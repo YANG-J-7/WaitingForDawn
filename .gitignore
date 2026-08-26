@@ -1,0 +1,16 @@
+# Godot 4 generated files
+.godot/
+
+# Export output and local credentials
+build/
+dist/
+exports/
+export_credentials.cfg
+
+# Local editor/OS files
+.DS_Store
+Thumbs.db
+*.tmp
+
+# WeChat developer tool local settings
+project.private.config.json

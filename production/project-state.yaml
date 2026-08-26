@@ -1,0 +1,6 @@
+version: 1
+stage: technical-setup
+engine: godot-4.6.3
+updated: 2026-08-26
+current_goal: "运行Godot工程骨架，并实现第1波敌人移动、主城受击与失败状态"
+active_story: ""

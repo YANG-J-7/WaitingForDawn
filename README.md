@@ -1,39 +1,55 @@
-# Waiting for Dawn
+# Waiting for Dawn（等待黎明）
 
-#### 介绍
-{**以下是 Gitee 平台说明，您可以替换此简介**
-Gitee 是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用 Gitee 实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
+一款面向微信小游戏的2D像素卡牌塔防游戏。玩家在持续十波的黑夜中经营聚落、构筑防线、收集怪物王对策并守住主城。
 
-#### 软件架构
-软件架构说明
+## 当前阶段
 
+项目处于技术准备阶段，已完成：
 
-#### 安装教程
+- 核心玩法、单夜十波、克制、怪物王、黄金凤凰和广告商业化GDD。
+- Godot 4.6.3工程基线。
+- 960×540横屏兼容渲染配置。
+- 全局对局状态与可启动的灰盒入口场景。
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+下一目标是实现第1波敌人移动、攻击主城和失败结算。
 
-#### 使用说明
+## 开发环境
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+- Godot 4.6.3 Standard
+- GDScript
+- GL Compatibility渲染器
+- Windows开发，微信小游戏首发
 
-#### 参与贡献
+请使用精确的Godot 4.6.3打开根目录中的 `project.godot`。微信导出所用编辑器、PCK和WASM模板必须保持同一补丁版本。
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+## 本地运行
 
+1. 安装Godot 4.6.3 Standard。
+2. 在Godot项目管理器中导入本仓库根目录。
+3. 打开项目后按F6/F5运行主场景。
 
-#### 特技
+若Godot已加入PATH，可执行：
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+```powershell
+godot --path . --editor
+```
+
+工程结构冒烟检查：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\check_project.ps1
+```
+
+## 目录
+
+- `design/gdd/`：游戏系统设计。
+- `docs/project/`：技术偏好和预算。
+- `docs/architecture/`：技术决策记录。
+- `production/`：项目状态与后续开发故事。
+- `src/core/`：全局状态与纯规则。
+- `src/main/`：入口场景。
+- `tools/`：本地检查工具。
+
+## 微信小游戏说明
+
+首个灰盒不接入第三方导出插件、广告或排行榜SDK。核心循环稳定后，再单独验证微信WASM模板、包体、音频、存档、排行榜与激励广告桥接。

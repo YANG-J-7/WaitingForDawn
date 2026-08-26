@@ -1,0 +1,83 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/main/main.gd" id="1_main"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_main")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="TopBar" type="PanelContainer" parent="HUD"]
+offset_left = 20.0
+offset_top = 18.0
+offset_right = 940.0
+offset_bottom = 82.0
+
+[node name="Margin" type="MarginContainer" parent="HUD/TopBar"]
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 10
+
+[node name="Stats" type="HBoxContainer" parent="HUD/TopBar/Margin"]
+theme_override_constants/separation = 28
+
+[node name="Title" type="Label" parent="HUD/TopBar/Margin/Stats"]
+theme_override_colors/font_color = Color(0.95, 0.72, 0.32, 1)
+theme_override_font_sizes/font_size = 22
+text = "WAITING FOR DAWN"
+
+[node name="PhaseLabel" type="Label" parent="HUD/TopBar/Margin/Stats"]
+text = "阶段"
+
+[node name="PhaseValue" type="Label" parent="HUD/TopBar/Margin/Stats"]
+unique_name_in_owner = true
+text = "BOOT"
+
+[node name="WaveLabel" type="Label" parent="HUD/TopBar/Margin/Stats"]
+text = "波次"
+
+[node name="WaveValue" type="Label" parent="HUD/TopBar/Margin/Stats"]
+unique_name_in_owner = true
+text = "1 / 10"
+
+[node name="CityLabel" type="Label" parent="HUD/TopBar/Margin/Stats"]
+text = "主城"
+
+[node name="CityValue" type="Label" parent="HUD/TopBar/Margin/Stats"]
+unique_name_in_owner = true
+text = "600 / 600"
+
+[node name="BottomPanel" type="PanelContainer" parent="HUD"]
+offset_left = 164.0
+offset_top = 426.0
+offset_right = 796.0
+offset_bottom = 522.0
+
+[node name="Margin" type="MarginContainer" parent="HUD/BottomPanel"]
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="Content" type="VBoxContainer" parent="HUD/BottomPanel/Margin"]
+theme_override_constants/separation = 8
+
+[node name="StatusLabel" type="Label" parent="HUD/BottomPanel/Margin/Content"]
+unique_name_in_owner = true
+text = "Godot工程骨架已加载。"
+horizontal_alignment = 1
+
+[node name="Buttons" type="HBoxContainer" parent="HUD/BottomPanel/Margin/Content"]
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="StartButton" type="Button" parent="HUD/BottomPanel/Margin/Content/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 38)
+text = "开始灰盒对局"
+
+[node name="ResetButton" type="Button" parent="HUD/BottomPanel/Margin/Content/Buttons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 38)
+text = "重置"

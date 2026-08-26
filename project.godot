@@ -1,0 +1,35 @@
+; Engine configuration file.
+; Waiting for Dawn — Godot 4.6.3 baseline.
+
+config_version=5
+
+[application]
+
+config/name="Waiting for Dawn"
+config/description="单夜十波的2D像素卡牌塔防"
+run/main_scene="res://src/main/main.tscn"
+config/features=PackedStringArray("4.6", "GL Compatibility")
+
+[autoload]
+
+RunState="*res://src/core/run_state.gd"
+
+[display]
+
+window/size/viewport_width=960
+window/size/viewport_height=540
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+window/handheld/orientation=0
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
+textures/canvas_textures/default_texture_filter=0
+
+[physics]
+
+common/physics_ticks_per_second=60
