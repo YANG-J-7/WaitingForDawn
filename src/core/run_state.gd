@@ -18,12 +18,14 @@ enum Phase {
 const FIRST_WAVE: int = 1
 const LAST_WAVE: int = 10
 const DEFAULT_CITY_HEALTH: int = 600
+const DEFAULT_CITY_ARMOR: int = 10
 
 var run_id: String = ""
 var phase: Phase = Phase.BOOT
 var current_wave: int = FIRST_WAVE
 var city_max_health: int = DEFAULT_CITY_HEALTH
 var city_health: int = DEFAULT_CITY_HEALTH
+var city_armor: int = DEFAULT_CITY_ARMOR
 var ad_assisted: bool = false
 var ad_continue_used: int = 0
 
@@ -33,6 +35,7 @@ func begin_new_run() -> void:
 	current_wave = FIRST_WAVE
 	city_max_health = DEFAULT_CITY_HEALTH
 	city_health = DEFAULT_CITY_HEALTH
+	city_armor = DEFAULT_CITY_ARMOR
 	ad_assisted = false
 	ad_continue_used = 0
 	_set_phase(Phase.DAY_SETUP)
@@ -46,6 +49,7 @@ func reset_to_boot() -> void:
 	current_wave = FIRST_WAVE
 	city_max_health = DEFAULT_CITY_HEALTH
 	city_health = DEFAULT_CITY_HEALTH
+	city_armor = DEFAULT_CITY_ARMOR
 	ad_assisted = false
 	ad_continue_used = 0
 	_set_phase(Phase.BOOT)

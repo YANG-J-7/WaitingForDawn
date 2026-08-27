@@ -1,6 +1,6 @@
 version: 1
 stage: technical-setup
-engine: godot-4.6.3
-updated: 2026-08-26
-current_goal: "运行Godot工程骨架，并实现第1波敌人移动、主城受击与失败状态"
+engine: godot-4.7-development-validation
+updated: 2026-08-27
+current_goal: "确认微信导出版本基线，并实现第一座箭塔攻击、野狼死亡与第1波清场"
 active_story: ""
