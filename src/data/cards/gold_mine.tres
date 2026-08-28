@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="OpeningCardDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/cards/card_definition.gd" id="1_card"]
+
+[resource]
+script = ExtResource("1_card")
+card_id = &"gold_mine"
+display_name = "金矿场"
+category = "resource"
+shop_price = 8
+build_costs = {
+&"iron": 10,
+&"wood": 50
+}
+build_cost_text = "50木+10铁"
+production_resource = &"gold"
+production_per_wave = 4
+worker_slots = 2
+building_color = Color(0.721569, 0.533333, 0.180392, 1)
+description = "后续每波生产金币。"

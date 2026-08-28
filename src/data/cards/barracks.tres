@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="OpeningCardDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/cards/card_definition.gd" id="1_card"]
+
+[resource]
+script = ExtResource("1_card")
+card_id = &"barracks"
+display_name = "兵营"
+category = "defense"
+shop_price = 8
+build_costs = {
+&"iron": 10,
+&"stone": 20,
+&"wood": 55
+}
+build_cost_text = "55木+20石+10铁"
+worker_slots = 2
+description = "训练守卫；建造功能待后续开放。"

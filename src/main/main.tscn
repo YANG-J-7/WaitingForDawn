@@ -1,8 +1,19 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://src/main/main.gd" id="1_main"]
 [ext_resource type="Script" path="res://src/gameplay/waves/wave_controller.gd" id="2_controller"]
 [ext_resource type="Resource" path="res://src/data/waves/wave_01.tres" id="3_wave"]
+[ext_resource type="PackedScene" path="res://src/gameplay/defenses/arrow_tower.tscn" id="4_tower"]
+[ext_resource type="Script" path="res://src/gameplay/cards/opening_draft.gd" id="5_draft"]
+[ext_resource type="Resource" path="res://src/data/cards/lumber_camp.tres" id="6_lumber"]
+[ext_resource type="Resource" path="res://src/data/cards/farm.tres" id="7_farm"]
+[ext_resource type="Resource" path="res://src/data/cards/gold_mine.tres" id="8_gold"]
+[ext_resource type="Resource" path="res://src/data/cards/arrow_tower_card.tres" id="9_arrow"]
+[ext_resource type="Resource" path="res://src/data/cards/wall.tres" id="10_wall"]
+[ext_resource type="Resource" path="res://src/data/cards/barracks.tres" id="11_barracks"]
+[ext_resource type="Script" path="res://src/gameplay/buildings/settlement_builder.gd" id="12_builder"]
+[ext_resource type="Script" path="res://src/gameplay/economy/wave_economy.gd" id="13_wave_economy"]
+[ext_resource type="Script" path="res://src/gameplay/cards/card_drop_slot.gd" id="14_drop_slot"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_main")
@@ -10,6 +21,22 @@ script = ExtResource("1_main")
 [node name="WaveController" type="Node2D" parent="."]
 script = ExtResource("2_controller")
 wave_definition = ExtResource("3_wave")
+
+[node name="OpeningDraft" type="Node" parent="."]
+script = ExtResource("5_draft")
+offered_cards = [ExtResource("6_lumber"), ExtResource("7_farm"), ExtResource("8_gold"), ExtResource("9_arrow"), ExtResource("10_wall"), ExtResource("11_barracks")]
+
+[node name="SettlementBuilder" type="Node2D" parent="."]
+script = ExtResource("12_builder")
+
+[node name="WaveEconomy" type="Node" parent="."]
+script = ExtResource("13_wave_economy")
+
+[node name="ArrowTower" parent="." instance=ExtResource("4_tower")]
+visible = false
+position = Vector2(650, 245)
+target_provider_path = NodePath("../WaveController")
+enabled = false
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
@@ -60,6 +87,127 @@ text = "敌人"
 [node name="EnemyValue" type="Label" parent="HUD/TopBar/Margin/Stats"]
 unique_name_in_owner = true
 text = "0 / 0"
+
+[node name="ResourcesBar" type="PanelContainer" parent="HUD"]
+unique_name_in_owner = true
+offset_left = 180.0
+offset_top = 88.0
+offset_right = 780.0
+offset_bottom = 126.0
+
+[node name="Margin" type="MarginContainer" parent="HUD/ResourcesBar"]
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 7
+
+[node name="Values" type="HBoxContainer" parent="HUD/ResourcesBar/Margin"]
+alignment = 1
+theme_override_constants/separation = 22
+
+[node name="WoodValue" type="Label" parent="HUD/ResourcesBar/Margin/Values"]
+unique_name_in_owner = true
+text = "木 0"
+
+[node name="FoodValue" type="Label" parent="HUD/ResourcesBar/Margin/Values"]
+unique_name_in_owner = true
+text = "食 0"
+
+[node name="StoneValue" type="Label" parent="HUD/ResourcesBar/Margin/Values"]
+unique_name_in_owner = true
+text = "石 0"
+
+[node name="IronValue" type="Label" parent="HUD/ResourcesBar/Margin/Values"]
+unique_name_in_owner = true
+text = "铁 0"
+
+[node name="GoldValue" type="Label" parent="HUD/ResourcesBar/Margin/Values"]
+unique_name_in_owner = true
+text = "金 0"
+
+[node name="PopulationValue" type="Label" parent="HUD/ResourcesBar/Margin/Values"]
+unique_name_in_owner = true
+text = "人口 0/0"
+
+[node name="SettlementSlot0" type="Button" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+offset_left = 201.0
+offset_top = 145.0
+offset_right = 295.0
+offset_bottom = 215.0
+text = "聚落格1\n拖入资源卡"
+script = ExtResource("14_drop_slot")
+accepted_category = "resource"
+
+[node name="SettlementSlot1" type="Button" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+offset_left = 319.0
+offset_top = 145.0
+offset_right = 413.0
+offset_bottom = 215.0
+text = "聚落格2\n拖入资源卡"
+script = ExtResource("14_drop_slot")
+accepted_category = "resource"
+
+[node name="SettlementSlot2" type="Button" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+offset_left = 437.0
+offset_top = 145.0
+offset_right = 531.0
+offset_bottom = 215.0
+text = "聚落格3\n拖入资源卡"
+script = ExtResource("14_drop_slot")
+accepted_category = "resource"
+
+[node name="DefenseSlotButton" type="Button" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+offset_left = 608.0
+offset_top = 196.0
+offset_right = 692.0
+offset_bottom = 274.0
+text = "防御格\n拖入箭塔卡"
+script = ExtResource("14_drop_slot")
+accepted_card_ids = PackedStringArray("arrow_tower")
+
+[node name="HandBar" type="PanelContainer" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+offset_left = 20.0
+offset_top = 216.0
+offset_right = 600.0
+offset_bottom = 262.0
+
+[node name="Margin" type="MarginContainer" parent="HUD/HandBar"]
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 3
+
+[node name="Content" type="HBoxContainer" parent="HUD/HandBar/Margin"]
+theme_override_constants/separation = 6
+
+[node name="HandLabel" type="Label" parent="HUD/HandBar/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 40)
+text = "手牌\n0 / 4"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HandEmptyHint" type="Label" parent="HUD/HandBar/Margin/Content"]
+unique_name_in_owner = true
+size_flags_horizontal = 3
+text = "点击下方六卡选择，选中的卡会进入这里"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HandSlots" type="HBoxContainer" parent="HUD/HandBar/Margin/Content"]
+unique_name_in_owner = true
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
 
 [node name="BottomPanel" type="PanelContainer" parent="HUD"]
 offset_left = 164.0
@@ -126,3 +274,89 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 42)
 text = "重新开始"
+
+[node name="DaySetupPanel" type="PanelContainer" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+offset_left = 20.0
+offset_top = 264.0
+offset_right = 940.0
+offset_bottom = 530.0
+
+[node name="Margin" type="MarginContainer" parent="HUD/DaySetupPanel"]
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 10
+
+[node name="Content" type="VBoxContainer" parent="HUD/DaySetupPanel/Margin"]
+theme_override_constants/separation = 6
+
+[node name="Header" type="HBoxContainer" parent="HUD/DaySetupPanel/Margin/Content"]
+alignment = 1
+theme_override_constants/separation = 28
+
+[node name="DayTitle" type="Label" parent="HUD/DaySetupPanel/Margin/Content/Header"]
+unique_name_in_owner = true
+theme_override_colors/font_color = Color(0.95, 0.72, 0.32, 1)
+text = "白天布防"
+
+[node name="TimerLabel" type="Label" parent="HUD/DaySetupPanel/Margin/Content/Header"]
+unique_name_in_owner = true
+text = "剩余 20 秒"
+
+[node name="SelectionLabel" type="Label" parent="HUD/DaySetupPanel/Margin/Content/Header"]
+unique_name_in_owner = true
+text = "剩余免费名额：4"
+
+[node name="PauseTimerButton" type="Button" parent="HUD/DaySetupPanel/Margin/Content/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(106, 34)
+text = "暂停计时"
+
+[node name="CardGrid" type="GridContainer" parent="HUD/DaySetupPanel/Margin/Content"]
+unique_name_in_owner = true
+columns = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 5
+
+[node name="JobSection" type="HBoxContainer" parent="HUD/DaySetupPanel/Margin/Content"]
+unique_name_in_owner = true
+theme_override_constants/separation = 10
+
+[node name="JobSummaryLabel" type="Label" parent="HUD/DaySetupPanel/Margin/Content/JobSection"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(95, 44)
+text = "岗位 0/6\n空闲 6"
+vertical_alignment = 1
+
+[node name="JobRows" type="HBoxContainer" parent="HUD/DaySetupPanel/Margin/Content/JobSection"]
+unique_name_in_owner = true
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="JobEmptyHint" type="Label" parent="HUD/DaySetupPanel/Margin/Content/JobSection"]
+unique_name_in_owner = true
+size_flags_horizontal = 3
+text = "先建造建筑，岗位加减按钮会立即显示在这里"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AutoAssignButton" type="Button" parent="HUD/DaySetupPanel/Margin/Content/JobSection"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 44)
+text = "自动分配"
+
+[node name="Controls" type="HBoxContainer" parent="HUD/DaySetupPanel/Margin/Content"]
+alignment = 1
+theme_override_constants/separation = 18
+
+[node name="SetupHintLabel" type="Label" parent="HUD/DaySetupPanel/Margin/Content/Controls"]
+unique_name_in_owner = true
+text = "免费选4张；选中箭塔后点击地图防御格"
+
+[node name="ReadyButton" type="Button" parent="HUD/DaySetupPanel/Margin/Content/Controls"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 34)
+disabled = true
+text = "迎战"

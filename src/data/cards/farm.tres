@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="OpeningCardDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/cards/card_definition.gd" id="1_card"]
+
+[resource]
+script = ExtResource("1_card")
+card_id = &"farm"
+display_name = "农场"
+category = "resource"
+shop_price = 6
+build_costs = {
+&"stone": 10,
+&"wood": 30
+}
+build_cost_text = "30木+10石"
+production_resource = &"food"
+production_per_wave = 8
+worker_slots = 2
+building_color = Color(0.678431, 0.560784, 0.254902, 1)
+description = "后续每波生产食物。"

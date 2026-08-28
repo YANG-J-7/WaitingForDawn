@@ -6,6 +6,7 @@
 | 微信激励广告与单局商业化 | [wechat-ad-monetization-system.md](wechat-ad-monetization-system.md) | 0.1 失败续战已批准 | 验证失败续战观看率、恢复公平、广告收入与留存护栏 |
 | 卡牌经营与昼夜防守核心系统 | [core-loop-system.md](core-loop-system.md) | 0.2 历史基线 | 建筑与伤害初值参考；节奏规则已被单夜十波系统替代 |
 | 敌人与建筑克制系统 | [counter-system.md](counter-system.md) | 0.2 待灰盒验证 | 验证普通软克制与怪物王硬对策边界是否清晰 |
+| 手牌卡槽拖放建造 | [card-drag-placement-system.md](card-drag-placement-system.md) | 0.2 灰盒验证中 | 验证选卡进入独立手牌栏、合法落点与触屏操作 |
 
 ## 后续候选系统
 

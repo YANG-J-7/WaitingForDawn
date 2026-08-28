@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="OpeningCardDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/cards/card_definition.gd" id="1_card"]
+
+[resource]
+script = ExtResource("1_card")
+card_id = &"arrow_tower"
+display_name = "箭塔"
+category = "defense"
+shop_price = 6
+build_costs = {
+&"stone": 10,
+&"wood": 45
+}
+build_cost_text = "45木+10石"
+worker_slots = 1
+description = "克制野狼，可放到防御格。"

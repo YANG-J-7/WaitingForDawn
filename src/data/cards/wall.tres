@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="OpeningCardDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/cards/card_definition.gd" id="1_card"]
+
+[resource]
+script = ExtResource("1_card")
+card_id = &"wall"
+display_name = "城墙"
+category = "defense"
+shop_price = 6
+build_costs = {
+&"stone": 15,
+&"wood": 20
+}
+build_cost_text = "20木+15石"
+description = "阻挡敌人；建造功能待后续开放。"

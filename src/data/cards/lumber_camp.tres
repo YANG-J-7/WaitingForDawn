@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="OpeningCardDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/cards/card_definition.gd" id="1_card"]
+
+[resource]
+script = ExtResource("1_card")
+card_id = &"lumber_camp"
+display_name = "伐木场"
+category = "resource"
+shop_price = 6
+build_costs = {
+&"wood": 35
+}
+build_cost_text = "35木"
+production_resource = &"wood"
+production_per_wave = 10
+worker_slots = 2
+building_color = Color(0.333333, 0.541176, 0.313726, 1)
+description = "后续每波生产木材。"

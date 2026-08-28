@@ -16,6 +16,8 @@ func _run_test() -> void:
 	await get_tree().process_frame
 
 	var controller: WaveController = main.get_node("WaveController") as WaveController
+	var tower: ArrowTower = main.get_node("ArrowTower") as ArrowTower
+	tower.enabled = false
 	_expect_equal(controller.wave_definition.total_threat(), 20, "wave threat budget")
 
 	RunState.begin_new_run()

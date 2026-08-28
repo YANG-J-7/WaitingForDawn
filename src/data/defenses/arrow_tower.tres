@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="TowerDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/defenses/tower_definition.gd" id="1_definition"]
+
+[resource]
+script = ExtResource("1_definition")
+defense_id = &"arrow_tower"
+display_name = "箭塔"
+base_damage = 12
+armor_penetration = 0
+attack_interval = 0.8
+attack_range_tiles = 4.5
+counter_multipliers = {
+&"wolf": 1.35
+}
+body_color = Color(0.360784, 0.541176, 0.65098, 1)
