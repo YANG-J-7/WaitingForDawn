@@ -8,7 +8,7 @@ extends Resource
 @export var build_costs: Dictionary = {}
 @export var build_cost_text: String = "待实现"
 @export var production_resource: StringName = &""
-@export_range(0, 999, 1) var production_per_wave: int = 0
+@export_range(0.0, 100.0, 0.1) var production_per_second: float = 0.0
 @export_range(0, 8, 1) var worker_slots: int = 0
 @export var building_color: Color = Color("6b8f5e")
 @export_multiline var description: String = ""

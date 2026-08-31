@@ -14,7 +14,7 @@ build_costs = {
 }
 build_cost_text = "50木+10铁"
 production_resource = &"gold"
-production_per_wave = 4
+production_per_second = 1.0
 worker_slots = 2
 building_color = Color(0.721569, 0.533333, 0.180392, 1)
-description = "后续每波生产金币。"
+description = "满岗位时每秒生产1金币。"

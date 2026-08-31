@@ -32,6 +32,7 @@ func _run_test() -> void:
 	start_button.pressed.emit()
 	_expect_true(not hand_bar.visible, "hand bar stays hidden before card selection finishes")
 	_expect_equal(hand_slots.get_child_count(), 0, "hidden hand has no cards")
+	_expect_true(not settlement_slots[0].visible and not defense_slot.visible, "map deployment targets stay hidden during selection")
 	_expect_true(not card_grid.get_child(0) is HandCardSlot, "shop offer itself is not draggable hand card")
 
 	(card_grid.get_child(0) as Button).pressed.emit()
@@ -41,10 +42,19 @@ func _run_test() -> void:
 	(card_grid.get_child(1) as Button).pressed.emit()
 	_expect_true(not hand_bar.visible, "three selected cards do not show hand bar")
 	(card_grid.get_child(2) as Button).pressed.emit()
-	_expect_true(hand_bar.visible, "fourth selected card reveals hand bar")
-	_expect_equal(hand_slots.get_child_count(), 4, "completed selection fills hand with four cards")
-	_expect_true("已加入手牌" in (card_grid.get_child(0) as Button).text, "shop offer reports card entered hand")
+	_expect_true(not hand_bar.visible, "completed selection still keeps hand bar hidden")
+	_expect_equal(hand_slots.get_child_count(), 0, "completed selection does not create hand before battle")
+	_expect_true("已选择" in (card_grid.get_child(0) as Button).text, "shop offer reports selected state")
+
+	ready_button.pressed.emit()
+	await get_tree().process_frame
+	_expect_equal(RunState.phase, RunState.Phase.WAVE_COMBAT, "ready starts battle before hand appears")
+	_expect_true(hand_bar.visible, "battle start reveals bottom hand bar")
+	_expect_equal(hand_slots.get_child_count(), 4, "battle hand contains four selected cards")
+	_expect_true(settlement_slots[0].visible and defense_slot.visible, "battle exposes map deployment targets")
+	_expect_true(hand_bar.position.y >= 400.0, "hand bar is anchored at the bottom of the battle view")
 	var lumber_hand := hand_slots.get_node("HandCard_0") as HandCardSlot
+	_expect_true(lumber_hand.custom_minimum_size.y >= 80.0, "battle hand uses tall readable card slots")
 	var lumber_data: Variant = lumber_hand.drag_payload()
 	_expect_true(lumber_data is Dictionary, "hand card exposes drag payload")
 	_expect_true(settlement_slots[0].accepts_card_data(lumber_data), "resource hand card accepts settlement target")
@@ -86,11 +96,9 @@ func _run_test() -> void:
 	_expect_equal(RunEconomy.amount(&"iron"), iron_before_unaffordable, "unaffordable drop keeps iron")
 	_expect_true("拖到地图" in gold_hand.text, "hand slot explains drag action")
 
-	ready_button.pressed.emit()
-	await get_tree().process_frame
-	_expect_equal(RunState.phase, RunState.Phase.WAVE_COMBAT, "four selected cards can start combat")
-	_expect_true(not hand_bar.visible, "combat hides hand bar")
-	_expect_true(gold_hand.drag_payload() == null, "combat disables unplayed hand dragging")
+	_expect_equal(RunState.phase, RunState.Phase.WAVE_COMBAT, "card deployment stays inside battle phase")
+	_expect_true(hand_bar.visible, "battle keeps hand bar visible")
+	_expect_true(gold_hand.drag_payload() is Dictionary, "battle allows remaining hand card dragging")
 
 	main.queue_free()
 	get_tree().quit(failure_count)

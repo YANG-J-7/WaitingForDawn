@@ -70,6 +70,16 @@ func can_pay(costs: Dictionary) -> bool:
 	return true
 
 
+func missing_resources(costs: Dictionary) -> Dictionary:
+	var missing: Dictionary = {}
+	for resource_id: Variant in costs:
+		var typed_id := StringName(resource_id)
+		var shortage: int = int(costs[resource_id]) - amount(typed_id)
+		if shortage > 0:
+			missing[typed_id] = shortage
+	return missing
+
+
 func try_pay(costs: Dictionary) -> bool:
 	if not can_pay(costs):
 		return false

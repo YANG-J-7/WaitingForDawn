@@ -3,6 +3,7 @@ extends Node
 
 signal workers_assigned(assigned_population: int, idle_population: int)
 signal settlement_completed(wave_index: int, report: Dictionary)
+signal production_tick(produced_resources: Dictionary)
 signal jobs_changed(job_order: Array[StringName])
 signal assignments_changed(
 	worker_assignments: Dictionary,
@@ -23,9 +24,25 @@ var job_labels: Dictionary = {}
 var worker_assignments: Dictionary = {}
 var assignments_locked: bool = false
 var user_modified_assignments: bool = false
+var production_builder: SettlementBuilder
+var production_arrow_tower: ArrowTower
+var production_barracks: Barracks
+var production_progress: Dictionary = {}
+var total_continuous_production: Dictionary = {}
 
 
-func refresh_jobs(builder: SettlementBuilder, arrow_tower: ArrowTower) -> void:
+func _process(delta: float) -> void:
+	advance_production(delta)
+
+
+func refresh_jobs(
+	builder: SettlementBuilder,
+	arrow_tower: ArrowTower,
+	barracks: Barracks = null
+) -> void:
+	production_builder = builder
+	production_arrow_tower = arrow_tower
+	production_barracks = barracks
 	var next_order: Array[StringName] = []
 	var next_capacities: Dictionary = {}
 	var next_labels: Dictionary = {}
@@ -33,6 +50,10 @@ func refresh_jobs(builder: SettlementBuilder, arrow_tower: ArrowTower) -> void:
 		next_order.append(&"arrow_tower")
 		next_capacities[&"arrow_tower"] = 1
 		next_labels[&"arrow_tower"] = "箭塔"
+	if barracks != null and barracks.is_built():
+		next_order.append(&"barracks")
+		next_capacities[&"barracks"] = 2
+		next_labels[&"barracks"] = "兵营"
 	for building in builder.placed_buildings():
 		if not is_instance_valid(building) or building.definition == null:
 			continue
@@ -56,6 +77,7 @@ func refresh_jobs(builder: SettlementBuilder, arrow_tower: ArrowTower) -> void:
 		_recalculate_totals()
 	else:
 		_apply_auto_distribution()
+	_apply_assignments_to_entities()
 	if roster_changed:
 		jobs_changed.emit(job_order.duplicate())
 	_emit_assignments_changed()
@@ -73,6 +95,7 @@ func adjust_workers(job_id: StringName, delta: int) -> bool:
 	worker_assignments[job_id] = next
 	user_modified_assignments = true
 	_recalculate_totals()
+	_apply_assignments_to_entities()
 	_emit_assignments_changed()
 	return true
 
@@ -82,17 +105,19 @@ func auto_assign_workers() -> bool:
 		return false
 	user_modified_assignments = true
 	_apply_auto_distribution()
+	_apply_assignments_to_entities()
 	_emit_assignments_changed()
 	return true
 
 
-func prepare_wave(builder: SettlementBuilder, arrow_tower: ArrowTower) -> void:
-	refresh_jobs(builder, arrow_tower)
+func prepare_wave(
+	builder: SettlementBuilder,
+	arrow_tower: ArrowTower,
+	barracks: Barracks = null
+) -> void:
+	refresh_jobs(builder, arrow_tower, barracks)
 	assignments_locked = true
-	arrow_tower_workers = int(worker_assignments.get(&"arrow_tower", 0))
-	arrow_tower.enabled = arrow_tower.visible and arrow_tower_workers > 0
-	for building in builder.placed_buildings():
-		building.assign_workers(int(worker_assignments.get(building.definition.card_id, 0)))
+	_apply_assignments_to_entities()
 	workers_assigned.emit(assigned_population, idle_population)
 	_emit_assignments_changed()
 
@@ -102,35 +127,16 @@ func unlock_for_planning() -> void:
 	_emit_assignments_changed()
 
 
-func settle_wave(wave_index: int, builder: SettlementBuilder) -> bool:
+func settle_wave(wave_index: int, _builder: SettlementBuilder) -> bool:
 	if wave_index in settled_waves:
 		return false
-
-	var production: Dictionary = {}
-	for building in builder.placed_buildings():
-		if not is_instance_valid(building) or building.definition == null:
-			continue
-		var definition: OpeningCardDefinition = building.definition
-		if definition.worker_slots <= 0 or definition.production_resource.is_empty():
-			continue
-		var produced: int = floori(
-			float(definition.production_per_wave * building.assigned_workers)
-			/ float(definition.worker_slots)
-		)
-		if produced <= 0:
-			continue
-		production[definition.production_resource] = (
-			int(production.get(definition.production_resource, 0)) + produced
-		)
-
-	for resource_id: Variant in production:
-		RunEconomy.add_resource(StringName(resource_id), int(production[resource_id]))
 
 	var required_food: int = RunEconomy.current_population
 	var consumed_food: int = RunEconomy.consume_food(required_food)
 	settled_waves.append(wave_index)
 	last_report = {
-		"production": production.duplicate(true),
+		"production": {},
+		"continuous_production": total_continuous_production.duplicate(true),
 		"food_required": required_food,
 		"food_consumed": consumed_food,
 		"is_hungry": RunEconomy.is_hungry,
@@ -140,6 +146,55 @@ func settle_wave(wave_index: int, builder: SettlementBuilder) -> bool:
 	last_summary = _format_summary(last_report)
 	settlement_completed.emit(wave_index, last_report.duplicate(true))
 	return true
+
+
+func advance_production(delta: float) -> Dictionary:
+	var produced_resources: Dictionary = {}
+	if delta <= 0.0 or production_builder == null:
+		return produced_resources
+	if RunState.phase not in [
+		RunState.Phase.DAY_SETUP,
+		RunState.Phase.WAVE_COMBAT,
+		RunState.Phase.WAVE_RESULT,
+	]:
+		return produced_resources
+	for building in production_builder.placed_buildings():
+		if not is_instance_valid(building) or building.definition == null:
+			continue
+		var definition: OpeningCardDefinition = building.definition
+		if (
+			definition.production_resource.is_empty()
+			or definition.production_per_second <= 0.0
+			or definition.worker_slots <= 0
+		):
+			continue
+		var workers: int = int(worker_assignments.get(definition.card_id, 0))
+		if workers <= 0:
+			continue
+		var building_key: int = building.get_instance_id()
+		var rate: float = (
+			definition.production_per_second
+			* float(workers)
+			/ float(definition.worker_slots)
+		)
+		var progress: float = float(production_progress.get(building_key, 0.0)) + rate * delta
+		var payout: int = floori(progress + 0.000001)
+		production_progress[building_key] = progress - float(payout)
+		if payout <= 0:
+			continue
+		var resource_id: StringName = definition.production_resource
+		produced_resources[resource_id] = int(produced_resources.get(resource_id, 0)) + payout
+
+	for resource_id: Variant in produced_resources:
+		var typed_resource_id := StringName(resource_id)
+		var amount: int = int(produced_resources[resource_id])
+		RunEconomy.add_resource(typed_resource_id, amount)
+		total_continuous_production[typed_resource_id] = (
+			int(total_continuous_production.get(typed_resource_id, 0)) + amount
+		)
+	if not produced_resources.is_empty():
+		production_tick.emit(produced_resources.duplicate(true))
+	return produced_resources
 
 
 func reset(builder: SettlementBuilder) -> void:
@@ -155,6 +210,13 @@ func reset(builder: SettlementBuilder) -> void:
 	worker_assignments.clear()
 	assignments_locked = false
 	user_modified_assignments = false
+	production_progress.clear()
+	total_continuous_production.clear()
+	production_builder = null
+	production_arrow_tower = null
+	if production_barracks != null and is_instance_valid(production_barracks):
+		production_barracks.set_assigned_workers(0)
+	production_barracks = null
 	for building in builder.placed_buildings():
 		if is_instance_valid(building):
 			building.assign_workers(0)
@@ -190,6 +252,19 @@ func _recalculate_totals() -> void:
 	idle_population = maxi(0, RunEconomy.current_population - assigned_population)
 
 
+func _apply_assignments_to_entities() -> void:
+	if production_arrow_tower != null and is_instance_valid(production_arrow_tower):
+		arrow_tower_workers = int(worker_assignments.get(&"arrow_tower", 0))
+		production_arrow_tower.enabled = production_arrow_tower.visible and arrow_tower_workers > 0
+	if production_barracks != null and is_instance_valid(production_barracks):
+		production_barracks.set_assigned_workers(int(worker_assignments.get(&"barracks", 0)))
+	if production_builder == null:
+		return
+	for building in production_builder.placed_buildings():
+		if is_instance_valid(building) and building.definition != null:
+			building.assign_workers(int(worker_assignments.get(building.definition.card_id, 0)))
+
+
 func _emit_assignments_changed() -> void:
 	assignments_changed.emit(
 		worker_assignments.duplicate(true),
@@ -200,23 +275,8 @@ func _emit_assignments_changed() -> void:
 
 
 func _format_summary(report: Dictionary) -> String:
-	var parts: Array[String] = []
-	var names: Dictionary = {
-		&"wood": "木",
-		&"food": "食",
-		&"stone": "石",
-		&"iron": "铁",
-		&"gold": "金",
-	}
-	var production: Dictionary = report["production"]
-	for resource_id in RunEconomy.RESOURCE_IDS:
-		var produced: int = int(production.get(resource_id, 0))
-		if produced > 0:
-			parts.append("+%d%s" % [produced, names[resource_id]])
-	var production_text: String = "无生产" if parts.is_empty() else " ".join(parts)
 	var hunger_text: String = "，发生饥饿" if bool(report["is_hungry"]) else ""
-	return "生产%s；消耗%d/%d食；岗位%d/%d（空闲%d）%s" % [
-		production_text,
+	return "资源建筑持续生产中；波末消耗%d/%d食；岗位%d/%d（空闲%d）%s" % [
 		int(report["food_consumed"]),
 		int(report["food_required"]),
 		int(report["assigned_population"]),

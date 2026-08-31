@@ -23,7 +23,8 @@ func accepts_card_data(data: Variant) -> bool:
 func drop_card_data(data: Variant) -> bool:
 	if not accepts_card_data(data):
 		return false
-	card_dropped.emit(int((data as Dictionary)["card_index"]))
+	var payload := data as Dictionary
+	card_dropped.emit(int(payload.get("card_instance_id", payload["card_index"])))
 	return true
 
 

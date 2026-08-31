@@ -14,7 +14,7 @@ build_costs = {
 }
 build_cost_text = "30木+10石"
 production_resource = &"food"
-production_per_wave = 8
+production_per_second = 2.0
 worker_slots = 2
 building_color = Color(0.678431, 0.560784, 0.254902, 1)
-description = "后续每波生产食物。"
+description = "满岗位时每秒生产2食物。"

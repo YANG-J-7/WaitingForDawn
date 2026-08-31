@@ -13,4 +13,4 @@ build_costs = {
 &"wood": 20
 }
 build_cost_text = "20木+15石"
-description = "阻挡敌人；建造功能待后续开放。"
+description = "400耐久、20护甲；阻挡并承受敌人的攻击。"

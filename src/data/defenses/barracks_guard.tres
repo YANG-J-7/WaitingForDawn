@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="GuardDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/defenses/guard_definition.gd" id="1_definition"]
+
+[resource]
+script = ExtResource("1_definition")
+defense_id = &"barracks_guard"
+display_name = "守卫"
+maximum_health = 90
+armor = 5
+base_damage = 8
+armor_penetration = 0
+attack_interval = 0.9
+attack_range_pixels = 46.0
+counter_multipliers = {
+&"wolf": 1.0
+}
+body_color = Color(0.372549, 0.560784, 0.403922, 1)

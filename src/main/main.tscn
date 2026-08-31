@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=25 format=3]
 
 [ext_resource type="Script" path="res://src/main/main.gd" id="1_main"]
 [ext_resource type="Script" path="res://src/gameplay/waves/wave_controller.gd" id="2_controller"]
@@ -14,6 +14,27 @@
 [ext_resource type="Script" path="res://src/gameplay/buildings/settlement_builder.gd" id="12_builder"]
 [ext_resource type="Script" path="res://src/gameplay/economy/wave_economy.gd" id="13_wave_economy"]
 [ext_resource type="Script" path="res://src/gameplay/cards/card_drop_slot.gd" id="14_drop_slot"]
+[ext_resource type="Script" path="res://src/gameplay/cards/run_card_inventory.gd" id="15_inventory"]
+[ext_resource type="Script" path="res://src/gameplay/cards/interwave_draft.gd" id="16_interwave"]
+[ext_resource type="Resource" path="res://src/data/waves/wave_02.tres" id="17_wave_two"]
+[ext_resource type="Resource" path="res://src/data/waves/wave_03.tres" id="18_wave_three"]
+[ext_resource type="Resource" path="res://src/data/waves/wave_04.tres" id="19_wave_four"]
+[ext_resource type="PackedScene" path="res://src/gameplay/defenses/barracks.tscn" id="21_barracks_scene"]
+[ext_resource type="Script" path="res://src/gameplay/defenses/wall_manager.gd" id="22_wall_manager"]
+[ext_resource type="Script" path="res://src/gameplay/cards/battle_shop.gd" id="23_battle_shop"]
+[ext_resource type="Script" path="res://src/gameplay/cards/map_drop_surface.gd" id="24_map_surface"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hand_bar"]
+bg_color = Color(0.0705882, 0.0823529, 0.101961, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.839216, 0.662745, 0.309804, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_main")
@@ -21,10 +42,22 @@ script = ExtResource("1_main")
 [node name="WaveController" type="Node2D" parent="."]
 script = ExtResource("2_controller")
 wave_definition = ExtResource("3_wave")
+wave_definitions = Array[ExtResource("3_wave")]([ExtResource("3_wave"), ExtResource("17_wave_two"), ExtResource("18_wave_three"), ExtResource("19_wave_four")])
 
 [node name="OpeningDraft" type="Node" parent="."]
 script = ExtResource("5_draft")
 offered_cards = [ExtResource("6_lumber"), ExtResource("7_farm"), ExtResource("8_gold"), ExtResource("9_arrow"), ExtResource("10_wall"), ExtResource("11_barracks")]
+
+[node name="RunCardInventory" type="Node" parent="."]
+script = ExtResource("15_inventory")
+
+[node name="InterwaveDraft" type="Node" parent="."]
+script = ExtResource("16_interwave")
+card_pool = [ExtResource("6_lumber"), ExtResource("7_farm"), ExtResource("8_gold"), ExtResource("9_arrow"), ExtResource("10_wall"), ExtResource("11_barracks")]
+
+[node name="BattleShop" type="Node" parent="."]
+script = ExtResource("23_battle_shop")
+card_pool = [ExtResource("6_lumber"), ExtResource("7_farm"), ExtResource("8_gold"), ExtResource("9_arrow"), ExtResource("10_wall"), ExtResource("11_barracks")]
 
 [node name="SettlementBuilder" type="Node2D" parent="."]
 script = ExtResource("12_builder")
@@ -38,7 +71,25 @@ position = Vector2(650, 245)
 target_provider_path = NodePath("../WaveController")
 enabled = false
 
+[node name="WallManager" type="Node2D" parent="."]
+script = ExtResource("22_wall_manager")
+
+[node name="Barracks" parent="." instance=ExtResource("21_barracks_scene")]
+visible = false
+position = Vector2(470, 250)
+
 [node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="MapDropSurface" type="Control" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = 64.0
+offset_top = 126.0
+offset_right = 780.0
+offset_bottom = 414.0
+script = ExtResource("24_map_surface")
 
 [node name="TopBar" type="PanelContainer" parent="HUD"]
 offset_left = 20.0
@@ -94,6 +145,15 @@ offset_left = 180.0
 offset_top = 88.0
 offset_right = 780.0
 offset_bottom = 126.0
+
+[node name="BattleShopButton" type="Button" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+offset_left = 792.0
+offset_top = 88.0
+offset_right = 932.0
+offset_bottom = 126.0
+text = "战斗商店"
 
 [node name="Margin" type="MarginContainer" parent="HUD/ResourcesBar"]
 theme_override_constants/margin_left = 12
@@ -173,34 +233,59 @@ text = "防御格\n拖入箭塔卡"
 script = ExtResource("14_drop_slot")
 accepted_card_ids = PackedStringArray("arrow_tower")
 
+[node name="BarrierSlotButton" type="Button" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+offset_left = 512.0
+offset_top = 236.0
+offset_right = 590.0
+offset_bottom = 306.0
+text = "屏障格\n拖入城墙卡"
+script = ExtResource("14_drop_slot")
+accepted_card_ids = PackedStringArray("wall")
+
+[node name="BarracksSlotButton" type="Button" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+offset_left = 416.0
+offset_top = 228.0
+offset_right = 500.0
+offset_bottom = 306.0
+text = "兵营格\n拖入兵营卡"
+script = ExtResource("14_drop_slot")
+accepted_card_ids = PackedStringArray("barracks")
+
 [node name="HandBar" type="PanelContainer" parent="HUD"]
 unique_name_in_owner = true
 visible = false
-offset_left = 20.0
-offset_top = 216.0
-offset_right = 600.0
-offset_bottom = 262.0
+z_index = 10
+offset_left = 80.0
+offset_top = 414.0
+offset_right = 880.0
+offset_bottom = 532.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hand_bar")
 
 [node name="Margin" type="MarginContainer" parent="HUD/HandBar"]
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 3
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
 
 [node name="Content" type="HBoxContainer" parent="HUD/HandBar/Margin"]
 theme_override_constants/separation = 6
 
 [node name="HandLabel" type="Label" parent="HUD/HandBar/Margin/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(52, 40)
-text = "手牌\n0 / 4"
+custom_minimum_size = Vector2(68, 96)
+theme_override_colors/font_color = Color(0.929412, 0.843137, 0.647059, 1)
+text = "部署手牌\n0 / 4"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="HandEmptyHint" type="Label" parent="HUD/HandBar/Margin/Content"]
 unique_name_in_owner = true
 size_flags_horizontal = 3
-text = "点击下方六卡选择，选中的卡会进入这里"
+text = "已无可部署卡牌"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -210,6 +295,7 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
 [node name="BottomPanel" type="PanelContainer" parent="HUD"]
+unique_name_in_owner = true
 offset_left = 164.0
 offset_top = 426.0
 offset_right = 796.0
@@ -274,6 +360,41 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 42)
 text = "重新开始"
+
+[node name="BuildFailurePanel" type="PanelContainer" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+z_index = 30
+offset_left = 300.0
+offset_top = 155.0
+offset_right = 660.0
+offset_bottom = 355.0
+
+[node name="Margin" type="MarginContainer" parent="HUD/BuildFailurePanel"]
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 18
+
+[node name="Content" type="VBoxContainer" parent="HUD/BuildFailurePanel/Margin"]
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="HUD/BuildFailurePanel/Margin/Content"]
+theme_override_colors/font_color = Color(0.95, 0.62, 0.25, 1)
+theme_override_font_sizes/font_size = 24
+text = "建造资源不足"
+horizontal_alignment = 1
+
+[node name="Detail" type="Label" parent="HUD/BuildFailurePanel/Margin/Content"]
+unique_name_in_owner = true
+text = "缺少资源明细"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="HUD/BuildFailurePanel/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 44)
+text = "知道了"
 
 [node name="DaySetupPanel" type="PanelContainer" parent="HUD"]
 unique_name_in_owner = true
@@ -354,6 +475,12 @@ theme_override_constants/separation = 18
 [node name="SetupHintLabel" type="Label" parent="HUD/DaySetupPanel/Margin/Content/Controls"]
 unique_name_in_owner = true
 text = "免费选4张；选中箭塔后点击地图防御格"
+
+[node name="RefreshButton" type="Button" parent="HUD/DaySetupPanel/Margin/Content/Controls"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(116, 34)
+text = "刷新 10金"
 
 [node name="ReadyButton" type="Button" parent="HUD/DaySetupPanel/Margin/Content/Controls"]
 unique_name_in_owner = true

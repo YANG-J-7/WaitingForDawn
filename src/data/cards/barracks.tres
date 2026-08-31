@@ -15,4 +15,4 @@ build_costs = {
 }
 build_cost_text = "55木+20石+10铁"
 worker_slots = 2
-description = "训练守卫；建造功能待后续开放。"
+description = "提供2个岗位；每名上岗人口在怪潮中生成1名守卫。"

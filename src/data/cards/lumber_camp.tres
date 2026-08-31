@@ -13,7 +13,7 @@ build_costs = {
 }
 build_cost_text = "35木"
 production_resource = &"wood"
-production_per_wave = 10
+production_per_second = 2.0
 worker_slots = 2
 building_color = Color(0.333333, 0.541176, 0.313726, 1)
-description = "后续每波生产木材。"
+description = "满岗位时每秒生产2木材。"

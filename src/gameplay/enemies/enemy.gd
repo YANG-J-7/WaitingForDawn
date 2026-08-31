@@ -2,6 +2,16 @@ class_name EnemyActor
 extends Node2D
 
 signal attack_requested(base_damage: int)
+signal barrier_attack_requested(
+	base_damage: int,
+	enemy_id: StringName,
+	target_wall: BarrierWall
+)
+signal guard_attack_requested(
+	base_damage: int,
+	enemy_id: StringName,
+	target_guard: BarracksGuard
+)
 signal health_changed(current_health: int, maximum_health: int)
 signal died(enemy: EnemyActor)
 
@@ -9,6 +19,10 @@ const TILE_SIZE: float = 32.0
 
 var definition: EnemyDefinition
 var target_position: Vector2 = Vector2.ZERO
+var city_target_position: Vector2 = Vector2.ZERO
+var barrier_target: BarrierWall
+var guard_target: BarracksGuard
+var attack_target_kind: StringName = &"city"
 var active: bool = false
 var has_reached_target: bool = false
 var age_seconds: float = 0.0
@@ -25,7 +39,11 @@ func configure(
 ) -> void:
 	definition = enemy_definition
 	position = spawn_position
-	target_position = city_position
+	city_target_position = city_position
+	target_position = city_target_position
+	barrier_target = null
+	guard_target = null
+	attack_target_kind = &"city"
 	spawn_index = entity_spawn_index
 	current_health = definition.maximum_health
 	active = true
@@ -42,6 +60,52 @@ func stop() -> void:
 
 func is_alive() -> bool:
 	return active and current_health > 0
+
+
+func set_barrier(wall: BarrierWall) -> bool:
+	if wall == null or not is_instance_valid(wall) or not wall.is_blocking():
+		return false
+	if attack_target_kind == &"guard" and _has_valid_guard_target():
+		return false
+	var parent_2d := get_parent() as Node2D
+	var local_barrier_position: Vector2 = (
+		parent_2d.to_local(wall.global_position)
+		if parent_2d != null
+		else wall.global_position
+	)
+	if position.x > local_barrier_position.x + 16.0:
+		return false
+	barrier_target = wall
+	target_position = local_barrier_position
+	attack_target_kind = &"barrier"
+	has_reached_target = false
+	attack_elapsed = 0.0
+	if not wall.destroyed.is_connected(_on_barrier_destroyed):
+		wall.destroyed.connect(_on_barrier_destroyed)
+	return true
+
+
+func set_guard(guard: BarracksGuard) -> bool:
+	if guard == null or not is_instance_valid(guard) or not guard.is_available():
+		return false
+	var parent_2d := get_parent() as Node2D
+	var local_guard_position: Vector2 = (
+		parent_2d.to_local(guard.global_position)
+		if parent_2d != null
+		else guard.global_position
+	)
+	if position.x > local_guard_position.x + 16.0:
+		return false
+	if not guard.engage_enemy(self):
+		return false
+	guard_target = guard
+	target_position = local_guard_position
+	attack_target_kind = &"guard"
+	has_reached_target = false
+	attack_elapsed = 0.0
+	if not guard.defeated.is_connected(_on_guard_defeated):
+		guard.defeated.connect(_on_guard_defeated)
+	return true
 
 
 func apply_damage(amount: int) -> int:
@@ -82,12 +146,62 @@ func _physics_process(delta: float) -> void:
 
 
 func _process_attack(delta: float) -> void:
+	if attack_target_kind == &"guard" and not _has_valid_guard_target():
+		_resume_to_city()
+		return
+	if attack_target_kind == &"barrier" and (
+		barrier_target == null
+		or not is_instance_valid(barrier_target)
+		or not barrier_target.is_blocking()
+	):
+		_resume_to_city()
+		return
 	attack_elapsed += delta
 	while attack_elapsed >= definition.attack_interval:
 		attack_elapsed -= definition.attack_interval
-		attack_requested.emit(definition.base_damage)
+		if attack_target_kind == &"guard":
+			guard_attack_requested.emit(definition.base_damage, definition.enemy_id, guard_target)
+			if attack_target_kind != &"guard":
+				return
+		elif attack_target_kind == &"barrier":
+			barrier_attack_requested.emit(
+				definition.base_damage,
+				definition.enemy_id,
+				barrier_target
+			)
+			if attack_target_kind != &"barrier":
+				return
+		else:
+			attack_requested.emit(definition.base_damage)
 		if RunState.phase != RunState.Phase.WAVE_COMBAT:
 			return
+
+
+func _on_barrier_destroyed(wall: BarrierWall) -> void:
+	if attack_target_kind == &"barrier" and wall == barrier_target:
+		_resume_to_city()
+
+
+func _on_guard_defeated(guard: BarracksGuard) -> void:
+	if attack_target_kind == &"guard" and guard == guard_target:
+		_resume_to_city()
+
+
+func _has_valid_guard_target() -> bool:
+	return (
+		guard_target != null
+		and is_instance_valid(guard_target)
+		and guard_target.is_active()
+	)
+
+
+func _resume_to_city() -> void:
+	barrier_target = null
+	guard_target = null
+	target_position = city_target_position
+	attack_target_kind = &"city"
+	has_reached_target = false
+	attack_elapsed = 0.0
 
 
 func _draw() -> void:

@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/defenses/barracks.gd" id="1_barracks"]
+[ext_resource type="Resource" path="res://src/data/defenses/barracks_guard.tres" id="2_guard"]
+
+[node name="Barracks" type="Node2D"]
+script = ExtResource("1_barracks")
+guard_definition = ExtResource("2_guard")

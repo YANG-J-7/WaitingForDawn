@@ -84,9 +84,9 @@ func _run_test() -> void:
 		await get_tree().process_frame
 		frame_budget -= 1
 	_expect_equal(RunState.phase, RunState.Phase.WAVE_RESULT, "staffed defense clears wave one")
-	_expect_resource(&"wood", 35, "one-worker lumber camp produces five wood")
-	_expect_resource(&"food", 34, "full farm produces eight then population eats six")
-	_expect_resource(&"gold", 24, "full gold mine produces four gold")
+	_expect_true(int(wave_economy.total_continuous_production.get(&"wood", 0)) > 0, "one-worker lumber camp produces continuously")
+	_expect_true(int(wave_economy.total_continuous_production.get(&"food", 0)) > 0, "full farm produces continuously")
+	_expect_true(int(wave_economy.total_continuous_production.get(&"gold", 0)) > 0, "full gold mine produces continuously")
 	_expect_true(not wave_economy.assignments_locked, "wave result unlocks assignments")
 	_expect_true((main.get_node("HUD/DaySetupPanel") as PanelContainer).visible, "interwave worker panel is visible")
 
