@@ -1,6 +1,6 @@
 version: 1
-stage: technical-setup
+stage: production
 engine: godot-4.7-development-validation
-updated: 2026-08-31
+updated: 2026-09-02
 current_goal: "实现第5波怪潮与第6～10波每波10%强度增长"
 active_story: ""
