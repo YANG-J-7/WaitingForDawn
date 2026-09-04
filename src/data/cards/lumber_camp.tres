@@ -15,5 +15,6 @@ build_cost_text = "35木"
 production_resource = &"wood"
 production_per_second = 2.0
 worker_slots = 2
+required_resource_site = &"forest"
 building_color = Color(0.333333, 0.541176, 0.313726, 1)
-description = "满岗位时每秒生产2木材。"
+description = "只能建在树林；农民运回主城后增加木材。"

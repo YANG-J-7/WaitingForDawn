@@ -43,25 +43,31 @@ func _test_free_wall_and_battle_shop() -> void:
 	var wall_payload: Variant = wall_hand.drag_payload()
 	_expect_true(map_surface.accepts_card_data(wall_payload), "map surface accepts wall card")
 	var inventory_before: int = inventory.card_count()
-	map_surface.drop_card_data(wall_payload, Vector2(790.0, 313.0))
-	_expect_equal(wall_manager.active_walls().size(), 0, "city edge rejects wall placement")
+	map_surface.drop_card_data(wall_payload, controller.city_target_position)
+	_expect_equal(wall_manager.active_walls().size(), 0, "city center rejects wall placement")
 	_expect_equal(inventory.card_count(), inventory_before, "invalid wall placement preserves card")
 	_expect_equal(RunEconomy.amount(&"wood"), 140, "invalid wall placement preserves materials")
-
-	map_surface.drop_card_data(wall_payload, Vector2(360.0, 370.0))
-	_expect_equal(wall_manager.active_walls().size(), 1, "legal off route point creates first wall")
-	var off_route_wall: BarrierWall = wall_manager.active_walls()[0]
-	_expect_true(not off_route_wall.blocks_route(313.0), "off route wall does not block path")
-	_expect_equal(RunEconomy.amount(&"wood"), 120, "first free wall spends twenty wood")
-	_expect_equal(RunEconomy.amount(&"stone"), 45, "first free wall spends fifteen stone")
-	_expect_equal(inventory.card_count(), inventory_before - 1, "first free wall consumes card")
 
 	var frame_budget: int = 180
 	while controller.enemies.is_empty() and frame_budget > 0:
 		await get_tree().process_frame
 		frame_budget -= 1
 	var tracked_enemy: EnemyActor = controller.enemies[0]
-	var enemy_x_before_shop: float = tracked_enemy.position.x
+	Engine.time_scale = 1.0
+	var route_direction: Vector2 = (controller.city_target_position - tracked_enemy.global_position).normalized()
+	var off_route_position: Vector2 = tracked_enemy.global_position.lerp(controller.city_target_position, 0.45)
+	off_route_position += Vector2(-route_direction.y, route_direction.x) * 90.0
+	off_route_position.x = clampf(off_route_position.x, 100.0, 860.0)
+	off_route_position.y = clampf(off_route_position.y, 150.0, 390.0)
+	map_surface.drop_card_data(wall_payload, off_route_position)
+	_expect_equal(wall_manager.active_walls().size(), 1, "legal off route point creates first wall")
+	var off_route_wall: BarrierWall = wall_manager.active_walls()[0]
+	_expect_true(not off_route_wall.blocks_segment(tracked_enemy.global_position, controller.city_target_position), "off route wall does not block tracked path")
+	_expect_equal(RunEconomy.amount(&"wood"), 120, "first free wall spends twenty wood")
+	_expect_equal(RunEconomy.amount(&"stone"), 45, "first free wall spends fifteen stone")
+	_expect_equal(inventory.card_count(), inventory_before - 1, "first free wall consumes card")
+
+	var distance_before_shop: float = tracked_enemy.global_position.distance_to(controller.city_target_position)
 	build_failure_panel.visible = true
 	shop_button.pressed.emit()
 	await get_tree().process_frame
@@ -70,7 +76,7 @@ func _test_free_wall_and_battle_shop() -> void:
 	_expect_true(main.get_node("HUD/DaySetupPanel").visible, "battle shop uses six card panel")
 	for _frame in range(8):
 		await get_tree().process_frame
-	_expect_true(tracked_enemy.position.x > enemy_x_before_shop, "enemy keeps moving while shop is open")
+	_expect_true(tracked_enemy.global_position.distance_to(controller.city_target_position) < distance_before_shop, "enemy keeps moving while shop is open")
 
 	var wall_offer_index: int = -1
 	for card_index in range(battle_shop.offered_cards.size()):
@@ -113,14 +119,16 @@ func _test_free_wall_and_battle_shop() -> void:
 	map_surface.drop_card_data(purchased_wall_payload, tracked_enemy.global_position)
 	_expect_equal(wall_manager.active_walls().size(), 1, "enemy occupied point rejects wall placement")
 	_expect_true(inventory.has_card(purchased_wall_id), "enemy overlap rejection preserves wall card")
-	map_surface.drop_card_data(purchased_wall_payload, Vector2(360.0, 370.0))
+	map_surface.drop_card_data(purchased_wall_payload, off_route_position)
 	_expect_equal(wall_manager.active_walls().size(), 1, "overlapping wall placement is rejected")
 	_expect_true(inventory.has_card(purchased_wall_id), "overlap rejection preserves purchased wall card")
 
-	map_surface.drop_card_data(purchased_wall_payload, Vector2(550.0, 313.0))
-	_expect_equal(wall_manager.active_walls().size(), 2, "second wall can be placed at another free point")
+	var route_wall_position: Vector2 = tracked_enemy.global_position.lerp(controller.city_target_position, 0.5)
+	map_surface.drop_card_data(purchased_wall_payload, route_wall_position)
+	_expect_equal(wall_manager.active_walls().size(), 2, "second wall can be placed at another free point (%s)" % (main.get_node("HUD/DaySetupPanel/Margin/Content/Controls/SetupHintLabel") as Label).text)
 	var route_wall: BarrierWall = wall_manager.active_walls()[1]
-	_expect_true(route_wall.blocks_route(313.0), "route wall participates in blocking")
+	_expect_true(route_wall.blocks_segment(tracked_enemy.global_position, controller.city_target_position), "route wall participates in blocking")
+	Engine.time_scale = 20.0
 	frame_budget = 700
 	var observed_route_target: bool = false
 	while route_wall.current_health == 400 and frame_budget > 0:

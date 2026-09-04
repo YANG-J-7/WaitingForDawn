@@ -30,6 +30,7 @@ func begin(next_wave_index: int, current_inventory_count: int) -> bool:
 	last_error = ""
 	offered_cards.assign(card_pool)
 	_shuffle_offers()
+	offered_cards.resize(6)
 	active = true
 	_emit_selection_changed()
 	return true

@@ -3,7 +3,16 @@ extends Control
 
 signal card_dropped(card_index: int, map_position: Vector2)
 
-@export var accepted_card_ids: PackedStringArray = PackedStringArray(["wall"])
+@export var accepted_card_ids: PackedStringArray = PackedStringArray([
+	"wall",
+	"arrow_tower",
+	"barracks",
+	"lumber_camp",
+	"farm",
+	"gold_mine",
+	"stone_mine",
+	"house",
+])
 var interaction_enabled: bool = true
 
 

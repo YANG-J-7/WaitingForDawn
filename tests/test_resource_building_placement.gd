@@ -33,8 +33,8 @@ func _run_test() -> void:
 	_expect_resource(&"stone", 60, "initial stone")
 	_expect_resource(&"iron", 30, "initial iron")
 	_expect_resource(&"gold", 20, "initial gold")
-	_expect_equal(RunEconomy.current_population, 6, "initial population")
-	_expect_equal(RunEconomy.population_capacity, 8, "initial population capacity")
+	_expect_equal(RunEconomy.current_population, 5, "initial population")
+	_expect_equal(RunEconomy.population_capacity, 5, "initial population capacity")
 	_expect_true((main.get_node("HUD/ResourcesBar/Margin/Values/WoodValue") as Label).text.contains("140"), "resource bar shows wood")
 
 	for card_index in [0, 1, 2, 3]:

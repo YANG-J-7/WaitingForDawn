@@ -39,8 +39,32 @@ func is_blocking() -> bool:
 	return active and current_health > 0
 
 
+func is_attackable() -> bool:
+	return is_blocking()
+
+
+func attackable_radius() -> float:
+	return 28.0
+
+
 func blocks_route(route_y: float, tolerance: float = 40.0) -> bool:
 	return is_blocking() and absf(global_position.y - route_y) <= tolerance
+
+
+func blocks_segment(origin: Vector2, destination: Vector2, tolerance: float = 40.0) -> bool:
+	if not is_blocking():
+		return false
+	var route: Vector2 = destination - origin
+	var route_length: float = route.length()
+	if route_length <= 0.001:
+		return false
+	var direction: Vector2 = route / route_length
+	var relative: Vector2 = global_position - origin
+	var forward_distance: float = relative.dot(direction)
+	if forward_distance < 0.0 or forward_distance > route_length:
+		return false
+	var perpendicular_distance: float = absf(relative.cross(direction))
+	return perpendicular_distance <= tolerance
 
 
 func apply_enemy_attack(base_damage: int, enemy_id: StringName) -> int:

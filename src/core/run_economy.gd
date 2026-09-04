@@ -22,8 +22,8 @@ const INITIAL_BALANCES: Dictionary = {
 	&"iron": 30,
 	&"gold": 20,
 }
-const INITIAL_POPULATION: int = 6
-const INITIAL_POPULATION_CAPACITY: int = 8
+const INITIAL_POPULATION: int = 5
+const INITIAL_POPULATION_CAPACITY: int = 5
 
 var balances: Dictionary = {}
 var current_population: int = 0
@@ -96,6 +96,31 @@ func add_resource(resource_id: StringName, amount_to_add: int) -> bool:
 	balances[resource_id] = amount(resource_id) + amount_to_add
 	_emit_resources_changed()
 	return true
+
+
+func change_population_capacity(delta: int) -> bool:
+	if delta == 0 or population_capacity + delta < 0:
+		return false
+	population_capacity += delta
+	_emit_resources_changed()
+	return true
+
+
+func try_train_farmer(gold_cost: int = 10) -> bool:
+	if gold_cost < 0 or current_population >= population_capacity:
+		return false
+	if not try_pay({&"gold": gold_cost}):
+		return false
+	current_population += 1
+	_emit_resources_changed()
+	return true
+
+
+func lose_population(amount_to_lose: int = 1) -> int:
+	var lost: int = mini(maxi(0, amount_to_lose), current_population)
+	current_population -= lost
+	_emit_resources_changed()
+	return lost
 
 
 func consume_food(required_food: int) -> int:

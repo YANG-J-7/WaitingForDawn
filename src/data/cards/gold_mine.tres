@@ -16,5 +16,6 @@ build_cost_text = "50木+10铁"
 production_resource = &"gold"
 production_per_second = 1.0
 worker_slots = 2
+required_resource_site = &"gold_vein"
 building_color = Color(0.721569, 0.533333, 0.180392, 1)
-description = "满岗位时每秒生产1金币。"
+description = "只能建在金矿脉；农民运回主城后增加金币。"

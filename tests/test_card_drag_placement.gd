@@ -22,6 +22,8 @@ func _run_test() -> void:
 	var card_grid := main.get_node("HUD/DaySetupPanel/Margin/Content/CardGrid") as GridContainer
 	var hand_bar := main.get_node("HUD/HandBar") as PanelContainer
 	var hand_slots := main.get_node("HUD/HandBar/Margin/Content/HandSlots") as HBoxContainer
+	var map_surface := main.get_node("HUD/MapDropSurface") as MapDropSurface
+	var resource_sites := main.get_node("ResourceSites")
 	var settlement_slots: Array[CardDropSlot] = [
 		main.get_node("HUD/SettlementSlot0") as CardDropSlot,
 		main.get_node("HUD/SettlementSlot1") as CardDropSlot,
@@ -51,15 +53,15 @@ func _run_test() -> void:
 	_expect_equal(RunState.phase, RunState.Phase.WAVE_COMBAT, "ready starts battle before hand appears")
 	_expect_true(hand_bar.visible, "battle start reveals bottom hand bar")
 	_expect_equal(hand_slots.get_child_count(), 4, "battle hand contains four selected cards")
-	_expect_true(settlement_slots[0].visible and defense_slot.visible, "battle exposes map deployment targets")
+	_expect_true(map_surface.visible, "battle exposes unified map deployment surface")
+	_expect_true(not settlement_slots[0].visible and not defense_slot.visible, "legacy fixed deployment targets stay hidden")
 	_expect_true(hand_bar.position.y >= 400.0, "hand bar is anchored at the bottom of the battle view")
 	var lumber_hand := hand_slots.get_node("HandCard_0") as HandCardSlot
 	_expect_true(lumber_hand.custom_minimum_size.y >= 80.0, "battle hand uses tall readable card slots")
 	var lumber_data: Variant = lumber_hand.drag_payload()
 	_expect_true(lumber_data is Dictionary, "hand card exposes drag payload")
-	_expect_true(settlement_slots[0].accepts_card_data(lumber_data), "resource hand card accepts settlement target")
-	_expect_true(not defense_slot.accepts_card_data(lumber_data), "resource hand card rejects defense target")
-	settlement_slots[0].drop_card_data(lumber_data)
+	_expect_true(map_surface.accepts_card_data(lumber_data), "resource hand card accepts map target")
+	map_surface.drop_card_data(lumber_data, (resource_sites.get_node("Forest") as Node2D).global_position)
 	_expect_equal(builder.building_count(), 1, "resource hand drop constructs building")
 	_expect_equal(RunEconomy.amount(&"wood"), 105, "resource hand drop uses atomic cost")
 	_expect_true(draft.is_card_locked(0), "successful resource drop locks selected card")
@@ -67,9 +69,8 @@ func _run_test() -> void:
 
 	var arrow_hand := hand_slots.get_node("HandCard_3") as HandCardSlot
 	var arrow_data: Variant = arrow_hand.drag_payload()
-	_expect_true(not settlement_slots[1].accepts_card_data(arrow_data), "arrow hand card rejects settlement target")
-	_expect_true(defense_slot.accepts_card_data(arrow_data), "arrow hand card accepts defense target")
-	defense_slot.drop_card_data(arrow_data)
+	_expect_true(map_surface.accepts_card_data(arrow_data), "arrow hand card accepts free map target")
+	map_surface.drop_card_data(arrow_data, Vector2(700.0, 270.0))
 	_expect_true(tower.visible and tower.enabled, "arrow hand drop constructs tower")
 	_expect_equal(RunEconomy.amount(&"wood"), 60, "arrow hand drop spends wood")
 	_expect_equal(RunEconomy.amount(&"stone"), 50, "arrow hand drop spends stone")
@@ -78,10 +79,10 @@ func _run_test() -> void:
 	var farm_hand := hand_slots.get_node("HandCard_1") as HandCardSlot
 	var farm_data: Variant = farm_hand.drag_payload()
 	var wood_before_occupied: int = RunEconomy.amount(&"wood")
-	_expect_true(not settlement_slots[0].accepts_card_data(farm_data), "occupied target rejects hand card")
+	map_surface.drop_card_data(farm_data, (resource_sites.get_node("Forest") as Node2D).global_position)
 	_expect_equal(hand_slots.get_child_count(), 2, "rejected target keeps all remaining hand cards")
 	_expect_equal(RunEconomy.amount(&"wood"), wood_before_occupied, "rejected target keeps resources")
-	settlement_slots[1].drop_card_data(farm_data)
+	map_surface.drop_card_data(farm_data, (resource_sites.get_node("Farmland") as Node2D).global_position)
 	_expect_equal(builder.building_count(), 2, "second legal hand drop constructs farm")
 	_expect_equal(hand_slots.get_child_count(), 1, "farm leaves hand only after success")
 
@@ -89,7 +90,7 @@ func _run_test() -> void:
 	var gold_data: Variant = gold_hand.drag_payload()
 	var wood_before_unaffordable: int = RunEconomy.amount(&"wood")
 	var iron_before_unaffordable: int = RunEconomy.amount(&"iron")
-	settlement_slots[2].drop_card_data(gold_data)
+	map_surface.drop_card_data(gold_data, (resource_sites.get_node("GoldVein") as Node2D).global_position)
 	_expect_true(not draft.is_card_locked(2), "unaffordable drop does not consume selected card")
 	_expect_equal(hand_slots.get_child_count(), 1, "unaffordable card remains in hand bar")
 	_expect_equal(RunEconomy.amount(&"wood"), wood_before_unaffordable, "unaffordable drop keeps wood")

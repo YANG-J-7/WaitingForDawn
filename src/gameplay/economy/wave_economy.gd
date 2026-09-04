@@ -29,6 +29,7 @@ var production_arrow_tower: ArrowTower
 var production_barracks: Barracks
 var production_progress: Dictionary = {}
 var total_continuous_production: Dictionary = {}
+var use_farmer_logistics: bool = false
 
 
 func _process(delta: float) -> void:
@@ -56,6 +57,8 @@ func refresh_jobs(
 		next_labels[&"barracks"] = "兵营"
 	for building in builder.placed_buildings():
 		if not is_instance_valid(building) or building.definition == null:
+			continue
+		if building.definition.worker_slots <= 0:
 			continue
 		var job_id: StringName = building.definition.card_id
 		next_order.append(job_id)
@@ -150,6 +153,8 @@ func settle_wave(wave_index: int, _builder: SettlementBuilder) -> bool:
 
 func advance_production(delta: float) -> Dictionary:
 	var produced_resources: Dictionary = {}
+	if use_farmer_logistics:
+		return produced_resources
 	if delta <= 0.0 or production_builder == null:
 		return produced_resources
 	if RunState.phase not in [
@@ -195,6 +200,29 @@ func advance_production(delta: float) -> Dictionary:
 	if not produced_resources.is_empty():
 		production_tick.emit(produced_resources.duplicate(true))
 	return produced_resources
+
+
+func record_farmer_delivery(resource_id: StringName, amount: int) -> void:
+	if amount <= 0:
+		return
+	total_continuous_production[resource_id] = int(total_continuous_production.get(resource_id, 0)) + amount
+	production_tick.emit({resource_id: amount})
+
+
+func refresh_population_totals() -> void:
+	_recalculate_totals()
+	var overflow: int = maxi(0, assigned_population - RunEconomy.current_population)
+	for index in range(job_order.size() - 1, -1, -1):
+		if overflow <= 0:
+			break
+		var job_id: StringName = job_order[index]
+		var assigned: int = int(worker_assignments.get(job_id, 0))
+		var removed: int = mini(assigned, overflow)
+		worker_assignments[job_id] = assigned - removed
+		overflow -= removed
+	_recalculate_totals()
+	_apply_assignments_to_entities()
+	_emit_assignments_changed()
 
 
 func reset(builder: SettlementBuilder) -> void:

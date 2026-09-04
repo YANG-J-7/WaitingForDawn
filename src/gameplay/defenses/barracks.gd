@@ -2,6 +2,7 @@ class_name Barracks
 extends Node2D
 
 signal guard_roster_changed(active_count: int, assigned_workers: int)
+signal destroyed(barracks: Barracks)
 
 const GUARD_SCENE: PackedScene = preload("res://src/gameplay/defenses/barracks_guard.tscn")
 
@@ -37,6 +38,29 @@ func build(card: OpeningCardDefinition) -> bool:
 
 func is_built() -> bool:
 	return active and current_health > 0
+
+
+func is_attackable() -> bool:
+	return is_built()
+
+
+func attackable_radius() -> float:
+	return 42.0
+
+
+func apply_enemy_attack(base_damage: int, _enemy_id: StringName) -> int:
+	if not is_built() or base_damage <= 0:
+		return 0
+	var final_damage: int = maxi(1, floori(float(base_damage) * 100.0 / (100.0 + float(armor))))
+	var applied: int = mini(current_health, final_damage)
+	current_health -= applied
+	if current_health == 0:
+		active = false
+		visible = false
+		_clear_guards()
+		destroyed.emit(self)
+	queue_redraw()
+	return applied
 
 
 func set_assigned_workers(worker_count: int) -> void:
@@ -141,3 +165,6 @@ func _draw() -> void:
 	]), Color("9b604d"))
 	draw_rect(Rect2(-8.0, 2.0, 16.0, 20.0), Color("2e3038"))
 	draw_string(ThemeDB.fallback_font, Vector2(-22.0, 39.0), "兵营", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color.WHITE)
+	var health_ratio: float = float(current_health) / float(maximum_health)
+	draw_rect(Rect2(-28, -52, 56, 4), Color("2b1d25"))
+	draw_rect(Rect2(-28, -52, 56 * health_ratio, 4), Color("7ecf75"))

@@ -17,6 +17,7 @@ func _run_test() -> void:
 	var draft: OpeningDraft = main.get_node("OpeningDraft") as OpeningDraft
 	var builder: SettlementBuilder = main.get_node("SettlementBuilder") as SettlementBuilder
 	var wave_economy: WaveEconomy = main.get_node("WaveEconomy") as WaveEconomy
+	var farmer_manager := main.get_node("FarmerManager") as FarmerManager
 	var start_button := main.get_node("HUD/BottomPanel/Margin/Content/Buttons/StartButton") as Button
 	var card_grid := main.get_node("HUD/DaySetupPanel/Margin/Content/CardGrid") as GridContainer
 	var defense_slot := main.get_node("HUD/DefenseSlotButton") as Button
@@ -32,6 +33,7 @@ func _run_test() -> void:
 
 	start_button.pressed.emit()
 	wave_economy.set_process(false)
+	farmer_manager.set_process(false)
 	for card_index in [0, 1, 2, 3]:
 		(card_grid.get_child(card_index) as Button).pressed.emit()
 
@@ -41,23 +43,30 @@ func _run_test() -> void:
 	(card_grid.get_child(0) as Button).pressed.emit()
 	settlement_slots[2].pressed.emit()
 	_expect_equal(builder.building_count(), 3, "three resource buildings are constructed during day setup")
-	_expect_equal(wave_economy.assigned_population, 6, "new buildings receive workers immediately")
+	_expect_equal(wave_economy.assigned_population, 5, "five starting farmers receive jobs immediately")
 	_expect_equal(draft.offered_cards[0].production_per_second, 2.0, "lumber rate is data driven")
 	_expect_equal(draft.offered_cards[1].production_per_second, 2.0, "farm rate is data driven")
 	_expect_equal(draft.offered_cards[2].production_per_second, 1.0, "gold mine rate is data driven")
 
-	var produced: Dictionary = wave_economy.advance_production(1.0)
-	_expect_equal(int(produced.get(&"wood", 0)), 2, "full lumber camp produces two wood per second")
-	_expect_equal(int(produced.get(&"food", 0)), 2, "full farm produces two food per second")
-	_expect_equal(int(produced.get(&"gold", 0)), 1, "full gold mine produces one gold per second")
-	_expect_resource(&"wood", 27, "wood enters balance before wave starts")
-	_expect_resource(&"food", 34, "food enters balance before wave starts")
-	_expect_resource(&"gold", 21, "gold enters balance before wave starts")
+	var produced: Dictionary = wave_economy.advance_production(20.0)
+	_expect_true(produced.is_empty(), "resource buildings do not deposit without farmer delivery")
+	_expect_resource(&"wood", 25, "outbound trip keeps wood unchanged")
+	farmer_manager.advance(10.0)
+	farmer_manager.advance(1.1)
+	_expect_resource(&"wood", 25, "loaded cargo is still outside city")
+	farmer_manager.advance(10.0)
+	_expect_resource(&"wood", 27, "lumber cargo enters balance after return")
+	_expect_resource(&"food", 36, "farmers deliver food to city")
+	_expect_resource(&"gold", 22, "miners deliver gold to city")
 	_expect_true("27" in wood_label.text, "resource bar updates immediately")
 
 	_expect_true(wave_economy.adjust_workers(&"gold_mine", -1), "one gold worker can be removed")
-	_expect_equal(int(wave_economy.advance_production(1.0).get(&"gold", 0)), 0, "half gold rate retains first fractional unit")
-	_expect_equal(int(wave_economy.advance_production(1.0).get(&"gold", 0)), 1, "half gold rate pays after two seconds")
+	var gold_before_trip: int = RunEconomy.amount(&"gold")
+	farmer_manager.advance(10.0)
+	farmer_manager.advance(1.1)
+	_expect_equal(RunEconomy.amount(&"gold"), gold_before_trip, "single miner does not pay before return")
+	farmer_manager.advance(10.0)
+	_expect_equal(RunEconomy.amount(&"gold"), gold_before_trip + 1, "single miner pays one gold after return")
 
 	var wood_before_settlement: int = RunEconomy.amount(&"wood")
 	var gold_before_settlement: int = RunEconomy.amount(&"gold")

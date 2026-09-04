@@ -12,6 +12,12 @@ signal guard_attack_requested(
 	enemy_id: StringName,
 	target_guard: BarracksGuard
 )
+signal world_target_attack_requested(
+	base_damage: int,
+	enemy_id: StringName,
+	target: Node2D
+)
+signal target_released(enemy: EnemyActor)
 signal health_changed(current_health: int, maximum_health: int)
 signal died(enemy: EnemyActor)
 
@@ -22,6 +28,7 @@ var target_position: Vector2 = Vector2.ZERO
 var city_target_position: Vector2 = Vector2.ZERO
 var barrier_target: BarrierWall
 var guard_target: BarracksGuard
+var world_target: Node2D
 var attack_target_kind: StringName = &"city"
 var active: bool = false
 var has_reached_target: bool = false
@@ -43,6 +50,7 @@ func configure(
 	target_position = city_target_position
 	barrier_target = null
 	guard_target = null
+	world_target = null
 	attack_target_kind = &"city"
 	spawn_index = entity_spawn_index
 	current_health = definition.maximum_health
@@ -73,7 +81,7 @@ func set_barrier(wall: BarrierWall) -> bool:
 		if parent_2d != null
 		else wall.global_position
 	)
-	if position.x > local_barrier_position.x + 16.0:
+	if not _is_forward_target(local_barrier_position):
 		return false
 	barrier_target = wall
 	target_position = local_barrier_position
@@ -94,7 +102,7 @@ func set_guard(guard: BarracksGuard) -> bool:
 		if parent_2d != null
 		else guard.global_position
 	)
-	if position.x > local_guard_position.x + 16.0:
+	if not _is_forward_target(local_guard_position):
 		return false
 	if not guard.engage_enemy(self):
 		return false
@@ -105,6 +113,25 @@ func set_guard(guard: BarracksGuard) -> bool:
 	attack_elapsed = 0.0
 	if not guard.defeated.is_connected(_on_guard_defeated):
 		guard.defeated.connect(_on_guard_defeated)
+	return true
+
+
+func set_world_target(target: Node2D) -> bool:
+	if target == null or not is_instance_valid(target) or not _target_is_attackable(target):
+		return false
+	if attack_target_kind == &"guard" and _has_valid_guard_target():
+		return false
+	var parent_2d := get_parent() as Node2D
+	var local_target_position: Vector2 = parent_2d.to_local(target.global_position) if parent_2d != null else target.global_position
+	if not _is_forward_target(local_target_position):
+		return false
+	barrier_target = null
+	guard_target = null
+	world_target = target
+	target_position = local_target_position
+	attack_target_kind = &"world"
+	has_reached_target = false
+	attack_elapsed = 0.0
 	return true
 
 
@@ -129,6 +156,9 @@ func _physics_process(delta: float) -> void:
 	if RunState.phase != RunState.Phase.WAVE_COMBAT:
 		return
 
+	if attack_target_kind == &"world" and _has_valid_world_target():
+		var parent_2d := get_parent() as Node2D
+		target_position = parent_2d.to_local(world_target.global_position) if parent_2d != null else world_target.global_position
 	if has_reached_target:
 		_process_attack(delta)
 		return
@@ -156,6 +186,9 @@ func _process_attack(delta: float) -> void:
 	):
 		_resume_to_city()
 		return
+	if attack_target_kind == &"world" and not _has_valid_world_target():
+		_resume_to_city()
+		return
 	attack_elapsed += delta
 	while attack_elapsed >= definition.attack_interval:
 		attack_elapsed -= definition.attack_interval
@@ -170,6 +203,15 @@ func _process_attack(delta: float) -> void:
 				barrier_target
 			)
 			if attack_target_kind != &"barrier":
+				return
+		elif attack_target_kind == &"world":
+			world_target_attack_requested.emit(
+				definition.base_damage,
+				definition.enemy_id,
+				world_target
+			)
+			if not _has_valid_world_target():
+				_resume_to_city()
 				return
 		else:
 			attack_requested.emit(definition.base_damage)
@@ -195,13 +237,32 @@ func _has_valid_guard_target() -> bool:
 	)
 
 
+func _has_valid_world_target() -> bool:
+	return world_target != null and is_instance_valid(world_target) and _target_is_attackable(world_target)
+
+
+func _target_is_attackable(target: Node2D) -> bool:
+	return target.has_method("is_attackable") and bool(target.call("is_attackable"))
+
+
 func _resume_to_city() -> void:
 	barrier_target = null
 	guard_target = null
+	world_target = null
 	target_position = city_target_position
 	attack_target_kind = &"city"
 	has_reached_target = false
 	attack_elapsed = 0.0
+	target_released.emit(self)
+
+
+func _is_forward_target(candidate_position: Vector2) -> bool:
+	var route: Vector2 = city_target_position - position
+	var route_length: float = route.length()
+	if route_length <= 0.001:
+		return false
+	var forward_distance: float = (candidate_position - position).dot(route / route_length)
+	return forward_distance >= -16.0 and forward_distance < route_length
 
 
 func _draw() -> void:

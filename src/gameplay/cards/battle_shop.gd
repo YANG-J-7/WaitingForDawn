@@ -25,6 +25,7 @@ func open_for_wave(wave_index: int) -> bool:
 		refresh_count = 0
 		last_error = ""
 		_shuffle_offers()
+		offered_cards.resize(6)
 	active = true
 	offers_changed.emit()
 	return true

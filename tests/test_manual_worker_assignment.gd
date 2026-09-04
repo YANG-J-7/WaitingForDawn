@@ -49,8 +49,8 @@ func _run_test() -> void:
 	_expect_equal(wave_economy.assigned_workers_for(&"arrow_tower"), 1, "auto assignment staffs arrow tower first")
 	_expect_equal(wave_economy.assigned_workers_for(&"lumber_camp"), 2, "auto assignment staffs lumber camp")
 	_expect_equal(wave_economy.assigned_workers_for(&"farm"), 2, "auto assignment staffs farm")
-	_expect_equal(wave_economy.assigned_workers_for(&"gold_mine"), 1, "remaining worker staffs gold mine")
-	_expect_equal(wave_economy.assigned_population, 6, "auto assignment uses all population")
+	_expect_equal(wave_economy.assigned_workers_for(&"gold_mine"), 0, "five starting farmers leave gold mine unstaffed")
+	_expect_equal(wave_economy.assigned_population, 5, "auto assignment uses all population")
 	_expect_equal(wave_economy.idle_population, 0, "auto assignment leaves no idle population")
 	var arrow_minus := job_rows.get_node("Job_arrow_tower/Controls/Minus") as Button
 	var arrow_plus := job_rows.get_node("Job_arrow_tower/Controls/Plus") as Button
@@ -60,16 +60,16 @@ func _run_test() -> void:
 	_expect_true(arrow_plus.custom_minimum_size.x >= 44.0, "plus touch target is at least forty-four")
 
 	_expect_true(not wave_economy.adjust_workers(&"gold_mine", 1), "population cap rejects extra worker")
-	_expect_equal(wave_economy.assigned_workers_for(&"gold_mine"), 1, "rejected adjustment keeps assignment")
+	_expect_equal(wave_economy.assigned_workers_for(&"gold_mine"), 0, "rejected adjustment keeps assignment")
 	lumber_minus.pressed.emit()
 	gold_plus.pressed.emit()
 	_expect_equal(wave_economy.assigned_workers_for(&"lumber_camp"), 1, "manual minus removes lumber worker")
-	_expect_equal(wave_economy.assigned_workers_for(&"gold_mine"), 2, "manual plus adds gold worker")
-	_expect_equal(wave_economy.assigned_population, 6, "manual reassignment preserves total cap")
+	_expect_equal(wave_economy.assigned_workers_for(&"gold_mine"), 1, "manual plus adds gold worker")
+	_expect_equal(wave_economy.assigned_population, 5, "manual reassignment preserves total cap")
 
 	auto_button.pressed.emit()
 	_expect_equal(wave_economy.assigned_workers_for(&"lumber_camp"), 2, "auto button restores lumber workers")
-	_expect_equal(wave_economy.assigned_workers_for(&"gold_mine"), 1, "auto button restores gold worker")
+	_expect_equal(wave_economy.assigned_workers_for(&"gold_mine"), 0, "auto button restores defense-first distribution")
 	lumber_minus.pressed.emit()
 	gold_plus.pressed.emit()
 	ready_button.pressed.emit()

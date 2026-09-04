@@ -9,7 +9,7 @@ display_name = "箭塔"
 base_damage = 12
 armor_penetration = 0
 attack_interval = 0.8
-attack_range_tiles = 4.5
+attack_range_tiles = 8.0
 counter_multipliers = {
 &"wolf": 1.35
 }

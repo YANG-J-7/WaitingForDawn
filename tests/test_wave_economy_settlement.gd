@@ -43,7 +43,7 @@ func _run_test() -> void:
 	_expect_equal(buildings[0].assigned_workers, 2, "lumber camp receives two workers")
 	_expect_equal(buildings[1].assigned_workers, 2, "farm receives two workers")
 	_expect_equal(wave_economy.assigned_population, 5, "five population are assigned")
-	_expect_equal(wave_economy.idle_population, 1, "one population remains idle")
+	_expect_equal(wave_economy.idle_population, 0, "all five population are assigned")
 
 	var frame_budget: int = 900
 	while RunState.phase == RunState.Phase.WAVE_COMBAT and frame_budget > 0:
@@ -56,9 +56,9 @@ func _run_test() -> void:
 	_expect_true(not RunEconomy.is_hungry, "sufficient food avoids hunger")
 	_expect_true(wave_economy.last_summary.contains("持续生产"), "summary explains continuous production")
 	_expect_true(not wave_economy.last_summary.contains("+10木"), "summary no longer grants wave-end lumber")
-	_expect_true(wave_economy.last_summary.contains("消耗6/6食"), "summary shows food consumption")
+	_expect_true(wave_economy.last_summary.contains("消耗5/5食"), "summary shows food consumption")
 	var status_label: Label = main.get_node("HUD/BottomPanel/Margin/Content/StatusLabel") as Label
-	_expect_true(status_label.text.contains("岗位5/6"), "wave result UI shows worker summary")
+	_expect_true(status_label.text.contains("岗位5/5"), "wave result UI shows worker summary")
 
 	var wood_after_first_settlement: int = RunEconomy.amount(&"wood")
 	var food_after_first_settlement: int = RunEconomy.amount(&"food")
@@ -77,9 +77,9 @@ func _run_test() -> void:
 	wave_economy.set_process(false)
 	_expect_equal(builder.placed_buildings()[0].assigned_workers, 1, "single worker is assigned to gold mine")
 	wave_economy.advance_production(2.0)
-	_expect_resource(&"gold", 21, "half staffed gold mine accumulates one gold over two seconds")
+	_expect_resource(&"gold", 20, "farmer logistics mode disables direct mine payout")
 	_expect_true(wave_economy.settle_wave(1, builder), "new run can settle wave one")
-	_expect_resource(&"gold", 21, "wave settlement does not add gold")
+	_expect_resource(&"gold", 20, "wave settlement does not add gold")
 	_expect_resource(&"food", 31, "single population consumes one food")
 
 	RunEconomy.consume_food(31)

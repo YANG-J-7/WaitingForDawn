@@ -72,6 +72,7 @@ func _test_barracks_battle_flow() -> void:
 	var barrier_slot := main.get_node("HUD/BarrierSlotButton") as CardDropSlot
 	var settlement_slot := main.get_node("HUD/SettlementSlot0") as CardDropSlot
 	var hand_slots := main.get_node("HUD/HandBar/Margin/Content/HandSlots") as HBoxContainer
+	var map_surface := main.get_node("HUD/MapDropSurface") as MapDropSurface
 
 	start_button.pressed.emit()
 	for card_index in [0, 3, 4, 5]:
@@ -79,25 +80,25 @@ func _test_barracks_battle_flow() -> void:
 	_expect_true(not barracks_slot.visible, "barracks slot stays hidden during card selection")
 	ready_button.pressed.emit()
 	await get_tree().process_frame
-	_expect_true(barracks_slot.visible, "battle reveals barracks slot")
+	_expect_true(not barracks_slot.visible and map_surface.visible, "battle uses free map placement instead of barracks slot")
 	var barracks_hand := hand_slots.get_node("HandCard_5") as HandCardSlot
 	var arrow_hand := hand_slots.get_node("HandCard_3") as HandCardSlot
 	var barracks_payload: Variant = barracks_hand.drag_payload()
 	var arrow_payload: Variant = arrow_hand.drag_payload()
-	_expect_true(barracks_slot.accepts_card_data(barracks_payload), "barracks slot accepts barracks card")
+	_expect_true(map_surface.accepts_card_data(barracks_payload), "map accepts barracks card")
 	_expect_true(not defense_slot.accepts_card_data(barracks_payload), "tower slot rejects barracks card")
 	_expect_true(not barrier_slot.accepts_card_data(barracks_payload), "barrier slot rejects barracks card")
 	_expect_true(not settlement_slot.accepts_card_data(barracks_payload), "settlement slot rejects barracks card")
 
 	var inventory_before: int = inventory.card_count()
 	RunEconomy.try_pay({&"wood": 100})
-	barracks_slot.drop_card_data(barracks_payload)
+	map_surface.drop_card_data(barracks_payload, Vector2(620.0, 360.0))
 	_expect_true(not barracks.is_built(), "insufficient resources do not create barracks")
 	_expect_equal(inventory.card_count(), inventory_before, "failed barracks build preserves hand card")
 	_expect_true(main.get_node("HUD/BuildFailurePanel").visible, "failed barracks build shows shortage popup")
 	RunEconomy.add_resource(&"wood", 100)
 
-	barracks_slot.drop_card_data(barracks_payload)
+	map_surface.drop_card_data(barracks_payload, Vector2(620.0, 360.0))
 	await get_tree().process_frame
 	_expect_true(barracks.is_built(), "barracks becomes active after drop")
 	_expect_equal(RunEconomy.amount(&"wood"), 85, "barracks construction spends fifty five wood")
@@ -107,8 +108,8 @@ func _test_barracks_battle_flow() -> void:
 	_expect_equal(economy.job_capacity(&"barracks"), 2, "barracks contributes two job slots")
 	_expect_equal(economy.assigned_workers_for(&"barracks"), 2, "auto assignment staffs both barracks jobs")
 	_expect_equal(barracks.active_guards().size(), 2, "two assigned workers spawn two guards")
-	_expect_true("2 / 2" in barracks_slot.text, "barracks slot displays active guard count")
-	defense_slot.drop_card_data(arrow_payload)
+	_expect_equal(barracks.active_guards().size(), 2, "barracks visual roster reflects active guard count")
+	map_surface.drop_card_data(arrow_payload, Vector2(650.0, 180.0))
 	await get_tree().process_frame
 
 	var observed_guard_target: bool = false

@@ -9,8 +9,8 @@ const DamageRules = preload("res://src/gameplay/combat/damage_calculator.gd")
 
 @export var wave_definition: WaveDefinition
 @export var wave_definitions: Array[WaveDefinition] = []
-@export var spawn_position: Vector2 = Vector2(96.0, 313.0)
-@export var city_target_position: Vector2 = Vector2(782.0, 313.0)
+@export var playable_bounds: Rect2 = Rect2(64.0, 126.0, 832.0, 288.0)
+@export var city_target_position: Vector2 = Vector2(480.0, 270.0)
 
 var spawning: bool = false
 var spawned_count: int = 0
@@ -21,6 +21,11 @@ var active_wave_index: int = 0
 var active_enemy_count: int = 0
 var barrier_walls: Array[BarrierWall] = []
 var barracks: Barracks
+var spawn_history: Array[Vector2] = []
+var spawn_random := RandomNumberGenerator.new()
+var spawn_side_order: Array[int] = []
+var world_targets: Array[Node2D] = []
+var target_scan_elapsed: float = 0.0
 
 
 func _ready() -> void:
@@ -28,18 +33,19 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if not spawning or active_wave_definition == null:
-		return
 	if RunState.phase != RunState.Phase.WAVE_COMBAT:
 		return
-
-	spawn_elapsed += delta
-	while spawned_count < active_enemy_count and spawn_elapsed >= active_wave_definition.spawn_interval:
-		spawn_elapsed -= active_wave_definition.spawn_interval
-		_spawn_enemy()
-
-	if spawned_count >= active_enemy_count:
-		spawning = false
+	if spawning and active_wave_definition != null:
+		spawn_elapsed += delta
+		while spawned_count < active_enemy_count and spawn_elapsed >= active_wave_definition.spawn_interval:
+			spawn_elapsed -= active_wave_definition.spawn_interval
+			_spawn_enemy()
+		if spawned_count >= active_enemy_count:
+			spawning = false
+	target_scan_elapsed += delta
+	if target_scan_elapsed >= 0.1:
+		target_scan_elapsed = 0.0
+		_assign_defensive_targets()
 
 
 func start_first_wave() -> bool:
@@ -57,6 +63,9 @@ func start_wave(wave_index: int) -> bool:
 	spawning = true
 	spawned_count = 0
 	spawn_elapsed = definition.spawn_interval
+	spawn_history.clear()
+	spawn_random.seed = absi(hash("%s:wave:%d:perimeter" % [RunState.run_id, wave_index]))
+	_refill_spawn_sides()
 	return true
 
 
@@ -67,6 +76,9 @@ func reset_wave() -> void:
 	active_wave_definition = null
 	active_wave_index = 0
 	active_enemy_count = 0
+	spawn_history.clear()
+	spawn_side_order.clear()
+	target_scan_elapsed = 0.0
 	for enemy in enemies:
 		if is_instance_valid(enemy):
 			enemy.queue_free()
@@ -96,6 +108,11 @@ func set_barracks(value: Barracks) -> void:
 	_assign_defensive_targets()
 
 
+func set_world_targets(targets: Array[Node2D]) -> void:
+	world_targets = targets.duplicate()
+	_assign_defensive_targets()
+
+
 func get_priority_target(origin: Vector2, attack_range_pixels: float) -> EnemyActor:
 	var best_target: EnemyActor = null
 	var best_city_distance: float = INF
@@ -117,20 +134,49 @@ func get_priority_target(origin: Vector2, attack_range_pixels: float) -> EnemyAc
 func _spawn_enemy() -> void:
 	var enemy: EnemyActor = ENEMY_SCENE.instantiate() as EnemyActor
 	add_child(enemy)
+	var current_spawn_position: Vector2 = _next_spawn_position()
+	spawn_history.append(current_spawn_position)
 	enemy.configure(
 		active_wave_definition.enemy_definition,
-		spawn_position,
+		current_spawn_position,
 		city_target_position,
 		spawned_count
 	)
 	enemy.attack_requested.connect(_on_enemy_attack_requested)
 	enemy.barrier_attack_requested.connect(_on_enemy_barrier_attack_requested)
 	enemy.guard_attack_requested.connect(_on_enemy_guard_attack_requested)
+	enemy.world_target_attack_requested.connect(_on_enemy_world_target_attack_requested)
+	enemy.target_released.connect(_on_enemy_target_released)
 	enemy.died.connect(_on_enemy_died)
 	enemies.append(enemy)
 	spawned_count += 1
 	_assign_defensive_targets()
 	enemy_count_changed.emit(enemies.size(), spawned_count)
+
+
+func _next_spawn_position() -> Vector2:
+	if spawn_side_order.is_empty():
+		_refill_spawn_sides()
+	var side: int = spawn_side_order.pop_front()
+	var margin: float = 28.0
+	match side:
+		0:
+			return Vector2(spawn_random.randf_range(playable_bounds.position.x + margin, playable_bounds.end.x - margin), playable_bounds.position.y)
+		1:
+			return Vector2(playable_bounds.end.x, spawn_random.randf_range(playable_bounds.position.y + margin, playable_bounds.end.y - margin))
+		2:
+			return Vector2(spawn_random.randf_range(playable_bounds.position.x + margin, playable_bounds.end.x - margin), playable_bounds.end.y)
+		_:
+			return Vector2(playable_bounds.position.x, spawn_random.randf_range(playable_bounds.position.y + margin, playable_bounds.end.y - margin))
+
+
+func _refill_spawn_sides() -> void:
+	spawn_side_order = [0, 1, 2, 3]
+	for index in range(spawn_side_order.size() - 1, 0, -1):
+		var swap_index: int = spawn_random.randi_range(0, index)
+		var value: int = spawn_side_order[index]
+		spawn_side_order[index] = spawn_side_order[swap_index]
+		spawn_side_order[swap_index] = value
 
 
 func _on_enemy_attack_requested(base_damage: int) -> void:
@@ -164,6 +210,22 @@ func _on_enemy_guard_attack_requested(
 	target_guard.apply_enemy_attack(base_damage, enemy_id)
 
 
+func _on_enemy_world_target_attack_requested(
+	base_damage: int,
+	enemy_id: StringName,
+	target: Node2D
+) -> void:
+	if RunState.phase != RunState.Phase.WAVE_COMBAT:
+		return
+	if target == null or not is_instance_valid(target) or not target.has_method("apply_enemy_attack"):
+		return
+	target.call("apply_enemy_attack", base_damage, enemy_id)
+
+
+func _on_enemy_target_released(_enemy: EnemyActor) -> void:
+	_assign_defensive_targets.call_deferred()
+
+
 func _on_enemy_died(enemy: EnemyActor) -> void:
 	enemies.erase(enemy)
 	enemy_count_changed.emit(enemies.size(), spawned_count)
@@ -188,28 +250,68 @@ func _assign_defensive_targets() -> void:
 		if enemy.attack_target_kind == &"guard" and enemy.guard_target != null:
 			if is_instance_valid(enemy.guard_target) and enemy.guard_target.is_active():
 				continue
+		if enemy.attack_target_kind == &"barrier" and enemy.barrier_target != null:
+			if is_instance_valid(enemy.barrier_target) and enemy.barrier_target.is_blocking():
+				continue
+		if enemy.attack_target_kind == &"world" and enemy.world_target != null:
+			if is_instance_valid(enemy.world_target) and enemy.world_target.has_method("is_attackable") and bool(enemy.world_target.call("is_attackable")):
+				continue
 		var guard: BarracksGuard = null
 		if barracks != null and is_instance_valid(barracks) and barracks.is_built():
 			guard = barracks.available_guard()
 		if guard != null and enemy.set_guard(guard):
 			continue
-		var wall: BarrierWall = _nearest_forward_route_wall(enemy)
-		if wall != null:
-			enemy.set_barrier(wall)
+		var target: Node2D = _nearest_forward_world_target(enemy)
+		if target is BarrierWall:
+			enemy.set_barrier(target as BarrierWall)
+		elif target != null:
+			enemy.set_world_target(target)
 
 
 func _nearest_forward_route_wall(enemy: EnemyActor) -> BarrierWall:
 	var best_wall: BarrierWall = null
-	var best_x: float = INF
+	var best_forward_distance: float = INF
+	var route: Vector2 = city_target_position - enemy.global_position
+	if route.length() <= 0.001:
+		return null
+	var direction: Vector2 = route.normalized()
 	for wall in barrier_walls:
-		if not is_instance_valid(wall) or not wall.blocks_route(city_target_position.y):
+		if not is_instance_valid(wall) or not wall.blocks_segment(enemy.global_position, city_target_position):
 			continue
-		if wall.global_position.x + 16.0 < enemy.global_position.x:
-			continue
-		if wall.global_position.x < best_x:
+		var forward_distance: float = (wall.global_position - enemy.global_position).dot(direction)
+		if forward_distance < best_forward_distance:
 			best_wall = wall
-			best_x = wall.global_position.x
+			best_forward_distance = forward_distance
 	return best_wall
+
+
+func _nearest_forward_world_target(enemy: EnemyActor) -> Node2D:
+	var candidates: Array[Node2D] = world_targets.duplicate()
+	for wall in barrier_walls:
+		if is_instance_valid(wall) and wall not in candidates:
+			candidates.append(wall)
+	var route: Vector2 = city_target_position - enemy.global_position
+	var route_length: float = route.length()
+	if route_length <= 0.001:
+		return null
+	var direction: Vector2 = route / route_length
+	var best_target: Node2D = null
+	var best_forward_distance: float = INF
+	for candidate in candidates:
+		if not is_instance_valid(candidate) or not candidate.has_method("is_attackable") or not bool(candidate.call("is_attackable")):
+			continue
+		var relative: Vector2 = candidate.global_position - enemy.global_position
+		var forward_distance: float = relative.dot(direction)
+		if forward_distance <= 0.0 or forward_distance >= route_length:
+			continue
+		var radius: float = float(candidate.call("attackable_radius")) if candidate.has_method("attackable_radius") else 24.0
+		var perpendicular_distance: float = absf(relative.cross(direction))
+		if perpendicular_distance > radius + 14.0:
+			continue
+		if forward_distance < best_forward_distance:
+			best_target = candidate
+			best_forward_distance = forward_distance
+	return best_target
 
 
 func _definition_for_wave(wave_index: int) -> WaveDefinition:

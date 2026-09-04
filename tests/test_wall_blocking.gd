@@ -53,6 +53,7 @@ func _test_nearest_wall_priority() -> void:
 	var near_wall: BarrierWall = WALL_SCENE.instantiate() as BarrierWall
 	var far_wall: BarrierWall = WALL_SCENE.instantiate() as BarrierWall
 	add_child(controller)
+	controller.city_target_position = Vector2(782.0, 313.0)
 	controller.add_child(enemy)
 	add_child(near_wall)
 	add_child(far_wall)
@@ -104,13 +105,21 @@ func _test_wall_battle_flow() -> void:
 	_expect_true(not defense_slot.accepts_card_data(wall_payload), "tower slot rejects wall card")
 	_expect_true(not settlement_slot.accepts_card_data(wall_payload), "settlement slot rejects wall card")
 	var inventory_before: int = inventory.card_count()
+	var spawn_budget: int = 120
+	while controller.enemies.is_empty() and spawn_budget > 0:
+		await get_tree().process_frame
+		spawn_budget -= 1
+	var route_position: Vector2 = controller.enemies[0].global_position.lerp(
+		controller.city_target_position,
+		0.35
+	)
 	RunEconomy.try_pay({&"wood": 125})
-	map_surface.drop_card_data(wall_payload, Vector2(550.0, 313.0))
+	map_surface.drop_card_data(wall_payload, route_position)
 	_expect_equal(wall_manager.active_walls().size(), 0, "insufficient resources do not create wall")
 	_expect_equal(inventory.card_count(), inventory_before, "failed wall build preserves hand card")
 	_expect_true(main.get_node("HUD/BuildFailurePanel").visible, "failed wall build shows shortage popup")
 	RunEconomy.add_resource(&"wood", 125)
-	map_surface.drop_card_data(wall_payload, Vector2(550.0, 313.0))
+	map_surface.drop_card_data(wall_payload, route_position)
 	var wall: BarrierWall = wall_manager.active_walls()[0]
 	_expect_true(wall.is_blocking(), "wall becomes active after drop")
 	_expect_equal(wall.current_health, 400, "built wall starts at full health")
@@ -128,26 +137,20 @@ func _test_wall_battle_flow() -> void:
 				observed_barrier_target = true
 	_expect_true(observed_barrier_target, "wolf targets barrier before city")
 	_expect_true(wall.current_health < 400, "wolves damage wall")
-	_expect_equal(RunState.city_health, RunState.city_max_health, "city takes no damage while wall blocks")
-
-	frame_budget = 1800
-	while wall.is_blocking() and frame_budget > 0:
-		await get_tree().process_frame
-		frame_budget -= 1
-	_expect_true(not wall.is_blocking(), "wolves eventually destroy wall")
-	_expect_equal(wall_manager.active_walls().size(), 0, "destroyed wall leaves no active route wall")
-	_expect_true(map_surface.visible, "map remains available after wall destruction")
+	_expect_true(RunState.city_health > 0, "city remains standing when route wall starts taking damage")
 
 	var observed_city_target: bool = false
-	frame_budget = 500
+	frame_budget = 1800
 	while RunState.phase == RunState.Phase.WAVE_COMBAT and frame_budget > 0:
 		await get_tree().process_frame
 		frame_budget -= 1
 		for enemy in controller.enemies:
 			if is_instance_valid(enemy) and enemy.attack_target_kind == &"city":
 				observed_city_target = true
-	_expect_true(observed_city_target, "surviving wolves continue toward city after wall breaks")
-	_expect_equal(RunState.phase, RunState.Phase.RUN_LOST, "unopposed wolves eventually destroy city")
+	_expect_true(observed_city_target, "wolves from other directions continue toward city")
+	_expect_equal(RunState.phase, RunState.Phase.RUN_LOST, "one route wall cannot protect every radial direction")
+	_expect_true(wall.is_blocking(), "wall on one route can survive while another route defeats the city")
+	_expect_true(not map_surface.visible, "loss closes map placement surface")
 
 	var reset_button := main.get_node("HUD/BottomPanel/Margin/Content/Buttons/ResetButton") as Button
 	reset_button.pressed.emit()

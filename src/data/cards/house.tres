@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="OpeningCardDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/cards/card_definition.gd" id="1_card"]
+
+[resource]
+script = ExtResource("1_card")
+card_id = &"house"
+display_name = "民屋"
+category = "population"
+shop_price = 7
+build_costs = {
+&"stone": 15,
+&"wood": 45
+}
+build_cost_text = "45木+15石"
+population_capacity_bonus = 2
+maximum_health = 240
+armor = 8
+building_color = Color(0.584314, 0.431373, 0.301961, 1)
+description = "可建在空地，建成后增加2人口容量。"

@@ -2,6 +2,7 @@ class_name ArrowTower
 extends Node2D
 
 signal attack_performed(target_spawn_index: int, final_damage: int, applied_damage: int, killed: bool)
+signal destroyed(tower: ArrowTower)
 
 const TILE_SIZE: float = 32.0
 const DamageRules = preload("res://src/gameplay/combat/damage_calculator.gd")
@@ -15,6 +16,9 @@ var total_damage: int = 0
 var kill_count: int = 0
 var first_target_spawn_index: int = -1
 var first_final_damage: int = 0
+var maximum_health: int = 220
+var current_health: int = 220
+var armor: int = 8
 
 @onready var target_provider: WaveController = get_node(target_provider_path) as WaveController
 
@@ -49,6 +53,29 @@ func reset_statistics() -> void:
 	kill_count = 0
 	first_target_spawn_index = -1
 	first_final_damage = 0
+	current_health = maximum_health
+
+
+func is_attackable() -> bool:
+	return visible and current_health > 0
+
+
+func attackable_radius() -> float:
+	return 34.0
+
+
+func apply_enemy_attack(base_damage: int, _enemy_id: StringName) -> int:
+	if not is_attackable() or base_damage <= 0:
+		return 0
+	var final_damage: int = DamageRules.physical_damage(base_damage, armor)
+	var applied: int = mini(current_health, final_damage)
+	current_health -= applied
+	if current_health == 0:
+		visible = false
+		enabled = false
+		destroyed.emit(self)
+	queue_redraw()
+	return applied
 
 
 func _attack(target: EnemyActor) -> void:
@@ -81,3 +108,6 @@ func _draw() -> void:
 	draw_line(Vector2(0.0, -23.0), Vector2(18.0, -23.0), Color("d8e7ed"), 3.0)
 	if definition != null:
 		draw_arc(Vector2.ZERO, definition.attack_range_tiles * TILE_SIZE, 0.0, TAU, 64, Color(0.42, 0.7, 0.78, 0.18), 1.0)
+		var health_ratio: float = float(current_health) / float(maximum_health)
+		draw_rect(Rect2(-18, -38, 36, 4), Color("2b1d25"))
+		draw_rect(Rect2(-18, -38, 36 * health_ratio, 4), Color("7ecf75"))

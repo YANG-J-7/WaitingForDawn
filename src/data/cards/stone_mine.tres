@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="OpeningCardDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/cards/card_definition.gd" id="1_card"]
+
+[resource]
+script = ExtResource("1_card")
+card_id = &"stone_mine"
+display_name = "石矿场"
+category = "resource"
+shop_price = 7
+build_costs = {
+&"iron": 8,
+&"wood": 40
+}
+build_cost_text = "40木+8铁"
+production_resource = &"stone"
+production_per_second = 2.0
+worker_slots = 2
+required_resource_site = &"stone_deposit"
+building_color = Color(0.454902, 0.490196, 0.541176, 1)
+description = "只能建在石矿脉；农民运回主城后增加石材。"

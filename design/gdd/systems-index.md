@@ -10,6 +10,7 @@
 | 战斗手牌拖放部署 | [card-drag-placement-system.md](card-drag-placement-system.md) | 0.7 跨波手牌、自由城墙与兵营格灰盒通过 | 扩展正式卡池并验证微信触屏操作 |
 | 兵营守卫与近战拦截 | [barracks-guard-system.md](barracks-guard-system.md) | 0.1 Godot灰盒通过 | 后续验证多敌人压力、岗位取舍与正式移动表现 |
 | 自由城墙与战斗商店 | [free-wall-battle-shop-system.md](free-wall-battle-shop-system.md) | 0.1 Godot灰盒通过 | 验证微信触控、多墙平衡和实时商店注意力压力 |
+| 中心聚落、资源地块与农民运输 | [radial-settlement-logistics-system.md](radial-settlement-logistics-system.md) | 0.1 规则基线；Story-015开发中 | 先验证中心地图、外围出生、资源点和自由建筑，再实现农民运输与沿途受击 |
 
 ## 后续候选系统
 
