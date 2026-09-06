@@ -54,6 +54,8 @@ tools/          本地检查和构建脚本
 
 ## 测试策略
 
+2026-09-06更新：当前Windows开发与回归使用Godot 4.7 Standard，已有命令行环境；以下“无命令行环境”描述是初始化历史。执行 `godot --headless --editor --quit --path .` 注册新类，然后用 `tools/run_tests.ps1 -GodotPath <本机路径>` 跑全部测试。微信发布版本仍待ADR-0001复核，不能将桌面验证当作微信兼容结论。
+
 - 当前无Godot命令行环境，先使用 `tools/check_project.ps1` 做结构与配置冒烟检查。
 - 安装Godot 4.6.3后，第一条运行验证为 `godot --headless --path . --editor --quit`。
 - 纯公式与状态转换优先写成无场景依赖的GDScript并增加headless测试。

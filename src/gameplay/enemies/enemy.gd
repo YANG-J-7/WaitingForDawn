@@ -156,9 +156,15 @@ func _physics_process(delta: float) -> void:
 	if RunState.phase != RunState.Phase.WAVE_COMBAT:
 		return
 
+	if (attack_target_kind == &"world" and not _has_valid_world_target()) or (attack_target_kind == &"guard" and not _has_valid_guard_target()) or (attack_target_kind == &"barrier" and (not is_instance_valid(barrier_target) or not barrier_target.is_blocking())):
+		_resume_to_city()
 	if attack_target_kind == &"world" and _has_valid_world_target():
 		var parent_2d := get_parent() as Node2D
 		target_position = parent_2d.to_local(world_target.global_position) if parent_2d != null else world_target.global_position
+		if not is_on_route(world_target):
+			_resume_to_city()
+	if position.distance_to(target_position) > _contact_range():
+		has_reached_target = false
 	if has_reached_target:
 		_process_attack(delta)
 		return
@@ -170,7 +176,7 @@ func _physics_process(delta: float) -> void:
 	var speed_pixels: float = definition.move_speed_tiles_per_second * TILE_SIZE * speed_multiplier
 	position = position.move_toward(target_position, speed_pixels * delta)
 
-	if position.distance_to(target_position) <= definition.attack_range_pixels:
+	if position.distance_to(target_position) <= _contact_range():
 		has_reached_target = true
 		attack_elapsed = 0.0
 
@@ -246,6 +252,8 @@ func _target_is_attackable(target: Node2D) -> bool:
 
 
 func _resume_to_city() -> void:
+	if is_instance_valid(guard_target) and guard_target.engaged_enemy == self:
+		guard_target.release_enemy()
 	barrier_target = null
 	guard_target = null
 	world_target = null
@@ -254,6 +262,24 @@ func _resume_to_city() -> void:
 	has_reached_target = false
 	attack_elapsed = 0.0
 	target_released.emit(self)
+
+
+func _contact_range() -> float:
+	if attack_target_kind == &"world" and _has_valid_world_target():
+		return definition.attack_range_pixels + float(world_target.call("attackable_radius"))
+	if attack_target_kind == &"barrier":
+		return definition.attack_range_pixels + 28.0
+	return definition.attack_range_pixels
+
+
+func is_on_route(candidate: Node2D) -> bool:
+	var route: Vector2 = city_target_position - position
+	if route.length() <= 0.001:
+		return false
+	var relative: Vector2 = candidate.global_position - global_position
+	var forward_distance: float = relative.dot(route.normalized())
+	var radius: float = float(candidate.call("attackable_radius"))
+	return forward_distance >= 0.0 and forward_distance < route.length() and absf(relative.cross(route.normalized())) <= radius + 14.0
 
 
 func _is_forward_target(candidate_position: Vector2) -> bool:

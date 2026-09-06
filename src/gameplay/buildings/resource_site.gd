@@ -7,6 +7,14 @@ extends Node2D
 @export var site_color: Color = Color("4f7650")
 
 var occupied_building: ResourceBuilding
+var highlighted: bool = false
+
+
+func set_highlighted(value: bool) -> void:
+	if highlighted == value:
+		return
+	highlighted = value
+	queue_redraw()
 
 
 func accepts(card: OpeningCardDefinition) -> bool:
@@ -41,6 +49,8 @@ func reset() -> void:
 
 
 func _draw() -> void:
+	if highlighted:
+		draw_arc(Vector2.ZERO, radius + 5.0, 0.0, TAU, 40, Color("ffe083"), 4.0)
 	draw_circle(Vector2.ZERO, radius, Color(site_color, 0.24))
 	draw_arc(Vector2.ZERO, radius, 0.0, TAU, 32, site_color, 2.0)
 	if site_type == &"forest":
@@ -62,7 +72,7 @@ func _draw() -> void:
 	draw_string(
 		ThemeDB.fallback_font,
 		Vector2(-38, radius + 16),
-		display_name if not is_occupied() else "%s（已占用）" % display_name,
+		display_name if not is_occupied() else "%s·占用" % display_name,
 		HORIZONTAL_ALIGNMENT_CENTER,
 		76.0,
 		13,

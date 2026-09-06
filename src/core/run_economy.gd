@@ -109,8 +109,9 @@ func change_population_capacity(delta: int) -> bool:
 func try_train_farmer(gold_cost: int = 10) -> bool:
 	if gold_cost < 0 or current_population >= population_capacity:
 		return false
-	if not try_pay({&"gold": gold_cost}):
+	if amount(&"gold") < gold_cost:
 		return false
+	balances[&"gold"] = amount(&"gold") - gold_cost
 	current_population += 1
 	_emit_resources_changed()
 	return true

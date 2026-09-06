@@ -158,6 +158,7 @@ func _test_wave_four_integration() -> void:
 
 
 func _wait_for_result(frame_budget: int) -> void:
+	preload("res://tests/helpers/shop_wave_fixture.gd").clear_wave(get_tree().root.get_node("Main/WaveController") as WaveController)
 	while RunState.phase == RunState.Phase.WAVE_COMBAT and frame_budget > 0:
 		await get_tree().process_frame
 		frame_budget -= 1

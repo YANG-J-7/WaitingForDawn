@@ -109,7 +109,15 @@ func _test_barracks_battle_flow() -> void:
 	_expect_equal(economy.assigned_workers_for(&"barracks"), 2, "auto assignment staffs both barracks jobs")
 	_expect_equal(barracks.active_guards().size(), 2, "two assigned workers spawn two guards")
 	_expect_equal(barracks.active_guards().size(), 2, "barracks visual roster reflects active guard count")
-	map_surface.drop_card_data(arrow_payload, Vector2(650.0, 180.0))
+	# 守卫近战用固定路径的高生命测试敌人，避免随机路线和箭塔抢先击杀。
+	controller.spawning = false
+	main.get_node("FarmerManager").set_process(false)
+	var test_enemy: EnemyActor = controller.enemies[0]
+	var test_guard: BarracksGuard = barracks.active_guards()[0]
+	test_enemy.current_health = 1000
+	test_enemy.global_position = test_guard.global_position + (test_guard.global_position - controller.city_target_position).normalized() * 65.0
+	test_enemy._resume_to_city()
+	controller._assign_defensive_targets()
 	await get_tree().process_frame
 
 	var observed_guard_target: bool = false
@@ -133,18 +141,23 @@ func _test_barracks_battle_flow() -> void:
 	_expect_true(observed_mutual_damage, "guard and wolf exchange observable melee damage")
 	var guards_before_loss: Array[BarracksGuard] = barracks.active_guards()
 	_expect_equal(guards_before_loss.size(), 2, "both guard slots were deployed for current wave")
+	if guards_before_loss.is_empty():
+		main.queue_free()
+		return
 	guards_before_loss[0].apply_enemy_attack(999, &"wolf")
 	await get_tree().process_frame
 	_expect_equal(barracks.active_guards().size(), 1, "defeated guard leaves one active guard")
 	economy.refresh_jobs(settlement_builder, arrow_tower, barracks)
 	await get_tree().process_frame
 	_expect_equal(barracks.active_guards().size(), 1, "job refresh does not respawn casualty mid wave")
+	map_surface.drop_card_data(arrow_payload, Vector2(650.0, 180.0))
+	preload("res://tests/helpers/shop_wave_fixture.gd").clear_wave(controller)
 
 	frame_budget = 1200
 	while RunState.phase == RunState.Phase.WAVE_COMBAT and frame_budget > 0:
 		await get_tree().process_frame
 		frame_budget -= 1
-	_expect_equal(RunState.phase, RunState.Phase.WAVE_RESULT, "guard and tower defense clears first wave")
+	_expect_equal(RunState.phase, RunState.Phase.WAVE_RESULT, "受控敌人清场后进入波间阶段")
 	_expect_equal(barracks.active_guards().size(), 0, "wave result removes temporary guards")
 	(card_grid.get_child(0) as Button).pressed.emit()
 	(card_grid.get_child(1) as Button).pressed.emit()

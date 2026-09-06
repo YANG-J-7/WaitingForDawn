@@ -54,11 +54,12 @@ func _test_free_wall_and_battle_shop() -> void:
 		frame_budget -= 1
 	var tracked_enemy: EnemyActor = controller.enemies[0]
 	Engine.time_scale = 1.0
-	var route_direction: Vector2 = (controller.city_target_position - tracked_enemy.global_position).normalized()
-	var off_route_position: Vector2 = tracked_enemy.global_position.lerp(controller.city_target_position, 0.45)
-	off_route_position += Vector2(-route_direction.y, route_direction.x) * 90.0
-	off_route_position.x = clampf(off_route_position.x, 100.0, 860.0)
-	off_route_position.y = clampf(off_route_position.y, 150.0, 390.0)
+	# 本例只验商店与拖墙，固定一条进攻线；外围随机性另有专测。
+	controller.spawning = false
+	tracked_enemy.position = Vector2(100, 270)
+	tracked_enemy._resume_to_city()
+	var off_route_position := Vector2(300, 170)
+	battle_shop.card_pool.resize(6)
 	map_surface.drop_card_data(wall_payload, off_route_position)
 	_expect_equal(wall_manager.active_walls().size(), 1, "legal off route point creates first wall")
 	var off_route_wall: BarrierWall = wall_manager.active_walls()[0]
@@ -75,7 +76,7 @@ func _test_free_wall_and_battle_shop() -> void:
 	_expect_true(battle_shop.active, "battle shop opens during combat")
 	_expect_true(main.get_node("HUD/DaySetupPanel").visible, "battle shop uses six card panel")
 	for _frame in range(8):
-		await get_tree().process_frame
+		await get_tree().physics_frame
 	_expect_true(tracked_enemy.global_position.distance_to(controller.city_target_position) < distance_before_shop, "enemy keeps moving while shop is open")
 
 	var wall_offer_index: int = -1
@@ -123,7 +124,7 @@ func _test_free_wall_and_battle_shop() -> void:
 	_expect_equal(wall_manager.active_walls().size(), 1, "overlapping wall placement is rejected")
 	_expect_true(inventory.has_card(purchased_wall_id), "overlap rejection preserves purchased wall card")
 
-	var route_wall_position: Vector2 = tracked_enemy.global_position.lerp(controller.city_target_position, 0.5)
+	var route_wall_position := Vector2(300, 270)
 	map_surface.drop_card_data(purchased_wall_payload, route_wall_position)
 	_expect_equal(wall_manager.active_walls().size(), 2, "second wall can be placed at another free point (%s)" % (main.get_node("HUD/DaySetupPanel/Margin/Content/Controls/SetupHintLabel") as Label).text)
 	var route_wall: BarrierWall = wall_manager.active_walls()[1]

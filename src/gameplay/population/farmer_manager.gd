@@ -3,6 +3,7 @@ extends Node2D
 
 signal roster_changed(active_count: int)
 signal delivery_completed(resource_id: StringName, amount: int)
+signal worker_lost(job_id: StringName)
 
 var farmers: Array[FarmerAgent] = []
 var city_position: Vector2 = Vector2(480.0, 270.0)
@@ -11,6 +12,7 @@ var arrow_tower: ArrowTower
 var barracks: Barracks
 var current_assignments: Dictionary = {}
 var current_job_order: Array[StringName] = []
+var next_farmer_index: int = 0
 
 
 func _process(delta: float) -> void:
@@ -44,12 +46,21 @@ func sync_population(farmer_count: int) -> void:
 func apply_assignments(assignments: Dictionary, job_order: Array[StringName]) -> void:
 	current_assignments = assignments.duplicate(true)
 	current_job_order = job_order.duplicate()
-	var farmer_cursor: int = 0
+	# 先保留仍有效的原岗位，只有失去岗位的农民参与再分配。
+	var remaining: Dictionary = current_assignments.duplicate()
+	var available: Array[FarmerAgent] = []
+	for farmer in farmers:
+		if int(remaining.get(farmer.job_id, 0)) > 0 and farmer.workplace == _workplace_for(farmer.job_id) and is_instance_valid(farmer.workplace):
+			remaining[farmer.job_id] = int(remaining[farmer.job_id]) - 1
+		else:
+			available.append(farmer)
 	for job_id in current_job_order:
 		var workplace: Node2D = _workplace_for(job_id)
-		var worker_count: int = int(current_assignments.get(job_id, 0))
+		if workplace == null:
+			continue
+		var worker_count: int = int(remaining.get(job_id, 0))
 		for _worker in range(worker_count):
-			if farmer_cursor >= farmers.size():
+			if available.is_empty():
 				break
 			var resource_id: StringName = &""
 			var amount_per_trip: int = 0
@@ -58,11 +69,10 @@ func apply_assignments(assignments: Dictionary, job_order: Array[StringName]) ->
 				if resource_building.definition != null:
 					resource_id = resource_building.definition.production_resource
 					amount_per_trip = maxi(1, roundi(resource_building.definition.production_per_second))
-			farmers[farmer_cursor].assign_job(job_id, workplace, resource_id, amount_per_trip)
-			farmer_cursor += 1
-	while farmer_cursor < farmers.size():
-		farmers[farmer_cursor].clear_job()
-		farmer_cursor += 1
+			var farmer: FarmerAgent = available.pop_front()
+			farmer.assign_job(job_id, workplace, resource_id, amount_per_trip)
+	for farmer in available:
+		farmer.clear_job()
 
 
 func advance(delta: float) -> void:
@@ -78,6 +88,7 @@ func reset() -> void:
 	farmers.clear()
 	current_assignments.clear()
 	current_job_order.clear()
+	next_farmer_index = 0
 	roster_changed.emit(0)
 
 
@@ -91,10 +102,13 @@ func active_farmers() -> Array[FarmerAgent]:
 
 func _sync_roster(farmer_count: int) -> void:
 	var target_count: int = maxi(0, farmer_count)
+	if target_count == farmers.size():
+		return
 	while farmers.size() < target_count:
 		var farmer := FarmerAgent.new()
 		add_child(farmer)
-		farmer.configure(farmers.size(), city_position)
+		farmer.configure(next_farmer_index, city_position)
+		next_farmer_index += 1
 		farmer.delivery_completed.connect(_on_farmer_delivery)
 		farmer.died.connect(_on_farmer_died)
 		farmers.append(farmer)
@@ -124,7 +138,11 @@ func _on_farmer_delivery(resource_id: StringName, amount: int) -> void:
 
 
 func _on_farmer_died(farmer: FarmerAgent) -> void:
+	if farmer not in farmers:
+		return
 	farmers.erase(farmer)
+	current_assignments[farmer.job_id] = maxi(0, int(current_assignments.get(farmer.job_id, 0)) - 1)
+	worker_lost.emit(farmer.job_id)
 	RunEconomy.lose_population(1)
 	roster_changed.emit(active_farmers().size())
 	farmer.queue_free()

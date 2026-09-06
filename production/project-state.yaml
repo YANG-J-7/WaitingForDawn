@@ -1,6 +1,6 @@
 version: 1
 stage: production
 engine: godot-4.7-development-validation
-updated: 2026-09-03
-current_goal: "重构中心聚落地图、资源地块、自由建筑、农民运输与沿途攻击"
-active_story: "story-015-radial-map-resource-sites"
+updated: 2026-09-06
+current_goal: "中心聚落与农民物流灰盒已验收；下一步试玩前四波并完成第5～10波压力曲线"
+active_story: "story-018-wave-five-to-ten-scaling"

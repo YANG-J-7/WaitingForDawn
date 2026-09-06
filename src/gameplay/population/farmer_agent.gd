@@ -24,6 +24,7 @@ var job_id: StringName = &""
 var delivery_resource: StringName = &""
 var delivery_amount: int = 0
 var carried_amount: int = 0
+var carried_resource: StringName = &""
 var state: WorkState = WorkState.IDLE
 var gather_elapsed: float = 0.0
 
@@ -49,9 +50,9 @@ func assign_job(
 	workplace = next_workplace
 	delivery_resource = resource_id
 	delivery_amount = amount_per_trip
-	carried_amount = 0
 	gather_elapsed = 0.0
-	state = WorkState.TO_WORK if workplace != null else WorkState.IDLE
+	# 已采集的货物属于本次运输，换岗或建筑毁坏不会将其抹掉。
+	state = WorkState.TO_CITY if carried_amount > 0 else (WorkState.TO_WORK if workplace != null else WorkState.IDLE)
 	queue_redraw()
 
 
@@ -74,6 +75,7 @@ func apply_enemy_attack(base_damage: int, _enemy_id: StringName) -> int:
 	current_health -= applied
 	if current_health == 0:
 		carried_amount = 0
+		carried_resource = &""
 		visible = false
 		died.emit(self)
 	queue_redraw()
@@ -87,7 +89,7 @@ func advance(delta: float) -> void:
 		WorkState.IDLE:
 			global_position = global_position.move_toward(_idle_position(), move_speed * delta)
 		WorkState.TO_WORK:
-			if not is_instance_valid(workplace):
+			if not _workplace_is_valid():
 				clear_job()
 				return
 			global_position = global_position.move_toward(workplace.global_position, move_speed * delta)
@@ -95,24 +97,33 @@ func advance(delta: float) -> void:
 				state = WorkState.GATHERING if not delivery_resource.is_empty() else WorkState.WORKING
 				gather_elapsed = 0.0
 		WorkState.GATHERING:
-			if not is_instance_valid(workplace):
+			if not _workplace_is_valid():
 				clear_job()
 				return
 			gather_elapsed += delta
 			if gather_elapsed >= gather_seconds:
 				carried_amount = delivery_amount
+				carried_resource = delivery_resource
 				state = WorkState.TO_CITY
 		WorkState.TO_CITY:
 			global_position = global_position.move_toward(city_position, move_speed * delta)
 			if global_position.distance_to(city_position) <= 8.0:
-				if carried_amount > 0 and not delivery_resource.is_empty():
-					delivery_completed.emit(delivery_resource, carried_amount)
+				var amount_to_deliver: int = carried_amount
+				var resource_to_deliver: StringName = carried_resource
 				carried_amount = 0
-				state = WorkState.TO_WORK if is_instance_valid(workplace) else WorkState.IDLE
+				carried_resource = &""
+				state = WorkState.TO_WORK if _workplace_is_valid() else WorkState.IDLE
+				# 入账可能同步触发重新分配；先完成自身状态转换，避免重入覆盖。
+				if amount_to_deliver > 0 and not resource_to_deliver.is_empty():
+					delivery_completed.emit(resource_to_deliver, amount_to_deliver)
 		WorkState.WORKING:
-			if not is_instance_valid(workplace):
+			if not _workplace_is_valid():
 				clear_job()
 	queue_redraw()
+
+
+func _workplace_is_valid() -> bool:
+	return is_instance_valid(workplace) and (not workplace.has_method("is_attackable") or bool(workplace.call("is_attackable")))
 
 
 func _idle_position() -> Vector2:
@@ -125,6 +136,8 @@ func _draw() -> void:
 	var body_color := Color("d6b66a") if carried_amount == 0 else Color("f0cf59")
 	draw_circle(Vector2.ZERO, 8.0, body_color)
 	draw_rect(Rect2(-5, 6, 10, 9), Color("6f5438"))
-	draw_string(ThemeDB.fallback_font, Vector2(-12, -13), str(farmer_index + 1), HORIZONTAL_ALIGNMENT_CENTER, 24.0, 10, Color.WHITE)
+	var job_label: String = str({&"lumber_camp": "木", &"farm": "农", &"gold_mine": "金", &"stone_mine": "石", &"arrow_tower": "箭", &"barracks": "兵"}.get(job_id, "闲"))
+	draw_string(ThemeDB.fallback_font, Vector2(-24, -13), "%d·%s" % [farmer_index + 1, job_label], HORIZONTAL_ALIGNMENT_CENTER, 48.0, 10, Color.WHITE)
 	if carried_amount > 0:
-		draw_string(ThemeDB.fallback_font, Vector2(-15, 27), "%s%d" % [String(delivery_resource).left(1), carried_amount], HORIZONTAL_ALIGNMENT_CENTER, 30.0, 10, Color("ffe083"))
+		var resource_label: String = str({&"wood": "木", &"food": "食", &"gold": "金", &"stone": "石"}.get(carried_resource, "货"))
+		draw_string(ThemeDB.fallback_font, Vector2(-15, 27), "%s%d" % [resource_label, carried_amount], HORIZONTAL_ALIGNMENT_CENTER, 30.0, 10, Color("ffe083"))

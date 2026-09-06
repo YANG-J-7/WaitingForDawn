@@ -59,6 +59,8 @@ const COLOR_CITY := Color("e3a94b")
 @onready var iron_value: Label = %IronValue
 @onready var gold_value: Label = %GoldValue
 @onready var population_value: Label = %PopulationValue
+@onready var notice_panel: PanelContainer = $HUD/NoticePanel
+@onready var notice_label: Label = $HUD/NoticePanel/Message
 
 var card_buttons: Array[Button] = []
 var hand_card_slots: Dictionary = {}
@@ -70,6 +72,7 @@ var job_minus_buttons: Dictionary = {}
 var job_plus_buttons: Dictionary = {}
 var zero_purchase_warning_shown: bool = false
 var resource_sites: Array[ResourceSite] = []
+var notice_seconds: float = 0.0
 
 
 func _ready() -> void:
@@ -111,6 +114,7 @@ func _ready() -> void:
 	wave_controller.set_barracks(barracks)
 	farmer_manager.configure(wave_controller.city_target_position, settlement_builder, arrow_tower, barracks)
 	farmer_manager.delivery_completed.connect(_on_farmer_delivery_completed)
+	farmer_manager.worker_lost.connect(wave_economy.remove_lost_worker)
 	wave_economy.use_farmer_logistics = true
 	wave_controller.enemy_count_changed.connect(_on_enemy_count_changed)
 	wave_controller.wave_cleared.connect(_on_wave_cleared)
@@ -143,6 +147,25 @@ func _ready() -> void:
 	queue_redraw()
 
 
+func _process(delta: float) -> void:
+	notice_seconds = maxf(0.0, notice_seconds - delta)
+	notice_panel.visible = notice_seconds > 0.0 and not day_setup_panel.visible and not failure_panel.visible and not build_failure_panel.visible
+	var payload: Variant = get_viewport().gui_get_drag_data()
+	var card: OpeningCardDefinition = null
+	if payload is Dictionary:
+		card = _card_for_play_ref(int(payload.get("card_instance_id", -1)))
+	for site in resource_sites:
+		site.set_highlighted(card != null and site.accepts(card))
+
+
+func _show_notice(message: String) -> void:
+	status_label.text = message
+	setup_hint_label.text = message
+	notice_label.text = message
+	notice_seconds = 4.0
+	notice_panel.visible = not day_setup_panel.visible and not build_failure_panel.visible
+
+
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, Vector2(960, 540)), COLOR_NIGHT)
 	for x in range(0, 961, 32):
@@ -156,7 +179,6 @@ func _draw() -> void:
 	draw_circle(city_position, 56.0, COLOR_CITY)
 	draw_circle(city_position, 42.0, COLOR_CITY.darkened(0.18))
 	draw_string(ThemeDB.fallback_font, city_position + Vector2(-24, 7), "主城", HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color.WHITE)
-	draw_string(ThemeDB.fallback_font, Vector2(68, 118), "怪物从外围随机方向进攻", HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color("a9bbca"))
 
 
 func _on_start_pressed() -> void:
@@ -169,7 +191,7 @@ func _on_start_pressed() -> void:
 	_configure_opening_setup_panel()
 	day_setup_panel.visible = true
 	hand_bar.visible = false
-	bottom_panel.visible = true
+	bottom_panel.visible = false
 	defense_slot_button.visible = false
 	barrier_slot_button.visible = false
 	barracks_slot_button.visible = false
@@ -212,6 +234,8 @@ func _on_reset_pressed() -> void:
 	battle_shop_button.visible = false
 	battle_shop_button.text = "战斗商店"
 	train_farmer_button.visible = false
+	notice_seconds = 0.0
+	notice_panel.visible = false
 	last_settlement_summary = ""
 	zero_purchase_warning_shown = false
 	for slot_button in settlement_slot_buttons:
@@ -220,7 +244,10 @@ func _on_reset_pressed() -> void:
 
 func _on_state_changed(_phase: int) -> void:
 	phase_value.text = RunState.phase_name()
+	train_farmer_button.visible = RunState.phase in [RunState.Phase.DAY_SETUP, RunState.Phase.WAVE_COMBAT, RunState.Phase.WAVE_RESULT]
 	if RunState.phase == RunState.Phase.RUN_LOST:
+		day_setup_panel.visible = false
+		build_failure_panel.visible = false
 		_set_hand_interaction_enabled(false)
 		hand_bar.visible = false
 		bottom_panel.visible = true
@@ -391,6 +418,7 @@ func _on_map_card_dropped(card_index: int, map_position: Vector2) -> void:
 		_:
 			if card.category in ["resource", "population"]:
 				_try_place_map_building_card(card_index, map_position)
+	_show_notice(setup_hint_label.text)
 
 
 func _on_barracks_slot_pressed() -> void:
@@ -485,23 +513,7 @@ func _try_place_wall_card(card_index: int, map_position: Vector2) -> bool:
 
 
 func _wall_placement_obstacles() -> Array[Dictionary]:
-	var obstacles: Array[Dictionary] = [
-		{"position": wave_controller.city_target_position, "radius": 56.0},
-	]
-	if arrow_tower.visible:
-		obstacles.append({"position": arrow_tower.global_position, "radius": 34.0})
-	if barracks.is_built():
-		obstacles.append({"position": barracks.global_position, "radius": 42.0})
-	for building in settlement_builder.placed_buildings():
-		if is_instance_valid(building):
-			obstacles.append({"position": building.global_position, "radius": 44.0})
-	for guard in barracks.active_guards():
-		if is_instance_valid(guard):
-			obstacles.append({"position": guard.global_position, "radius": 18.0})
-	for enemy in wave_controller.enemies:
-		if is_instance_valid(enemy) and enemy.is_alive():
-			obstacles.append({"position": enemy.global_position, "radius": 18.0})
-	return obstacles
+	return _free_placement_obstacles(true)
 
 
 func _try_place_defense_card(card_index: int, map_position: Vector2 = Vector2(-1.0, -1.0)) -> bool:
@@ -533,6 +545,9 @@ func _try_place_defense_card(card_index: int, map_position: Vector2 = Vector2(-1
 		_show_build_failure(arrow_card)
 		return false
 	arrow_tower.visible = true
+	arrow_tower.current_health = arrow_tower.maximum_health
+	arrow_tower.attack_elapsed = arrow_tower.definition.attack_interval
+	arrow_tower.queue_redraw()
 	arrow_tower.enabled = true
 	arrow_tower.global_position = target_position
 	_consume_played_card(card_index, arrow_card)
@@ -730,7 +745,8 @@ func _on_resources_changed(
 	gold_value.text = "金 %d" % RunEconomy.amount(&"gold")
 	population_value.text = "人口 %d/%d" % [current_population, population_capacity]
 	train_farmer_button.visible = RunState.phase not in [RunState.Phase.BOOT, RunState.Phase.RUN_LOST, RunState.Phase.RUN_WON]
-	train_farmer_button.text = "生产农民 10金（%d/%d）" % [current_population, population_capacity]
+	train_farmer_button.text = "主城招募 · 10金"
+	train_farmer_button.tooltip_text = "生产一名农民，占1人口；当前%d/%d。民屋可增加2人口容量。" % [current_population, population_capacity]
 	farmer_manager.sync_population(current_population)
 	wave_economy.refresh_population_totals()
 
@@ -739,13 +755,13 @@ func _on_train_farmer_pressed() -> void:
 	if RunState.phase in [RunState.Phase.BOOT, RunState.Phase.RUN_LOST, RunState.Phase.RUN_WON]:
 		return
 	if RunEconomy.current_population >= RunEconomy.population_capacity:
-		status_label.text = "人口已满：请先建造民屋增加人口容量。"
+		_show_notice("人口已满：请先建造民屋增加人口容量。")
 		return
 	if RunEconomy.amount(&"gold") < 10:
-		status_label.text = "金币不足：生产1名农民需要10金币。"
+		_show_notice("金币不足：生产1名农民需要10金币。")
 		return
 	if RunEconomy.try_train_farmer(10):
-		status_label.text = "主城已生产1名农民，消耗10金币。"
+		_show_notice("主城已生产1名农民，消耗10金币。")
 
 
 func _on_farmer_delivery_completed(resource_id: StringName, amount: int) -> void:
@@ -852,7 +868,7 @@ func _try_place_map_building_card(card_index: int, map_position: Vector2) -> boo
 	var building: ResourceBuilding = settlement_builder.place_card_at(
 		card,
 		map_position,
-		_free_placement_obstacles(true)
+		_free_placement_obstacles(true, card.category != "resource")
 	)
 	if building == null:
 		setup_hint_label.text = settlement_builder.last_error
@@ -869,7 +885,7 @@ func _try_place_map_building_card(card_index: int, map_position: Vector2) -> boo
 
 
 func _can_place_free_building(map_position: Vector2, radius: float) -> bool:
-	if not wall_manager.build_bounds.has_point(map_position):
+	if not wall_manager.build_bounds.grow(-radius).has_point(map_position):
 		setup_hint_label.text = "建筑必须放在地图可建造区域内。"
 		return false
 	for obstacle in _free_placement_obstacles(true):
@@ -881,7 +897,7 @@ func _can_place_free_building(map_position: Vector2, radius: float) -> bool:
 	return true
 
 
-func _free_placement_obstacles(include_defenses: bool = true) -> Array[Dictionary]:
+func _free_placement_obstacles(include_defenses: bool = true, reserve_resource_sites: bool = true) -> Array[Dictionary]:
 	var obstacles: Array[Dictionary] = [
 		{"position": wave_controller.city_target_position, "radius": 56.0},
 	]
@@ -889,6 +905,9 @@ func _free_placement_obstacles(include_defenses: bool = true) -> Array[Dictionar
 		obstacles.append({"position": arrow_tower.global_position, "radius": 34.0})
 	if include_defenses and barracks.is_built():
 		obstacles.append({"position": barracks.global_position, "radius": 42.0})
+	if reserve_resource_sites:
+		for site in resource_sites:
+			obstacles.append({"position": site.global_position, "radius": site.radius})
 	for wall in wall_manager.active_walls():
 		obstacles.append({"position": wall.global_position, "radius": WallManager.WALL_RADIUS})
 	for building in settlement_builder.placed_buildings():
@@ -900,6 +919,10 @@ func _free_placement_obstacles(include_defenses: bool = true) -> Array[Dictionar
 	for enemy in wave_controller.enemies:
 		if is_instance_valid(enemy) and enemy.is_alive():
 			obstacles.append({"position": enemy.global_position, "radius": 18.0})
+	for farmer in farmer_manager.active_farmers():
+		obstacles.append({"position": farmer.global_position, "radius": farmer.attackable_radius()})
+	for guard in barracks.active_guards():
+		obstacles.append({"position": guard.global_position, "radius": guard.attackable_radius()})
 	return obstacles
 
 
@@ -1204,6 +1227,7 @@ func _configure_opening_setup_panel() -> void:
 
 func _configure_interwave_shop_panel() -> void:
 	build_failure_panel.visible = false
+	bottom_panel.visible = false
 	day_setup_panel.visible = true
 	hand_bar.visible = false
 	day_title.text = "第%d波六卡商店" % RunState.current_wave
@@ -1223,6 +1247,7 @@ func _configure_interwave_shop_panel() -> void:
 
 
 func _configure_interwave_job_panel() -> void:
+	bottom_panel.visible = false
 	day_setup_panel.visible = true
 	hand_bar.visible = false
 	day_title.text = "第%d波休整" % RunState.current_wave

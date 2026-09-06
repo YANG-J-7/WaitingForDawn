@@ -108,21 +108,7 @@ func _shuffle_offers() -> void:
 
 
 func _rotate_open_offers() -> void:
-	var open_indices: Array[int] = []
-	var previous_cards: Array[OpeningCardDefinition] = []
-	for card_index in range(offered_cards.size()):
-		if card_index in purchased_indices:
-			continue
-		open_indices.append(card_index)
-		previous_cards.append(offered_cards[card_index])
-	if open_indices.size() <= 1:
-		return
-	var random := RandomNumberGenerator.new()
-	random.seed = absi(hash(
-		"%s:battle-shop:%d:refresh:%d" % [RunState.run_id, initialized_wave, refresh_count]
-	))
-	var shift: int = random.randi_range(1, open_indices.size() - 1)
-	for position in range(open_indices.size()):
-		offered_cards[open_indices[position]] = previous_cards[
-			(position + shift) % previous_cards.size()
-		]
+	preload("res://src/gameplay/cards/shop_offer_refresh.gd").redraw(
+		card_pool, offered_cards, purchased_indices,
+		absi(hash("%s:battle-shop:%d:refresh:%d" % [RunState.run_id, initialized_wave, refresh_count]))
+	)

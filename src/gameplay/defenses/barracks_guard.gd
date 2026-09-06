@@ -45,6 +45,14 @@ func is_available() -> bool:
 	return is_active() and (engaged_enemy == null or not is_instance_valid(engaged_enemy))
 
 
+func is_attackable() -> bool:
+	return is_active()
+
+
+func attackable_radius() -> float:
+	return 18.0
+
+
 func engage_enemy(enemy: EnemyActor) -> bool:
 	if not is_available() or enemy == null or not is_instance_valid(enemy) or not enemy.is_alive():
 		return false

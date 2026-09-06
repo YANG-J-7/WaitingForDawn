@@ -115,7 +115,12 @@ func _sync_guard_count() -> void:
 func _spawn_guard(guard_index: int) -> void:
 	var guard: BarracksGuard = GUARD_SCENE.instantiate() as BarracksGuard
 	add_child(guard)
-	guard.position = Vector2(10.0, 48.0 + guard_index * 30.0)
+	# 守卫部署在兵营远离主城的一侧，避免贴着下边界时生成到地图外。
+	var outward: Vector2 = (global_position - Vector2(480, 270)).normalized()
+	if outward == Vector2.ZERO:
+		outward = Vector2.RIGHT
+	var spawn_position: Vector2 = global_position + outward * 50.0 + outward.orthogonal() * (-18.0 if guard_index == 0 else 18.0)
+	guard.global_position = spawn_position.clamp(Vector2(82, 144), Vector2(878, 396))
 	guard.configure(guard_definition, guard_index)
 	guard.defeated.connect(_on_guard_defeated)
 	guard.target_released.connect(_on_guard_target_released)

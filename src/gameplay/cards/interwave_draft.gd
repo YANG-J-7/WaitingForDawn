@@ -151,22 +151,12 @@ func _shuffle_offers() -> void:
 
 
 func _rotate_unselected_offers() -> void:
-	var open_indices: Array[int] = []
-	var previous_cards: Array[OpeningCardDefinition] = []
-	for card_index in range(offered_cards.size()):
-		if card_index in selected_indices or card_index in purchased_indices:
-			continue
-		open_indices.append(card_index)
-		previous_cards.append(offered_cards[card_index])
-	if open_indices.size() <= 1:
-		return
-	var random := RandomNumberGenerator.new()
-	random.seed = absi(hash("%s:%d:refresh:%d" % [RunState.run_id, wave_index, refresh_count]))
-	var shift: int = random.randi_range(1, open_indices.size() - 1)
-	for position in range(open_indices.size()):
-		offered_cards[open_indices[position]] = previous_cards[
-			(position + shift) % previous_cards.size()
-		]
+	var locked: Array[int] = selected_indices.duplicate()
+	locked.append_array(purchased_indices)
+	preload("res://src/gameplay/cards/shop_offer_refresh.gd").redraw(
+		card_pool, offered_cards, locked,
+		absi(hash("%s:%d:refresh:%d" % [RunState.run_id, wave_index, refresh_count]))
+	)
 
 
 func _emit_selection_changed() -> void:

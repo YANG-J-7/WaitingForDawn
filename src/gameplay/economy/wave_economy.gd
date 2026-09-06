@@ -209,6 +209,13 @@ func record_farmer_delivery(resource_id: StringName, amount: int) -> void:
 	production_tick.emit({resource_id: amount})
 
 
+func remove_lost_worker(job_id: StringName) -> void:
+	# 死亡人口广播前移除准确岗位，不能从其他建筑末尾扣人。
+	if job_id in worker_assignments:
+		worker_assignments[job_id] = maxi(0, int(worker_assignments[job_id]) - 1)
+	user_modified_assignments = true
+
+
 func refresh_population_totals() -> void:
 	_recalculate_totals()
 	var overflow: int = maxi(0, assigned_population - RunEconomy.current_population)

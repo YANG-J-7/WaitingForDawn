@@ -15,7 +15,7 @@ var last_error: String = ""
 
 func can_place_wall(map_position: Vector2, obstacles: Array[Dictionary] = []) -> bool:
 	last_error = ""
-	if not build_bounds.has_point(map_position):
+	if not build_bounds.grow(-WALL_RADIUS).has_point(map_position):
 		last_error = "城墙必须放在地图可建造区域内。"
 		return false
 	for wall in active_walls():

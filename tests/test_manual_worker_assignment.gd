@@ -22,7 +22,7 @@ func _run_test() -> void:
 	var card_grid: GridContainer = main.get_node("HUD/DaySetupPanel/Margin/Content/CardGrid") as GridContainer
 	var ready_button: Button = main.get_node("HUD/DaySetupPanel/Margin/Content/Controls/ReadyButton") as Button
 	var defense_slot: Button = main.get_node("HUD/DefenseSlotButton") as Button
-	var job_rows: HBoxContainer = main.get_node("HUD/DaySetupPanel/Margin/Content/JobSection/JobRows") as HBoxContainer
+	var job_rows: HBoxContainer = main.get_node("HUD/DaySetupPanel/Margin/Content/JobSection/JobScroll/JobRows") as HBoxContainer
 	var job_section: HBoxContainer = main.get_node("HUD/DaySetupPanel/Margin/Content/JobSection") as HBoxContainer
 	var setup_panel: PanelContainer = main.get_node("HUD/DaySetupPanel") as PanelContainer
 	var auto_button: Button = main.get_node("HUD/DaySetupPanel/Margin/Content/JobSection/AutoAssignButton") as Button

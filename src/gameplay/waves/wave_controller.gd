@@ -247,22 +247,14 @@ func _assign_defensive_targets() -> void:
 	for enemy in enemies:
 		if not is_instance_valid(enemy) or not enemy.is_alive():
 			continue
-		if enemy.attack_target_kind == &"guard" and enemy.guard_target != null:
-			if is_instance_valid(enemy.guard_target) and enemy.guard_target.is_active():
-				continue
-		if enemy.attack_target_kind == &"barrier" and enemy.barrier_target != null:
-			if is_instance_valid(enemy.barrier_target) and enemy.barrier_target.is_blocking():
-				continue
-		if enemy.attack_target_kind == &"world" and enemy.world_target != null:
-			if is_instance_valid(enemy.world_target) and enemy.world_target.has_method("is_attackable") and bool(enemy.world_target.call("is_attackable")):
-				continue
-		var guard: BarracksGuard = null
-		if barracks != null and is_instance_valid(barracks) and barracks.is_built():
-			guard = barracks.available_guard()
-		if guard != null and enemy.set_guard(guard):
-			continue
 		var target: Node2D = _nearest_forward_world_target(enemy)
-		if target is BarrierWall:
+		if target != null and (target == enemy.world_target or target == enemy.barrier_target or target == enemy.guard_target):
+			continue
+		if enemy.attack_target_kind != &"city":
+			enemy._resume_to_city()
+		if target is BarracksGuard:
+			enemy.set_guard(target as BarracksGuard)
+		elif target is BarrierWall:
 			enemy.set_barrier(target as BarrierWall)
 		elif target != null:
 			enemy.set_world_target(target)
@@ -287,6 +279,10 @@ func _nearest_forward_route_wall(enemy: EnemyActor) -> BarrierWall:
 
 func _nearest_forward_world_target(enemy: EnemyActor) -> Node2D:
 	var candidates: Array[Node2D] = world_targets.duplicate()
+	if is_instance_valid(barracks) and barracks.is_built():
+		for guard in barracks.active_guards():
+			if guard.is_available() or guard.engaged_enemy == enemy:
+				candidates.append(guard)
 	for wall in barrier_walls:
 		if is_instance_valid(wall) and wall not in candidates:
 			candidates.append(wall)
@@ -302,7 +298,7 @@ func _nearest_forward_world_target(enemy: EnemyActor) -> Node2D:
 			continue
 		var relative: Vector2 = candidate.global_position - enemy.global_position
 		var forward_distance: float = relative.dot(direction)
-		if forward_distance <= 0.0 or forward_distance >= route_length:
+		if forward_distance < 0.0 or forward_distance >= route_length:
 			continue
 		var radius: float = float(candidate.call("attackable_radius")) if candidate.has_method("attackable_radius") else 24.0
 		var perpendicular_distance: float = absf(relative.cross(direction))

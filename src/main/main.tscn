@@ -176,6 +176,23 @@ text = "敌人"
 unique_name_in_owner = true
 text = "0 / 0"
 
+[node name="NoticePanel" type="PanelContainer" parent="HUD"]
+visible = false
+z_index = 10
+offset_left = 245.0
+offset_top = 128.0
+offset_right = 715.0
+offset_bottom = 172.0
+mouse_filter = 2
+
+[node name="Message" type="Label" parent="HUD/NoticePanel"]
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(1, 0.88, 0.56, 1)
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+mouse_filter = 2
+
 [node name="ResourcesBar" type="PanelContainer" parent="HUD"]
 unique_name_in_owner = true
 offset_left = 180.0
@@ -196,10 +213,11 @@ text = "战斗商店"
 unique_name_in_owner = true
 visible = false
 offset_left = 20.0
-offset_top = 88.0
+offset_top = 82.0
 offset_right = 174.0
 offset_bottom = 126.0
 text = "生产农民 10金"
+theme_override_font_sizes/font_size = 16
 
 [node name="Margin" type="MarginContainer" parent="HUD/ResourcesBar"]
 theme_override_constants/margin_left = 12
@@ -443,10 +461,11 @@ custom_minimum_size = Vector2(180, 44)
 text = "知道了"
 
 [node name="DaySetupPanel" type="PanelContainer" parent="HUD"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_hand_bar")
 unique_name_in_owner = true
 visible = false
 offset_left = 20.0
-offset_top = 264.0
+offset_top = 204.0
 offset_right = 940.0
 offset_bottom = 530.0
 
@@ -497,7 +516,12 @@ custom_minimum_size = Vector2(95, 44)
 text = "岗位 0/6\n空闲 6"
 vertical_alignment = 1
 
-[node name="JobRows" type="HBoxContainer" parent="HUD/DaySetupPanel/Margin/Content/JobSection"]
+[node name="JobScroll" type="ScrollContainer" parent="HUD/DaySetupPanel/Margin/Content/JobSection"]
+custom_minimum_size = Vector2(0, 88)
+size_flags_horizontal = 3
+vertical_scroll_mode = 0
+
+[node name="JobRows" type="HBoxContainer" parent="HUD/DaySetupPanel/Margin/Content/JobSection/JobScroll"]
 unique_name_in_owner = true
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
@@ -505,7 +529,7 @@ theme_override_constants/separation = 8
 [node name="JobEmptyHint" type="Label" parent="HUD/DaySetupPanel/Margin/Content/JobSection"]
 unique_name_in_owner = true
 size_flags_horizontal = 3
-text = "先建造建筑，岗位加减按钮会立即显示在这里"
+text = "迎战后拖牌建造\n波间可调整农民岗位"
 horizontal_alignment = 1
 vertical_alignment = 1
 

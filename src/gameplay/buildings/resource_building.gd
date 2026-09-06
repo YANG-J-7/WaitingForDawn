@@ -46,9 +46,10 @@ func apply_enemy_attack(base_damage: int, _enemy_id: StringName) -> int:
 func remove_from_run() -> void:
 	if resource_site != null and is_instance_valid(resource_site):
 		resource_site.release(self)
-	if capacity_bonus_applied and definition != null:
-		RunEconomy.change_population_capacity(-definition.population_capacity_bonus)
+	var removed_bonus: int = definition.population_capacity_bonus if capacity_bonus_applied and definition != null else 0
 	capacity_bonus_applied = false
+	if removed_bonus > 0:
+		RunEconomy.change_population_capacity(-removed_bonus)
 
 
 func assign_workers(worker_count: int) -> void:

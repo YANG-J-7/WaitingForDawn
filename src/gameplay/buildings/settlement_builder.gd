@@ -50,6 +50,7 @@ func place_card(card: OpeningCardDefinition, slot_index: int) -> bool:
 	add_child(building)
 	building.position = slot_positions[slot_index]
 	building.configure(card)
+	building.destroyed.connect(_on_building_destroyed)
 	buildings_by_slot[slot_index] = building
 	consumed_card_ids.append(card.card_id)
 	placement_order.append(building)
@@ -74,8 +75,8 @@ func place_card_at(
 			last_error = "%s必须建在对应的%s资源点上。" % [card.display_name, _site_label(card.required_resource_site)]
 			return null
 		final_position = claimed_site.global_position
-	elif not build_bounds.has_point(map_position):
-		last_error = "民屋必须放在地图可建造区域内。"
+	if not build_bounds.grow(-card.footprint_radius).has_point(final_position):
+		last_error = "建筑的完整占地必须位于地图可建造区域内。"
 		return null
 	if not _is_clear(final_position, card.footprint_radius, obstacles):
 		last_error = "这里已有建筑或单位，不能放置%s。" % card.display_name
@@ -173,3 +174,4 @@ func _on_building_destroyed(building: ResourceBuilding) -> void:
 		buildings_by_slot.erase(slot_index)
 	var card_id: StringName = building.definition.card_id if building.definition != null else &""
 	building_destroyed.emit(building, card_id)
+	building.queue_free()
