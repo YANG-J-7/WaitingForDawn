@@ -21,6 +21,7 @@ func check(condition: bool, label: String) -> void:
 
 
 func run_checks() -> void:
+	_test_carried_job_change()
 	var main = MAIN.instantiate()
 	get_tree().root.add_child.call_deferred(main)
 	await get_tree().process_frame
@@ -88,6 +89,34 @@ func run_checks() -> void:
 	main._on_start_pressed()
 	check(manager.active_farmers().size() == 5 and RunEconomy.population_capacity == 5, "新局恢复五农民五容量")
 	main.queue_free()
+
+
+func _test_carried_job_change() -> void:
+	var farmer := FarmerAgent.new()
+	var workplace := Node2D.new()
+	add_child(workplace)
+	add_child(farmer)
+	farmer.configure(0, Vector2.ZERO)
+	workplace.position = Vector2(160, 0)
+	var deliveries: Array = []
+	farmer.delivery_completed.connect(func(resource_id: StringName, amount: int): deliveries.append([resource_id, amount]))
+	farmer.assign_job(&"lumber_camp", workplace, &"wood", 2)
+	farmer.advance(10)
+	farmer.advance(1.1)
+	farmer.assign_job(&"gold_mine", workplace, &"gold", 1)
+	check(farmer.carried_resource == &"wood" and farmer.carried_amount == 2, "携木换到金矿岗位后仍保留原货物")
+	farmer.advance(10)
+	check(deliveries == [[&"wood", 2]], "换岗后的首次交付仍是两木而非金币")
+	farmer.advance(10)
+	farmer.advance(1.1)
+	check(farmer.carried_resource == &"gold" and farmer.carried_amount == 1, "交付旧货后按新岗位采集金币")
+	farmer.clear_job()
+	farmer.advance(10)
+	check(deliveries == [[&"wood", 2], [&"gold", 1]], "撤销岗位仍交付已采集金币")
+	farmer.advance(10)
+	check(deliveries.size() == 2, "空闲农民不会重复交付旧货")
+	farmer.queue_free()
+	workplace.queue_free()
 
 
 func _test_shop(shop: Node, battle: bool) -> void:
