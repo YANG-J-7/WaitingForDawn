@@ -36,13 +36,15 @@ var age_seconds: float = 0.0
 var attack_elapsed: float = 0.0
 var current_health: int = 0
 var spawn_index: int = -1
+var reward_transaction_id: StringName = &""
 
 
 func configure(
 	enemy_definition: EnemyDefinition,
 	spawn_position: Vector2,
 	city_position: Vector2,
-	entity_spawn_index: int = -1
+	entity_spawn_index: int = -1,
+	transaction_id: StringName = &""
 ) -> void:
 	definition = enemy_definition
 	position = spawn_position
@@ -53,6 +55,7 @@ func configure(
 	world_target = null
 	attack_target_kind = &"city"
 	spawn_index = entity_spawn_index
+	reward_transaction_id = transaction_id
 	current_health = definition.maximum_health
 	active = true
 	has_reached_target = false

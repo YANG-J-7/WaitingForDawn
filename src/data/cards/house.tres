@@ -7,7 +7,7 @@ script = ExtResource("1_card")
 card_id = &"house"
 display_name = "民屋"
 category = "population"
-shop_price = 7
+shop_price = 9
 build_costs = {
 &"stone": 15,
 &"wood": 45

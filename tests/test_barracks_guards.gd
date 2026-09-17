@@ -101,9 +101,9 @@ func _test_barracks_battle_flow() -> void:
 	map_surface.drop_card_data(barracks_payload, Vector2(620.0, 360.0))
 	await get_tree().process_frame
 	_expect_true(barracks.is_built(), "barracks becomes active after drop")
-	_expect_equal(RunEconomy.amount(&"wood"), 85, "barracks construction spends fifty five wood")
-	_expect_equal(RunEconomy.amount(&"stone"), 40, "barracks construction spends twenty stone")
-	_expect_equal(RunEconomy.amount(&"iron"), 20, "barracks construction spends ten iron")
+	_expect_equal(RunEconomy.amount(&"wood"), 45, "barracks construction spends fifty five wood")
+	_expect_equal(RunEconomy.amount(&"stone"), 80, "barracks construction spends twenty stone")
+	_expect_equal(RunEconomy.amount(&"iron"), 90, "barracks construction spends ten iron")
 	_expect_equal(inventory.card_count(), inventory_before - 1, "successful barracks drop consumes hand card")
 	_expect_equal(economy.job_capacity(&"barracks"), 2, "barracks contributes two job slots")
 	_expect_equal(economy.assigned_workers_for(&"barracks"), 2, "auto assignment staffs both barracks jobs")
@@ -159,11 +159,13 @@ func _test_barracks_battle_flow() -> void:
 		frame_budget -= 1
 	_expect_equal(RunState.phase, RunState.Phase.WAVE_RESULT, "受控敌人清场后进入波间阶段")
 	_expect_equal(barracks.active_guards().size(), 0, "wave result removes temporary guards")
+	var current_gold: int = RunEconomy.amount(&"gold")
+	if current_gold < 100:
+		RunEconomy.add_resource(&"gold", 100 - current_gold)
 	(card_grid.get_child(0) as Button).pressed.emit()
-	(card_grid.get_child(1) as Button).pressed.emit()
 	ready_button.pressed.emit()
 	await get_tree().process_frame
-	_expect_equal(RunState.phase, RunState.Phase.WAVE_COMBAT, "next wave starts after free selection")
+	_expect_equal(RunState.phase, RunState.Phase.WAVE_COMBAT, "next wave starts after paid purchase")
 	_expect_equal(barracks.active_guards().size(), 2, "next wave respawns guards from assignments")
 	for guard in barracks.active_guards():
 		_expect_equal(guard.current_health, 90, "respawned guard returns at full health")

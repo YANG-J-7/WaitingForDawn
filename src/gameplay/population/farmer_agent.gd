@@ -83,6 +83,9 @@ func apply_enemy_attack(base_damage: int, _enemy_id: StringName) -> int:
 
 
 func advance(delta: float) -> void:
+	# 终局冻结位置、采集进度和携货，防止其他调用入口继续推进运输。
+	if RunState.phase in [RunState.Phase.RUN_LOST, RunState.Phase.RUN_WON]:
+		return
 	if delta <= 0.0 or current_health <= 0:
 		return
 	match state:
@@ -136,7 +139,7 @@ func _draw() -> void:
 	var body_color := Color("d6b66a") if carried_amount == 0 else Color("f0cf59")
 	draw_circle(Vector2.ZERO, 8.0, body_color)
 	draw_rect(Rect2(-5, 6, 10, 9), Color("6f5438"))
-	var job_label: String = str({&"lumber_camp": "木", &"farm": "农", &"gold_mine": "金", &"stone_mine": "石", &"arrow_tower": "箭", &"barracks": "兵"}.get(job_id, "闲"))
+	var job_label: String = str({&"lumber_camp": "木", &"farm": "农", &"gold_mine": "金", &"stone_mine": "石", &"arrow_tower": "箭", &"barracks": "兵"}.get(StringName(String(job_id).get_slice("#", 0)), "闲"))
 	draw_string(ThemeDB.fallback_font, Vector2(-24, -13), "%d·%s" % [farmer_index + 1, job_label], HORIZONTAL_ALIGNMENT_CENTER, 48.0, 10, Color.WHITE)
 	if carried_amount > 0:
 		var resource_label: String = str({&"wood": "木", &"food": "食", &"gold": "金", &"stone": "石"}.get(carried_resource, "货"))

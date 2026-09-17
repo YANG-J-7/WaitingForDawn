@@ -49,29 +49,29 @@ func _run_test() -> void:
 	_expect_equal(wave_economy.assigned_workers_for(&"arrow_tower"), 1, "auto assignment staffs arrow tower first")
 	_expect_equal(wave_economy.assigned_workers_for(&"lumber_camp"), 2, "auto assignment staffs lumber camp")
 	_expect_equal(wave_economy.assigned_workers_for(&"farm"), 2, "auto assignment staffs farm")
-	_expect_equal(wave_economy.assigned_workers_for(&"gold_mine"), 0, "five starting farmers leave gold mine unstaffed")
+	_expect_equal(wave_economy.assigned_workers_for(&"stone_mine"), 0, "five starting farmers leave stone mine unstaffed")
 	_expect_equal(wave_economy.assigned_population, 5, "auto assignment uses all population")
 	_expect_equal(wave_economy.idle_population, 0, "auto assignment leaves no idle population")
 	var arrow_minus := job_rows.get_node("Job_arrow_tower/Controls/Minus") as Button
 	var arrow_plus := job_rows.get_node("Job_arrow_tower/Controls/Plus") as Button
 	var lumber_minus := job_rows.get_node("Job_lumber_camp/Controls/Minus") as Button
-	var gold_plus := job_rows.get_node("Job_gold_mine/Controls/Plus") as Button
+	var stone_plus := job_rows.get_node("Job_stone_mine/Controls/Plus") as Button
 	_expect_true(arrow_minus.custom_minimum_size.x >= 44.0, "minus touch target is at least forty-four")
 	_expect_true(arrow_plus.custom_minimum_size.x >= 44.0, "plus touch target is at least forty-four")
 
-	_expect_true(not wave_economy.adjust_workers(&"gold_mine", 1), "population cap rejects extra worker")
-	_expect_equal(wave_economy.assigned_workers_for(&"gold_mine"), 0, "rejected adjustment keeps assignment")
+	_expect_true(not wave_economy.adjust_workers(&"stone_mine", 1), "population cap rejects extra worker")
+	_expect_equal(wave_economy.assigned_workers_for(&"stone_mine"), 0, "rejected adjustment keeps assignment")
 	lumber_minus.pressed.emit()
-	gold_plus.pressed.emit()
+	stone_plus.pressed.emit()
 	_expect_equal(wave_economy.assigned_workers_for(&"lumber_camp"), 1, "manual minus removes lumber worker")
-	_expect_equal(wave_economy.assigned_workers_for(&"gold_mine"), 1, "manual plus adds gold worker")
+	_expect_equal(wave_economy.assigned_workers_for(&"stone_mine"), 1, "manual plus adds stone worker")
 	_expect_equal(wave_economy.assigned_population, 5, "manual reassignment preserves total cap")
 
 	auto_button.pressed.emit()
 	_expect_equal(wave_economy.assigned_workers_for(&"lumber_camp"), 2, "auto button restores lumber workers")
-	_expect_equal(wave_economy.assigned_workers_for(&"gold_mine"), 0, "auto button restores defense-first distribution")
+	_expect_equal(wave_economy.assigned_workers_for(&"stone_mine"), 0, "auto button restores defense-first distribution")
 	lumber_minus.pressed.emit()
-	gold_plus.pressed.emit()
+	stone_plus.pressed.emit()
 	ready_button.pressed.emit()
 	await get_tree().process_frame
 	_expect_true(wave_economy.assignments_locked, "combat locks worker assignments")
@@ -86,7 +86,8 @@ func _run_test() -> void:
 	_expect_equal(RunState.phase, RunState.Phase.WAVE_RESULT, "staffed defense clears wave one")
 	_expect_true(int(wave_economy.total_continuous_production.get(&"wood", 0)) > 0, "one-worker lumber camp produces continuously")
 	_expect_true(int(wave_economy.total_continuous_production.get(&"food", 0)) > 0, "full farm produces continuously")
-	_expect_true(int(wave_economy.total_continuous_production.get(&"gold", 0)) > 0, "full gold mine produces continuously")
+	_expect_true(int(wave_economy.total_continuous_production.get(&"stone", 0)) > 0, "staffed stone mine produces continuously")
+	_expect_equal(int(wave_economy.total_continuous_production.get(&"gold", 0)), 0, "prototype resource jobs produce no passive gold")
 	_expect_true(not wave_economy.assignments_locked, "wave result unlocks assignments")
 	_expect_true((main.get_node("HUD/DaySetupPanel") as PanelContainer).visible, "interwave worker panel is visible")
 

@@ -39,6 +39,7 @@ func _run_test() -> void:
 	await get_tree().process_frame
 
 	var buildings: Array[ResourceBuilding] = builder.placed_buildings()
+	var wood_after_building: int = RunEconomy.amount(&"wood")
 	_expect_equal(wave_economy.arrow_tower_workers, 1, "arrow tower receives defense-priority worker")
 	_expect_equal(buildings[0].assigned_workers, 2, "lumber camp receives two workers")
 	_expect_equal(buildings[1].assigned_workers, 2, "farm receives two workers")
@@ -50,15 +51,15 @@ func _run_test() -> void:
 		await get_tree().process_frame
 		frame_budget -= 1
 	_expect_equal(RunState.phase, RunState.Phase.WAVE_RESULT, "wave one reaches result")
-	_expect_true(RunEconomy.amount(&"wood") > 30, "lumber produces continuously during combat")
-	_expect_true(RunEconomy.amount(&"food") > 26, "farm production offsets wave-end food consumption")
-	_expect_resource(&"stone", 40, "settlement does not change stone")
+	_expect_true(RunEconomy.amount(&"wood") > wood_after_building, "lumber produces continuously during combat")
+	_expect_true(RunEconomy.amount(&"food") > 95, "farm production offsets wave-end food consumption")
+	_expect_resource(&"stone", 80, "settlement does not change stone")
 	_expect_true(not RunEconomy.is_hungry, "sufficient food avoids hunger")
 	_expect_true(wave_economy.last_summary.contains("持续生产"), "summary explains continuous production")
 	_expect_true(not wave_economy.last_summary.contains("+10木"), "summary no longer grants wave-end lumber")
 	_expect_true(wave_economy.last_summary.contains("消耗5/5食"), "summary shows food consumption")
 	var status_label: Label = main.get_node("HUD/BottomPanel/Margin/Content/StatusLabel") as Label
-	_expect_true(status_label.text.contains("岗位5/5"), "wave result UI shows worker summary")
+	_expect_true(status_label.text.contains("岗位%d/%d" % [int(wave_economy.last_report.assigned_population), int(wave_economy.last_report.food_required)]), "结算界面展示实际存活建筑的岗位，不假设建筑始终完好")
 
 	var wood_after_first_settlement: int = RunEconomy.amount(&"wood")
 	var food_after_first_settlement: int = RunEconomy.amount(&"food")
@@ -75,14 +76,14 @@ func _run_test() -> void:
 	RunEconomy.current_population = 1
 	wave_economy.prepare_wave(builder, main.get_node("ArrowTower") as ArrowTower)
 	wave_economy.set_process(false)
-	_expect_equal(builder.placed_buildings()[0].assigned_workers, 1, "single worker is assigned to gold mine")
+	_expect_equal(builder.placed_buildings()[0].assigned_workers, 1, "single worker is assigned to stone mine")
 	wave_economy.advance_production(2.0)
-	_expect_resource(&"gold", 20, "farmer logistics mode disables direct mine payout")
+	_expect_resource(&"gold", 0, "new prototype has no passive gold payout")
 	_expect_true(wave_economy.settle_wave(1, builder), "new run can settle wave one")
-	_expect_resource(&"gold", 20, "wave settlement does not add gold")
-	_expect_resource(&"food", 31, "single population consumes one food")
+	_expect_resource(&"gold", 0, "wave settlement does not add gold")
+	_expect_resource(&"food", 99, "single population consumes one food")
 
-	RunEconomy.consume_food(31)
+	RunEconomy.consume_food(99)
 	_expect_resource(&"food", 0, "exact food consumption may reach zero")
 	RunEconomy.consume_food(1)
 	_expect_resource(&"food", 0, "food shortage never becomes negative")

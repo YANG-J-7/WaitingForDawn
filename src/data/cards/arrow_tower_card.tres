@@ -8,6 +8,7 @@ card_id = &"arrow_tower"
 display_name = "箭塔"
 category = "defense"
 shop_price = 6
+can_deal_damage = true
 build_costs = {
 &"stone": 10,
 &"wood": 45

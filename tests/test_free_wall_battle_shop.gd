@@ -46,7 +46,7 @@ func _test_free_wall_and_battle_shop() -> void:
 	map_surface.drop_card_data(wall_payload, controller.city_target_position)
 	_expect_equal(wall_manager.active_walls().size(), 0, "city center rejects wall placement")
 	_expect_equal(inventory.card_count(), inventory_before, "invalid wall placement preserves card")
-	_expect_equal(RunEconomy.amount(&"wood"), 140, "invalid wall placement preserves materials")
+	_expect_equal(RunEconomy.amount(&"wood"), 100, "invalid wall placement preserves materials")
 
 	var frame_budget: int = 180
 	while controller.enemies.is_empty() and frame_budget > 0:
@@ -64,8 +64,8 @@ func _test_free_wall_and_battle_shop() -> void:
 	_expect_equal(wall_manager.active_walls().size(), 1, "legal off route point creates first wall")
 	var off_route_wall: BarrierWall = wall_manager.active_walls()[0]
 	_expect_true(not off_route_wall.blocks_segment(tracked_enemy.global_position, controller.city_target_position), "off route wall does not block tracked path")
-	_expect_equal(RunEconomy.amount(&"wood"), 120, "first free wall spends twenty wood")
-	_expect_equal(RunEconomy.amount(&"stone"), 45, "first free wall spends fifteen stone")
+	_expect_equal(RunEconomy.amount(&"wood"), 80, "first free wall spends twenty wood")
+	_expect_equal(RunEconomy.amount(&"stone"), 85, "first free wall spends fifteen stone")
 	_expect_equal(inventory.card_count(), inventory_before - 1, "first free wall consumes card")
 
 	var distance_before_shop: float = tracked_enemy.global_position.distance_to(controller.city_target_position)
@@ -85,6 +85,7 @@ func _test_free_wall_and_battle_shop() -> void:
 			wall_offer_index = card_index
 			break
 	_expect_true(wall_offer_index >= 0, "battle shop contains wall offer")
+	RunEconomy.add_resource(&"gold", 50)
 	var gold_before_purchase: int = RunEconomy.amount(&"gold")
 	(card_grid.get_child(wall_offer_index) as Button).pressed.emit()
 	_expect_equal(
@@ -98,8 +99,8 @@ func _test_free_wall_and_battle_shop() -> void:
 	var purchased_wall: OpeningCardDefinition = battle_shop.offered_cards[wall_offer_index]
 	var gold_before_refresh: int = RunEconomy.amount(&"gold")
 	refresh_button.pressed.emit()
-	_expect_equal(RunEconomy.amount(&"gold"), gold_before_refresh - 10, "first battle refresh costs ten gold")
-	_expect_equal(battle_shop.current_refresh_cost(), 15, "next battle refresh rises to fifteen gold")
+	_expect_equal(RunEconomy.amount(&"gold"), gold_before_refresh - 2, "first battle refresh costs two gold")
+	_expect_equal(battle_shop.current_refresh_cost(), 3, "next battle refresh rises to three gold")
 	_expect_equal(battle_shop.offered_cards[wall_offer_index], purchased_wall, "refresh preserves purchased offer")
 
 	ready_button.pressed.emit()
@@ -109,7 +110,7 @@ func _test_free_wall_and_battle_shop() -> void:
 	shop_button.pressed.emit()
 	await get_tree().process_frame
 	_expect_true(battle_shop.active, "same wave battle shop can reopen")
-	_expect_equal(battle_shop.current_refresh_cost(), 15, "reopening does not reset refresh price")
+	_expect_equal(battle_shop.current_refresh_cost(), 3, "reopening does not reset refresh price")
 	_expect_true(wall_offer_index in battle_shop.purchased_indices, "reopening preserves sold out offer")
 	ready_button.pressed.emit()
 	await get_tree().process_frame

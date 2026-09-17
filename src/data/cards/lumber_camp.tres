@@ -9,9 +9,9 @@ display_name = "伐木场"
 category = "resource"
 shop_price = 6
 build_costs = {
-&"wood": 35
+&"wood": 20
 }
-build_cost_text = "35木"
+build_cost_text = "20木"
 production_resource = &"wood"
 production_per_second = 2.0
 worker_slots = 2

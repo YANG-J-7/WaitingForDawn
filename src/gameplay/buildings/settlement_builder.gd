@@ -39,8 +39,9 @@ func place_card(card: OpeningCardDefinition, slot_index: int) -> bool:
 	if buildings_by_slot.has(slot_index):
 		last_error = "这个聚落格已经有建筑。"
 		return false
+	# 旧固定格接口以类型代表开局唯一卡；地图入口按库存实例消费。
 	if card.card_id in consumed_card_ids:
-		last_error = "这张建筑卡已经使用。"
+		last_error = "这张开局建筑卡已经使用。"
 		return false
 	if not RunEconomy.try_pay(card.build_costs):
 		last_error = "建造资源不足。"

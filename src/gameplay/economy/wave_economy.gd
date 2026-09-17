@@ -30,6 +30,35 @@ var production_barracks: Barracks
 var production_progress: Dictionary = {}
 var total_continuous_production: Dictionary = {}
 var use_farmer_logistics: bool = false
+var additional_towers: Array[ArrowTower] = []
+var additional_barracks: Array[Barracks] = []
+var job_targets: Dictionary = {}
+var job_serials: Dictionary = {}
+
+func entity_job_id(entity: Node, base_id: StringName) -> StringName:
+	if not entity.has_meta("job_id"):
+		var serial: int = int(job_serials.get(base_id, 0))
+		job_serials[base_id] = serial + 1
+		entity.set_meta("job_id", base_id if serial == 0 else StringName("%s#%d" % [base_id, serial + 1]))
+	return StringName(entity.get_meta("job_id"))
+
+func tower_entities() -> Array[ArrowTower]:
+	var result: Array[ArrowTower] = []
+	if is_instance_valid(production_arrow_tower):
+		result.append(production_arrow_tower)
+	for tower in additional_towers:
+		if is_instance_valid(tower):
+			result.append(tower)
+	return result
+
+func barracks_entities() -> Array[Barracks]:
+	var result: Array[Barracks] = []
+	if is_instance_valid(production_barracks):
+		result.append(production_barracks)
+	for building in additional_barracks:
+		if is_instance_valid(building):
+			result.append(building)
+	return result
 
 
 func _process(delta: float) -> void:
@@ -47,23 +76,29 @@ func refresh_jobs(
 	var next_order: Array[StringName] = []
 	var next_capacities: Dictionary = {}
 	var next_labels: Dictionary = {}
-	if arrow_tower.visible:
-		next_order.append(&"arrow_tower")
-		next_capacities[&"arrow_tower"] = 1
-		next_labels[&"arrow_tower"] = "箭塔"
-	if barracks != null and barracks.is_built():
-		next_order.append(&"barracks")
-		next_capacities[&"barracks"] = 2
-		next_labels[&"barracks"] = "兵营"
+	job_targets.clear()
+	for tower in tower_entities():
+		if tower.is_attackable():
+			var key: StringName = entity_job_id(tower, &"arrow_tower")
+			next_order.append(key)
+			next_capacities[key] = 1
+			next_labels[key] = "箭塔" + (" " + String(key).get_slice("#", 1) if "#" in String(key) else "")
+			job_targets[key] = tower
+	for camp in barracks_entities():
+		if camp.is_built():
+			var key: StringName = entity_job_id(camp, &"barracks")
+			next_order.append(key)
+			next_capacities[key] = 2
+			next_labels[key] = "兵营" + (" " + String(key).get_slice("#", 1) if "#" in String(key) else "")
+			job_targets[key] = camp
 	for building in builder.placed_buildings():
-		if not is_instance_valid(building) or building.definition == null:
+		if not is_instance_valid(building) or building.definition == null or building.definition.worker_slots <= 0:
 			continue
-		if building.definition.worker_slots <= 0:
-			continue
-		var job_id: StringName = building.definition.card_id
-		next_order.append(job_id)
-		next_capacities[job_id] = building.definition.worker_slots
-		next_labels[job_id] = building.definition.display_name
+		var key: StringName = entity_job_id(building, building.definition.card_id)
+		next_order.append(key)
+		next_capacities[key] = building.definition.worker_slots
+		next_labels[key] = building.definition.display_name + (" " + String(key).get_slice("#", 1) if "#" in String(key) else "")
+		job_targets[key] = building
 
 	var roster_changed: bool = next_order != job_order
 	var next_assignments: Dictionary = {}
@@ -173,7 +208,7 @@ func advance_production(delta: float) -> Dictionary:
 			or definition.worker_slots <= 0
 		):
 			continue
-		var workers: int = int(worker_assignments.get(definition.card_id, 0))
+		var workers: int = int(worker_assignments.get(entity_job_id(building, definition.card_id), 0))
 		if workers <= 0:
 			continue
 		var building_key: int = building.get_instance_id()
@@ -233,6 +268,11 @@ func refresh_population_totals() -> void:
 
 
 func reset(builder: SettlementBuilder) -> void:
+	for entity in tower_entities() + barracks_entities():
+		if entity.has_meta("job_id"):
+			entity.remove_meta("job_id")
+	job_targets.clear()
+	job_serials.clear()
 	settled_waves.clear()
 	assigned_population = 0
 	idle_population = 0
@@ -288,16 +328,17 @@ func _recalculate_totals() -> void:
 
 
 func _apply_assignments_to_entities() -> void:
-	if production_arrow_tower != null and is_instance_valid(production_arrow_tower):
-		arrow_tower_workers = int(worker_assignments.get(&"arrow_tower", 0))
-		production_arrow_tower.enabled = production_arrow_tower.visible and arrow_tower_workers > 0
-	if production_barracks != null and is_instance_valid(production_barracks):
-		production_barracks.set_assigned_workers(int(worker_assignments.get(&"barracks", 0)))
-	if production_builder == null:
-		return
-	for building in production_builder.placed_buildings():
-		if is_instance_valid(building) and building.definition != null:
-			building.assign_workers(int(worker_assignments.get(building.definition.card_id, 0)))
+	arrow_tower_workers = 0
+	for tower in tower_entities():
+		var count: int = int(worker_assignments.get(entity_job_id(tower, &"arrow_tower"), 0))
+		tower.enabled = tower.is_attackable() and count > 0
+		arrow_tower_workers += count
+	for camp in barracks_entities():
+		camp.set_assigned_workers(int(worker_assignments.get(entity_job_id(camp, &"barracks"), 0)))
+	if production_builder != null:
+		for building in production_builder.placed_buildings():
+			if is_instance_valid(building) and building.definition != null:
+				building.assign_workers(int(worker_assignments.get(entity_job_id(building, building.definition.card_id), 0)))
 
 
 func _emit_assignments_changed() -> void:

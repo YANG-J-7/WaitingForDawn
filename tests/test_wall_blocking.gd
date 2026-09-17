@@ -113,18 +113,18 @@ func _test_wall_battle_flow() -> void:
 	controller.enemies[0].position = Vector2(100, 270)
 	controller.enemies[0]._resume_to_city()
 	var route_position := Vector2(300, 270)
-	RunEconomy.try_pay({&"wood": 125})
+	RunEconomy.try_pay({&"wood": RunEconomy.amount(&"wood")})
 	map_surface.drop_card_data(wall_payload, route_position)
 	_expect_equal(wall_manager.active_walls().size(), 0, "insufficient resources do not create wall")
 	_expect_equal(inventory.card_count(), inventory_before, "failed wall build preserves hand card")
 	_expect_true(main.get_node("HUD/BuildFailurePanel").visible, "failed wall build shows shortage popup")
-	RunEconomy.add_resource(&"wood", 125)
+	RunEconomy.add_resource(&"wood", 100)
 	map_surface.drop_card_data(wall_payload, route_position)
 	var wall: BarrierWall = wall_manager.active_walls()[0]
 	_expect_true(wall.is_blocking(), "wall becomes active after drop")
 	_expect_equal(wall.current_health, 400, "built wall starts at full health")
-	_expect_equal(RunEconomy.amount(&"wood"), 120, "wall construction spends twenty wood")
-	_expect_equal(RunEconomy.amount(&"stone"), 45, "wall construction spends fifteen stone")
+	_expect_equal(RunEconomy.amount(&"wood"), 80, "wall construction spends twenty wood")
+	_expect_equal(RunEconomy.amount(&"stone"), 85, "wall construction spends fifteen stone")
 	_expect_equal(inventory.card_count(), inventory_before - 1, "successful wall drop consumes hand card")
 
 	var frame_budget: int = 700

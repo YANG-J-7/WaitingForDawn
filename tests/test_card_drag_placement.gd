@@ -63,7 +63,7 @@ func _run_test() -> void:
 	_expect_true(map_surface.accepts_card_data(lumber_data), "resource hand card accepts map target")
 	map_surface.drop_card_data(lumber_data, (resource_sites.get_node("Forest") as Node2D).global_position)
 	_expect_equal(builder.building_count(), 1, "resource hand drop constructs building")
-	_expect_equal(RunEconomy.amount(&"wood"), 105, "resource hand drop uses atomic cost")
+	_expect_equal(RunEconomy.amount(&"wood"), 80, "resource hand drop uses atomic cost")
 	_expect_true(draft.is_card_locked(0), "successful resource drop locks selected card")
 	_expect_equal(hand_slots.get_child_count(), 3, "successful construction consumes one hand card")
 
@@ -72,8 +72,8 @@ func _run_test() -> void:
 	_expect_true(map_surface.accepts_card_data(arrow_data), "arrow hand card accepts free map target")
 	map_surface.drop_card_data(arrow_data, Vector2(700.0, 270.0))
 	_expect_true(tower.visible and tower.enabled, "arrow hand drop constructs tower")
-	_expect_equal(RunEconomy.amount(&"wood"), 60, "arrow hand drop spends wood")
-	_expect_equal(RunEconomy.amount(&"stone"), 50, "arrow hand drop spends stone")
+	_expect_equal(RunEconomy.amount(&"wood"), 35, "arrow hand drop spends wood")
+	_expect_equal(RunEconomy.amount(&"stone"), 90, "arrow hand drop spends stone")
 	_expect_equal(hand_slots.get_child_count(), 2, "tower construction consumes one hand card")
 
 	var farm_hand := hand_slots.get_node("HandCard_1") as HandCardSlot
@@ -86,20 +86,20 @@ func _run_test() -> void:
 	_expect_equal(builder.building_count(), 2, "second legal hand drop constructs farm")
 	_expect_equal(hand_slots.get_child_count(), 1, "farm leaves hand only after success")
 
-	var gold_hand := hand_slots.get_node("HandCard_2") as HandCardSlot
-	var gold_data: Variant = gold_hand.drag_payload()
+	var stone_hand := hand_slots.get_node("HandCard_2") as HandCardSlot
+	var stone_data: Variant = stone_hand.drag_payload()
 	var wood_before_unaffordable: int = RunEconomy.amount(&"wood")
 	var iron_before_unaffordable: int = RunEconomy.amount(&"iron")
-	map_surface.drop_card_data(gold_data, (resource_sites.get_node("GoldVein") as Node2D).global_position)
+	map_surface.drop_card_data(stone_data, (resource_sites.get_node("StoneDeposit") as Node2D).global_position)
 	_expect_true(not draft.is_card_locked(2), "unaffordable drop does not consume selected card")
 	_expect_equal(hand_slots.get_child_count(), 1, "unaffordable card remains in hand bar")
 	_expect_equal(RunEconomy.amount(&"wood"), wood_before_unaffordable, "unaffordable drop keeps wood")
 	_expect_equal(RunEconomy.amount(&"iron"), iron_before_unaffordable, "unaffordable drop keeps iron")
-	_expect_true("拖到地图" in gold_hand.text, "hand slot explains drag action")
+	_expect_true("拖动部署" in stone_hand.text, "hand slot explains drag action")
 
 	_expect_equal(RunState.phase, RunState.Phase.WAVE_COMBAT, "card deployment stays inside battle phase")
 	_expect_true(hand_bar.visible, "battle keeps hand bar visible")
-	_expect_true(gold_hand.drag_payload() is Dictionary, "battle allows remaining hand card dragging")
+	_expect_true(stone_hand.drag_payload() is Dictionary, "battle allows remaining hand card dragging")
 
 	main.queue_free()
 	get_tree().quit(failure_count)

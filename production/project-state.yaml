@@ -1,6 +1,6 @@
 version: 1
 stage: production
 engine: godot-4.7-development-validation
-updated: 2026-09-09
-current_goal: "0871440功能复验通过并保留风险；下一步试玩前四波并完成第5～10波压力曲线"
-active_story: "story-018-wave-five-to-ten-scaling"
+updated: 2026-09-17
+current_goal: "完成Story-024两局10～15分钟自然试玩，记录金币收入、购买、刷新、合成与失败原因"
+active_story: "production/stories/story-024-kill-gold-card-fusion-prototype.md"

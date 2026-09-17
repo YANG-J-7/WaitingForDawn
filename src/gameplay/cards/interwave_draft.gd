@@ -66,7 +66,8 @@ func finish() -> bool:
 
 
 func is_purchase_mode() -> bool:
-	return wave_index >= 4
+	# 开局免费六选四由OpeningDraft独立负责；确认后所有商店都使用金币。
+	return wave_index > 0
 
 
 func required_free_choices() -> int:
@@ -85,7 +86,7 @@ func purchase_card(card_index: int, inventory: RunCardInventory) -> bool:
 		last_error = "这张牌已经售罄。"
 		return false
 	if inventory == null or inventory.card_count() >= RunCardInventory.MAX_CARDS:
-		last_error = "普通卡库存已满（12/12），请先打出或弃牌。"
+		last_error = "普通卡库存已满（18/18），请先打出或合成。"
 		return false
 	var card: OpeningCardDefinition = offered_cards[card_index]
 	if not RunEconomy.can_pay({&"gold": card.shop_price}):
@@ -97,7 +98,7 @@ func purchase_card(card_index: int, inventory: RunCardInventory) -> bool:
 	var instance_id: int = inventory.add_card(card, wave_index, card_index)
 	if instance_id < 0:
 		RunEconomy.add_resource(&"gold", card.shop_price)
-		last_error = "普通卡库存已满（12/12），购买款已返还。"
+		last_error = "普通卡库存已满（18/18），购买款已返还。"
 		return false
 	purchased_indices.append(card_index)
 	inventory_count_at_open = inventory.card_count()
@@ -107,7 +108,7 @@ func purchase_card(card_index: int, inventory: RunCardInventory) -> bool:
 
 
 func current_refresh_cost() -> int:
-	return 10 + 5 * refresh_count
+	return mini(2 + refresh_count, 6)
 
 
 func refresh() -> bool:

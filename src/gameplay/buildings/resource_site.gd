@@ -3,7 +3,7 @@ extends Node2D
 
 @export var site_type: StringName = &"forest"
 @export var display_name: String = "资源点"
-@export var radius: float = 46.0
+@export var radius: float = 32.0
 @export var site_color: Color = Color("4f7650")
 
 var occupied_building: ResourceBuilding

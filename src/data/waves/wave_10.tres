@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="WaveDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/waves/wave_definition.gd" id="1_definition"]
+[ext_resource type="Resource" path="res://src/data/enemies/wolf.tres" id="2_wolf"]
+
+[resource]
+script = ExtResource("1_definition")
+wave_index = 10
+enemy_definition = ExtResource("2_wolf")
+enemy_count = 5
+spawn_interval = 0.6

@@ -1,22 +1,31 @@
 class_name HandCardSlot
 extends Button
 
+signal fusion_requested(card_id: StringName, star: int)
+
 var card_index: int = -1
 var card_instance_id: int = -1
 var card_definition: OpeningCardDefinition
 var interaction_enabled: bool = false
+var card_star: int = 1
+var matching_count: int = 1
 
 
-func configure(instance_id: int, definition: OpeningCardDefinition) -> void:
+func configure(instance_id: int, definition: OpeningCardDefinition, star: int = 1, same_count: int = 1) -> void:
 	card_index = instance_id
 	card_instance_id = instance_id
 	card_definition = definition
+	card_star = star
+	matching_count = same_count
 	name = "HandCard_%d" % card_instance_id
 	custom_minimum_size = Vector2(108.0, 92.0)
-	text = "%s【%s】\n建造：%s\n拖到地图部署" % [
+	text = "%s %s【%s】\n同名同星 %d/3｜建造：%s\n拖动部署%s" % [
 		card_definition.display_name,
+		"★".repeat(card_star),
 		card_definition.category_label(),
+		matching_count,
 		card_definition.build_cost_text,
+		"｜右键合成" if matching_count >= 3 and card_star < RunCardInventory.MAX_STAR else "",
 	]
 	tooltip_text = card_definition.description
 	add_theme_font_size_override("font_size", 14)
@@ -56,6 +65,15 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	preview.add_child(label)
 	set_drag_preview(preview)
 	return payload
+
+
+func _gui_input(event: InputEvent) -> void:
+	var mouse_event := event as InputEventMouseButton
+	if mouse_event == null or not mouse_event.pressed or mouse_event.button_index != MOUSE_BUTTON_RIGHT:
+		return
+	if interaction_enabled and card_definition != null and matching_count >= 3 and card_star < RunCardInventory.MAX_STAR:
+		fusion_requested.emit(card_definition.card_id, card_star)
+		accept_event()
 
 
 func _card_style(background: Color, border: Color, width: int) -> StyleBoxFlat:

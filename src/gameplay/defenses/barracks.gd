@@ -10,6 +10,8 @@ const GUARD_SCENE: PackedScene = preload("res://src/gameplay/defenses/barracks_g
 @export var maximum_health: int = 260
 @export var armor: int = 10
 
+var build_bounds := Rect2(64, 126, 832, 288)
+
 var card_definition: OpeningCardDefinition
 var current_health: int = 0
 var active: bool = false
@@ -120,7 +122,7 @@ func _spawn_guard(guard_index: int) -> void:
 	if outward == Vector2.ZERO:
 		outward = Vector2.RIGHT
 	var spawn_position: Vector2 = global_position + outward * 50.0 + outward.orthogonal() * (-18.0 if guard_index == 0 else 18.0)
-	guard.global_position = spawn_position.clamp(Vector2(82, 144), Vector2(878, 396))
+	guard.global_position = spawn_position.clamp(build_bounds.position + Vector2(18, 18), build_bounds.end - Vector2(18, 18))
 	guard.configure(guard_definition, guard_index)
 	guard.defeated.connect(_on_guard_defeated)
 	guard.target_released.connect(_on_guard_target_released)

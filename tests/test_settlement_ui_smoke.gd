@@ -30,8 +30,9 @@ func _ready() -> void:
 	main.farmer_manager.set_process(false)
 	await get_tree().process_frame
 	await get_tree().process_frame
+	await camera_inputs()
 	var lumber: HandCardSlot = main.hand_card_slots[0]
-	await drag(lumber.get_global_rect().get_center(), Vector2(190, 180))
+	await drag(lumber.get_global_rect().get_center(), world_to_screen(Vector2(190, 180)))
 	check(main.settlement_builder.building_count() == 1, "引擎鼠标拖动伐木卡生成建筑")
 	check(main.run_card_inventory.card_count() == 3, "拖牌成功才消耗手牌")
 	await click(main.train_farmer_button.get_global_rect().get_center())
@@ -43,6 +44,9 @@ func _ready() -> void:
 	await capture("shop")
 	await click(main.ready_button.get_global_rect().get_center())
 	check(not main.battle_shop.active and main.hand_bar.visible, "输入事件关闭商店回到手牌")
+	var wall: HandCardSlot = main.hand_card_slots[3]
+	await drag(wall.get_global_rect().get_center(), world_to_screen(Vector2(380, 390)), true)
+	check(main.placement_overlay.dragged_card == null, "拖牌结束后隐藏占地覆盖层")
 	main.queue_free()
 	get_tree().quit(failures)
 
@@ -75,14 +79,80 @@ func click(position: Vector2) -> void:
 	await get_tree().process_frame
 
 
-func drag(origin: Vector2, target: Vector2) -> void:
+func world_to_screen(point: Vector2) -> Vector2:
+	return main.map_camera.get_canvas_transform() * point
+
+
+func drag(origin: Vector2, target: Vector2, inspect_footprints: bool = false) -> void:
 	pointer(origin)
 	button(origin, true)
 	await get_tree().process_frame
 	for step in range(1, 6):
 		pointer(origin.lerp(target, float(step) / 5.0), true)
 		await get_tree().process_frame
+	if inspect_footprints:
+		check(main.placement_overlay.dragged_card != null, "拖动建筑时启用占地覆盖层")
+		check(main.building_footprints().size() == 2, "拖牌时包含主城与已建伐木场的实际占地")
+		await capture("footprints")
 	button(target, false)
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+
+func camera_inputs() -> void:
+	var camera = main.map_camera
+	var before: float = camera.zoom.x
+	var event := InputEventMouseButton.new()
+	event.position = Vector2(440, 250)
+	event.global_position = event.position
+	event.button_index = MOUSE_BUTTON_WHEEL_UP
+	event.pressed = true
+	playfield.push_input(event, true)
+	await get_tree().process_frame
+	check(camera.zoom.x > before, "真实滚轮事件放大地图")
+	event.pressed = false
+	playfield.push_input(event, true)
+	await get_tree().process_frame
+	var old_position: Vector2 = camera.position
+	await touch(0, Vector2(400, 260), true)
+	await finger_drag(0, Vector2(420, 260))
+	check(camera.position != old_position, "真实单指滑动事件平移地图")
+	await touch(1, Vector2(520, 260), true)
+	before = camera.zoom.x
+	await finger_drag(1, Vector2(570, 260))
+	check(camera.zoom.x > before, "真实双指拉开事件放大地图")
+	await finger_drag(1, Vector2(490, 260))
+	check(camera.zoom.x < before, "真实双指合拢事件缩小地图")
+	await touch(0, Vector2(420, 260), false)
+	await touch(1, Vector2(490, 260), false)
+	check(camera.touches.is_empty(), "手指释放清理镜头手势")
+	camera.reset_view()
+	for index in range(3):
+		event.pressed = true
+		playfield.push_input(event, true)
+		await get_tree().process_frame
+		event.pressed = false
+		playfield.push_input(event, true)
+		await get_tree().process_frame
+	# 合成触控会留下模拟鼠标的按钮状态；显式释放以继续验证真实的鼠标拖牌路径。
+	button(Vector2.ZERO, false)
+	await get_tree().process_frame
+
+
+func touch(index: int, point: Vector2, pressed: bool) -> void:
+	var event := InputEventScreenTouch.new()
+	event.index = index
+	event.position = point
+	event.pressed = pressed
+	playfield.push_input(event, true)
+	await get_tree().process_frame
+
+
+func finger_drag(index: int, point: Vector2) -> void:
+	var event := InputEventScreenDrag.new()
+	event.index = index
+	event.position = point
+	playfield.push_input(event, true)
 	await get_tree().process_frame
 
 

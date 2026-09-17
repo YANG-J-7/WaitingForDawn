@@ -1,5 +1,13 @@
 extends Node2D
 
+const MapLayout = preload("res://src/gameplay/buildings/map_layout.gd")
+const MapCameraScript = preload("res://src/gameplay/buildings/map_camera.gd")
+const OverlayScript = preload("res://src/gameplay/buildings/placement_overlay.gd")
+var map_camera: Camera2D
+var placement_overlay: Node2D
+var additional_towers: Array[ArrowTower] = []
+var additional_barracks: Array[Barracks] = []
+
 const COLOR_NIGHT := Color("101827")
 const COLOR_GRID := Color("1b2b3d")
 const COLOR_PATH := Color("37475b")
@@ -76,6 +84,34 @@ var notice_seconds: float = 0.0
 
 
 func _ready() -> void:
+	wave_controller.playable_bounds = MapLayout.BOUNDS
+	settlement_builder.build_bounds = MapLayout.BOUNDS
+	wall_manager.build_bounds = MapLayout.BOUNDS
+	barracks.build_bounds = MapLayout.BOUNDS
+	farmer_manager.economy = wave_economy
+	wave_economy.additional_towers = additional_towers
+	wave_economy.additional_barracks = additional_barracks
+	wave_controller.additional_barracks = additional_barracks
+	map_camera = MapCameraScript.new()
+	map_camera.name = "MapCamera"
+	add_child(map_camera)
+	map_camera.surface = map_drop_surface
+	map_drop_surface.screen_to_world = map_camera.screen_to_world
+	map_drop_surface.gui_input.connect(map_camera.handle_map_input)
+	placement_overlay = OverlayScript.new()
+	placement_overlay.main = self
+	placement_overlay.z_index = 100
+	add_child(placement_overlay)
+	# 保留原四个资源点，扩展区域为每种资源增加两处可建造地块。
+	for index in range(4):
+		var original: ResourceSite = resource_sites_root.get_child(index)
+		for offset in [Vector2(-230 if index < 2 else 230, 0), Vector2(0, -170 if index % 2 == 0 else 170)]:
+			var site := ResourceSite.new()
+			site.site_type = original.site_type
+			site.display_name = original.display_name
+			site.site_color = original.site_color
+			site.position = original.position + offset
+			resource_sites_root.add_child(site)
 	for child in resource_sites_root.get_children():
 		if child is ResourceSite:
 			resource_sites.append(child as ResourceSite)
@@ -156,6 +192,9 @@ func _process(delta: float) -> void:
 		card = _card_for_play_ref(int(payload.get("card_instance_id", -1)))
 	for site in resource_sites:
 		site.set_highlighted(card != null and site.accepts(card))
+	if placement_overlay.dragged_card != card or card != null:
+		placement_overlay.dragged_card = card
+		placement_overlay.queue_redraw()
 
 
 func _show_notice(message: String) -> void:
@@ -167,16 +206,18 @@ func _show_notice(message: String) -> void:
 
 
 func _draw() -> void:
-	draw_rect(Rect2(Vector2.ZERO, Vector2(960, 540)), COLOR_NIGHT)
-	for x in range(0, 961, 32):
-		draw_line(Vector2(x, 96), Vector2(x, 540), COLOR_GRID, 1.0)
-	for y in range(96, 541, 32):
-		draw_line(Vector2(0, y), Vector2(960, y), COLOR_GRID, 1.0)
+	draw_rect(MapLayout.BOUNDS.grow(2000), COLOR_NIGHT)
+	draw_rect(MapLayout.BOUNDS, Color("142333"))
+	for x in range(int(MapLayout.BOUNDS.position.x), int(MapLayout.BOUNDS.end.x) + 1, 40):
+		draw_line(Vector2(x, MapLayout.BOUNDS.position.y), Vector2(x, MapLayout.BOUNDS.end.y), COLOR_GRID, 1.0)
+	for y in range(int(MapLayout.BOUNDS.position.y), int(MapLayout.BOUNDS.end.y) + 1, 40):
+		draw_line(Vector2(MapLayout.BOUNDS.position.x, y), Vector2(MapLayout.BOUNDS.end.x, y), COLOR_GRID, 1.0)
+	draw_rect(MapLayout.BOUNDS, Color("527078"), false, 3.0)
 
 	var city_position := wave_controller.city_target_position
-	for edge_point in [Vector2(64, 270), Vector2(896, 270), Vector2(480, 126), Vector2(480, 414)]:
+	for edge_point in [Vector2(-220, 270), Vector2(1180, 270), Vector2(480, -30), Vector2(480, 570)]:
 		draw_line(edge_point, city_position, Color(COLOR_PATH, 0.38), 20.0)
-	draw_circle(city_position, 56.0, COLOR_CITY)
+	draw_circle(city_position, MapLayout.CITY_RADIUS, COLOR_CITY)
 	draw_circle(city_position, 42.0, COLOR_CITY.darkened(0.18))
 	draw_string(ThemeDB.fallback_font, city_position + Vector2(-24, 7), "主城", HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color.WHITE)
 
@@ -203,6 +244,7 @@ func _on_start_pressed() -> void:
 
 
 func _on_reset_pressed() -> void:
+	map_camera.reset_view()
 	wave_controller.reset_wave()
 	opening_draft.reset()
 	interwave_draft.reset()
@@ -210,6 +252,12 @@ func _on_reset_pressed() -> void:
 	run_card_inventory.reset()
 	wave_economy.reset(settlement_builder)
 	farmer_manager.reset()
+	for tower in additional_towers:
+		tower.free()
+	additional_towers.clear()
+	for camp in additional_barracks:
+		camp.free()
+	additional_barracks.clear()
 	settlement_builder.reset_buildings()
 	RunEconomy.clear()
 	arrow_tower.reset_statistics()
@@ -245,7 +293,7 @@ func _on_reset_pressed() -> void:
 func _on_state_changed(_phase: int) -> void:
 	phase_value.text = RunState.phase_name()
 	train_farmer_button.visible = RunState.phase in [RunState.Phase.DAY_SETUP, RunState.Phase.WAVE_COMBAT, RunState.Phase.WAVE_RESULT]
-	if RunState.phase == RunState.Phase.RUN_LOST:
+	if RunState.phase in [RunState.Phase.RUN_LOST, RunState.Phase.RUN_WON]:
 		day_setup_panel.visible = false
 		build_failure_panel.visible = false
 		_set_hand_interaction_enabled(false)
@@ -260,8 +308,17 @@ func _on_state_changed(_phase: int) -> void:
 		battle_shop.close()
 		for slot_button in settlement_slot_buttons:
 			slot_button.visible = false
-		status_label.text = "主城已被摧毁，本局失败。"
+		var won: bool = RunState.phase == RunState.Phase.RUN_WON
+		status_label.text = "十波守城成功，本局胜利！" if won else "主城已被摧毁，本局失败。"
+		var result_title: Label = $HUD/FailurePanel/Margin/Content/Title
+		result_title.text = "黎明到来，防守胜利！" if won else "主城已被摧毁"
+		result_title.add_theme_color_override("font_color", Color("9ad58b") if won else Color("e64d59"))
+		$HUD/FailurePanel/Margin/Content/Detail.text = (
+			"已守住全部10波｜主城耐久 %d" % RunState.city_health
+			if won else "第%d波防守失败" % RunState.current_wave
+		)
 		failure_panel.visible = true
+		start_button.text = "本局已结束"
 		start_button.disabled = true
 	elif RunState.phase == RunState.Phase.WAVE_RESULT:
 		_set_hand_interaction_enabled(false)
@@ -278,7 +335,7 @@ func _on_state_changed(_phase: int) -> void:
 			slot_button.visible = false
 		status_label.text = "第%d波已清空。%s" % [RunState.current_wave - 1, last_settlement_summary]
 		start_button.disabled = true
-		if RunState.current_wave in [2, 3, 4]:
+		if RunState.current_wave >= 2 and RunState.current_wave <= RunState.LAST_WAVE:
 			_begin_interwave_shop()
 		else:
 			_configure_interwave_job_panel()
@@ -320,7 +377,7 @@ func _on_ready_pressed() -> void:
 			setup_hint_label.text = "请先完成当前商店要求。"
 		return
 	if not opening_draft.finish(false):
-		setup_hint_label.text = "请先选满4张免费卡。"
+		setup_hint_label.text = "请选满4张，并至少包含1张可造成伤害的卡牌。"
 
 
 func _on_pause_timer_pressed() -> void:
@@ -435,7 +492,7 @@ func _on_barracks_card_dropped(card_index: int) -> void:
 	_try_place_barracks_card(card_index)
 
 
-func _try_place_barracks_card(card_index: int, map_position: Vector2 = Vector2(-1.0, -1.0)) -> bool:
+func _try_place_barracks_card(card_index: int, map_position: Vector2 = Vector2.INF) -> bool:
 	if not _card_play_allowed() or card_index < 0:
 		return false
 	var barracks_card: OpeningCardDefinition = _card_for_play_ref(card_index)
@@ -444,11 +501,8 @@ func _try_place_barracks_card(card_index: int, map_position: Vector2 = Vector2(-
 	if barracks_card.card_id != &"barracks":
 		setup_hint_label.text = "这张卡不能放入当前兵营格。"
 		return false
-	if barracks.is_built():
-		setup_hint_label.text = "当前只能建造一座兵营。"
-		return false
-	var target_position: Vector2 = barracks.global_position if map_position.x < 0.0 else map_position
-	if not _can_place_free_building(target_position, 42.0):
+	var target_position: Vector2 = barracks.global_position if map_position == Vector2.INF else map_position
+	if not _can_place_free_building(target_position, MapLayout.BARRACKS_RADIUS):
 		return false
 	if not RunEconomy.can_pay(barracks_card.build_costs):
 		_show_build_failure(barracks_card)
@@ -457,15 +511,16 @@ func _try_place_barracks_card(card_index: int, map_position: Vector2 = Vector2(-
 	if not RunEconomy.try_pay(barracks_card.build_costs):
 		_show_build_failure(barracks_card)
 		return false
-	if not barracks.build(barracks_card):
-		for resource_id: Variant in barracks_card.build_costs:
-			RunEconomy.add_resource(
-				StringName(resource_id),
-				int(barracks_card.build_costs[resource_id])
-			)
-		setup_hint_label.text = "兵营格当前无法建造。"
-		return false
-	barracks.global_position = target_position
+	var placed_camp: Barracks = barracks
+	if placed_camp.is_built():
+		placed_camp = preload("res://src/gameplay/defenses/barracks.tscn").instantiate()
+		add_child(placed_camp)
+		placed_camp.build_bounds = MapLayout.BOUNDS
+		additional_barracks.append(placed_camp)
+		placed_camp.destroyed.connect(_on_world_defense_destroyed)
+		placed_camp.guard_roster_changed.connect(wave_controller._on_guard_roster_changed)
+	placed_camp.global_position = target_position
+	placed_camp.build(barracks_card)
 	_consume_played_card(card_index, barracks_card)
 	wave_economy.refresh_jobs(settlement_builder, arrow_tower, barracks)
 	wave_controller.set_barracks(barracks)
@@ -516,7 +571,7 @@ func _wall_placement_obstacles() -> Array[Dictionary]:
 	return _free_placement_obstacles(true)
 
 
-func _try_place_defense_card(card_index: int, map_position: Vector2 = Vector2(-1.0, -1.0)) -> bool:
+func _try_place_defense_card(card_index: int, map_position: Vector2 = Vector2.INF) -> bool:
 	if not _card_play_allowed() or card_index < 0:
 		return false
 	var arrow_card: OpeningCardDefinition = _card_for_play_ref(card_index)
@@ -531,11 +586,8 @@ func _try_place_defense_card(card_index: int, map_position: Vector2 = Vector2(-1
 	if opening_draft.active and opening_draft.is_card_locked(card_index):
 		setup_hint_label.text = "箭塔卡已经使用。"
 		return false
-	var target_position: Vector2 = arrow_tower.global_position if map_position.x < 0.0 else map_position
-	if arrow_tower.visible:
-		setup_hint_label.text = "当前只能建造一座箭塔。"
-		return false
-	if not _can_place_free_building(target_position, 34.0):
+	var target_position: Vector2 = arrow_tower.global_position if map_position == Vector2.INF else map_position
+	if not _can_place_free_building(target_position, MapLayout.TOWER_RADIUS):
 		return false
 	if not RunEconomy.can_pay(arrow_card.build_costs):
 		_show_build_failure(arrow_card)
@@ -544,12 +596,18 @@ func _try_place_defense_card(card_index: int, map_position: Vector2 = Vector2(-1
 	if not RunEconomy.try_pay(arrow_card.build_costs):
 		_show_build_failure(arrow_card)
 		return false
-	arrow_tower.visible = true
-	arrow_tower.current_health = arrow_tower.maximum_health
-	arrow_tower.attack_elapsed = arrow_tower.definition.attack_interval
-	arrow_tower.queue_redraw()
-	arrow_tower.enabled = true
-	arrow_tower.global_position = target_position
+	var placed_tower: ArrowTower = arrow_tower
+	if placed_tower.is_attackable():
+		placed_tower = preload("res://src/gameplay/defenses/arrow_tower.tscn").instantiate()
+		placed_tower.target_provider_path = NodePath("../WaveController")
+		add_child(placed_tower)
+		additional_towers.append(placed_tower)
+		placed_tower.destroyed.connect(_on_world_defense_destroyed)
+	placed_tower.visible = true
+	placed_tower.reset_statistics()
+	placed_tower.enabled = true
+	placed_tower.global_position = target_position
+	placed_tower.queue_redraw()
 	_consume_played_card(card_index, arrow_card)
 	wave_economy.refresh_jobs(settlement_builder, arrow_tower, barracks)
 	_refresh_world_targets()
@@ -569,7 +627,9 @@ func _on_draft_selection_changed(selected_indices: Array[int], free_choices_rema
 		return
 	selection_label.text = "剩余免费名额：%d" % free_choices_remaining
 	refresh_button.text = "刷新 %d金" % interwave_draft.current_refresh_cost()
-	ready_button.disabled = selected_indices.size() != opening_draft.free_choice_limit
+	ready_button.disabled = not opening_draft.can_finish()
+	if selected_indices.size() == opening_draft.free_choice_limit and not opening_draft.selection_has_damage_card():
+		selection_label.text = "还需要1张伤害牌才能迎战"
 	for card_index in range(card_buttons.size()):
 		var card: OpeningCardDefinition = opening_draft.offered_cards[card_index]
 		var selected: bool = card_index in selected_indices
@@ -642,14 +702,26 @@ func _populate_battle_hand() -> void:
 	for entry in run_card_inventory.entries():
 		var instance_id: int = int(entry["instance_id"])
 		var card: OpeningCardDefinition = entry["card"] as OpeningCardDefinition
+		var star: int = int(entry.get("star", 1))
 		var hand_card := HandCardSlot.new()
-		hand_card.configure(instance_id, card)
+		hand_card.configure(instance_id, card, star, run_card_inventory.count_matching(card.card_id, star))
 		hand_card.set_interaction_enabled(true)
+		hand_card.fusion_requested.connect(_on_hand_fusion_requested)
 		hand_slots.add_child(hand_card)
 		hand_card_slots[instance_id] = hand_card
 	var hand_count: int = hand_card_slots.size()
 	hand_label.text = "部署手牌\n%d / %d" % [hand_count, RunCardInventory.MAX_CARDS]
 	hand_empty_hint.visible = hand_count == 0
+
+
+func _on_hand_fusion_requested(card_id: StringName, star: int) -> void:
+	var result_id: int = run_card_inventory.fuse_first_matching(card_id, star)
+	if result_id < 0:
+		status_label.text = "合成失败：需要3张同名同星手牌，且最高为3星。"
+		return
+	var result: Dictionary = run_card_inventory.entry_for(result_id)
+	var card: OpeningCardDefinition = result.get("card") as OpeningCardDefinition
+	status_label.text = "合成成功：%s升至%d星。" % [card.display_name, int(result.get("star", star + 1))]
 
 
 func _set_hand_interaction_enabled(is_enabled: bool) -> void:
@@ -843,10 +915,10 @@ func _on_world_defense_destroyed(_defense: Node2D) -> void:
 
 func _refresh_world_targets() -> void:
 	var targets: Array[Node2D] = []
-	if arrow_tower.visible and arrow_tower.is_attackable():
-		targets.append(arrow_tower)
-	if barracks.is_built():
-		targets.append(barracks)
+	for tower in active_towers():
+		targets.append(tower)
+	for camp in active_barracks():
+		targets.append(camp)
 	for building in settlement_builder.placed_buildings():
 		if is_instance_valid(building) and building.is_attackable():
 			targets.append(building)
@@ -897,33 +969,74 @@ func _can_place_free_building(map_position: Vector2, radius: float) -> bool:
 	return true
 
 
-func _free_placement_obstacles(include_defenses: bool = true, reserve_resource_sites: bool = true) -> Array[Dictionary]:
-	var obstacles: Array[Dictionary] = [
-		{"position": wave_controller.city_target_position, "radius": 56.0},
-	]
-	if include_defenses and arrow_tower.visible:
-		obstacles.append({"position": arrow_tower.global_position, "radius": 34.0})
-	if include_defenses and barracks.is_built():
-		obstacles.append({"position": barracks.global_position, "radius": 42.0})
-	if reserve_resource_sites:
-		for site in resource_sites:
-			obstacles.append({"position": site.global_position, "radius": site.radius})
+func active_towers() -> Array[ArrowTower]:
+	var result: Array[ArrowTower] = []
+	for tower in [arrow_tower] + additional_towers:
+		if is_instance_valid(tower) and tower.is_attackable():
+			result.append(tower)
+	return result
+
+
+func active_barracks() -> Array[Barracks]:
+	var result: Array[Barracks] = []
+	for camp in [barracks] + additional_barracks:
+		if is_instance_valid(camp) and camp.is_built():
+			result.append(camp)
+	return result
+
+
+func building_footprints(include_defenses: bool = true) -> Array[Dictionary]:
+	var result: Array[Dictionary] = [{"position": wave_controller.city_target_position, "radius": MapLayout.CITY_RADIUS}]
+	if include_defenses:
+		for tower in active_towers():
+			result.append({"position": tower.global_position, "radius": MapLayout.TOWER_RADIUS})
+		for camp in active_barracks():
+			result.append({"position": camp.global_position, "radius": MapLayout.BARRACKS_RADIUS})
 	for wall in wall_manager.active_walls():
-		obstacles.append({"position": wall.global_position, "radius": WallManager.WALL_RADIUS})
+		result.append({"position": wall.global_position, "radius": WallManager.WALL_RADIUS})
 	for building in settlement_builder.placed_buildings():
 		if is_instance_valid(building) and building.definition != null:
-			obstacles.append({
-				"position": building.global_position,
-				"radius": building.definition.footprint_radius,
-			})
+			result.append({"position": building.global_position, "radius": building.definition.footprint_radius})
+	return result
+
+
+func _free_placement_obstacles(include_defenses: bool = true, reserve_resource_sites: bool = true) -> Array[Dictionary]:
+	var obstacles: Array[Dictionary] = building_footprints(include_defenses)
+	if reserve_resource_sites:
+		for site in resource_sites:
+			if site.is_occupied():
+				continue
+			obstacles.append({"position": site.global_position, "radius": site.radius})
 	for enemy in wave_controller.enemies:
 		if is_instance_valid(enemy) and enemy.is_alive():
 			obstacles.append({"position": enemy.global_position, "radius": 18.0})
 	for farmer in farmer_manager.active_farmers():
 		obstacles.append({"position": farmer.global_position, "radius": farmer.attackable_radius()})
-	for guard in barracks.active_guards():
-		obstacles.append({"position": guard.global_position, "radius": guard.attackable_radius()})
+	for camp in active_barracks():
+		for guard in camp.active_guards():
+			obstacles.append({"position": guard.global_position, "radius": guard.attackable_radius()})
 	return obstacles
+
+
+func placement_preview(card: OpeningCardDefinition, point: Vector2) -> Dictionary:
+	var radius: float = card.footprint_radius
+	if card.card_id == &"arrow_tower":
+		radius = MapLayout.TOWER_RADIUS
+	elif card.card_id == &"barracks":
+		radius = MapLayout.BARRACKS_RADIUS
+	elif card.card_id == &"wall":
+		radius = MapLayout.WALL_RADIUS
+	var valid: bool = true
+	if card.category == "resource":
+		var site: ResourceSite = settlement_builder._matching_site(card, point)
+		valid = site != null
+		if site != null:
+			point = site.global_position
+	valid = valid and MapLayout.BOUNDS.grow(-radius).has_point(point) and RunEconomy.can_pay(card.build_costs)
+	for obstacle in _free_placement_obstacles(true, card.category != "resource"):
+		if point.distance_to(obstacle.position) < radius + float(obstacle.radius):
+			valid = false
+	return {"position": point, "radius": radius, "valid": valid}
 
 
 func _on_jobs_changed(current_job_order: Array[StringName]) -> void:
@@ -1121,7 +1234,7 @@ func _on_interwave_card_pressed(card_index: int) -> void:
 		]
 		return
 	if not interwave_draft.toggle_card(card_index):
-		setup_hint_label.text = "本波只能免费选择2张；可先取消一张。"
+		setup_hint_label.text = "当前商店不能选择该卡，请检查购买状态。"
 		return
 	setup_hint_label.text = "免费卡会在迎战后加入底部手牌；旧手牌会继续保留。"
 

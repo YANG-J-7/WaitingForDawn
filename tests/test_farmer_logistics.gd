@@ -63,6 +63,43 @@ func _run_test() -> void:
 	train_button.pressed.emit()
 	_expect_equal(RunEconomy.amount(&"gold"), gold_at_capacity, "full population rejects training without spending gold")
 
+	for won in [false, true]:
+		RunState.begin_new_run()
+		RunState.start_current_wave()
+		var farmer: FarmerAgent = manager.active_farmers()[0]
+		farmer.state = FarmerAgent.WorkState.TO_CITY
+		farmer.global_position = manager.city_position + Vector2(100, 0)
+		farmer.carried_resource = &"stone"
+		farmer.carried_amount = 2
+		if won:
+			RunState.current_wave = RunState.LAST_WAVE
+			RunState.complete_current_wave()
+		else:
+			RunState.damage_city(RunState.city_health)
+		var label := "胜利" if won else "失败"
+		var position_before := farmer.global_position
+		var balance_before := RunEconomy.balances.duplicate(true)
+		manager.advance(100.0)
+		_expect_equal(farmer.global_position, position_before, label + "后运输农民停止移动")
+		_expect_equal(RunEconomy.balances, balance_before, label + "后携货不再入账")
+		farmer.delivery_completed.emit(&"stone", 2)
+		_expect_equal(RunEconomy.balances, balance_before, label + "后迟到的交付信号不入账")
+		farmer.state = FarmerAgent.WorkState.GATHERING
+		farmer.gather_elapsed = 0.0
+		farmer.advance(100.0)
+		_expect_equal(farmer.gather_elapsed, 0.0, label + "后停止采集")
+	# 新局重建实体后，应恢复完整运输周期。
+	main._on_reset_pressed()
+	start_button.pressed.emit()
+	manager.set_process(false)
+	var fresh_building: ResourceBuilding = builder.place_card_at(STONE_MINE, stone_site.global_position)
+	wave_economy.refresh_jobs(builder, main.arrow_tower, main.barracks)
+	var fresh_balance: int = RunEconomy.amount(&"stone")
+	manager.advance(100.0)
+	manager.advance(2.0)
+	manager.advance(100.0)
+	_expect_true(fresh_building != null and RunEconomy.amount(&"stone") > fresh_balance, "重新开局后恢复运输交付")
+
 	main.queue_free()
 
 

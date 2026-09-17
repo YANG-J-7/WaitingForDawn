@@ -16,11 +16,11 @@ const RESOURCE_IDS: Array[StringName] = [
 	&"gold",
 ]
 const INITIAL_BALANCES: Dictionary = {
-	&"wood": 140,
-	&"food": 32,
-	&"stone": 60,
-	&"iron": 30,
-	&"gold": 20,
+	&"wood": 100,
+	&"food": 100,
+	&"stone": 100,
+	&"iron": 100,
+	&"gold": 0,
 }
 const INITIAL_POPULATION: int = 5
 const INITIAL_POPULATION_CAPACITY: int = 5

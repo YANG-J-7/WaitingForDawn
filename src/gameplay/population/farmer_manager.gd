@@ -13,6 +13,7 @@ var barracks: Barracks
 var current_assignments: Dictionary = {}
 var current_job_order: Array[StringName] = []
 var next_farmer_index: int = 0
+var economy: WaveEconomy
 
 
 func _process(delta: float) -> void:
@@ -120,6 +121,8 @@ func _sync_roster(farmer_count: int) -> void:
 
 
 func _workplace_for(job_id: StringName) -> Node2D:
+	if economy != null:
+		return economy.job_targets.get(job_id) as Node2D
 	if job_id == &"arrow_tower" and arrow_tower != null and arrow_tower.visible:
 		return arrow_tower
 	if job_id == &"barracks" and barracks != null and barracks.is_built():
@@ -132,6 +135,9 @@ func _workplace_for(job_id: StringName) -> Node2D:
 
 
 func _on_farmer_delivery(resource_id: StringName, amount: int) -> void:
+	# 对局结果确定后，迟到的交付也不能改变结算资源。
+	if RunState.phase in [RunState.Phase.RUN_LOST, RunState.Phase.RUN_WON]:
+		return
 	if amount <= 0 or not RunEconomy.add_resource(resource_id, amount):
 		return
 	delivery_completed.emit(resource_id, amount)

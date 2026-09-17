@@ -14,6 +14,7 @@ signal card_dropped(card_index: int, map_position: Vector2)
 	"house",
 ])
 var interaction_enabled: bool = true
+var screen_to_world: Callable
 
 
 func accepts_card_data(data: Variant) -> bool:
@@ -41,4 +42,6 @@ func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
 
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:
-	drop_card_data(data, global_position + at_position)
+	var screen_position := global_position + at_position
+	var map_position: Vector2 = screen_to_world.call(screen_position) if screen_to_world.is_valid() else screen_position
+	drop_card_data(data, map_position)

@@ -77,11 +77,22 @@ func finish(auto_fill_missing: bool = false) -> bool:
 		return false
 	if auto_fill_missing:
 		_auto_fill()
-	if selected_indices.size() != free_choice_limit:
+	if not can_finish():
 		return false
 	active = false
 	setup_finished.emit(selected_indices.duplicate())
 	return true
+
+
+func can_finish() -> bool:
+	return selected_indices.size() == free_choice_limit and selection_has_damage_card()
+
+
+func selection_has_damage_card() -> bool:
+	for card_index in selected_indices:
+		if offered_cards[card_index].can_deal_damage:
+			return true
+	return false
 
 
 func is_card_selected(card_id: StringName) -> bool:
@@ -117,12 +128,28 @@ func category_count(category: String) -> int:
 func _auto_fill() -> void:
 	if not _selection_contains_category("resource"):
 		_select_lowest_price("resource")
-	if not _selection_contains_category("defense"):
-		_select_lowest_price("defense")
+	if not selection_has_damage_card():
+		_select_lowest_damage_card()
 	while selected_indices.size() < free_choice_limit:
 		if not _select_lowest_price(""):
 			break
 	_emit_selection_changed()
+
+
+func _select_lowest_damage_card() -> bool:
+	var best_index: int = -1
+	var best_price: int = 1000000
+	for card_index in range(offered_cards.size()):
+		if card_index in selected_indices:
+			continue
+		var card: OpeningCardDefinition = offered_cards[card_index]
+		if card.can_deal_damage and card.shop_price < best_price:
+			best_index = card_index
+			best_price = card.shop_price
+	if best_index < 0:
+		return false
+	selected_indices.append(best_index)
+	return true
 
 
 func _selection_contains_category(category: String) -> bool:

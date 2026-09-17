@@ -16,6 +16,7 @@
 
 ## 项目权威规则
 
-- 最终局制以 `design/gdd/single-night-wave-system.md` 为准：单关、单夜、十波。
+- 2026-09-16新版方向：Steam单机，一局60分钟且每局从零开始；主城存活至60:00即胜利，同帧主城被摧毁优先判负。初始人口5/5，木材、食物、石材、铁矿各100，金币0；开局六张1星卡免费选四，之后通过击杀野怪赚金币，用于六格商店买牌与刷新。3张同名同星手牌手动合成高一星卡，已建建筑不参与，首个原型最高3星。普通建筑可在地图无单位位置自由放置，特定建筑要求特定位置；制作大地图并加入地形与天气。当前规则见 `design/gdd/sixty-minute-campaign-system.md` 与 `design/gdd/kill-gold-card-shop-fusion-system.md`，尚待确定的逐卡星级、地形与天气细则不得作为已批准内容。
+- `design/gdd/single-night-wave-system.md` 保留为现有十波灰盒的历史规则与测试依据，不再约束新版最终局制；在新设计落实前，代码仍为十波结束，不得声称已迁移。
 - Godot 主场景为 `res://src/main/main.tscn`，当前开发版本为 Godot 4.7 Standard。
 - `.godot/`、`.codex-temp/`、构建产物和本地凭据不得提交。

@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3]
+[gd_scene load_steps=35 format=3]
 
 [ext_resource type="Script" path="res://src/main/main.gd" id="1_main"]
 [ext_resource type="Script" path="res://src/gameplay/waves/wave_controller.gd" id="2_controller"]
@@ -27,6 +27,13 @@
 [ext_resource type="Resource" path="res://src/data/cards/stone_mine.tres" id="26_stone_mine"]
 [ext_resource type="Resource" path="res://src/data/cards/house.tres" id="27_house"]
 [ext_resource type="Script" path="res://src/gameplay/population/farmer_manager.gd" id="28_farmer_manager"]
+
+[ext_resource type="Resource" path="res://src/data/waves/wave_05.tres" id="wave_5"]
+[ext_resource type="Resource" path="res://src/data/waves/wave_06.tres" id="wave_6"]
+[ext_resource type="Resource" path="res://src/data/waves/wave_07.tres" id="wave_7"]
+[ext_resource type="Resource" path="res://src/data/waves/wave_08.tres" id="wave_8"]
+[ext_resource type="Resource" path="res://src/data/waves/wave_09.tres" id="wave_9"]
+[ext_resource type="Resource" path="res://src/data/waves/wave_10.tres" id="wave_10"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hand_bar"]
 bg_color = Color(0.0705882, 0.0823529, 0.101961, 0.96)
@@ -76,22 +83,22 @@ site_color = Color(0.541176, 0.580392, 0.639216, 1)
 [node name="WaveController" type="Node2D" parent="."]
 script = ExtResource("2_controller")
 wave_definition = ExtResource("3_wave")
-wave_definitions = Array[ExtResource("3_wave")]([ExtResource("3_wave"), ExtResource("17_wave_two"), ExtResource("18_wave_three"), ExtResource("19_wave_four")])
+wave_definitions = Array[ExtResource("3_wave")]([ExtResource("3_wave"), ExtResource("17_wave_two"), ExtResource("18_wave_three"), ExtResource("19_wave_four"), ExtResource("wave_5"), ExtResource("wave_6"), ExtResource("wave_7"), ExtResource("wave_8"), ExtResource("wave_9"), ExtResource("wave_10")])
 
 [node name="OpeningDraft" type="Node" parent="."]
 script = ExtResource("5_draft")
-offered_cards = [ExtResource("6_lumber"), ExtResource("7_farm"), ExtResource("8_gold"), ExtResource("9_arrow"), ExtResource("10_wall"), ExtResource("11_barracks")]
+offered_cards = [ExtResource("6_lumber"), ExtResource("7_farm"), ExtResource("26_stone_mine"), ExtResource("9_arrow"), ExtResource("10_wall"), ExtResource("11_barracks")]
 
 [node name="RunCardInventory" type="Node" parent="."]
 script = ExtResource("15_inventory")
 
 [node name="InterwaveDraft" type="Node" parent="."]
 script = ExtResource("16_interwave")
-card_pool = [ExtResource("6_lumber"), ExtResource("7_farm"), ExtResource("8_gold"), ExtResource("9_arrow"), ExtResource("10_wall"), ExtResource("11_barracks"), ExtResource("26_stone_mine"), ExtResource("27_house")]
+card_pool = [ExtResource("6_lumber"), ExtResource("7_farm"), ExtResource("9_arrow"), ExtResource("10_wall"), ExtResource("11_barracks"), ExtResource("26_stone_mine"), ExtResource("27_house")]
 
 [node name="BattleShop" type="Node" parent="."]
 script = ExtResource("23_battle_shop")
-card_pool = [ExtResource("6_lumber"), ExtResource("7_farm"), ExtResource("8_gold"), ExtResource("9_arrow"), ExtResource("10_wall"), ExtResource("11_barracks"), ExtResource("26_stone_mine"), ExtResource("27_house")]
+card_pool = [ExtResource("6_lumber"), ExtResource("7_farm"), ExtResource("9_arrow"), ExtResource("10_wall"), ExtResource("11_barracks"), ExtResource("26_stone_mine"), ExtResource("27_house")]
 
 [node name="SettlementBuilder" type="Node2D" parent="."]
 script = ExtResource("12_builder")

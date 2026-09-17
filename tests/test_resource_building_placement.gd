@@ -28,48 +28,48 @@ func _run_test() -> void:
 
 	start_button.pressed.emit()
 	await get_tree().process_frame
-	_expect_resource(&"wood", 140, "initial wood")
-	_expect_resource(&"food", 32, "initial food")
-	_expect_resource(&"stone", 60, "initial stone")
-	_expect_resource(&"iron", 30, "initial iron")
-	_expect_resource(&"gold", 20, "initial gold")
+	_expect_resource(&"wood", 100, "initial wood")
+	_expect_resource(&"food", 100, "initial food")
+	_expect_resource(&"stone", 100, "initial stone")
+	_expect_resource(&"iron", 100, "initial iron")
+	_expect_resource(&"gold", 0, "initial gold")
 	_expect_equal(RunEconomy.current_population, 5, "initial population")
 	_expect_equal(RunEconomy.population_capacity, 5, "initial population capacity")
-	_expect_true((main.get_node("HUD/ResourcesBar/Margin/Values/WoodValue") as Label).text.contains("140"), "resource bar shows wood")
+	_expect_true((main.get_node("HUD/ResourcesBar/Margin/Values/WoodValue") as Label).text.contains("100"), "resource bar shows wood")
 
 	for card_index in [0, 1, 2, 3]:
 		(card_grid.get_child(card_index) as Button).pressed.emit()
-	_expect_resource(&"wood", 140, "free card selection does not spend wood")
-	_expect_resource(&"stone", 60, "free card selection does not spend stone")
+	_expect_resource(&"wood", 100, "free card selection does not spend wood")
+	_expect_resource(&"stone", 100, "free card selection does not spend stone")
 
 	settlement_slots[0].pressed.emit()
-	_expect_equal(builder.building_count(), 1, "gold mine occupies first settlement slot")
-	_expect_resource(&"wood", 90, "gold mine spends wood")
-	_expect_resource(&"iron", 20, "gold mine spends iron")
-	_expect_true(draft.is_card_locked(2), "built gold mine card locks")
+	_expect_equal(builder.building_count(), 1, "stone mine occupies first settlement slot")
+	_expect_resource(&"wood", 60, "stone mine spends wood")
+	_expect_resource(&"iron", 92, "stone mine spends iron")
+	_expect_true(draft.is_card_locked(2), "built stone mine card locks")
 
-	var gold_card: OpeningCardDefinition = draft.offered_cards[2]
-	_expect_true(not builder.place_card(gold_card, 1), "used card cannot build twice")
-	_expect_resource(&"wood", 90, "duplicate card failure keeps wood")
+	var stone_card: OpeningCardDefinition = draft.offered_cards[2]
+	_expect_true(not builder.place_card(stone_card, 1), "used card cannot build twice")
+	_expect_resource(&"wood", 60, "duplicate card failure keeps wood")
 
 	(card_grid.get_child(1) as Button).pressed.emit()
 	settlement_slots[0].pressed.emit()
 	_expect_equal(builder.building_count(), 1, "occupied slot rejects another building")
-	_expect_resource(&"wood", 90, "occupied slot failure keeps wood")
+	_expect_resource(&"wood", 60, "occupied slot failure keeps wood")
 	settlement_slots[1].pressed.emit()
 	_expect_equal(builder.building_count(), 2, "farm occupies second settlement slot")
-	_expect_resource(&"wood", 60, "farm spends wood")
-	_expect_resource(&"stone", 50, "farm spends stone")
+	_expect_resource(&"wood", 30, "farm spends wood")
+	_expect_resource(&"stone", 90, "farm spends stone")
 
 	(card_grid.get_child(0) as Button).pressed.emit()
 	settlement_slots[2].pressed.emit()
 	_expect_equal(builder.building_count(), 3, "lumber camp occupies third settlement slot")
-	_expect_resource(&"wood", 25, "lumber camp spends wood")
+	_expect_resource(&"wood", 10, "lumber camp spends wood")
 
 	defense_slot.pressed.emit()
 	_expect_true(not tower.enabled and not tower.visible, "unaffordable arrow tower is not placed")
-	_expect_resource(&"wood", 25, "failed arrow tower payment keeps wood")
-	_expect_resource(&"stone", 50, "failed arrow tower payment keeps stone")
+	_expect_resource(&"wood", 10, "failed arrow tower payment keeps wood")
+	_expect_resource(&"stone", 90, "failed arrow tower payment keeps stone")
 
 	var reset_button: Button = main.get_node("HUD/BottomPanel/Margin/Content/Buttons/ResetButton") as Button
 	reset_button.pressed.emit()

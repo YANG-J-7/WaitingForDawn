@@ -29,7 +29,7 @@ func _run_test() -> void:
 	var resource_sites := main.get_node("ResourceSites")
 
 	_expect_vector(controller.city_target_position, Vector2(480.0, 270.0), "city target is centered")
-	_expect_equal(resource_sites.get_child_count(), 4, "map provides four typed resource sites")
+	_expect_equal(resource_sites.get_child_count(), 12, "地图提供四类共十二处资源点")
 	_expect_true("stone_mine" in map_surface.accepted_card_ids, "map accepts stone mine card")
 	_expect_true("house" in map_surface.accepted_card_ids, "map accepts house card")
 	_expect_true("arrow_tower" in map_surface.accepted_card_ids, "map accepts free arrow tower")

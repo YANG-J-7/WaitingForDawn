@@ -4,6 +4,8 @@ extends Resource
 @export var enemy_id: StringName = &"enemy"
 @export var display_name: String = "敌人"
 @export_range(1, 1000, 1) var threat_points: int = 1
+@export_enum("normal", "tough", "elite", "boss") var reward_tier: String = "normal"
+@export_range(0, 999, 1) var kill_gold: int = 2
 @export_range(1, 100000, 1) var maximum_health: int = 1
 @export_range(0, 1000, 1) var armor: int = 0
 @export_range(0.1, 20.0, 0.05) var move_speed_tiles_per_second: float = 1.0

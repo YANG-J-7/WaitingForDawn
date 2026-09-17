@@ -7,7 +7,8 @@ script = ExtResource("1_card")
 card_id = &"barracks"
 display_name = "兵营"
 category = "defense"
-shop_price = 8
+shop_price = 9
+can_deal_damage = true
 build_costs = {
 &"iron": 10,
 &"stone": 20,

@@ -20,12 +20,16 @@ var active_wave_definition: WaveDefinition
 var active_wave_index: int = 0
 var active_enemy_count: int = 0
 var barrier_walls: Array[BarrierWall] = []
+var additional_barracks: Array[Barracks] = []
 var barracks: Barracks
 var spawn_history: Array[Vector2] = []
 var spawn_random := RandomNumberGenerator.new()
 var spawn_side_order: Array[int] = []
 var world_targets: Array[Node2D] = []
 var target_scan_elapsed: float = 0.0
+var clear_pending: bool = false
+var wave_generation: int = 0
+var kill_gold_ledger := KillGoldLedger.new()
 
 
 func _ready() -> void:
@@ -54,12 +58,12 @@ func start_first_wave() -> bool:
 
 func start_wave(wave_index: int) -> bool:
 	var definition: WaveDefinition = _definition_for_wave(wave_index)
-	if definition == null or definition.enemy_definition == null:
+	if definition == null or not definition.is_valid():
 		return false
 	reset_wave()
 	active_wave_definition = definition
 	active_wave_index = wave_index
-	active_enemy_count = definition.enemy_count
+	active_enemy_count = definition.spawn_count()
 	spawning = true
 	spawned_count = 0
 	spawn_elapsed = definition.spawn_interval
@@ -70,6 +74,8 @@ func start_wave(wave_index: int) -> bool:
 
 
 func reset_wave() -> void:
+	wave_generation += 1
+	clear_pending = false
 	spawning = false
 	spawned_count = 0
 	spawn_elapsed = 0.0
@@ -84,6 +90,7 @@ func reset_wave() -> void:
 			enemy.queue_free()
 	enemies.clear()
 	enemy_count_changed.emit(0, 0)
+	kill_gold_ledger.reset()
 
 
 func stop_wave() -> void:
@@ -140,7 +147,8 @@ func _spawn_enemy() -> void:
 		active_wave_definition.enemy_definition,
 		current_spawn_position,
 		city_target_position,
-		spawned_count
+		spawned_count,
+		StringName("%s:%d:%d:%d" % [RunState.run_id, wave_generation, active_wave_index, spawned_count])
 	)
 	enemy.attack_requested.connect(_on_enemy_attack_requested)
 	enemy.barrier_attack_requested.connect(_on_enemy_barrier_attack_requested)
@@ -227,6 +235,10 @@ func _on_enemy_target_released(_enemy: EnemyActor) -> void:
 
 
 func _on_enemy_died(enemy: EnemyActor) -> void:
+	if enemy not in enemies:
+		return
+	if enemy.definition != null:
+		kill_gold_ledger.award(enemy.reward_transaction_id, enemy.definition.kill_gold, true)
 	enemies.erase(enemy)
 	enemy_count_changed.emit(enemies.size(), spawned_count)
 	_assign_defensive_targets.call_deferred()
@@ -234,7 +246,22 @@ func _on_enemy_died(enemy: EnemyActor) -> void:
 		return
 	if RunState.phase != RunState.Phase.WAVE_COMBAT:
 		return
+	if clear_pending:
+		return
 	spawning = false
+	clear_pending = true
+	# 等同帧攻击处理完毕，主城摧毁优先；代号隔离重置前的迟到回调。
+	_finish_clear.call_deferred(wave_generation)
+
+
+func _finish_clear(generation: int) -> void:
+	if generation != wave_generation or not clear_pending:
+		return
+	clear_pending = false
+	if RunState.phase != RunState.Phase.WAVE_COMBAT or RunState.city_health <= 0:
+		return
+	if RunState.current_wave != active_wave_index or not enemies.is_empty():
+		return
 	wave_cleared.emit(active_wave_index)
 	RunState.complete_current_wave()
 
@@ -279,8 +306,13 @@ func _nearest_forward_route_wall(enemy: EnemyActor) -> BarrierWall:
 
 func _nearest_forward_world_target(enemy: EnemyActor) -> Node2D:
 	var candidates: Array[Node2D] = world_targets.duplicate()
-	if is_instance_valid(barracks) and barracks.is_built():
-		for guard in barracks.active_guards():
+	var camps: Array[Barracks] = additional_barracks.duplicate()
+	if is_instance_valid(barracks):
+		camps.append(barracks)
+	for camp in camps:
+		if not is_instance_valid(camp) or not camp.is_built():
+			continue
+		for guard in camp.active_guards():
 			if guard.is_available() or guard.engaged_enemy == enemy:
 				candidates.append(guard)
 	for wall in barrier_walls:

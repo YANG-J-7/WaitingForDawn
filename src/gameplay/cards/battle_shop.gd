@@ -47,7 +47,7 @@ func purchase_card(card_index: int, inventory: RunCardInventory) -> bool:
 		last_error = "这张牌已经售罄。"
 		return false
 	if inventory == null or inventory.card_count() >= RunCardInventory.MAX_CARDS:
-		last_error = "普通卡库存已满（12/12），请先打出卡牌。"
+		last_error = "普通卡库存已满（18/18），请先打出或合成。"
 		return false
 	var card: OpeningCardDefinition = offered_cards[card_index]
 	if not RunEconomy.try_pay({&"gold": card.shop_price}):
@@ -65,7 +65,7 @@ func purchase_card(card_index: int, inventory: RunCardInventory) -> bool:
 
 
 func current_refresh_cost() -> int:
-	return 10 + 5 * refresh_count
+	return mini(2 + refresh_count, 6)
 
 
 func refresh() -> bool:

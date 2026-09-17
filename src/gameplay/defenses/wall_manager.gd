@@ -5,7 +5,7 @@ signal walls_changed(active_walls: Array[BarrierWall])
 signal wall_destroyed(wall: BarrierWall)
 
 const WALL_SCENE: PackedScene = preload("res://src/gameplay/defenses/barrier_wall.tscn")
-const WALL_RADIUS: float = 28.0
+const WALL_RADIUS: float = preload("res://src/gameplay/buildings/map_layout.gd").WALL_RADIUS
 
 @export var build_bounds: Rect2 = Rect2(64.0, 126.0, 832.0, 288.0)
 

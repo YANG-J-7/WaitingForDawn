@@ -7,7 +7,7 @@ script = ExtResource("1_card")
 card_id = &"stone_mine"
 display_name = "石矿场"
 category = "resource"
-shop_price = 7
+shop_price = 9
 build_costs = {
 &"iron": 8,
 &"wood": 40

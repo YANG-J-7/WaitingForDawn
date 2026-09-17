@@ -59,7 +59,7 @@ func _test_purchase_rules() -> void:
 	var gold_before_full: int = RunEconomy.amount(&"gold")
 	_expect_true(not shop.purchase_card(0, inventory), "full inventory rejects purchase")
 	_expect_equal(RunEconomy.amount(&"gold"), gold_before_full, "full inventory rejection spends no gold")
-	_expect_true("12" in shop.last_error, "full inventory error explains capacity")
+	_expect_true("18" in shop.last_error, "full inventory error explains capacity")
 
 	inventory.reset()
 	shop.begin(4, inventory.card_count())
