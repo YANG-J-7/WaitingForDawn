@@ -5,6 +5,8 @@ signal health_changed(current_health: int, maximum_health: int)
 signal destroyed(wall: BarrierWall)
 
 const DamageRules = preload("res://src/gameplay/combat/damage_calculator.gd")
+const ArtVisualScript = preload("res://src/gameplay/art/art_visual.gd")
+const BuildingGroundingScript = preload("res://src/gameplay/art/building_grounding.gd")
 
 @export var maximum_health: int = 400
 @export var armor: int = 20
@@ -12,6 +14,16 @@ const DamageRules = preload("res://src/gameplay/combat/damage_calculator.gd")
 var current_health: int = 0
 var active: bool = false
 var card_definition: OpeningCardDefinition
+
+
+func _ready() -> void:
+	var grounding: Node2D = BuildingGroundingScript.new() as Node2D
+	add_child(grounding)
+	grounding.configure(Vector2i.ONE, &"wall")
+	var art := ArtVisualScript.new() as ArtVisual
+	art.show_behind_parent = true
+	add_child(art)
+	art.configure("palisade_wall", Vector2(34, 37))
 
 
 func build(card: OpeningCardDefinition) -> bool:
@@ -94,14 +106,6 @@ func apply_enemy_attack(base_damage: int, enemy_id: StringName) -> int:
 func _draw() -> void:
 	if not visible:
 		return
-	var stone_color := Color("75808d")
-	var mortar_color := Color("323a46")
-	draw_rect(Rect2(-16.0, -38.0, 32.0, 76.0), mortar_color)
-	for row in range(4):
-		var y: float = -36.0 + row * 18.0
-		var offset: float = -13.0 if row % 2 == 0 else -5.0
-		for column in range(2):
-			draw_rect(Rect2(offset + column * 18.0, y, 16.0, 15.0), stone_color)
 	var health_ratio: float = float(current_health) / float(maximum_health)
 	draw_rect(Rect2(-19.0, -48.0, 38.0, 5.0), Color("2b1d25"))
 	draw_rect(Rect2(-19.0, -48.0, 38.0 * health_ratio, 5.0), Color("7ecf75"))

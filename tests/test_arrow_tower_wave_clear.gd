@@ -34,7 +34,7 @@ func _run_test() -> void:
 	_expect_true(controller.spawning or controller.spawned_count > 0, "opening draft starts enemy spawning")
 
 	var frame_budget: int = 900
-	while RunState.phase == RunState.Phase.WAVE_COMBAT and frame_budget > 0:
+	while 1 not in main.wave_economy.settled_waves and frame_budget > 0:
 		await get_tree().process_frame
 		frame_budget -= 1
 
@@ -42,12 +42,11 @@ func _run_test() -> void:
 	_expect_equal(tower.first_final_damage, 16, "tower deals counter damage")
 	_expect_equal(tower.kill_count, 4, "tower kills all wolves")
 	_expect_equal(tower.total_damage, 220, "tower applies exact total health damage")
-	_expect_equal(controller.spawned_count, 4, "all enemies were spawned")
-	_expect_equal(controller.enemies.size(), 0, "no living enemies remain")
-	_expect_equal(RunState.phase, RunState.Phase.WAVE_RESULT, "run enters wave result")
+	_expect_true(1 in main.wave_economy.settled_waves, "first threat wave is cleared")
+	_expect_equal(RunState.phase, RunState.Phase.WAVE_COMBAT, "continuous defense starts the next threat")
 	_expect_equal(RunState.current_wave, 2, "wave advances to two")
 	_expect_true(RunState.city_health > 0, "city survives wave one")
-	_expect_true(status_label.text.contains("第1波已清空"), "ui reports wave clear")
+	_expect_true(status_label.text.contains("威胁轮次2"), "ui reports the next continuous threat")
 
 	var reset_button: Button = main.get_node("HUD/BottomPanel/Margin/Content/Buttons/ResetButton") as Button
 	reset_button.pressed.emit()

@@ -14,6 +14,13 @@ var current_assignments: Dictionary = {}
 var current_job_order: Array[StringName] = []
 var next_farmer_index: int = 0
 var economy: WaveEconomy
+var pathfinder: RefCounted
+
+
+func set_pathfinder(value: RefCounted) -> void:
+	pathfinder = value
+	for farmer in farmers:
+		farmer.set_pathfinder(pathfinder)
 
 
 func _process(delta: float) -> void:
@@ -109,6 +116,7 @@ func _sync_roster(farmer_count: int) -> void:
 		var farmer := FarmerAgent.new()
 		add_child(farmer)
 		farmer.configure(next_farmer_index, city_position)
+		farmer.set_pathfinder(pathfinder)
 		next_farmer_index += 1
 		farmer.delivery_completed.connect(_on_farmer_delivery)
 		farmer.died.connect(_on_farmer_died)

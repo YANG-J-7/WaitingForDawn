@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3]
+[gd_scene load_steps=37 format=3]
 
 [ext_resource type="Script" path="res://src/main/main.gd" id="1_main"]
 [ext_resource type="Script" path="res://src/gameplay/waves/wave_controller.gd" id="2_controller"]
@@ -23,10 +23,10 @@
 [ext_resource type="Script" path="res://src/gameplay/defenses/wall_manager.gd" id="22_wall_manager"]
 [ext_resource type="Script" path="res://src/gameplay/cards/battle_shop.gd" id="23_battle_shop"]
 [ext_resource type="Script" path="res://src/gameplay/cards/map_drop_surface.gd" id="24_map_surface"]
-[ext_resource type="Script" path="res://src/gameplay/buildings/resource_site.gd" id="25_resource_site"]
 [ext_resource type="Resource" path="res://src/data/cards/stone_mine.tres" id="26_stone_mine"]
 [ext_resource type="Resource" path="res://src/data/cards/house.tres" id="27_house"]
 [ext_resource type="Script" path="res://src/gameplay/population/farmer_manager.gd" id="28_farmer_manager"]
+[ext_resource type="Resource" path="res://src/data/cards/iron_mine.tres" id="29_iron_mine"]
 
 [ext_resource type="Resource" path="res://src/data/waves/wave_05.tres" id="wave_5"]
 [ext_resource type="Resource" path="res://src/data/waves/wave_06.tres" id="wave_6"]
@@ -47,38 +47,27 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_top_bar"]
+bg_color = Color(0.0352941, 0.0745098, 0.117647, 0.97)
+border_width_bottom = 1
+border_color = Color(0.356863, 0.443137, 0.505882, 0.8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_resource_bar"]
+bg_color = Color(0.0431373, 0.0901961, 0.137255, 0.72)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.356863, 0.443137, 0.505882, 0.45)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
 [node name="Main" type="Node2D"]
 script = ExtResource("1_main")
 
 [node name="ResourceSites" type="Node2D" parent="."]
-
-[node name="Forest" type="Node2D" parent="ResourceSites"]
-position = Vector2(190, 180)
-script = ExtResource("25_resource_site")
-site_type = &"forest"
-display_name = "树林"
-site_color = Color(0.258824, 0.537255, 0.309804, 1)
-
-[node name="Farmland" type="Node2D" parent="ResourceSites"]
-position = Vector2(190, 350)
-script = ExtResource("25_resource_site")
-site_type = &"farmland"
-display_name = "农田"
-site_color = Color(0.690196, 0.552941, 0.25098, 1)
-
-[node name="GoldVein" type="Node2D" parent="ResourceSites"]
-position = Vector2(770, 180)
-script = ExtResource("25_resource_site")
-site_type = &"gold_vein"
-display_name = "金矿脉"
-site_color = Color(0.862745, 0.682353, 0.188235, 1)
-
-[node name="StoneDeposit" type="Node2D" parent="ResourceSites"]
-position = Vector2(770, 350)
-script = ExtResource("25_resource_site")
-site_type = &"stone_deposit"
-display_name = "石矿脉"
-site_color = Color(0.541176, 0.580392, 0.639216, 1)
 
 [node name="WaveController" type="Node2D" parent="."]
 script = ExtResource("2_controller")
@@ -94,11 +83,11 @@ script = ExtResource("15_inventory")
 
 [node name="InterwaveDraft" type="Node" parent="."]
 script = ExtResource("16_interwave")
-card_pool = [ExtResource("6_lumber"), ExtResource("7_farm"), ExtResource("9_arrow"), ExtResource("10_wall"), ExtResource("11_barracks"), ExtResource("26_stone_mine"), ExtResource("27_house")]
+card_pool = [ExtResource("6_lumber"), ExtResource("7_farm"), ExtResource("9_arrow"), ExtResource("10_wall"), ExtResource("11_barracks"), ExtResource("26_stone_mine"), ExtResource("29_iron_mine"), ExtResource("27_house")]
 
 [node name="BattleShop" type="Node" parent="."]
 script = ExtResource("23_battle_shop")
-card_pool = [ExtResource("6_lumber"), ExtResource("7_farm"), ExtResource("9_arrow"), ExtResource("10_wall"), ExtResource("11_barracks"), ExtResource("26_stone_mine"), ExtResource("27_house")]
+card_pool = [ExtResource("6_lumber"), ExtResource("7_farm"), ExtResource("9_arrow"), ExtResource("10_wall"), ExtResource("11_barracks"), ExtResource("26_stone_mine"), ExtResource("29_iron_mine"), ExtResource("27_house")]
 
 [node name="SettlementBuilder" type="Node2D" parent="."]
 script = ExtResource("12_builder")
@@ -111,7 +100,7 @@ script = ExtResource("28_farmer_manager")
 
 [node name="ArrowTower" parent="." instance=ExtResource("4_tower")]
 visible = false
-position = Vector2(600, 270)
+position = Vector2(1200, 1030)
 target_provider_path = NodePath("../WaveController")
 enabled = false
 
@@ -120,7 +109,7 @@ script = ExtResource("22_wall_manager")
 
 [node name="Barracks" parent="." instance=ExtResource("21_barracks_scene")]
 visible = false
-position = Vector2(620, 360)
+position = Vector2(1560, 1120)
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
@@ -128,60 +117,103 @@ position = Vector2(620, 360)
 unique_name_in_owner = true
 visible = false
 layout_mode = 3
-anchors_preset = 0
-offset_left = 64.0
-offset_top = 126.0
-offset_right = 896.0
-offset_bottom = 414.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("24_map_surface")
 
 [node name="TopBar" type="PanelContainer" parent="HUD"]
-offset_left = 20.0
-offset_top = 18.0
-offset_right = 940.0
-offset_bottom = 82.0
+z_index = 20
+layout_mode = 3
+anchor_right = 1.0
+offset_bottom = 54.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_top_bar")
 
 [node name="Margin" type="MarginContainer" parent="HUD/TopBar"]
-theme_override_constants/margin_left = 18
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 18
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 476
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
 
 [node name="Stats" type="HBoxContainer" parent="HUD/TopBar/Margin"]
-theme_override_constants/separation = 28
+alignment = 2
+theme_override_constants/separation = 8
 
 [node name="Title" type="Label" parent="HUD/TopBar/Margin/Stats"]
+visible = false
 theme_override_colors/font_color = Color(0.95, 0.72, 0.32, 1)
 theme_override_font_sizes/font_size = 22
 text = "WAITING FOR DAWN"
 
 [node name="PhaseLabel" type="Label" parent="HUD/TopBar/Margin/Stats"]
+visible = false
 text = "阶段"
 
 [node name="PhaseValue" type="Label" parent="HUD/TopBar/Margin/Stats"]
 unique_name_in_owner = true
+visible = false
 text = "BOOT"
 
 [node name="WaveLabel" type="Label" parent="HUD/TopBar/Margin/Stats"]
-text = "波次"
+theme_override_colors/font_color = Color(0.95, 0.38, 0.34, 1)
+text = "威胁"
 
 [node name="WaveValue" type="Label" parent="HUD/TopBar/Margin/Stats"]
 unique_name_in_owner = true
-text = "1 / 10"
+theme_override_colors/font_color = Color(1, 0.38, 0.31, 1)
+theme_override_font_sizes/font_size = 18
+text = "1"
+
+[node name="CampaignTimeLabel" type="Label" parent="HUD/TopBar/Margin/Stats"]
+theme_override_colors/font_color = Color(0.95, 0.95, 0.9, 1)
+text = "黎明"
+
+[node name="CampaignTimeValue" type="Label" parent="HUD/TopBar/Margin/Stats"]
+unique_name_in_owner = true
+theme_override_colors/font_color = Color(1, 0.741176, 0.301961, 1)
+theme_override_font_sizes/font_size = 22
+text = "60:00"
+
+[node name="CampaignPauseButton" type="Button" parent="HUD/TopBar/Margin/Stats"]
+unique_name_in_owner = true
+process_mode = 3
+custom_minimum_size = Vector2(56, 44)
+text = "暂停"
 
 [node name="CityLabel" type="Label" parent="HUD/TopBar/Margin/Stats"]
 text = "主城"
 
 [node name="CityValue" type="Label" parent="HUD/TopBar/Margin/Stats"]
 unique_name_in_owner = true
+theme_override_colors/font_color = Color(0.55, 0.9, 0.63, 1)
 text = "600 / 600"
 
 [node name="EnemyLabel" type="Label" parent="HUD/TopBar/Margin/Stats"]
+visible = false
 text = "敌人"
 
 [node name="EnemyValue" type="Label" parent="HUD/TopBar/Margin/Stats"]
 unique_name_in_owner = true
+visible = false
 text = "0 / 0"
+
+[node name="CityHealthBar" type="ProgressBar" parent="HUD"]
+unique_name_in_owner = true
+z_index = 21
+layout_mode = 3
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -118.0
+offset_top = 43.0
+offset_right = -8.0
+offset_bottom = 51.0
+grow_horizontal = 0
+mouse_filter = 2
+value = 100.0
+show_percentage = false
 
 [node name="NoticePanel" type="PanelContainer" parent="HUD"]
 visible = false
@@ -202,39 +234,49 @@ mouse_filter = 2
 
 [node name="ResourcesBar" type="PanelContainer" parent="HUD"]
 unique_name_in_owner = true
-offset_left = 180.0
-offset_top = 88.0
-offset_right = 780.0
-offset_bottom = 126.0
+z_index = 21
+offset_left = 8.0
+offset_top = 7.0
+offset_right = 412.0
+offset_bottom = 47.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_resource_bar")
 
 [node name="BattleShopButton" type="Button" parent="HUD"]
 unique_name_in_owner = true
 visible = false
-offset_left = 792.0
-offset_top = 88.0
-offset_right = 932.0
-offset_bottom = 126.0
-text = "战斗商店"
+z_index = 22
+layout_mode = 3
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -68.0
+offset_top = 64.0
+offset_right = -8.0
+offset_bottom = 128.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(1, 0.839216, 0.478431, 1)
+theme_override_font_sizes/font_size = 16
+text = "金\n商店"
 
 [node name="TrainFarmerButton" type="Button" parent="HUD"]
 unique_name_in_owner = true
 visible = false
-offset_left = 20.0
-offset_top = 82.0
-offset_right = 174.0
-offset_bottom = 126.0
-text = "生产农民 10金"
-theme_override_font_sizes/font_size = 16
+z_index = 22
+offset_left = 416.0
+offset_top = 7.0
+offset_right = 472.0
+offset_bottom = 51.0
+text = "招募"
+theme_override_font_sizes/font_size = 14
 
 [node name="Margin" type="MarginContainer" parent="HUD/ResourcesBar"]
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 7
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 7
+theme_override_constants/margin_left = 9
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 9
+theme_override_constants/margin_bottom = 6
 
 [node name="Values" type="HBoxContainer" parent="HUD/ResourcesBar/Margin"]
 alignment = 1
-theme_override_constants/separation = 22
+theme_override_constants/separation = 12
 
 [node name="WoodValue" type="Label" parent="HUD/ResourcesBar/Margin/Values"]
 unique_name_in_owner = true
@@ -330,10 +372,13 @@ accepted_card_ids = PackedStringArray("barracks")
 unique_name_in_owner = true
 visible = false
 z_index = 10
-offset_left = 80.0
-offset_top = 414.0
-offset_right = 880.0
-offset_bottom = 532.0
+layout_mode = 3
+anchor_right = 1.0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -124.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_hand_bar")
 
 [node name="Margin" type="MarginContainer" parent="HUD/HandBar"]
@@ -347,11 +392,17 @@ theme_override_constants/separation = 6
 
 [node name="HandLabel" type="Label" parent="HUD/HandBar/Margin/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(68, 96)
+custom_minimum_size = Vector2(74, 104)
 theme_override_colors/font_color = Color(0.929412, 0.843137, 0.647059, 1)
-text = "部署手牌\n0 / 4"
+text = "手牌\n0 / 18"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="HandPrevButton" type="Button" parent="HUD/HandBar/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(44, 88)
+text = "‹"
+theme_override_font_sizes/font_size = 28
 
 [node name="HandEmptyHint" type="Label" parent="HUD/HandBar/Margin/Content"]
 unique_name_in_owner = true
@@ -360,10 +411,23 @@ text = "已无可部署卡牌"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HandSlots" type="HBoxContainer" parent="HUD/HandBar/Margin/Content"]
+[node name="HandScroll" type="ScrollContainer" parent="HUD/HandBar/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 98)
+size_flags_horizontal = 3
+vertical_scroll_mode = 0
+scroll_deadzone = 8
+
+[node name="HandSlots" type="HBoxContainer" parent="HUD/HandBar/Margin/Content/HandScroll"]
 unique_name_in_owner = true
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
+
+[node name="HandNextButton" type="Button" parent="HUD/HandBar/Margin/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(44, 88)
+text = "›"
+theme_override_font_sizes/font_size = 28
 
 [node name="BottomPanel" type="PanelContainer" parent="HUD"]
 unique_name_in_owner = true
@@ -468,6 +532,7 @@ custom_minimum_size = Vector2(180, 44)
 text = "知道了"
 
 [node name="DaySetupPanel" type="PanelContainer" parent="HUD"]
+z_index = 18
 theme_override_styles/panel = SubResource("StyleBoxFlat_hand_bar")
 unique_name_in_owner = true
 visible = false
@@ -504,8 +569,15 @@ text = "剩余免费名额：4"
 
 [node name="PauseTimerButton" type="Button" parent="HUD/DaySetupPanel/Margin/Content/Header"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(106, 34)
+custom_minimum_size = Vector2(106, 44)
 text = "暂停计时"
+
+[node name="ShopCloseButton" type="Button" parent="HUD/DaySetupPanel/Margin/Content/Header"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(44, 44)
+text = "×"
+theme_override_font_sizes/font_size = 22
 
 [node name="CardGrid" type="GridContainer" parent="HUD/DaySetupPanel/Margin/Content"]
 unique_name_in_owner = true
@@ -515,6 +587,7 @@ theme_override_constants/v_separation = 5
 
 [node name="JobSection" type="HBoxContainer" parent="HUD/DaySetupPanel/Margin/Content"]
 unique_name_in_owner = true
+visible = false
 theme_override_constants/separation = 10
 
 [node name="JobSummaryLabel" type="Label" parent="HUD/DaySetupPanel/Margin/Content/JobSection"]
@@ -536,7 +609,7 @@ theme_override_constants/separation = 8
 [node name="JobEmptyHint" type="Label" parent="HUD/DaySetupPanel/Margin/Content/JobSection"]
 unique_name_in_owner = true
 size_flags_horizontal = 3
-text = "迎战后拖牌建造\n波间可调整农民岗位"
+text = "建造岗位建筑后\n可随时调整人口"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -556,11 +629,69 @@ text = "免费选4张；选中箭塔后点击地图防御格"
 [node name="RefreshButton" type="Button" parent="HUD/DaySetupPanel/Margin/Content/Controls"]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(116, 34)
+custom_minimum_size = Vector2(116, 44)
 text = "刷新 10金"
 
 [node name="ReadyButton" type="Button" parent="HUD/DaySetupPanel/Margin/Content/Controls"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(130, 34)
+custom_minimum_size = Vector2(130, 44)
 disabled = true
 text = "迎战"
+
+[node name="BuildingWorkerPanel" type="PanelContainer" parent="HUD"]
+unique_name_in_owner = true
+visible = false
+z_index = 20
+offset_left = 24.0
+offset_top = 142.0
+offset_right = 264.0
+offset_bottom = 342.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hand_bar")
+
+[node name="Margin" type="MarginContainer" parent="HUD/BuildingWorkerPanel"]
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="Content" type="VBoxContainer" parent="HUD/BuildingWorkerPanel/Margin"]
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="HUD/BuildingWorkerPanel/Margin/Content"]
+theme_override_colors/font_color = Color(0.95, 0.72, 0.32, 1)
+theme_override_font_sizes/font_size = 18
+text = "建筑岗位"
+horizontal_alignment = 1
+
+[node name="WorkerValue" type="Label" parent="HUD/BuildingWorkerPanel/Margin/Content"]
+text = "岗位 0/0｜空闲 0"
+horizontal_alignment = 1
+
+[node name="Hint" type="Label" parent="HUD/BuildingWorkerPanel/Margin/Content"]
+text = "用 + / − 调整当前建筑岗位"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Controls" type="HBoxContainer" parent="HUD/BuildingWorkerPanel/Margin/Content"]
+alignment = 1
+theme_override_constants/separation = 10
+
+[node name="MinusButton" type="Button" parent="HUD/BuildingWorkerPanel/Margin/Content/Controls"]
+custom_minimum_size = Vector2(52, 44)
+text = "−"
+
+[node name="PlusButton" type="Button" parent="HUD/BuildingWorkerPanel/Margin/Content/Controls"]
+custom_minimum_size = Vector2(52, 44)
+text = "+"
+
+[node name="Actions" type="HBoxContainer" parent="HUD/BuildingWorkerPanel/Margin/Content"]
+alignment = 1
+theme_override_constants/separation = 8
+
+[node name="AutoButton" type="Button" parent="HUD/BuildingWorkerPanel/Margin/Content/Actions"]
+custom_minimum_size = Vector2(116, 44)
+text = "自动分配全部"
+
+[node name="CloseButton" type="Button" parent="HUD/BuildingWorkerPanel/Margin/Content/Actions"]
+custom_minimum_size = Vector2(72, 44)
+text = "关闭"

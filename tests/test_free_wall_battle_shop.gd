@@ -28,7 +28,7 @@ func _test_free_wall_and_battle_shop() -> void:
 	var card_grid := main.get_node("HUD/DaySetupPanel/Margin/Content/CardGrid") as GridContainer
 	var ready_button := main.get_node("HUD/DaySetupPanel/Margin/Content/Controls/ReadyButton") as Button
 	var refresh_button := main.get_node("HUD/DaySetupPanel/Margin/Content/Controls/RefreshButton") as Button
-	var hand_slots := main.get_node("HUD/HandBar/Margin/Content/HandSlots") as HBoxContainer
+	var hand_slots := main.get_node("HUD/HandBar/Margin/Content/HandScroll/HandSlots") as HBoxContainer
 
 	start_button.pressed.emit()
 	for card_index in [0, 3, 4, 5]:
@@ -56,10 +56,12 @@ func _test_free_wall_and_battle_shop() -> void:
 	Engine.time_scale = 1.0
 	# 本例只验商店与拖墙，固定一条进攻线；外围随机性另有专测。
 	controller.spawning = false
-	tracked_enemy.position = Vector2(100, 270)
+	tracked_enemy.position = Vector2(100, 1030)
 	tracked_enemy._resume_to_city()
-	var off_route_position := Vector2(300, 170)
+	var off_route_position := Vector2(700, 850)
 	battle_shop.card_pool.resize(6)
+	# 重建本阶段报价，确保缩小后的六张夹具池全部出现，避免依赖run_id随机遗漏城墙。
+	battle_shop.reset()
 	map_surface.drop_card_data(wall_payload, off_route_position)
 	_expect_equal(wall_manager.active_walls().size(), 1, "legal off route point creates first wall")
 	var off_route_wall: BarrierWall = wall_manager.active_walls()[0]
@@ -75,6 +77,9 @@ func _test_free_wall_and_battle_shop() -> void:
 	_expect_true(not build_failure_panel.visible, "opening battle shop closes stale build failure popup")
 	_expect_true(battle_shop.active, "battle shop opens during combat")
 	_expect_true(main.get_node("HUD/DaySetupPanel").visible, "battle shop uses six card panel")
+	_expect_true(map_surface.visible and main.get_node("HUD/HandBar").visible, "shop drawer keeps map and hand visible")
+	_expect_equal(card_grid.columns, 2, "shop drawer arranges six offers in two columns")
+	_expect_true(main.shop_close_button.visible, "shop drawer exposes a dedicated close button")
 	for _frame in range(8):
 		await get_tree().physics_frame
 	_expect_true(tracked_enemy.global_position.distance_to(controller.city_target_position) < distance_before_shop, "enemy keeps moving while shop is open")
@@ -101,9 +106,10 @@ func _test_free_wall_and_battle_shop() -> void:
 	refresh_button.pressed.emit()
 	_expect_equal(RunEconomy.amount(&"gold"), gold_before_refresh - 2, "first battle refresh costs two gold")
 	_expect_equal(battle_shop.current_refresh_cost(), 3, "next battle refresh rises to three gold")
-	_expect_equal(battle_shop.offered_cards[wall_offer_index], purchased_wall, "refresh preserves purchased offer")
+	_expect_true(battle_shop.purchased_indices.is_empty(), "refresh restores purchased offer slot")
+	_expect_true(refresh_button.text.contains("下次 4金"), "refresh row shows current and next refresh costs")
 
-	ready_button.pressed.emit()
+	main.shop_close_button.pressed.emit()
 	await get_tree().process_frame
 	_expect_true(not battle_shop.active, "close button returns to battle")
 	_expect_true(main.get_node("HUD/HandBar").visible, "closing shop restores battle hand")
@@ -111,8 +117,8 @@ func _test_free_wall_and_battle_shop() -> void:
 	await get_tree().process_frame
 	_expect_true(battle_shop.active, "same wave battle shop can reopen")
 	_expect_equal(battle_shop.current_refresh_cost(), 3, "reopening does not reset refresh price")
-	_expect_true(wall_offer_index in battle_shop.purchased_indices, "reopening preserves sold out offer")
-	ready_button.pressed.emit()
+	_expect_true(battle_shop.purchased_indices.is_empty(), "reopening keeps refreshed slots available")
+	main.shop_close_button.pressed.emit()
 	await get_tree().process_frame
 	var purchased_wall_id: int = inventory.first_instance_for_card(&"wall")
 	_expect_true(purchased_wall_id >= 0, "purchased wall is available in inventory")
@@ -125,7 +131,7 @@ func _test_free_wall_and_battle_shop() -> void:
 	_expect_equal(wall_manager.active_walls().size(), 1, "overlapping wall placement is rejected")
 	_expect_true(inventory.has_card(purchased_wall_id), "overlap rejection preserves purchased wall card")
 
-	var route_wall_position := Vector2(300, 270)
+	var route_wall_position := Vector2(900, 1030)
 	map_surface.drop_card_data(purchased_wall_payload, route_wall_position)
 	_expect_equal(wall_manager.active_walls().size(), 2, "second wall can be placed at another free point (%s)" % (main.get_node("HUD/DaySetupPanel/Margin/Content/Controls/SetupHintLabel") as Label).text)
 	var route_wall: BarrierWall = wall_manager.active_walls()[1]

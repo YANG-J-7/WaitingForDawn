@@ -47,10 +47,10 @@ func _run_test() -> void:
 	_expect_equal(wave_economy.idle_population, 0, "all five population are assigned")
 
 	var frame_budget: int = 900
-	while RunState.phase == RunState.Phase.WAVE_COMBAT and frame_budget > 0:
+	while 1 not in wave_economy.settled_waves and frame_budget > 0:
 		await get_tree().process_frame
 		frame_budget -= 1
-	_expect_equal(RunState.phase, RunState.Phase.WAVE_RESULT, "wave one reaches result")
+	_expect_true(1 in wave_economy.settled_waves and RunState.current_wave == 2, "wave one settles and continuous defense advances")
 	_expect_true(RunEconomy.amount(&"wood") > wood_after_building, "lumber produces continuously during combat")
 	_expect_true(RunEconomy.amount(&"food") > 95, "farm production offsets wave-end food consumption")
 	_expect_resource(&"stone", 80, "settlement does not change stone")
@@ -58,8 +58,7 @@ func _run_test() -> void:
 	_expect_true(wave_economy.last_summary.contains("持续生产"), "summary explains continuous production")
 	_expect_true(not wave_economy.last_summary.contains("+10木"), "summary no longer grants wave-end lumber")
 	_expect_true(wave_economy.last_summary.contains("消耗5/5食"), "summary shows food consumption")
-	var status_label: Label = main.get_node("HUD/BottomPanel/Margin/Content/StatusLabel") as Label
-	_expect_true(status_label.text.contains("岗位%d/%d" % [int(wave_economy.last_report.assigned_population), int(wave_economy.last_report.food_required)]), "结算界面展示实际存活建筑的岗位，不假设建筑始终完好")
+	_expect_true(wave_economy.last_summary.contains("岗位%d/%d" % [int(wave_economy.last_report.assigned_population), int(wave_economy.last_report.food_required)]), "结算摘要展示实际存活建筑的岗位，不假设建筑始终完好")
 
 	var wood_after_first_settlement: int = RunEconomy.amount(&"wood")
 	var food_after_first_settlement: int = RunEconomy.amount(&"food")

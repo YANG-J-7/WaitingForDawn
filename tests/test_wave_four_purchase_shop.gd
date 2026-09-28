@@ -48,8 +48,10 @@ func _test_purchase_rules() -> void:
 	var gold_after_all: int = RunEconomy.amount(&"gold")
 	_expect_true(not shop.purchase_card(0, inventory), "sold offer cannot be bought twice")
 	_expect_equal(RunEconomy.amount(&"gold"), gold_after_all, "duplicate purchase spends no gold")
-	_expect_true(not shop.refresh(), "all-sold shop refuses useless refresh")
-	_expect_equal(RunEconomy.amount(&"gold"), gold_after_all, "refused refresh spends no gold")
+	_expect_true(shop.refresh(), "all-sold shop can refresh every slot")
+	_expect_equal(RunEconomy.amount(&"gold"), gold_after_all - 2, "full refresh spends current refresh cost")
+	_expect_true(shop.purchased_indices.is_empty(), "full refresh clears every sold-out marker")
+	_expect_true(shop.purchase_card(0, inventory), "refreshed slot can be purchased again")
 
 	inventory.reset()
 	shop.begin(4, inventory.card_count())
@@ -85,7 +87,7 @@ func _test_wave_four_integration() -> void:
 	await get_tree().process_frame
 
 	var inventory: RunCardInventory = main.get_node("RunCardInventory") as RunCardInventory
-	var shop: InterwaveDraft = main.get_node("InterwaveDraft") as InterwaveDraft
+	var shop: BattleShop = main.get_node("BattleShop") as BattleShop
 	var controller: WaveController = main.get_node("WaveController") as WaveController
 	var wave_economy: WaveEconomy = main.get_node("WaveEconomy") as WaveEconomy
 	var start_button := main.get_node("HUD/BottomPanel/Margin/Content/Buttons/StartButton") as Button
@@ -101,26 +103,17 @@ func _test_wave_four_integration() -> void:
 		(card_grid.get_child(card_index) as Button).pressed.emit()
 	defense_slot.pressed.emit()
 	ready_button.pressed.emit()
-	await _wait_for_result(900)
-	for expected_wave in [2, 3]:
-		(card_grid.get_child(0) as Button).pressed.emit()
-		(card_grid.get_child(1) as Button).pressed.emit()
-		ready_button.pressed.emit()
-		await _wait_for_result(1400)
-		_expect_equal(RunState.current_wave, expected_wave + 1, "wave %d advances" % expected_wave)
-
-	_expect_equal(RunState.current_wave, 4, "wave three opens wave four shop")
-	_expect_true(shop.active and shop.is_purchase_mode(), "wave four UI uses purchase mode")
-	_expect_true(not ready_button.disabled, "purchase shop allows zero-card ready")
-	_expect_true("金币购买" in selection_label.text, "shop labels paid purchase mode")
-	_expect_true("购买" in (card_grid.get_child(0) as Button).text, "offer displays purchase action")
+	await get_tree().process_frame
+	main._on_battle_shop_button_pressed()
+	_expect_equal(RunState.current_wave, 1, "battle shop opens without waiting for wave clear")
+	_expect_true(shop.active, "continuous battle shop uses purchase mode")
+	_expect_true(not ready_button.disabled, "battle shop can be closed without purchase")
+	_expect_true("金币" in selection_label.text, "shop header displays current gold")
+	_expect_true("金币不足" in (card_grid.get_child(0) as Button).text, "zero-gold offer explains unavailable purchase")
 	_expect_true("金" in (card_grid.get_child(0) as Button).text, "offer displays gold price")
 
-	ready_button.pressed.emit()
-	_expect_equal(RunState.phase, RunState.Phase.WAVE_RESULT, "first zero-card ready only warns")
-	_expect_true("再次点击" in setup_hint.text, "zero-card warning requests confirmation")
-
 	_set_gold(100)
+	_expect_true("购买" in (card_grid.get_child(0) as Button).text, "affordable offer displays purchase action")
 	var inventory_before_purchase: int = inventory.card_count()
 	var offer_card: OpeningCardDefinition = shop.offered_cards[0]
 	var offer_price: int = offer_card.shop_price
@@ -131,22 +124,25 @@ func _test_wave_four_integration() -> void:
 	_expect_true(0 in shop.purchased_indices, "purchased UI slot is sold out")
 	_expect_true("已售罄" in (card_grid.get_child(0) as Button).text, "purchased offer displays sold out")
 	var inventory_after_purchase: int = inventory.card_count()
-	var purchased_card: OpeningCardDefinition = shop.offered_cards[0]
 	refresh_button.pressed.emit()
 	_expect_equal(inventory.card_count(), inventory_after_purchase, "refresh preserves purchased inventory")
-	_expect_true(shop.offered_cards[0] == purchased_card, "refresh preserves purchased offer slot")
-	_expect_true(0 in shop.purchased_indices, "refresh preserves sold-out state")
+	_expect_true(shop.purchased_indices.is_empty(), "refresh clears sold-out state")
+	_expect_true("购买" in (card_grid.get_child(0) as Button).text, "refreshed slot is purchasable again")
+	var inventory_before_repeat: int = inventory.card_count()
+	(card_grid.get_child(0) as Button).pressed.emit()
+	_expect_equal(inventory.card_count(), inventory_before_repeat + 1, "refreshed slot can be purchased repeatedly")
 
 	ready_button.pressed.emit()
 	await get_tree().process_frame
-	_expect_equal(RunState.phase, RunState.Phase.WAVE_COMBAT, "purchased shop starts wave four directly")
-	_expect_equal(controller.active_wave_index, 4, "controller uses wave four definition")
-	_expect_equal(controller.active_enemy_count, 4, "wave four uses four-wolf functional validation wave")
-	await _wait_for_result(1600)
-	_expect_equal(RunState.current_wave, 5, "wave four clear advances to wave five")
-	_expect_equal(RunState.phase, RunState.Phase.WAVE_RESULT, "wave five remains in planning")
-	_expect_true(4 in wave_economy.settled_waves, "wave four settles once")
-	_expect_true(not controller.spawning, "wave five does not auto start")
+	_expect_equal(RunState.phase, RunState.Phase.WAVE_COMBAT, "closing shop keeps current wave running")
+	_expect_equal(controller.active_wave_index, 1, "controller keeps current threat template")
+	preload("res://tests/helpers/shop_wave_fixture.gd").clear_wave(controller)
+	while 1 not in wave_economy.settled_waves:
+		await get_tree().process_frame
+	_expect_equal(RunState.current_wave, 2, "wave clear advances to wave two")
+	_expect_equal(RunState.phase, RunState.Phase.WAVE_COMBAT, "wave two auto starts without planning pause")
+	_expect_true(1 in wave_economy.settled_waves, "wave one settles once")
+	_expect_true(controller.spawning, "wave two starts spawning automatically")
 
 	var reset_button := main.get_node("HUD/BottomPanel/Margin/Content/Buttons/ResetButton") as Button
 	reset_button.pressed.emit()

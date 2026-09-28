@@ -89,7 +89,7 @@ func _test_wall_battle_flow() -> void:
 	var map_surface := main.get_node("HUD/MapDropSurface") as MapDropSurface
 	var defense_slot := main.get_node("HUD/DefenseSlotButton") as CardDropSlot
 	var settlement_slot := main.get_node("HUD/SettlementSlot0") as CardDropSlot
-	var hand_slots := main.get_node("HUD/HandBar/Margin/Content/HandSlots") as HBoxContainer
+	var hand_slots := main.get_node("HUD/HandBar/Margin/Content/HandScroll/HandSlots") as HBoxContainer
 
 	start_button.pressed.emit()
 	for card_index in [0, 3, 4, 5]:
@@ -110,9 +110,9 @@ func _test_wall_battle_flow() -> void:
 		await get_tree().process_frame
 		spawn_budget -= 1
 	# 固定被测敌人的路径，避免出生在南北边时试图在主城占地内建墙。
-	controller.enemies[0].position = Vector2(100, 270)
+	controller.enemies[0].position = Vector2(100, 1030)
 	controller.enemies[0]._resume_to_city()
-	var route_position := Vector2(300, 270)
+	var route_position := Vector2(900, 1030)
 	RunEconomy.try_pay({&"wood": RunEconomy.amount(&"wood")})
 	map_surface.drop_card_data(wall_payload, route_position)
 	_expect_equal(wall_manager.active_walls().size(), 0, "insufficient resources do not create wall")

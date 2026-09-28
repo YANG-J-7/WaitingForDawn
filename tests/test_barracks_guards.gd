@@ -71,7 +71,7 @@ func _test_barracks_battle_flow() -> void:
 	var defense_slot := main.get_node("HUD/DefenseSlotButton") as CardDropSlot
 	var barrier_slot := main.get_node("HUD/BarrierSlotButton") as CardDropSlot
 	var settlement_slot := main.get_node("HUD/SettlementSlot0") as CardDropSlot
-	var hand_slots := main.get_node("HUD/HandBar/Margin/Content/HandSlots") as HBoxContainer
+	var hand_slots := main.get_node("HUD/HandBar/Margin/Content/HandScroll/HandSlots") as HBoxContainer
 	var map_surface := main.get_node("HUD/MapDropSurface") as MapDropSurface
 
 	start_button.pressed.emit()
@@ -151,22 +151,16 @@ func _test_barracks_battle_flow() -> void:
 	await get_tree().process_frame
 	_expect_equal(barracks.active_guards().size(), 1, "job refresh does not respawn casualty mid wave")
 	map_surface.drop_card_data(arrow_payload, Vector2(650.0, 180.0))
+	var cleared_wave_index: int = RunState.current_wave
 	preload("res://tests/helpers/shop_wave_fixture.gd").clear_wave(controller)
 
 	frame_budget = 1200
-	while RunState.phase == RunState.Phase.WAVE_COMBAT and frame_budget > 0:
+	while cleared_wave_index not in economy.settled_waves and frame_budget > 0:
 		await get_tree().process_frame
 		frame_budget -= 1
-	_expect_equal(RunState.phase, RunState.Phase.WAVE_RESULT, "受控敌人清场后进入波间阶段")
-	_expect_equal(barracks.active_guards().size(), 0, "wave result removes temporary guards")
-	var current_gold: int = RunEconomy.amount(&"gold")
-	if current_gold < 100:
-		RunEconomy.add_resource(&"gold", 100 - current_gold)
-	(card_grid.get_child(0) as Button).pressed.emit()
-	ready_button.pressed.emit()
-	await get_tree().process_frame
-	_expect_equal(RunState.phase, RunState.Phase.WAVE_COMBAT, "next wave starts after paid purchase")
-	_expect_equal(barracks.active_guards().size(), 2, "next wave respawns guards from assignments")
+	_expect_true(cleared_wave_index in economy.settled_waves, "受控敌人清场后完成本轮结算")
+	_expect_equal(RunState.phase, RunState.Phase.WAVE_COMBAT, "连续守城自动开始下一轮")
+	_expect_equal(barracks.active_guards().size(), 2, "下一轮按岗位自动补充守卫")
 	for guard in barracks.active_guards():
 		_expect_equal(guard.current_health, 90, "respawned guard returns at full health")
 

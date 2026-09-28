@@ -32,20 +32,27 @@ func run_checks() -> void:
 	var builder: SettlementBuilder = main.settlement_builder
 	for resource_id in RunEconomy.RESOURCE_IDS:
 		RunEconomy.add_resource(resource_id, 2000)
-	var stone: ResourceBuilding = builder.place_card_at(STONE, Vector2(770, 350))
+	var stone_position := (main.get_node("ResourceSites/stone_01") as ResourceSite).global_position
+	var stone: ResourceBuilding = builder.place_card_at(STONE, stone_position)
 	main.wave_economy.refresh_jobs(builder, main.arrow_tower, main.barracks)
 	manager.advance(10)
 	manager.advance(1.1)
 	var carrier: FarmerAgent = manager.farmers[0]
 	check(carrier.carried_amount == 2, "石矿农民采集两石后返回")
+	var carried_before_destroy: int = 0
+	for farmer in manager.farmers:
+		carried_before_destroy += farmer.carried_amount
 	var balance: int = RunEconomy.amount(&"stone")
 	stone.apply_enemy_attack(9999, &"wolf")
 	check(builder.building_count() == 0, "摧毁建筑移除建造记录")
 	check(carrier.carried_amount == 2, "建筑摧毁仍保留已采集货物")
-	manager.advance(10)
-	check(RunEconomy.amount(&"stone") == balance + 4, "两名携货农民在建筑毁坏后仍可交付")
+	manager.advance(30)
+	check(
+		RunEconomy.amount(&"stone") == balance + carried_before_destroy,
+		"建筑摧毁前已经携带的石材仍会按网格路径完成交付"
+	)
 	check(main.wave_economy.job_order.is_empty(), "摧毁建筑移除岗位")
-	check(builder.place_card_at(STONE, Vector2(770, 350)) != null, "摧毁后可以重建资源点")
+	check(builder.place_card_at(STONE, stone_position) != null, "摧毁后可以重建资源点")
 	main.wave_economy.refresh_jobs(builder, main.arrow_tower, main.barracks)
 	var victim: FarmerAgent = manager.farmers[0]
 	var survivor: FarmerAgent = manager.farmers[1]
@@ -80,7 +87,7 @@ func run_checks() -> void:
 	check(not RunEconomy.try_train_farmer(), "人口超额不能继续生产")
 	check(not main._can_place_free_building(manager.farmers[2].global_position, 34), "不能在农民占位上建造")
 	check(not main._can_place_free_building(Vector2(-210, 220), 34), "箭塔完整占地不能越界")
-	check(not main._can_place_free_building(Vector2(190, 180), 34), "防御建筑不能占用空闲树林资源点")
+	check(not main._can_place_free_building((main.get_node("ResourceSites/forest_03") as ResourceSite).global_position, 34), "防御建筑不能占用空闲树林资源点")
 	_test_shop(main.battle_shop, true)
 	_test_shop(main.interwave_draft, false)
 	_test_route(main)
@@ -128,11 +135,11 @@ func _test_shop(shop: Node, battle: bool) -> void:
 	shop.purchased_indices.assign([0, 1, 2, 3, 4])
 	var seen_new: bool = false
 	for attempt in range(20):
-		check(shop.refresh(), "单个未购槽仍能付费刷新")
-		if shop.offered_cards[5] not in initial:
+		check(shop.refresh(), "刷新会重抽全部商店槽位")
+		if shop.offered_cards[5] not in initial or shop.offered_cards[0] != initial[0]:
 			seen_new = true
 	check(seen_new, "刷新可抽到原来六张之外的牌")
-	check(shop.offered_cards[0] == initial[0], "刷新不改变已购买的牌")
+	check(shop.purchased_indices.is_empty(), "刷新清除已购买槽位的置灰状态")
 	shop.reset()
 
 
@@ -140,6 +147,7 @@ func _test_route(main: Node) -> void:
 	main.opening_draft.active = false
 	RunState.start_current_wave()
 	var controller: WaveController = main.wave_controller
+	controller.city_target_position = Vector2(480, 270)
 	controller.set_process(false)
 	controller.world_targets.clear()
 	var enemy := EnemyActor.new()

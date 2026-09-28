@@ -1,6 +1,9 @@
 class_name ResourceBuilding
 extends Node2D
 
+const ArtVisualScript = preload("res://src/gameplay/art/art_visual.gd")
+const BuildingGroundingScript = preload("res://src/gameplay/art/building_grounding.gd")
+
 signal destroyed(building: ResourceBuilding)
 
 var definition: OpeningCardDefinition
@@ -8,12 +11,32 @@ var assigned_workers: int = 0
 var resource_site: ResourceSite
 var capacity_bonus_applied: bool = false
 var current_health: int = 0
+var art_visual: ArtVisual
+var grounding: Node2D
+
+
+func _ready() -> void:
+	grounding = BuildingGroundingScript.new() as Node2D
+	add_child(grounding)
+	art_visual = ArtVisualScript.new() as ArtVisual
+	art_visual.show_behind_parent = true
+	add_child(art_visual)
 
 
 func configure(card_definition: OpeningCardDefinition, site: ResourceSite = null) -> void:
 	definition = card_definition
 	resource_site = site
 	current_health = definition.maximum_health if definition != null else 0
+	var art_name: String = str({
+		&"lumber_camp": "lumberyard",
+		&"farm": "farm",
+		&"stone_mine": "quarry",
+		&"iron_mine": "mine_entrance",
+		&"gold_mine": "mine_entrance",
+		&"house": "house",
+	}.get(definition.card_id, "house")) if definition != null else "house"
+	grounding.configure(Vector2i(2, 2), definition.card_id if definition != null else &"default")
+	art_visual.configure(art_name, Vector2(65, 56), &"lantern")
 	if definition != null and definition.population_capacity_bonus > 0:
 		capacity_bonus_applied = RunEconomy.change_population_capacity(
 			definition.population_capacity_bonus
@@ -61,13 +84,6 @@ func assign_workers(worker_count: int) -> void:
 
 
 func _draw() -> void:
-	var body_color := Color("6b8f5e") if definition == null else definition.building_color
-	draw_rect(Rect2(-34.0, -24.0, 68.0, 48.0), body_color)
-	draw_polygon(PackedVector2Array([
-		Vector2(-39.0, -24.0),
-		Vector2(0.0, -43.0),
-		Vector2(39.0, -24.0),
-	]), PackedColorArray([body_color.lightened(0.18)]))
 	if definition != null:
 		draw_string(
 			ThemeDB.fallback_font,

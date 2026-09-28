@@ -5,6 +5,8 @@
 > GDD：[单夜十波系统](../../design/gdd/single-night-wave-system.md)、[核心系统历史基线](../../design/gdd/core-loop-system.md)
 > ADR：[Godot平台基线](../../docs/architecture/adr-0001-godot-platform-baseline.md)
 
+> 新版覆盖：Story-025已取消战斗岗位锁定；Story-026进一步将玩家入口迁移为点击地图建筑后的上下文岗位面板，商店不再显示岗位列表。下方第5条只保留为旧十波流程的历史验收。
+
 ## 用户故事
 
 作为白天规划的玩家，我希望用明确的加减按钮在人口上限内调整每座建筑的岗位，从而主动决定本波偏向防御还是生产。

@@ -1,6 +1,9 @@
 class_name EnemyActor
 extends Node2D
 
+const ArtVisualScript = preload("res://src/gameplay/art/art_visual.gd")
+const GridPathFollowerScript = preload("res://src/gameplay/grid/grid_path_follower.gd")
+
 signal attack_requested(base_damage: int)
 signal barrier_attack_requested(
 	base_damage: int,
@@ -21,7 +24,7 @@ signal target_released(enemy: EnemyActor)
 signal health_changed(current_health: int, maximum_health: int)
 signal died(enemy: EnemyActor)
 
-const TILE_SIZE: float = 32.0
+const TILE_SIZE: float = 36.0
 
 var definition: EnemyDefinition
 var target_position: Vector2 = Vector2.ZERO
@@ -37,6 +40,18 @@ var attack_elapsed: float = 0.0
 var current_health: int = 0
 var spawn_index: int = -1
 var reward_transaction_id: StringName = &""
+var path_follower: RefCounted = GridPathFollowerScript.new()
+
+
+func set_pathfinder(value: RefCounted) -> void:
+	path_follower.set_pathfinder(value)
+
+
+func _ready() -> void:
+	var art := ArtVisualScript.new() as ArtVisual
+	art.show_behind_parent = true
+	add_child(art)
+	art.configure("wolf", Vector2(23, 17), &"wolf")
 
 
 func configure(
@@ -61,6 +76,7 @@ func configure(
 	has_reached_target = false
 	age_seconds = 0.0
 	attack_elapsed = 0.0
+	path_follower.invalidate()
 	health_changed.emit(current_health, definition.maximum_health)
 	queue_redraw()
 
@@ -91,6 +107,7 @@ func set_barrier(wall: BarrierWall) -> bool:
 	attack_target_kind = &"barrier"
 	has_reached_target = false
 	attack_elapsed = 0.0
+	path_follower.invalidate()
 	if not wall.destroyed.is_connected(_on_barrier_destroyed):
 		wall.destroyed.connect(_on_barrier_destroyed)
 	return true
@@ -114,6 +131,7 @@ func set_guard(guard: BarracksGuard) -> bool:
 	attack_target_kind = &"guard"
 	has_reached_target = false
 	attack_elapsed = 0.0
+	path_follower.invalidate()
 	if not guard.defeated.is_connected(_on_guard_defeated):
 		guard.defeated.connect(_on_guard_defeated)
 	return true
@@ -135,6 +153,7 @@ func set_world_target(target: Node2D) -> bool:
 	attack_target_kind = &"world"
 	has_reached_target = false
 	attack_elapsed = 0.0
+	path_follower.invalidate()
 	return true
 
 
@@ -166,7 +185,16 @@ func _physics_process(delta: float) -> void:
 		target_position = parent_2d.to_local(world_target.global_position) if parent_2d != null else world_target.global_position
 		if not is_on_route(world_target):
 			_resume_to_city()
-	if position.distance_to(target_position) > _contact_range():
+	if path_follower.pathfinder != null:
+		var parent_for_target := get_parent() as Node2D
+		var current_target_global := parent_for_target.to_global(target_position) if parent_for_target != null else target_position
+		if (
+			path_follower.target_position == Vector2.INF
+			or path_follower.target_position.distance_to(current_target_global) >= 18.0
+			or not path_follower.arrived
+		):
+			has_reached_target = false
+	elif position.distance_to(target_position) > _contact_range():
 		has_reached_target = false
 	if has_reached_target:
 		_process_attack(delta)
@@ -177,9 +205,18 @@ func _physics_process(delta: float) -> void:
 	if age_seconds <= definition.rush_duration:
 		speed_multiplier = definition.rush_multiplier
 	var speed_pixels: float = definition.move_speed_tiles_per_second * TILE_SIZE * speed_multiplier
-	position = position.move_toward(target_position, speed_pixels * delta)
+	if path_follower.pathfinder != null:
+		var parent_2d := get_parent() as Node2D
+		var target_global := parent_2d.to_global(target_position) if parent_2d != null else target_position
+		var movement: Dictionary = path_follower.advance(
+			global_position, target_global, _path_stop_radius(), speed_pixels, delta
+		)
+		global_position = movement.position
+		has_reached_target = bool(movement.arrived)
+	else:
+		position = position.move_toward(target_position, speed_pixels * delta)
 
-	if position.distance_to(target_position) <= _contact_range():
+	if has_reached_target or position.distance_to(target_position) <= _contact_range():
 		has_reached_target = true
 		attack_elapsed = 0.0
 
@@ -264,7 +301,14 @@ func _resume_to_city() -> void:
 	attack_target_kind = &"city"
 	has_reached_target = false
 	attack_elapsed = 0.0
+	path_follower.invalidate()
 	target_released.emit(self)
+
+
+func _path_stop_radius() -> float:
+	if attack_target_kind == &"city":
+		return 96.0
+	return _contact_range()
 
 
 func _contact_range() -> float:
@@ -295,19 +339,6 @@ func _is_forward_target(candidate_position: Vector2) -> bool:
 
 
 func _draw() -> void:
-	var color: Color = Color("b94b62") if definition == null else definition.body_color
-	draw_rect(Rect2(-14.0, -11.0, 28.0, 22.0), color)
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(-11.0, -11.0),
-		Vector2(-6.0, -19.0),
-		Vector2(-2.0, -11.0),
-	]), color)
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(2.0, -11.0),
-		Vector2(7.0, -19.0),
-		Vector2(11.0, -11.0),
-	]), color)
-	draw_circle(Vector2(7.0, -3.0), 2.0, Color("f6e3a6"))
 	if definition != null and current_health > 0:
 		var health_ratio: float = float(current_health) / float(definition.maximum_health)
 		draw_rect(Rect2(-14.0, -25.0, 28.0, 3.0), Color("3c1f2a"))

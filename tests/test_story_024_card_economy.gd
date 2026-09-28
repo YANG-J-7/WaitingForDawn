@@ -68,6 +68,15 @@ func _test_shop_refresh_and_capacity() -> void:
 	add_child(inventory)
 	check(shop.open_for_wave(1), "六格商店可以打开")
 	check(shop.offered_cards.size() == 6, "商店固定六个1星槽位")
+	var repeat_card: OpeningCardDefinition = shop.offered_cards[0]
+	check(shop.purchase_card(0, inventory), "首次购买把槽位置为售罄")
+	check(0 in shop.purchased_indices, "购买后槽位暂时置灰")
+	check(shop.refresh(), "刷新已购买槽位成功")
+	check(shop.purchased_indices.is_empty(), "刷新后全部槽位恢复可购买")
+	shop.offered_cards[0] = repeat_card
+	check(shop.purchase_card(0, inventory), "同名卡可以再次购买")
+	check(inventory.count_matching(repeat_card.card_id, 1) == 2, "重复购买不限制同名1星卡数量")
+	check(shop.open_for_wave(2), "新威胁阶段补满商店")
 	var expected_costs: Array[int] = [2, 3, 4, 5, 6, 6]
 	for expected in expected_costs:
 		var before: int = RunEconomy.amount(&"gold")
@@ -75,7 +84,7 @@ func _test_shop_refresh_and_capacity() -> void:
 		check(shop.refresh(), "支付%d金币刷新成功" % expected)
 		check(RunEconomy.amount(&"gold") == before - expected, "刷新精确扣除%d金币" % expected)
 	check(shop.current_refresh_cost() == 6, "刷新费用封顶6金币")
-	check(shop.open_for_wave(2), "新威胁阶段补满商店")
+	check(shop.open_for_wave(3), "下一威胁阶段再次补满商店")
 	check(shop.refresh_count == 0 and shop.current_refresh_cost() == 2, "新威胁阶段重置刷新费用")
 	for index in range(RunCardInventory.MAX_CARDS):
 		inventory.add_card(CARDS[0], 1)

@@ -1,6 +1,9 @@
 class_name FarmerAgent
 extends Node2D
 
+const ArtVisualScript = preload("res://src/gameplay/art/art_visual.gd")
+const GridPathFollowerScript = preload("res://src/gameplay/grid/grid_path_follower.gd")
+
 signal delivery_completed(resource_id: StringName, amount: int)
 signal died(farmer: FarmerAgent)
 
@@ -27,6 +30,18 @@ var carried_amount: int = 0
 var carried_resource: StringName = &""
 var state: WorkState = WorkState.IDLE
 var gather_elapsed: float = 0.0
+var path_follower: RefCounted = GridPathFollowerScript.new()
+
+
+func set_pathfinder(value: RefCounted) -> void:
+	path_follower.set_pathfinder(value)
+
+
+func _ready() -> void:
+	var art := ArtVisualScript.new() as ArtVisual
+	art.show_behind_parent = true
+	add_child(art)
+	art.configure("villager", Vector2(12, 18), &"walk")
 
 
 func configure(index: int, home_position: Vector2) -> void:
@@ -35,6 +50,7 @@ func configure(index: int, home_position: Vector2) -> void:
 	current_health = maximum_health
 	global_position = _idle_position()
 	state = WorkState.IDLE
+	path_follower.invalidate()
 	queue_redraw()
 
 
@@ -51,6 +67,7 @@ func assign_job(
 	delivery_resource = resource_id
 	delivery_amount = amount_per_trip
 	gather_elapsed = 0.0
+	path_follower.invalidate()
 	# 已采集的货物属于本次运输，换岗或建筑毁坏不会将其抹掉。
 	state = WorkState.TO_CITY if carried_amount > 0 else (WorkState.TO_WORK if workplace != null else WorkState.IDLE)
 	queue_redraw()
@@ -90,13 +107,12 @@ func advance(delta: float) -> void:
 		return
 	match state:
 		WorkState.IDLE:
-			global_position = global_position.move_toward(_idle_position(), move_speed * delta)
+			_move_toward_grid(_idle_position(), 18.0, delta)
 		WorkState.TO_WORK:
 			if not _workplace_is_valid():
 				clear_job()
 				return
-			global_position = global_position.move_toward(workplace.global_position, move_speed * delta)
-			if global_position.distance_to(workplace.global_position) <= 6.0:
+			if _move_toward_grid(workplace.global_position, 60.0, delta):
 				state = WorkState.GATHERING if not delivery_resource.is_empty() else WorkState.WORKING
 				gather_elapsed = 0.0
 		WorkState.GATHERING:
@@ -109,8 +125,7 @@ func advance(delta: float) -> void:
 				carried_resource = delivery_resource
 				state = WorkState.TO_CITY
 		WorkState.TO_CITY:
-			global_position = global_position.move_toward(city_position, move_speed * delta)
-			if global_position.distance_to(city_position) <= 8.0:
+			if _move_toward_grid(city_position, 96.0, delta):
 				var amount_to_deliver: int = carried_amount
 				var resource_to_deliver: StringName = carried_resource
 				carried_amount = 0
@@ -125,22 +140,28 @@ func advance(delta: float) -> void:
 	queue_redraw()
 
 
+func _move_toward_grid(target: Vector2, stop_distance: float, delta: float) -> bool:
+	if path_follower.pathfinder == null:
+		global_position = global_position.move_toward(target, move_speed * delta)
+		return global_position.distance_to(target) <= maxf(6.0, stop_distance if stop_distance < 24.0 else 8.0)
+	var movement: Dictionary = path_follower.advance(global_position, target, stop_distance, move_speed, delta)
+	global_position = movement.position
+	return bool(movement.arrived)
+
+
 func _workplace_is_valid() -> bool:
 	return is_instance_valid(workplace) and (not workplace.has_method("is_attackable") or bool(workplace.call("is_attackable")))
 
 
 func _idle_position() -> Vector2:
 	var angle: float = float(farmer_index % 8) / 8.0 * TAU
-	var ring: float = 66.0 + float(farmer_index / 8) * 18.0
+	var ring: float = 108.0 + float(farmer_index / 8) * 18.0
 	return city_position + Vector2.from_angle(angle) * ring
 
 
 func _draw() -> void:
-	var body_color := Color("d6b66a") if carried_amount == 0 else Color("f0cf59")
-	draw_circle(Vector2.ZERO, 8.0, body_color)
-	draw_rect(Rect2(-5, 6, 10, 9), Color("6f5438"))
-	var job_label: String = str({&"lumber_camp": "木", &"farm": "农", &"gold_mine": "金", &"stone_mine": "石", &"arrow_tower": "箭", &"barracks": "兵"}.get(StringName(String(job_id).get_slice("#", 0)), "闲"))
+	var job_label: String = str({&"lumber_camp": "木", &"farm": "农", &"gold_mine": "金", &"stone_mine": "石", &"iron_mine": "铁", &"arrow_tower": "箭", &"barracks": "兵"}.get(StringName(String(job_id).get_slice("#", 0)), "闲"))
 	draw_string(ThemeDB.fallback_font, Vector2(-24, -13), "%d·%s" % [farmer_index + 1, job_label], HORIZONTAL_ALIGNMENT_CENTER, 48.0, 10, Color.WHITE)
 	if carried_amount > 0:
-		var resource_label: String = str({&"wood": "木", &"food": "食", &"gold": "金", &"stone": "石"}.get(carried_resource, "货"))
+		var resource_label: String = str({&"wood": "木", &"food": "食", &"gold": "金", &"stone": "石", &"iron": "铁"}.get(carried_resource, "货"))
 		draw_string(ThemeDB.fallback_font, Vector2(-15, 27), "%s%d" % [resource_label, carried_amount], HORIZONTAL_ALIGNMENT_CENTER, 30.0, 10, Color("ffe083"))

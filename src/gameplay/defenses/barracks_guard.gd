@@ -5,6 +5,8 @@ signal defeated(guard: BarracksGuard)
 signal target_released(guard: BarracksGuard)
 
 const DamageRules = preload("res://src/gameplay/combat/damage_calculator.gd")
+const ArtVisualScript = preload("res://src/gameplay/art/art_visual.gd")
+const GridPathFollowerScript = preload("res://src/gameplay/grid/grid_path_follower.gd")
 
 var definition: GuardDefinition
 var guard_index: int = -1
@@ -14,6 +16,19 @@ var engaged_enemy: EnemyActor
 var attack_elapsed: float = 0.0
 var total_damage: int = 0
 var kill_count: int = 0
+var move_speed: float = 72.0
+var path_follower: RefCounted = GridPathFollowerScript.new()
+
+
+func set_pathfinder(value: RefCounted) -> void:
+	path_follower.set_pathfinder(value)
+
+
+func _ready() -> void:
+	var art := ArtVisualScript.new() as ArtVisual
+	art.show_behind_parent = true
+	add_child(art)
+	art.configure("guard", Vector2(18, 25), &"walk")
 
 
 func configure(guard_definition: GuardDefinition, entity_index: int) -> void:
@@ -26,6 +41,7 @@ func configure(guard_definition: GuardDefinition, entity_index: int) -> void:
 	total_damage = 0
 	kill_count = 0
 	visible = true
+	path_follower.invalidate()
 	queue_redraw()
 
 
@@ -57,6 +73,7 @@ func engage_enemy(enemy: EnemyActor) -> bool:
 	if not is_available() or enemy == null or not is_instance_valid(enemy) or not enemy.is_alive():
 		return false
 	engaged_enemy = enemy
+	path_follower.invalidate()
 	attack_elapsed = definition.attack_interval
 	if not enemy.died.is_connected(_on_engaged_enemy_died):
 		enemy.died.connect(_on_engaged_enemy_died)
@@ -68,6 +85,7 @@ func release_enemy() -> void:
 		if engaged_enemy.died.is_connected(_on_engaged_enemy_died):
 			engaged_enemy.died.disconnect(_on_engaged_enemy_died)
 	engaged_enemy = null
+	path_follower.invalidate()
 	target_released.emit(self)
 
 
@@ -123,7 +141,17 @@ func _process(delta: float) -> void:
 			release_enemy()
 		return
 	if global_position.distance_to(engaged_enemy.global_position) > definition.attack_range_pixels:
-		return
+		if path_follower.pathfinder != null:
+			var movement: Dictionary = path_follower.advance(
+				global_position,
+				engaged_enemy.global_position,
+				definition.attack_range_pixels,
+				move_speed,
+				delta
+			)
+			global_position = movement.position
+		if global_position.distance_to(engaged_enemy.global_position) > definition.attack_range_pixels:
+			return
 	attack_elapsed = minf(definition.attack_interval, attack_elapsed + delta)
 	if attack_elapsed < definition.attack_interval:
 		return
@@ -133,15 +161,11 @@ func _process(delta: float) -> void:
 
 func _on_engaged_enemy_died(_enemy: EnemyActor) -> void:
 	engaged_enemy = null
+	path_follower.invalidate()
 	target_released.emit(self)
 
 
 func _draw() -> void:
-	var color: Color = Color("5f8f67") if definition == null else definition.body_color
-	draw_circle(Vector2.ZERO, 11.0, color)
-	draw_rect(Rect2(-7.0, -18.0, 14.0, 8.0), color.lightened(0.15))
-	draw_line(Vector2(7.0, -5.0), Vector2(17.0, 7.0), Color("d8d0ad"), 3.0)
-	draw_circle(Vector2(-3.0, -3.0), 1.5, Color("f4e7bd"))
 	if definition != null and current_health > 0:
 		var health_ratio: float = float(current_health) / float(definition.maximum_health)
 		draw_rect(Rect2(-13.0, -25.0, 26.0, 3.0), Color("2b1d25"))

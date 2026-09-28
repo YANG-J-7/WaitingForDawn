@@ -9,11 +9,12 @@ signal buildings_reset
 const RESOURCE_BUILDING_SCENE: PackedScene = preload(
 	"res://src/gameplay/buildings/resource_building.tscn"
 )
+const MapLayout = preload("res://src/gameplay/buildings/map_layout.gd")
 
 @export var slot_positions: Array[Vector2] = [
-	Vector2(248.0, 188.0),
-	Vector2(366.0, 188.0),
-	Vector2(484.0, 188.0),
+	Vector2(1180.0, 1030.0),
+	Vector2(1380.0, 1240.0),
+	Vector2(1580.0, 1030.0),
 ]
 
 var buildings_by_slot: Dictionary = {}
@@ -21,11 +22,16 @@ var consumed_card_ids: Array[StringName] = []
 var placement_order: Array[ResourceBuilding] = []
 var last_error: String = ""
 var resource_sites: Array[ResourceSite] = []
+var grid_map_model: RefCounted
 @export var build_bounds: Rect2 = Rect2(64.0, 126.0, 832.0, 288.0)
 
 
 func set_resource_sites(sites: Array[ResourceSite]) -> void:
 	resource_sites = sites.duplicate()
+
+
+func set_grid_map_model(model: RefCounted) -> void:
+	grid_map_model = model
 
 
 func place_card(card: OpeningCardDefinition, slot_index: int) -> bool:
@@ -49,8 +55,43 @@ func place_card(card: OpeningCardDefinition, slot_index: int) -> bool:
 
 	var building := RESOURCE_BUILDING_SCENE.instantiate() as ResourceBuilding
 	add_child(building)
-	building.position = slot_positions[slot_index]
-	building.configure(card)
+	var footprint: Vector2i = MapLayout.footprint_for_card(card.card_id)
+	var claimed_site: ResourceSite = null
+	if not card.required_resource_site.is_empty():
+		for site in resource_sites:
+			if site.accepts(card):
+				claimed_site = site
+				break
+		if claimed_site == null:
+			_refund(card.build_costs)
+			building.queue_free()
+			last_error = "%s需要空闲的对应资源点。" % card.display_name
+			return false
+	var final_position: Vector2 = claimed_site.position if claimed_site != null else slot_positions[slot_index]
+	if grid_map_model != null:
+		final_position = grid_map_model.snap_footprint_center(final_position, footprint)
+	var site_id := StringName(claimed_site.name) if claimed_site != null else &""
+	if grid_map_model != null and not grid_map_model.can_place(final_position, footprint, site_id):
+		_refund(card.build_costs)
+		building.queue_free()
+		last_error = "目标网格包含水域、资源点或已占用地块。"
+		return false
+	building.position = final_position
+	building.configure(card, claimed_site)
+	if claimed_site != null and not claimed_site.claim(building):
+		_refund(card.build_costs)
+		building.queue_free()
+		last_error = "该资源点已被占用。"
+		return false
+	if grid_map_model != null and not grid_map_model.occupy(
+		_occupant_id(building), final_position, footprint, site_id
+	):
+		if claimed_site != null:
+			claimed_site.release(building)
+		_refund(card.build_costs)
+		building.queue_free()
+		last_error = "目标网格已被占用。"
+		return false
 	building.destroyed.connect(_on_building_destroyed)
 	buildings_by_slot[slot_index] = building
 	consumed_card_ids.append(card.card_id)
@@ -68,15 +109,24 @@ func place_card_at(
 	if card == null or card.category not in ["resource", "population"]:
 		last_error = "该卡不能作为地图建筑放置。"
 		return null
-	var final_position: Vector2 = map_position
+	var footprint: Vector2i = MapLayout.footprint_for_card(card.card_id)
+	var final_position: Vector2 = (
+		grid_map_model.snap_footprint_center(map_position, footprint)
+		if grid_map_model != null
+		else map_position
+	)
 	var claimed_site: ResourceSite = null
-	if card.category == "resource":
+	if card.category == "resource" and not card.required_resource_site.is_empty():
 		claimed_site = _matching_site(card, map_position)
 		if claimed_site == null:
 			last_error = "%s必须建在对应的%s资源点上。" % [card.display_name, _site_label(card.required_resource_site)]
 			return null
 		final_position = claimed_site.global_position
-	if not build_bounds.grow(-card.footprint_radius).has_point(final_position):
+	var site_id := StringName(claimed_site.name) if claimed_site != null else &""
+	if grid_map_model != null and not grid_map_model.can_place(final_position, footprint, site_id):
+		last_error = "目标网格包含水域、资源点或已占用地块。"
+		return null
+	if not MapLayout.is_buildable(final_position, card.footprint_radius):
 		last_error = "建筑的完整占地必须位于地图可建造区域内。"
 		return null
 	if not _is_clear(final_position, card.footprint_radius, obstacles):
@@ -95,6 +145,15 @@ func place_card_at(
 		building.queue_free()
 		last_error = "该资源点已被占用。"
 		return null
+	if grid_map_model != null and not grid_map_model.occupy(
+		_occupant_id(building), final_position, footprint, site_id
+	):
+		if claimed_site != null:
+			claimed_site.release(building)
+		_refund(card.build_costs)
+		building.queue_free()
+		last_error = "目标网格已被占用。"
+		return null
 	placement_order.append(building)
 	building_placed_at.emit(building, card.card_id)
 	return building
@@ -103,10 +162,14 @@ func place_card_at(
 func reset_buildings() -> void:
 	for building: Variant in buildings_by_slot.values():
 		if is_instance_valid(building):
+			if grid_map_model != null:
+				grid_map_model.release(_occupant_id(building as Node))
 			(building as ResourceBuilding).remove_from_run()
 			(building as Node).queue_free()
 	for building in placement_order:
 		if is_instance_valid(building) and building not in buildings_by_slot.values():
+			if grid_map_model != null:
+				grid_map_model.release(_occupant_id(building))
 			building.remove_from_run()
 			building.queue_free()
 	buildings_by_slot.clear()
@@ -157,6 +220,7 @@ func _site_label(site_type: StringName) -> String:
 		&"farmland": "农田",
 		&"gold_vein": "金矿脉",
 		&"stone_deposit": "石矿脉",
+		&"iron_deposit": "铁矿脉",
 	}.get(site_type, "资源"))
 
 
@@ -166,6 +230,8 @@ func _refund(costs: Dictionary) -> void:
 
 
 func _on_building_destroyed(building: ResourceBuilding) -> void:
+	if grid_map_model != null:
+		grid_map_model.release(_occupant_id(building))
 	placement_order.erase(building)
 	var removed_slots: Array = []
 	for slot_index: Variant in buildings_by_slot:
@@ -176,3 +242,7 @@ func _on_building_destroyed(building: ResourceBuilding) -> void:
 	var card_id: StringName = building.definition.card_id if building.definition != null else &""
 	building_destroyed.emit(building, card_id)
 	building.queue_free()
+
+
+func _occupant_id(building: Node) -> StringName:
+	return StringName("building_%d" % building.get_instance_id())

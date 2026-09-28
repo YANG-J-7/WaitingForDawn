@@ -11,6 +11,7 @@ const DamageRules = preload("res://src/gameplay/combat/damage_calculator.gd")
 @export var wave_definitions: Array[WaveDefinition] = []
 @export var playable_bounds: Rect2 = Rect2(64.0, 126.0, 832.0, 288.0)
 @export var city_target_position: Vector2 = Vector2(480.0, 270.0)
+@export var spawn_points: Array[Vector2] = []
 
 var spawning: bool = false
 var spawned_count: int = 0
@@ -18,6 +19,7 @@ var spawn_elapsed: float = 0.0
 var enemies: Array[EnemyActor] = []
 var active_wave_definition: WaveDefinition
 var active_wave_index: int = 0
+var active_run_wave_index: int = 0
 var active_enemy_count: int = 0
 var barrier_walls: Array[BarrierWall] = []
 var additional_barracks: Array[Barracks] = []
@@ -30,6 +32,7 @@ var target_scan_elapsed: float = 0.0
 var clear_pending: bool = false
 var wave_generation: int = 0
 var kill_gold_ledger := KillGoldLedger.new()
+var pathfinder: RefCounted
 
 
 func _ready() -> void:
@@ -56,19 +59,20 @@ func start_first_wave() -> bool:
 	return start_wave(1)
 
 
-func start_wave(wave_index: int) -> bool:
+func start_wave(wave_index: int, run_wave_index: int = -1) -> bool:
 	var definition: WaveDefinition = _definition_for_wave(wave_index)
 	if definition == null or not definition.is_valid():
 		return false
 	reset_wave()
 	active_wave_definition = definition
 	active_wave_index = wave_index
+	active_run_wave_index = wave_index if run_wave_index <= 0 else run_wave_index
 	active_enemy_count = definition.spawn_count()
 	spawning = true
 	spawned_count = 0
 	spawn_elapsed = definition.spawn_interval
 	spawn_history.clear()
-	spawn_random.seed = absi(hash("%s:wave:%d:perimeter" % [RunState.run_id, wave_index]))
+	spawn_random.seed = absi(hash("%s:wave:%d:perimeter" % [RunState.run_id, active_run_wave_index]))
 	_refill_spawn_sides()
 	return true
 
@@ -81,6 +85,7 @@ func reset_wave() -> void:
 	spawn_elapsed = 0.0
 	active_wave_definition = null
 	active_wave_index = 0
+	active_run_wave_index = 0
 	active_enemy_count = 0
 	spawn_history.clear()
 	spawn_side_order.clear()
@@ -120,6 +125,12 @@ func set_world_targets(targets: Array[Node2D]) -> void:
 	_assign_defensive_targets()
 
 
+func set_pathfinder(value: RefCounted) -> void:
+	pathfinder = value
+	for enemy in enemies:
+		enemy.set_pathfinder(pathfinder)
+
+
 func get_priority_target(origin: Vector2, attack_range_pixels: float) -> EnemyActor:
 	var best_target: EnemyActor = null
 	var best_city_distance: float = INF
@@ -148,8 +159,9 @@ func _spawn_enemy() -> void:
 		current_spawn_position,
 		city_target_position,
 		spawned_count,
-		StringName("%s:%d:%d:%d" % [RunState.run_id, wave_generation, active_wave_index, spawned_count])
+		StringName("%s:%d:%d:%d" % [RunState.run_id, wave_generation, active_run_wave_index, spawned_count])
 	)
+	enemy.set_pathfinder(pathfinder)
 	enemy.attack_requested.connect(_on_enemy_attack_requested)
 	enemy.barrier_attack_requested.connect(_on_enemy_barrier_attack_requested)
 	enemy.guard_attack_requested.connect(_on_enemy_guard_attack_requested)
@@ -166,6 +178,8 @@ func _next_spawn_position() -> Vector2:
 	if spawn_side_order.is_empty():
 		_refill_spawn_sides()
 	var side: int = spawn_side_order.pop_front()
+	if not spawn_points.is_empty():
+		return spawn_points[side % spawn_points.size()]
 	var margin: float = 28.0
 	match side:
 		0:
@@ -179,7 +193,10 @@ func _next_spawn_position() -> Vector2:
 
 
 func _refill_spawn_sides() -> void:
-	spawn_side_order = [0, 1, 2, 3]
+	spawn_side_order.clear()
+	var count: int = spawn_points.size() if not spawn_points.is_empty() else 4
+	for index in range(count):
+		spawn_side_order.append(index)
 	for index in range(spawn_side_order.size() - 1, 0, -1):
 		var swap_index: int = spawn_random.randi_range(0, index)
 		var value: int = spawn_side_order[index]
@@ -260,9 +277,9 @@ func _finish_clear(generation: int) -> void:
 	clear_pending = false
 	if RunState.phase != RunState.Phase.WAVE_COMBAT or RunState.city_health <= 0:
 		return
-	if RunState.current_wave != active_wave_index or not enemies.is_empty():
+	if RunState.current_wave != active_run_wave_index or not enemies.is_empty():
 		return
-	wave_cleared.emit(active_wave_index)
+	wave_cleared.emit(active_run_wave_index)
 	RunState.complete_current_wave()
 
 

@@ -1,0 +1,1 @@
+2026-09-22 地图地物布置参考。以 `moonlit_hillside_lake_large_base.png` 为精确地面参照，保持湖岸、山坡、草地和镜头构图；只在上边界、左边界、左下边界及右上陆地边界加入密集但有层次的针叶树林；湖岸与大面积中央草地保持空旷。此图仅用于审阅树林布局，不作为运行时地图底图。实际分层预览见 `moonlit_hillside_lake_large_preview.png` 和 `moonlit_hillside_lake_large_props.json`。

@@ -1,0 +1,8 @@
+Use case: style-transfer
+Asset type: revised production source atlas for a reusable Godot 4.7 top-down terrain tileset
+Input image: the preceding generated 2×2 moonlit grass atlas is the visual reference and revision target.
+Primary request: create a cleaner second version of that exact 2×2 four-variant atlas, optimized to remain visibly distinct after each quadrant is reduced to a 36×36 tile.
+Preserve: exact square 2×2 equal-cell layout, top-down orthographic grass-only surface, cool moonlit teal palette, pixel-inspired hard clusters, no gutters or labels, full-bleed cells, shared material family and lighting direction.
+Change: raise local light-dark separation within each quadrant; make the four variants unmistakably different at thumbnail scale while keeping comparable average brightness. Top-left mostly plain blue-teal grass with a few medium dark flecks. Top-right darker dense short-grass grain but no tall tufts. Bottom-left clearly mossy olive-blue patches with broad low-frequency shapes. Bottom-right sparse pale tiny pebble/short-blade accents concentrated away from edges. Reduce tall grass tufts by at least 70 percent and remove all flower-like shapes.
+Seam requirement: each quadrant must be an independently seamless repeating square texture; keep a neutral low-detail band near every quadrant edge so left/right and top/bottom edges join safely.
+Avoid: text, numbers, borders, gutters, grid lines, UI, actors, buildings, trees, flowers, large or tall grass tufts, roads, water, cliffs, perspective, tile thickness, bevels, cast shadows, soft blur, photorealism, watermark, noisy high-frequency speckles, nearly identical quadrants.

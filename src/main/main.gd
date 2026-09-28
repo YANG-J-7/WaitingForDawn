@@ -2,20 +2,42 @@ extends Node2D
 
 const MapLayout = preload("res://src/gameplay/buildings/map_layout.gd")
 const MapCameraScript = preload("res://src/gameplay/buildings/map_camera.gd")
+const GridMapModelScript = preload("res://src/gameplay/grid/grid_map_model.gd")
+const GridPathfinderScript = preload("res://src/gameplay/grid/grid_pathfinder.gd")
+const TerrainMapDataScript = preload("res://src/gameplay/grid/terrain_map_data.gd")
+const TerrainGridLayerScript = preload("res://src/gameplay/art/terrain_grid_layer.gd")
+const BuildingGroundingScript = preload("res://src/gameplay/art/building_grounding.gd")
 const OverlayScript = preload("res://src/gameplay/buildings/placement_overlay.gd")
+const ArtVisualScript = preload("res://src/gameplay/art/art_visual.gd")
+const MAP_BASE_TEXTURE: Texture2D = preload("res://assets/map/moonlit_resource_map_16x9_base.png")
+const MAP_BORDER_FOREST_TEXTURE: Texture2D = preload("res://assets/map/moonlit_resource_map_16x9_border_forest.png")
+const MAP_SITE_DATA_PATH := "res://assets/map/moonlit_resource_map_16x9_sites.json"
 var map_camera: Camera2D
 var placement_overlay: Node2D
 var additional_towers: Array[ArrowTower] = []
 var additional_barracks: Array[Barracks] = []
+var grid_map_model: RefCounted = GridMapModelScript.new()
+var grid_pathfinder: RefCounted = GridPathfinderScript.new(grid_map_model)
+var terrain_grid_layer: Node2D
 
 const COLOR_NIGHT := Color("101827")
 const COLOR_GRID := Color("1b2b3d")
 const COLOR_PATH := Color("37475b")
 const COLOR_CITY := Color("e3a94b")
+const COLOR_UI_NIGHT := Color("091522")
+const COLOR_UI_PANEL := Color("101b29")
+const COLOR_UI_GOLD := Color("e4a846")
+const COLOR_UI_GOLD_BRIGHT := Color("ffd27a")
+const COLOR_PARCHMENT := Color("f1d8a8")
+const COLOR_PARCHMENT_TEXT := Color("24180d")
 
 @onready var phase_value: Label = %PhaseValue
+@onready var top_bar: PanelContainer = $HUD/TopBar
 @onready var wave_value: Label = %WaveValue
+@onready var campaign_time_value: Label = %CampaignTimeValue
+@onready var campaign_pause_button: Button = %CampaignPauseButton
 @onready var city_value: Label = %CityValue
+@onready var city_health_bar: ProgressBar = %CityHealthBar
 @onready var enemy_value: Label = %EnemyValue
 @onready var status_label: Label = %StatusLabel
 @onready var bottom_panel: PanelContainer = %BottomPanel
@@ -49,6 +71,9 @@ const COLOR_CITY := Color("e3a94b")
 @onready var hand_label: Label = %HandLabel
 @onready var hand_empty_hint: Label = %HandEmptyHint
 @onready var hand_slots: HBoxContainer = %HandSlots
+@onready var hand_scroll: ScrollContainer = %HandScroll
+@onready var hand_prev_button: Button = %HandPrevButton
+@onready var hand_next_button: Button = %HandNextButton
 @onready var job_rows: HBoxContainer = %JobRows
 @onready var job_empty_hint: Label = %JobEmptyHint
 @onready var job_summary_label: Label = %JobSummaryLabel
@@ -69,6 +94,14 @@ const COLOR_CITY := Color("e3a94b")
 @onready var population_value: Label = %PopulationValue
 @onready var notice_panel: PanelContainer = $HUD/NoticePanel
 @onready var notice_label: Label = $HUD/NoticePanel/Message
+@onready var building_worker_panel: PanelContainer = %BuildingWorkerPanel
+@onready var building_worker_title: Label = $HUD/BuildingWorkerPanel/Margin/Content/Title
+@onready var building_worker_value: Label = $HUD/BuildingWorkerPanel/Margin/Content/WorkerValue
+@onready var building_worker_minus_button: Button = $HUD/BuildingWorkerPanel/Margin/Content/Controls/MinusButton
+@onready var building_worker_plus_button: Button = $HUD/BuildingWorkerPanel/Margin/Content/Controls/PlusButton
+@onready var building_worker_auto_button: Button = $HUD/BuildingWorkerPanel/Margin/Content/Actions/AutoButton
+@onready var building_worker_close_button: Button = $HUD/BuildingWorkerPanel/Margin/Content/Actions/CloseButton
+@onready var shop_close_button: Button = %ShopCloseButton
 
 var card_buttons: Array[Button] = []
 var hand_card_slots: Dictionary = {}
@@ -81,44 +114,66 @@ var job_plus_buttons: Dictionary = {}
 var zero_purchase_warning_shown: bool = false
 var resource_sites: Array[ResourceSite] = []
 var notice_seconds: float = 0.0
+var selected_job_id: StringName = &""
 
 
 func _ready() -> void:
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_initialize_grid_map()
+	terrain_grid_layer = TerrainGridLayerScript.new() as Node2D
+	terrain_grid_layer.name = "TerrainGridLayer"
+	terrain_grid_layer.z_index = 0
+	terrain_grid_layer.configure(grid_map_model)
+	add_child(terrain_grid_layer)
+	move_child(terrain_grid_layer, 0)
+	var border_forest := Sprite2D.new()
+	border_forest.name = "BorderForest"
+	border_forest.texture = MAP_BORDER_FOREST_TEXTURE
+	border_forest.centered = false
+	border_forest.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	border_forest.z_index = 0
+	add_child(border_forest)
+	move_child(border_forest, 1)
+	wave_controller.city_target_position = MapLayout.CITY_POSITION
 	wave_controller.playable_bounds = MapLayout.BOUNDS
+	wave_controller.spawn_points.assign(MapLayout.SPAWN_POINTS)
 	settlement_builder.build_bounds = MapLayout.BOUNDS
+	settlement_builder.set_grid_map_model(grid_map_model)
 	wall_manager.build_bounds = MapLayout.BOUNDS
 	barracks.build_bounds = MapLayout.BOUNDS
 	farmer_manager.economy = wave_economy
+	farmer_manager.set_pathfinder(grid_pathfinder)
+	wave_controller.set_pathfinder(grid_pathfinder)
+	barracks.set_pathfinder(grid_pathfinder)
 	wave_economy.additional_towers = additional_towers
 	wave_economy.additional_barracks = additional_barracks
 	wave_controller.additional_barracks = additional_barracks
 	map_camera = MapCameraScript.new()
 	map_camera.name = "MapCamera"
 	add_child(map_camera)
+	var city_art := ArtVisualScript.new() as ArtVisual
+	city_art.position = wave_controller.city_target_position
+	city_art.configure("town_hall", Vector2(90, 88), &"lantern")
+	add_child(city_art)
+	var city_grounding: Node2D = BuildingGroundingScript.new() as Node2D
+	city_grounding.position = wave_controller.city_target_position
+	city_grounding.configure(MapLayout.CITY_FOOTPRINT, &"town_hall")
+	add_child(city_grounding)
 	map_camera.surface = map_drop_surface
 	map_drop_surface.screen_to_world = map_camera.screen_to_world
 	map_drop_surface.gui_input.connect(map_camera.handle_map_input)
+	map_drop_surface.gui_input.connect(_on_map_surface_gui_input)
 	placement_overlay = OverlayScript.new()
 	placement_overlay.main = self
 	placement_overlay.z_index = 100
 	add_child(placement_overlay)
-	# 保留原四个资源点，扩展区域为每种资源增加两处可建造地块。
-	for index in range(4):
-		var original: ResourceSite = resource_sites_root.get_child(index)
-		for offset in [Vector2(-230 if index < 2 else 230, 0), Vector2(0, -170 if index % 2 == 0 else 170)]:
-			var site := ResourceSite.new()
-			site.site_type = original.site_type
-			site.display_name = original.display_name
-			site.site_color = original.site_color
-			site.position = original.position + offset
-			resource_sites_root.add_child(site)
-	for child in resource_sites_root.get_children():
-		if child is ResourceSite:
-			resource_sites.append(child as ResourceSite)
+	_load_resource_sites()
 	settlement_builder.set_resource_sites(resource_sites)
 	RunState.phase_changed.connect(_on_state_changed)
 	RunState.wave_changed.connect(_on_wave_changed)
 	RunState.city_health_changed.connect(_on_city_health_changed)
+	RunState.campaign_time_changed.connect(_on_campaign_time_changed)
+	RunState.threat_stage_changed.connect(_on_threat_stage_changed)
 	start_button.pressed.connect(_on_start_pressed)
 	reset_button.pressed.connect(_on_reset_pressed)
 	failure_reset_button.pressed.connect(_on_reset_pressed)
@@ -127,12 +182,22 @@ func _ready() -> void:
 	refresh_button.pressed.connect(_on_refresh_pressed)
 	pause_timer_button.pressed.connect(_on_pause_timer_pressed)
 	auto_assign_button.pressed.connect(_on_auto_assign_pressed)
+	building_worker_minus_button.pressed.connect(_on_selected_job_adjust_pressed.bind(-1))
+	building_worker_plus_button.pressed.connect(_on_selected_job_adjust_pressed.bind(1))
+	building_worker_auto_button.pressed.connect(_on_auto_assign_pressed)
+	building_worker_close_button.pressed.connect(_close_building_worker_panel)
+	shop_close_button.pressed.connect(_close_battle_shop)
+	hand_prev_button.pressed.connect(_scroll_hand.bind(-1))
+	hand_next_button.pressed.connect(_scroll_hand.bind(1))
+	hand_scroll.get_h_scroll_bar().value_changed.connect(_on_hand_scroll_changed)
+	get_viewport().size_changed.connect(_on_viewport_size_changed)
 	defense_slot_button.pressed.connect(_on_defense_slot_pressed)
 	barracks_slot_button.pressed.connect(_on_barracks_slot_pressed)
 	barracks_slot_button.card_dropped.connect(_on_barracks_card_dropped)
 	map_drop_surface.card_dropped.connect(_on_map_card_dropped)
 	battle_shop_button.pressed.connect(_on_battle_shop_button_pressed)
 	train_farmer_button.pressed.connect(_on_train_farmer_pressed)
+	campaign_pause_button.pressed.connect(_on_campaign_pause_pressed)
 	settlement_slot_buttons = [%SettlementSlot0, %SettlementSlot1, %SettlementSlot2]
 	for slot_index in range(settlement_slot_buttons.size()):
 		settlement_slot_buttons[slot_index].pressed.connect(
@@ -172,6 +237,7 @@ func _ready() -> void:
 	wave_economy.jobs_changed.connect(_on_jobs_changed)
 	wave_economy.assignments_changed.connect(_on_assignments_changed)
 	_create_card_buttons()
+	_apply_confirmed_hud_style()
 	_remove_arrow_tower()
 	_reset_walls()
 	_reset_barracks()
@@ -183,7 +249,50 @@ func _ready() -> void:
 	queue_redraw()
 
 
+func _load_resource_sites() -> void:
+	resource_sites.clear()
+	for child in resource_sites_root.get_children():
+		child.queue_free()
+	var file := FileAccess.open(MAP_SITE_DATA_PATH, FileAccess.READ)
+	if file == null:
+		push_error("无法读取新地图资源点数据：%s" % MAP_SITE_DATA_PATH)
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		push_error("新地图资源点数据格式错误。")
+		return
+	for entry: Variant in (parsed as Dictionary).get("resourceSites", []):
+		if not entry is Dictionary:
+			continue
+		var data := entry as Dictionary
+		var site := ResourceSite.new()
+		site.name = str(data.get("id", "ResourceSite"))
+		site.site_type = StringName(data.get("siteType", ""))
+		site.display_name = str({
+			"forest": "树林",
+			"stone_deposit": "石矿脉",
+			"iron_deposit": "铁矿脉",
+		}.get(str(site.site_type), "资源点"))
+		var position_data: Dictionary = data.get("position", {})
+		var authored_position := Vector2(float(position_data.get("x", 0)), float(position_data.get("y", 0)))
+		grid_map_model.register_resource_site(StringName(site.name), site.site_type, authored_position)
+		site.position = grid_map_model.resource_site_center(StringName(site.name))
+		site.radius = float(data.get("placementRadius", 72))
+		resource_sites_root.add_child(site)
+		resource_sites.append(site)
+
+
+func _initialize_grid_map() -> void:
+	TerrainMapDataScript.apply_to(grid_map_model)
+	grid_map_model.occupy(&"city", MapLayout.CITY_POSITION, MapLayout.CITY_FOOTPRINT)
+
+
 func _process(delta: float) -> void:
+	RunState.advance_campaign_time(delta)
+	if hand_bar.visible:
+		_refresh_hand_scroll_buttons()
+	if building_worker_panel.visible:
+		_position_building_worker_panel()
 	notice_seconds = maxf(0.0, notice_seconds - delta)
 	notice_panel.visible = notice_seconds > 0.0 and not day_setup_panel.visible and not failure_panel.visible and not build_failure_panel.visible
 	var payload: Variant = get_viewport().gui_get_drag_data()
@@ -202,24 +311,152 @@ func _show_notice(message: String) -> void:
 	setup_hint_label.text = message
 	notice_label.text = message
 	notice_seconds = 4.0
+	_position_notice_panel()
 	notice_panel.visible = not day_setup_panel.visible and not build_failure_panel.visible
+
+
+func _on_map_surface_gui_input(event: InputEvent) -> void:
+	if get_viewport().gui_is_dragging() or not map_drop_surface.visible:
+		return
+	if battle_shop.active:
+		return
+	if RunState.phase not in [RunState.Phase.WAVE_COMBAT, RunState.Phase.WAVE_RESULT]:
+		return
+	var local_point := Vector2.INF
+	if event is InputEventMouseButton:
+		var mouse_event := event as InputEventMouseButton
+		if mouse_event.pressed or mouse_event.button_index != MOUSE_BUTTON_LEFT:
+			return
+		if map_camera.last_mouse_pan_distance > MapCameraScript.MOUSE_DRAG_THRESHOLD:
+			return
+		local_point = mouse_event.position
+	elif event is InputEventScreenTouch:
+		var touch_event := event as InputEventScreenTouch
+		if not touch_event.pressed:
+			return
+		local_point = touch_event.position
+	else:
+		return
+	var screen_point: Vector2 = map_drop_surface.global_position + local_point
+	var world_point: Vector2 = map_camera.screen_to_world(screen_point)
+	var job_id: StringName = _job_at_world_point(world_point)
+	if job_id.is_empty():
+		_close_building_worker_panel()
+		return
+	_select_building_job(job_id)
+	map_drop_surface.accept_event()
+
+
+func _job_at_world_point(world_point: Vector2) -> StringName:
+	var best_job: StringName = &""
+	var best_distance: float = INF
+	for job_id in wave_economy.job_order:
+		var target: Node2D = wave_economy.job_target(job_id) as Node2D
+		if target == null or not is_instance_valid(target) or not target.visible:
+			continue
+		var distance: float = target.global_position.distance_to(world_point)
+		if distance <= _job_target_radius(target) + 12.0 and distance < best_distance:
+			best_job = job_id
+			best_distance = distance
+	return best_job
+
+
+func _job_target_radius(target: Node2D) -> float:
+	if target != null and target.has_method("attackable_radius"):
+		return float(target.call("attackable_radius"))
+	return MapLayout.BUILDING_RADIUS
+
+
+func _select_building_job(job_id: StringName) -> void:
+	if wave_economy.job_target(job_id) == null:
+		_close_building_worker_panel()
+		return
+	selected_job_id = job_id
+	building_worker_panel.visible = true
+	_position_building_worker_panel()
+	_refresh_building_worker_panel()
+	status_label.text = "已选择%s，可在建筑岗位面板增减人口。" % wave_economy.job_label(job_id)
+	queue_redraw()
+
+
+func _close_building_worker_panel() -> void:
+	selected_job_id = &""
+	building_worker_panel.visible = false
+	queue_redraw()
+
+
+func _refresh_building_worker_panel() -> void:
+	if selected_job_id.is_empty() or wave_economy.job_target(selected_job_id) == null:
+		if building_worker_panel.visible:
+			_close_building_worker_panel()
+		return
+	var assigned: int = wave_economy.assigned_workers_for(selected_job_id)
+	var capacity: int = wave_economy.job_capacity(selected_job_id)
+	building_worker_title.text = wave_economy.job_label(selected_job_id)
+	building_worker_value.text = "岗位 %d/%d｜空闲 %d" % [assigned, capacity, wave_economy.idle_population]
+	building_worker_minus_button.disabled = wave_economy.assignments_locked or assigned <= 0
+	building_worker_plus_button.disabled = (
+		wave_economy.assignments_locked
+		or assigned >= capacity
+		or wave_economy.idle_population <= 0
+	)
+	building_worker_auto_button.disabled = wave_economy.assignments_locked or wave_economy.job_order.is_empty()
+	_position_building_worker_panel()
+
+
+func _position_building_worker_panel() -> void:
+	if selected_job_id.is_empty() or map_camera == null:
+		return
+	var target: Node2D = wave_economy.job_target(selected_job_id) as Node2D
+	if target == null or not is_instance_valid(target):
+		return
+	var screen_point: Vector2 = map_camera.get_canvas_transform() * target.global_position
+	var viewport_size: Vector2 = get_viewport_rect().size
+	var panel_size: Vector2 = building_worker_panel.get_combined_minimum_size()
+	panel_size.x = maxf(panel_size.x, 240.0)
+	panel_size.y = maxf(panel_size.y, 200.0)
+	var safe_top: float = top_bar.get_global_rect().end.y + 8.0
+	var safe_bottom: float = hand_bar.get_global_rect().position.y - 8.0
+	var x: float = screen_point.x + 28.0
+	if x + panel_size.x > viewport_size.x - 12.0:
+		x = screen_point.x - panel_size.x - 28.0
+	var y: float = clampf(screen_point.y - panel_size.y * 0.45, safe_top, safe_bottom - panel_size.y)
+	x = clampf(x, 12.0, viewport_size.x - 12.0 - panel_size.x)
+	building_worker_panel.offset_left = x
+	building_worker_panel.offset_top = y
+	building_worker_panel.offset_right = x + panel_size.x
+	building_worker_panel.offset_bottom = y + panel_size.y
+	if notice_panel.visible:
+		_position_notice_panel()
+
+
+func _position_notice_panel() -> void:
+	var viewport_size: Vector2 = get_viewport_rect().size
+	var width := minf(430.0, viewport_size.x - 24.0)
+	var left := (viewport_size.x - width) * 0.5
+	if building_worker_panel.visible:
+		var worker_center: float = building_worker_panel.get_global_rect().get_center().x
+		left = 12.0 if worker_center > viewport_size.x * 0.5 else viewport_size.x - width - 12.0
+	notice_panel.offset_left = left
+	notice_panel.offset_top = top_bar.get_global_rect().end.y + 8.0
+	notice_panel.offset_right = left + width
+	notice_panel.offset_bottom = notice_panel.offset_top + 44.0
+
+
+func _on_selected_job_adjust_pressed(delta: int) -> void:
+	if selected_job_id.is_empty():
+		return
+	_on_job_adjust_pressed(selected_job_id, delta)
+	_refresh_building_worker_panel()
 
 
 func _draw() -> void:
 	draw_rect(MapLayout.BOUNDS.grow(2000), COLOR_NIGHT)
-	draw_rect(MapLayout.BOUNDS, Color("142333"))
-	for x in range(int(MapLayout.BOUNDS.position.x), int(MapLayout.BOUNDS.end.x) + 1, 40):
-		draw_line(Vector2(x, MapLayout.BOUNDS.position.y), Vector2(x, MapLayout.BOUNDS.end.y), COLOR_GRID, 1.0)
-	for y in range(int(MapLayout.BOUNDS.position.y), int(MapLayout.BOUNDS.end.y) + 1, 40):
-		draw_line(Vector2(MapLayout.BOUNDS.position.x, y), Vector2(MapLayout.BOUNDS.end.x, y), COLOR_GRID, 1.0)
+	draw_texture_rect(MAP_BASE_TEXTURE, MapLayout.BOUNDS, false)
 	draw_rect(MapLayout.BOUNDS, Color("527078"), false, 3.0)
-
-	var city_position := wave_controller.city_target_position
-	for edge_point in [Vector2(-220, 270), Vector2(1180, 270), Vector2(480, -30), Vector2(480, 570)]:
-		draw_line(edge_point, city_position, Color(COLOR_PATH, 0.38), 20.0)
-	draw_circle(city_position, MapLayout.CITY_RADIUS, COLOR_CITY)
-	draw_circle(city_position, 42.0, COLOR_CITY.darkened(0.18))
-	draw_string(ThemeDB.fallback_font, city_position + Vector2(-24, 7), "主城", HORIZONTAL_ALIGNMENT_LEFT, -1, 20, Color.WHITE)
+	var selected_target: Node2D = wave_economy.job_target(selected_job_id) as Node2D
+	if selected_target != null and is_instance_valid(selected_target):
+		draw_arc(selected_target.global_position, _job_target_radius(selected_target) + 8.0, 0.0, TAU, 40, Color("f0c767"), 3.0)
 
 
 func _on_start_pressed() -> void:
@@ -244,6 +481,8 @@ func _on_start_pressed() -> void:
 
 
 func _on_reset_pressed() -> void:
+	get_tree().paused = false
+	campaign_pause_button.text = "暂停"
 	map_camera.reset_view()
 	wave_controller.reset_wave()
 	opening_draft.reset()
@@ -252,6 +491,8 @@ func _on_reset_pressed() -> void:
 	run_card_inventory.reset()
 	wave_economy.reset(settlement_builder)
 	farmer_manager.reset()
+	grid_map_model.clear_occupancy()
+	grid_map_model.occupy(&"city", MapLayout.CITY_POSITION, MapLayout.CITY_FOOTPRINT)
 	for tower in additional_towers:
 		tower.free()
 	additional_towers.clear()
@@ -280,7 +521,8 @@ func _on_reset_pressed() -> void:
 	barracks_slot_button.visible = false
 	map_drop_surface.visible = false
 	battle_shop_button.visible = false
-	battle_shop_button.text = "战斗商店"
+	battle_shop_button.text = "金\n商店"
+	_close_building_worker_panel()
 	train_farmer_button.visible = false
 	notice_seconds = 0.0
 	notice_panel.visible = false
@@ -304,49 +546,77 @@ func _on_state_changed(_phase: int) -> void:
 		barracks_slot_button.visible = false
 		map_drop_surface.visible = false
 		battle_shop_button.visible = false
-		battle_shop_button.text = "战斗商店"
+		battle_shop_button.text = "金\n商店"
+		_close_building_worker_panel()
 		battle_shop.close()
 		for slot_button in settlement_slot_buttons:
 			slot_button.visible = false
 		var won: bool = RunState.phase == RunState.Phase.RUN_WON
-		status_label.text = "十波守城成功，本局胜利！" if won else "主城已被摧毁，本局失败。"
+		status_label.text = "已坚守60分钟，本局胜利！" if won else "主城已被摧毁，本局失败。"
 		var result_title: Label = $HUD/FailurePanel/Margin/Content/Title
 		result_title.text = "黎明到来，防守胜利！" if won else "主城已被摧毁"
 		result_title.add_theme_color_override("font_color", Color("9ad58b") if won else Color("e64d59"))
 		$HUD/FailurePanel/Margin/Content/Detail.text = (
-			"已守住全部10波｜主城耐久 %d" % RunState.city_health
-			if won else "第%d波防守失败" % RunState.current_wave
+			"已坚守60分钟｜主城耐久 %d" % RunState.city_health
+			if won else "威胁轮次%d防守失败" % RunState.current_wave
 		)
 		failure_panel.visible = true
 		start_button.text = "本局已结束"
 		start_button.disabled = true
 	elif RunState.phase == RunState.Phase.WAVE_RESULT:
-		_set_hand_interaction_enabled(false)
-		hand_bar.visible = false
-		bottom_panel.visible = true
-		defense_slot_button.visible = false
-		barrier_slot_button.visible = false
-		barracks_slot_button.visible = false
-		map_drop_surface.visible = false
-		battle_shop_button.visible = false
-		battle_shop_button.text = "战斗商店"
-		battle_shop.close()
-		for slot_button in settlement_slot_buttons:
-			slot_button.visible = false
-		status_label.text = "第%d波已清空。%s" % [RunState.current_wave - 1, last_settlement_summary]
-		start_button.disabled = true
-		if RunState.current_wave >= 2 and RunState.current_wave <= RunState.LAST_WAVE:
-			_begin_interwave_shop()
-		else:
-			_configure_interwave_job_panel()
+		status_label.text = "威胁轮次%d已清空，下一轮即将抵达。%s" % [
+			RunState.current_wave - 1,
+			last_settlement_summary,
+		]
+		_continue_campaign_after_clear.call_deferred(RunState.run_id, RunState.current_wave)
 
 
 func _on_wave_changed(wave_index: int) -> void:
-	wave_value.text = "%d / %d" % [wave_index, RunState.LAST_WAVE]
+	wave_value.text = str(wave_index)
+
+
+func _on_campaign_time_changed(remaining_seconds: float) -> void:
+	var total_seconds: int = int(ceil(remaining_seconds))
+	campaign_time_value.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
+
+
+func _on_threat_stage_changed(stage_index: int) -> void:
+	if RunState.phase == RunState.Phase.BOOT:
+		return
+	battle_shop.begin_stage(stage_index)
+	if battle_shop.active:
+		_on_battle_shop_offers_changed()
+	_show_notice("威胁阶段%d开始：战斗商店已补满，刷新费用重置。" % stage_index)
+
+
+func _on_campaign_pause_pressed() -> void:
+	if RunState.phase not in [RunState.Phase.WAVE_COMBAT, RunState.Phase.WAVE_RESULT]:
+		return
+	get_tree().paused = not get_tree().paused
+	campaign_pause_button.text = "继续" if get_tree().paused else "暂停"
+
+
+func _continue_campaign_after_clear(expected_run_id: String, expected_wave: int) -> void:
+	if RunState.run_id != expected_run_id or RunState.phase != RunState.Phase.WAVE_RESULT:
+		return
+	if RunState.current_wave != expected_wave:
+		return
+	var template_wave: int = ((expected_wave - 1) % RunState.LAST_WAVE) + 1
+	wave_economy.prepare_wave(settlement_builder, arrow_tower, barracks)
+	if not wave_controller.start_wave(template_wave, expected_wave):
+		status_label.text = "威胁模板%d无效，连续守城无法继续。" % template_wave
+		return
+	RunState.start_current_wave()
+	status_label.text = "威胁轮次%d：%d只野狼正在进攻主城。" % [
+		expected_wave,
+		wave_controller.active_enemy_count,
+	]
 
 
 func _on_city_health_changed(current_health: int, maximum_health: int) -> void:
 	city_value.text = "%d / %d" % [current_health, maximum_health]
+	city_health_bar.max_value = maximum_health
+	city_health_bar.value = current_health
 
 
 func _on_enemy_count_changed(active_count: int, total_spawned: int) -> void:
@@ -502,7 +772,8 @@ func _try_place_barracks_card(card_index: int, map_position: Vector2 = Vector2.I
 		setup_hint_label.text = "这张卡不能放入当前兵营格。"
 		return false
 	var target_position: Vector2 = barracks.global_position if map_position == Vector2.INF else map_position
-	if not _can_place_free_building(target_position, MapLayout.BARRACKS_RADIUS):
+	target_position = _snap_card_position(&"barracks", target_position)
+	if not _can_place_free_building(target_position, MapLayout.BARRACKS_RADIUS, &"barracks"):
 		return false
 	if not RunEconomy.can_pay(barracks_card.build_costs):
 		_show_build_failure(barracks_card)
@@ -516,11 +787,13 @@ func _try_place_barracks_card(card_index: int, map_position: Vector2 = Vector2.I
 		placed_camp = preload("res://src/gameplay/defenses/barracks.tscn").instantiate()
 		add_child(placed_camp)
 		placed_camp.build_bounds = MapLayout.BOUNDS
+		placed_camp.set_pathfinder(grid_pathfinder)
 		additional_barracks.append(placed_camp)
 		placed_camp.destroyed.connect(_on_world_defense_destroyed)
 		placed_camp.guard_roster_changed.connect(wave_controller._on_guard_roster_changed)
 	placed_camp.global_position = target_position
 	placed_camp.build(barracks_card)
+	grid_map_model.occupy(_node_occupant_id(placed_camp), target_position, MapLayout.footprint_for_card(&"barracks"))
 	_consume_played_card(card_index, barracks_card)
 	wave_economy.refresh_jobs(settlement_builder, arrow_tower, barracks)
 	wave_controller.set_barracks(barracks)
@@ -540,8 +813,12 @@ func _try_place_wall_card(card_index: int, map_position: Vector2) -> bool:
 	if wall_card.card_id != &"wall":
 		setup_hint_label.text = "只有城墙卡可以直接放到地图。"
 		return false
+	var target_position := _snap_card_position(&"wall", map_position)
+	if not grid_map_model.can_place(target_position, MapLayout.footprint_for_card(&"wall")):
+		setup_hint_label.text = "城墙目标网格不可建造或已被占用。"
+		return false
 	var obstacles: Array[Dictionary] = _wall_placement_obstacles()
-	if not wall_manager.can_place_wall(map_position, obstacles):
+	if not wall_manager.can_place_wall(target_position, obstacles):
 		setup_hint_label.text = wall_manager.last_error
 		return false
 	if not RunEconomy.can_pay(wall_card.build_costs):
@@ -551,12 +828,13 @@ func _try_place_wall_card(card_index: int, map_position: Vector2) -> bool:
 	if not RunEconomy.try_pay(wall_card.build_costs):
 		_show_build_failure(wall_card)
 		return false
-	var wall: BarrierWall = wall_manager.place_wall(wall_card, map_position, obstacles)
+	var wall: BarrierWall = wall_manager.place_wall(wall_card, target_position, obstacles)
 	if wall == null:
 		for resource_id: Variant in wall_card.build_costs:
 			RunEconomy.add_resource(StringName(resource_id), int(wall_card.build_costs[resource_id]))
 		setup_hint_label.text = wall_manager.last_error
 		return false
+	grid_map_model.occupy(_node_occupant_id(wall), target_position, MapLayout.footprint_for_card(&"wall"))
 	_consume_played_card(card_index, wall_card)
 	setup_hint_label.text = (
 		"城墙部署完成，已进入路线阻挡。"
@@ -587,7 +865,8 @@ func _try_place_defense_card(card_index: int, map_position: Vector2 = Vector2.IN
 		setup_hint_label.text = "箭塔卡已经使用。"
 		return false
 	var target_position: Vector2 = arrow_tower.global_position if map_position == Vector2.INF else map_position
-	if not _can_place_free_building(target_position, MapLayout.TOWER_RADIUS):
+	target_position = _snap_card_position(&"arrow_tower", target_position)
+	if not _can_place_free_building(target_position, MapLayout.TOWER_RADIUS, &"arrow_tower"):
 		return false
 	if not RunEconomy.can_pay(arrow_card.build_costs):
 		_show_build_failure(arrow_card)
@@ -607,6 +886,7 @@ func _try_place_defense_card(card_index: int, map_position: Vector2 = Vector2.IN
 	placed_tower.reset_statistics()
 	placed_tower.enabled = true
 	placed_tower.global_position = target_position
+	grid_map_model.occupy(_node_occupant_id(placed_tower), target_position, MapLayout.footprint_for_card(&"arrow_tower"))
 	placed_tower.queue_redraw()
 	_consume_played_card(card_index, arrow_card)
 	wave_economy.refresh_jobs(settlement_builder, arrow_tower, barracks)
@@ -672,6 +952,7 @@ func _on_setup_finished(selected_indices: Array[int]) -> void:
 		start_button.text = "无法迎战"
 		return
 	RunState.start_current_wave()
+	battle_shop.begin_stage(RunState.threat_stage)
 	status_label.text = "第1波：4只野狼正在进攻主城。"
 	start_button.text = "战斗进行中"
 	start_button.disabled = true
@@ -689,12 +970,91 @@ func _create_card_buttons() -> void:
 	_on_draft_selection_changed([], opening_draft.free_choice_limit)
 
 
+func _apply_confirmed_hud_style() -> void:
+	for label in [wood_value, food_value, stone_value, iron_value, gold_value, population_value]:
+		label.add_theme_font_size_override("font_size", 16)
+		label.add_theme_color_override("font_color", Color("f5ebd6"))
+	battle_shop_button.add_theme_stylebox_override("normal", _ui_style(COLOR_UI_PANEL, COLOR_UI_GOLD, 2, 7))
+	battle_shop_button.add_theme_stylebox_override("hover", _ui_style(Color("17283a"), COLOR_UI_GOLD_BRIGHT, 3, 7))
+	train_farmer_button.add_theme_stylebox_override("normal", _ui_style(Color("30291f"), COLOR_UI_GOLD, 1, 5))
+	city_health_bar.add_theme_stylebox_override("background", _ui_style(Color("172231"), Color("4f6070"), 1, 3))
+	city_health_bar.add_theme_stylebox_override("fill", _ui_style(Color("4acf85"), Color("77e3a8"), 0, 3))
+	building_worker_panel.add_theme_stylebox_override("panel", _ui_style(Color(COLOR_UI_NIGHT, 0.97), COLOR_UI_GOLD, 2, 7))
+	for button in [building_worker_minus_button, building_worker_plus_button, building_worker_auto_button, building_worker_close_button]:
+		button.add_theme_stylebox_override("normal", _ui_style(Color("162434"), Color("6b7d8c"), 1, 5))
+		button.add_theme_stylebox_override("hover", _ui_style(Color("20364a"), COLOR_UI_GOLD, 2, 5))
+	ready_button.add_theme_color_override("font_color", COLOR_PARCHMENT_TEXT)
+	ready_button.add_theme_stylebox_override("normal", _ui_style(COLOR_UI_GOLD_BRIGHT, COLOR_UI_GOLD, 2, 5))
+	ready_button.add_theme_stylebox_override("hover", _ui_style(Color("ffe3a0"), Color("fff0bd"), 3, 5))
+	ready_button.add_theme_stylebox_override("pressed", _ui_style(COLOR_UI_GOLD, Color("9a6a25"), 2, 5))
+	ready_button.add_theme_stylebox_override("disabled", _ui_style(Color("444b53"), Color("69727c"), 1, 5))
+	pause_timer_button.add_theme_color_override("font_color", Color("f5ebd6"))
+	pause_timer_button.add_theme_stylebox_override("normal", _ui_style(Color("17283a"), Color("73a8c8"), 1, 5))
+	pause_timer_button.add_theme_stylebox_override("hover", _ui_style(Color("20364a"), COLOR_UI_GOLD, 2, 5))
+	for button in card_buttons:
+		_apply_shop_card_style(button, false)
+	_refresh_hand_scroll_buttons()
+
+
+func _ui_style(background: Color, border: Color, width: int, radius: int) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = background
+	style.border_color = border
+	style.set_border_width_all(width)
+	style.set_corner_radius_all(radius)
+	style.content_margin_left = 8.0
+	style.content_margin_right = 8.0
+	style.content_margin_top = 6.0
+	style.content_margin_bottom = 6.0
+	return style
+
+
+func _apply_shop_card_style(button: Button, disabled_state: bool) -> void:
+	button.add_theme_font_size_override("font_size", 13)
+	button.add_theme_color_override("font_color", COLOR_PARCHMENT_TEXT)
+	button.add_theme_color_override("font_hover_color", Color("120c07"))
+	button.add_theme_color_override("font_disabled_color", Color("d7d0c4"))
+	button.add_theme_stylebox_override("normal", _ui_style(COLOR_PARCHMENT, Color("8e6a31"), 1, 4))
+	button.add_theme_stylebox_override("hover", _ui_style(Color("ffe8b8"), COLOR_UI_GOLD, 3, 4))
+	button.add_theme_stylebox_override("pressed", _ui_style(Color("d9bd83"), COLOR_UI_GOLD_BRIGHT, 2, 4))
+	button.add_theme_stylebox_override(
+		"disabled",
+		_ui_style(Color("5b626a") if disabled_state else Color("b8ad96"), Color("777f88"), 1, 4)
+	)
+
+
+func _scroll_hand(direction: int) -> void:
+	var page: int = maxi(240, int(hand_scroll.size.x * 0.78))
+	hand_scroll.scroll_horizontal = clampi(
+		hand_scroll.scroll_horizontal + direction * page,
+		0,
+		maxi(0, int(hand_scroll.get_h_scroll_bar().max_value - hand_scroll.get_h_scroll_bar().page))
+	)
+	_refresh_hand_scroll_buttons()
+
+
+func _on_hand_scroll_changed(_value: float) -> void:
+	_refresh_hand_scroll_buttons()
+
+
+func _refresh_hand_scroll_buttons() -> void:
+	if hand_scroll == null or hand_prev_button == null or hand_next_button == null:
+		return
+	var scroll_bar: HScrollBar = hand_scroll.get_h_scroll_bar()
+	var maximum: int = maxi(0, int(scroll_bar.max_value - scroll_bar.page))
+	hand_prev_button.disabled = hand_scroll.scroll_horizontal <= 0
+	hand_next_button.disabled = hand_scroll.scroll_horizontal >= maximum
+	hand_prev_button.tooltip_text = "向左浏览手牌"
+	hand_next_button.tooltip_text = "向右浏览手牌"
+
+
 func _sync_hand_bar() -> void:
 	if hand_bar.visible:
 		_populate_battle_hand()
 
 
 func _populate_battle_hand() -> void:
+	var previous_scroll: int = hand_scroll.scroll_horizontal
 	for child in hand_slots.get_children():
 		hand_slots.remove_child(child)
 		child.queue_free()
@@ -710,8 +1070,10 @@ func _populate_battle_hand() -> void:
 		hand_slots.add_child(hand_card)
 		hand_card_slots[instance_id] = hand_card
 	var hand_count: int = hand_card_slots.size()
-	hand_label.text = "部署手牌\n%d / %d" % [hand_count, RunCardInventory.MAX_CARDS]
+	hand_label.text = "手牌\n%d / %d" % [hand_count, RunCardInventory.MAX_CARDS]
 	hand_empty_hint.visible = hand_count == 0
+	hand_scroll.scroll_horizontal = previous_scroll
+	_refresh_hand_scroll_buttons.call_deferred()
 
 
 func _on_hand_fusion_requested(card_id: StringName, star: int) -> void:
@@ -730,6 +1092,7 @@ func _set_hand_interaction_enabled(is_enabled: bool) -> void:
 
 
 func _remove_arrow_tower() -> void:
+	grid_map_model.release(_node_occupant_id(arrow_tower))
 	arrow_tower.visible = false
 	arrow_tower.enabled = false
 	defense_slot_button.text = "防御格\n拖入箭塔卡"
@@ -739,6 +1102,8 @@ func _remove_arrow_tower() -> void:
 
 
 func _reset_walls() -> void:
+	for wall in wall_manager.active_walls():
+		grid_map_model.release(_node_occupant_id(wall))
 	wall_manager.reset_walls()
 	barrier_slot_button.visible = false
 
@@ -749,10 +1114,12 @@ func _on_walls_changed(active_walls: Array[BarrierWall]) -> void:
 
 
 func _on_wall_destroyed(_wall: BarrierWall) -> void:
+	grid_map_model.release(_node_occupant_id(_wall))
 	setup_hint_label.text = "一面城墙已被摧毁，野狼正在寻找下一处阻挡。"
 
 
 func _reset_barracks() -> void:
+	grid_map_model.release(_node_occupant_id(barracks))
 	barracks.reset()
 	barracks_slot_button.text = "兵营格\n拖入兵营卡"
 	barracks_slot_button.disabled = false
@@ -817,10 +1184,12 @@ func _on_resources_changed(
 	gold_value.text = "金 %d" % RunEconomy.amount(&"gold")
 	population_value.text = "人口 %d/%d" % [current_population, population_capacity]
 	train_farmer_button.visible = RunState.phase not in [RunState.Phase.BOOT, RunState.Phase.RUN_LOST, RunState.Phase.RUN_WON]
-	train_farmer_button.text = "主城招募 · 10金"
+	train_farmer_button.text = "招募"
 	train_farmer_button.tooltip_text = "生产一名农民，占1人口；当前%d/%d。民屋可增加2人口容量。" % [current_population, population_capacity]
 	farmer_manager.sync_population(current_population)
 	wave_economy.refresh_population_totals()
+	if battle_shop.active:
+		_on_battle_shop_offers_changed()
 
 
 func _on_train_farmer_pressed() -> void:
@@ -853,6 +1222,8 @@ func _resource_display_name(resource_id: StringName) -> String:
 
 func _on_inventory_changed(_card_count: int) -> void:
 	_sync_hand_bar()
+	if battle_shop.active:
+		_on_battle_shop_offers_changed()
 
 
 func _on_build_failure_close_pressed() -> void:
@@ -909,6 +1280,7 @@ func _on_farmer_roster_changed(_active_count: int) -> void:
 
 
 func _on_world_defense_destroyed(_defense: Node2D) -> void:
+	grid_map_model.release(_node_occupant_id(_defense))
 	wave_economy.refresh_jobs(settlement_builder, arrow_tower, barracks)
 	_refresh_world_targets()
 
@@ -940,7 +1312,7 @@ func _try_place_map_building_card(card_index: int, map_position: Vector2) -> boo
 	var building: ResourceBuilding = settlement_builder.place_card_at(
 		card,
 		map_position,
-		_free_placement_obstacles(true, card.category != "resource")
+		_free_placement_obstacles(true, card.required_resource_site.is_empty())
 	)
 	if building == null:
 		setup_hint_label.text = settlement_builder.last_error
@@ -949,15 +1321,19 @@ func _try_place_map_building_card(card_index: int, map_position: Vector2) -> boo
 	wave_economy.refresh_jobs(settlement_builder, arrow_tower, barracks)
 	setup_hint_label.text = (
 		"%s已吸附到对应资源点。" % card.display_name
-		if card.category == "resource"
+		if card.category == "resource" and not card.required_resource_site.is_empty()
 		else "%s建造完成，人口容量增加%d。" % [card.display_name, card.population_capacity_bonus]
 	)
 	build_failure_panel.visible = false
 	return true
 
 
-func _can_place_free_building(map_position: Vector2, radius: float) -> bool:
-	if not wall_manager.build_bounds.grow(-radius).has_point(map_position):
+func _can_place_free_building(map_position: Vector2, radius: float, card_id: StringName = &"") -> bool:
+	var footprint := MapLayout.footprint_for_card(card_id)
+	if not grid_map_model.can_place(map_position, footprint):
+		setup_hint_label.text = "目标网格包含水域、资源点或已占用地块。"
+		return false
+	if not MapLayout.is_buildable(map_position, radius):
 		setup_hint_label.text = "建筑必须放在地图可建造区域内。"
 		return false
 	for obstacle in _free_placement_obstacles(true):
@@ -1019,6 +1395,8 @@ func _free_placement_obstacles(include_defenses: bool = true, reserve_resource_s
 
 
 func placement_preview(card: OpeningCardDefinition, point: Vector2) -> Dictionary:
+	var footprint: Vector2i = MapLayout.footprint_for_card(card.card_id)
+	point = grid_map_model.snap_footprint_center(point, footprint)
 	var radius: float = card.footprint_radius
 	if card.card_id == &"arrow_tower":
 		radius = MapLayout.TOWER_RADIUS
@@ -1027,16 +1405,30 @@ func placement_preview(card: OpeningCardDefinition, point: Vector2) -> Dictionar
 	elif card.card_id == &"wall":
 		radius = MapLayout.WALL_RADIUS
 	var valid: bool = true
-	if card.category == "resource":
+	if card.category == "resource" and not card.required_resource_site.is_empty():
 		var site: ResourceSite = settlement_builder._matching_site(card, point)
 		valid = site != null
 		if site != null:
 			point = site.global_position
-	valid = valid and MapLayout.BOUNDS.grow(-radius).has_point(point) and RunEconomy.can_pay(card.build_costs)
-	for obstacle in _free_placement_obstacles(true, card.category != "resource"):
+	var resource_site_id := &""
+	if card.category == "resource" and not card.required_resource_site.is_empty():
+		var matched_site: ResourceSite = settlement_builder._matching_site(card, point)
+		if matched_site != null:
+			resource_site_id = StringName(matched_site.name)
+	valid = valid and grid_map_model.can_place(point, footprint, resource_site_id)
+	valid = valid and MapLayout.is_buildable(point, radius) and RunEconomy.can_pay(card.build_costs)
+	for obstacle in _free_placement_obstacles(true, card.required_resource_site.is_empty()):
 		if point.distance_to(obstacle.position) < radius + float(obstacle.radius):
 			valid = false
-	return {"position": point, "radius": radius, "valid": valid}
+	return {"position": point, "radius": radius, "footprint": footprint, "valid": valid}
+
+
+func _snap_card_position(card_id: StringName, point: Vector2) -> Vector2:
+	return grid_map_model.snap_footprint_center(point, MapLayout.footprint_for_card(card_id))
+
+
+func _node_occupant_id(node: Node) -> StringName:
+	return StringName("entity_%d" % node.get_instance_id())
 
 
 func _on_jobs_changed(current_job_order: Array[StringName]) -> void:
@@ -1080,6 +1472,8 @@ func _on_jobs_changed(current_job_order: Array[StringName]) -> void:
 		job_value_labels[job_id] = value_label
 		job_minus_buttons[job_id] = minus_button
 		job_plus_buttons[job_id] = plus_button
+	if not selected_job_id.is_empty() and selected_job_id not in current_job_order:
+		_close_building_worker_panel()
 
 
 func _on_assignments_changed(
@@ -1111,18 +1505,20 @@ func _on_assignments_changed(
 		)
 	auto_assign_button.disabled = is_locked or wave_economy.job_order.is_empty()
 	farmer_manager.apply_assignments(assignments, wave_economy.job_order)
+	_refresh_building_worker_panel()
 
 
 func _on_job_adjust_pressed(job_id: StringName, delta: int) -> void:
 	if not wave_economy.adjust_workers(job_id, delta):
-		setup_hint_label.text = "岗位调整失败：岗位已满、无人可用或战斗已锁定。"
+		_show_notice("岗位调整失败：岗位已满或没有空闲人口。")
 		return
-	setup_hint_label.text = "岗位已调整；迎战后将锁定当前方案。"
+	_show_notice("%s岗位已调整并立即生效。" % wave_economy.job_label(job_id))
 
 
 func _on_auto_assign_pressed() -> void:
 	if wave_economy.auto_assign_workers():
-		setup_hint_label.text = "已恢复防御优先的自动岗位方案。"
+		_show_notice("已恢复防御优先的自动岗位方案，并立即生效。")
+	_refresh_building_worker_panel()
 
 
 func _on_battle_shop_button_pressed() -> void:
@@ -1131,40 +1527,79 @@ func _on_battle_shop_button_pressed() -> void:
 	if battle_shop.active:
 		_close_battle_shop()
 		return
-	if not battle_shop.open_for_wave(RunState.current_wave):
+	if not battle_shop.open_for_stage(RunState.threat_stage):
 		status_label.text = "战斗商店数据无效，暂时无法打开。"
 		return
 	_configure_battle_shop_panel()
 
 
+func _on_viewport_size_changed() -> void:
+	if day_setup_panel.visible:
+		_apply_setup_panel_layout(battle_shop.active)
+	if building_worker_panel.visible:
+		_position_building_worker_panel()
+	if notice_panel.visible:
+		_position_notice_panel()
+	_refresh_hand_scroll_buttons.call_deferred()
+
+
+func _apply_setup_panel_layout(shop_drawer: bool) -> void:
+	var viewport_size: Vector2 = get_viewport_rect().size
+	if shop_drawer:
+		var drawer_width: float = clampf(viewport_size.x * 0.38, 340.0, 420.0)
+		day_setup_panel.offset_left = viewport_size.x - drawer_width - 8.0
+		day_setup_panel.offset_top = 58.0
+		day_setup_panel.offset_right = viewport_size.x - 8.0
+		day_setup_panel.offset_bottom = hand_bar.get_global_rect().position.y - 6.0
+		card_grid.columns = 2
+		shop_close_button.visible = true
+		for button in card_buttons:
+			button.custom_minimum_size = Vector2((drawer_width - 46.0) * 0.5, 72.0)
+	else:
+		day_setup_panel.offset_left = 20.0
+		day_setup_panel.offset_top = minf(204.0, viewport_size.y * 0.38)
+		day_setup_panel.offset_right = viewport_size.x - 20.0
+		day_setup_panel.offset_bottom = viewport_size.y - 10.0
+		card_grid.columns = 3
+		shop_close_button.visible = false
+		refresh_button.custom_minimum_size = Vector2(116.0, 44.0)
+		refresh_button.tooltip_text = ""
+		for button in card_buttons:
+			button.custom_minimum_size = Vector2(286.0, 52.0)
+
+
 func _configure_battle_shop_panel() -> void:
 	build_failure_panel.visible = false
+	_close_building_worker_panel()
+	_apply_setup_panel_layout(true)
 	day_setup_panel.visible = true
-	hand_bar.visible = false
+	hand_bar.visible = true
+	_set_hand_interaction_enabled(true)
 	defense_slot_button.visible = false
 	barrier_slot_button.visible = false
 	barracks_slot_button.visible = false
-	map_drop_surface.visible = false
-	battle_shop_button.visible = true
-	battle_shop_button.text = "关闭商店"
+	map_drop_surface.visible = true
+	battle_shop_button.visible = false
 	for slot_button in settlement_slot_buttons:
 		slot_button.visible = false
-	day_title.text = "第%d波战斗商店（怪潮继续）" % RunState.current_wave
+	day_title.text = "商店｜战斗继续"
 	timer_label.visible = false
 	selection_label.visible = true
 	pause_timer_button.visible = false
 	card_grid.visible = true
 	refresh_button.visible = true
-	ready_button.visible = true
+	ready_button.visible = false
 	ready_button.disabled = false
-	ready_button.text = "关闭商店"
-	setup_hint_label.text = "购买立即进入手牌；打开商店不会暂停敌人和资源生产。"
+	setup_hint_label.text = "购买后加入手牌"
+	setup_hint_label.tooltip_text = "商店打开时战斗、生产与黎明倒计时继续进行。"
+	refresh_button.custom_minimum_size = Vector2(156.0, 44.0)
 	_on_battle_shop_offers_changed()
 
 
 func _close_battle_shop() -> void:
 	battle_shop.close()
 	day_setup_panel.visible = false
+	_apply_setup_panel_layout(false)
 	_populate_battle_hand()
 	hand_bar.visible = true
 	_set_hand_interaction_enabled(true)
@@ -1173,10 +1608,10 @@ func _close_battle_shop() -> void:
 	barracks_slot_button.visible = false
 	map_drop_surface.visible = true
 	battle_shop_button.visible = true
-	battle_shop_button.text = "战斗商店"
+	battle_shop_button.text = "金\n商店"
 	for slot_button in settlement_slot_buttons:
 		slot_button.visible = false
-	status_label.text = "战斗商店已关闭，新购卡牌已加入底部手牌。"
+	status_label.text = "商店已关闭，新购卡牌已加入底部手牌；点击建筑可调整岗位。"
 
 
 func _on_battle_shop_card_pressed(card_index: int) -> void:
@@ -1185,30 +1620,41 @@ func _on_battle_shop_card_pressed(card_index: int) -> void:
 		return
 	var card: OpeningCardDefinition = battle_shop.offered_cards[card_index]
 	_populate_battle_hand()
-	setup_hint_label.text = "已购买%s；关闭商店后可从底部手牌部署。" % card.display_name
+	setup_hint_label.text = "已购买%s，已加入底部手牌。" % card.display_name
 
 
 func _on_battle_shop_offers_changed() -> void:
 	if not battle_shop.active:
 		return
-	selection_label.text = "金币购买：已买%d张｜战斗仍在继续" % battle_shop.purchased_indices.size()
-	refresh_button.text = "刷新 %d金" % battle_shop.current_refresh_cost()
+	selection_label.text = "金币 %d" % RunEconomy.amount(&"gold")
+	var refresh_cost: int = battle_shop.current_refresh_cost()
+	refresh_button.text = "刷新 %d金｜下次 %d金" % [refresh_cost, mini(refresh_cost + 1, 6)]
+	refresh_button.disabled = RunEconomy.amount(&"gold") < refresh_cost
 	for card_index in range(card_buttons.size()):
 		if card_index >= battle_shop.offered_cards.size():
 			card_buttons[card_index].visible = false
 			continue
 		var card: OpeningCardDefinition = battle_shop.offered_cards[card_index]
 		var purchased: bool = card_index in battle_shop.purchased_indices
+		var held_count: int = run_card_inventory.count_matching(card.card_id, 1)
+		var fusion_gap: int = maxi(0, 3 - mini(held_count, 3))
+		var inventory_full: bool = run_card_inventory.card_count() >= RunCardInventory.MAX_CARDS
+		var lacks_gold: bool = RunEconomy.amount(&"gold") < card.shop_price
+		var state_text := "购买"
+		if purchased:
+			state_text = "已售罄"
+		elif inventory_full:
+			state_text = "手牌已满"
+		elif lacks_gold:
+			state_text = "金币不足"
 		card_buttons[card_index].visible = true
-		card_buttons[card_index].text = "%s【%s】\n价格：%d金｜建造：%s" % [
-			card.display_name,
-			"已购买" if purchased else "点击购买",
-			card.shop_price,
-			card.build_cost_text,
+		card_buttons[card_index].text = "%s  ★1\n持有 %d｜再差 %d 张可合成\n金 %d｜%s" % [
+			card.display_name, held_count, fusion_gap, card.shop_price, state_text,
 		]
-		card_buttons[card_index].tooltip_text = card.description
-		card_buttons[card_index].modulate = Color("8b8f94") if purchased else Color.WHITE
-		card_buttons[card_index].disabled = purchased
+		card_buttons[card_index].tooltip_text = "%s\n建造消耗：%s" % [card.description, card.build_cost_text]
+		card_buttons[card_index].modulate = Color.WHITE
+		card_buttons[card_index].disabled = purchased or inventory_full or lacks_gold
+		_apply_shop_card_style(card_buttons[card_index], card_buttons[card_index].disabled)
 
 
 func _begin_interwave_shop() -> void:
@@ -1327,6 +1773,7 @@ func _consume_played_card(card_ref: int, card: OpeningCardDefinition) -> void:
 
 
 func _configure_opening_setup_panel() -> void:
+	_apply_setup_panel_layout(false)
 	day_title.text = "白天布防"
 	timer_label.visible = true
 	selection_label.visible = true
@@ -1339,6 +1786,7 @@ func _configure_opening_setup_panel() -> void:
 
 
 func _configure_interwave_shop_panel() -> void:
+	_apply_setup_panel_layout(false)
 	build_failure_panel.visible = false
 	bottom_panel.visible = false
 	day_setup_panel.visible = true
@@ -1360,6 +1808,7 @@ func _configure_interwave_shop_panel() -> void:
 
 
 func _configure_interwave_job_panel() -> void:
+	_apply_setup_panel_layout(false)
 	bottom_panel.visible = false
 	day_setup_panel.visible = true
 	hand_bar.visible = false
@@ -1396,6 +1845,9 @@ func _card_play_allowed() -> bool:
 
 func _refresh_all_labels() -> void:
 	phase_value.text = RunState.phase_name()
-	wave_value.text = "%d / %d" % [RunState.current_wave, RunState.LAST_WAVE]
+	wave_value.text = str(RunState.current_wave)
+	_on_campaign_time_changed(RunState.campaign_remaining_seconds())
 	city_value.text = "%d / %d" % [RunState.city_health, RunState.city_max_health]
+	city_health_bar.max_value = RunState.city_max_health
+	city_health_bar.value = RunState.city_health
 	enemy_value.text = "0 / 0"

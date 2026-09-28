@@ -72,38 +72,26 @@ func run_test() -> void:
 		var balance = RunEconomy.balances.duplicate(true)
 		check(not main.wave_economy.settle_wave(wave, main.settlement_builder), "第%d波拒绝重复结算" % wave)
 		check(balance == RunEconomy.balances, "第%d波重复结算不扣资源" % wave)
-		if wave == 10:
-			break
-		check(main.interwave_draft.active, "第%d波后自动打开下一波商店" % wave)
-		if wave < 3:
-			main.card_buttons[0].pressed.emit()
-			main.card_buttons[1].pressed.emit()
-		else:
-			check(main.interwave_draft.is_purchase_mode(), "第%d波购买模式" % (wave + 1))
-			check(main.interwave_draft.refresh_count == 0, "新波刷新费用重置")
-			var inventory_before: int = main.run_card_inventory.card_count()
-			if wave % 2 == 0:
-				main.card_buttons[0].pressed.emit()
-				check(main.run_card_inventory.card_count() == inventory_before + 1, "后期购买立即进入手牌")
-			main.refresh_button.pressed.emit()
-			check(main.interwave_draft.refresh_count == 1, "后期付费刷新成功")
-			check(main.run_card_inventory.card_count() >= inventory_before, "刷新保留跨波手牌")
-			check(main.wave_economy.auto_assign_workers(), "后期休整可调整岗位")
-			var wood_before: int = RunEconomy.amount(&"wood")
-			main.farmer_manager.advance(100.0)
-			main.farmer_manager.advance(2.0)
-			main.farmer_manager.advance(100.0)
-			check(RunEconomy.amount(&"wood") > wood_before, "后期休整运输可交付")
-		main.ready_button.pressed.emit()
-		if main.interwave_draft.active:
-			main.ready_button.pressed.emit()
-	check(RunState.phase == RunState.Phase.RUN_WON and RunState.current_wave == 10, "第十波实际清场进入胜利")
-	check(main.failure_panel.visible and "胜利" in main.status_label.text, "胜利结果可见")
-	check(not main.day_setup_panel.visible and not main.battle_shop.active and not main.interwave_draft.active, "终局不打开第十一波商店")
+		check(not main.interwave_draft.active, "连续守城不打开旧波间商店")
+		check(RunState.phase == RunState.Phase.WAVE_COMBAT, "第%d波后自动衔接下一轮" % wave)
+		check(RunState.current_wave == wave + 1, "清场后威胁轮次递增")
+		var expected_template: int = wave + 1 if wave < 10 else 1
+		check(controller.active_wave_index == expected_template, "下一轮使用正确循环模板")
+		var wood_before: int = RunEconomy.amount(&"wood")
+		main.farmer_manager.advance(100.0)
+		main.farmer_manager.advance(2.0)
+		main.farmer_manager.advance(100.0)
+		check(RunEconomy.amount(&"wood") > wood_before, "连续战斗期间运输可交付")
+	check(RunState.phase == RunState.Phase.WAVE_COMBAT and RunState.current_wave == 11, "第十波清场后进入第十一轮而非胜利")
+	check(not main.failure_panel.visible, "第十波清场不显示终局结果")
+	check(not main.interwave_draft.active, "第十一轮不打开旧波间商店")
 	if "--capture-victory" in OS.get_cmdline_user_args():
 		await RenderingServer.frame_post_draw
 		DirAccess.make_dir_recursive_absolute("res://.codex-temp/story-018")
 		check(get_viewport().get_texture().get_image().save_png("res://.codex-temp/story-018/victory.png") == OK, "保存胜利界面截图")
+	RunState.advance_campaign_time(RunState.CAMPAIGN_DURATION_SECONDS)
+	await get_tree().process_frame
+	check(RunState.phase == RunState.Phase.RUN_WON and main.failure_panel.visible, "守满60分钟显示胜利结果")
 	var balances = RunEconomy.balances.duplicate(true)
 	main.farmer_manager.advance(100.0)
 	check(balances == RunEconomy.balances, "实际通关后运输停止")

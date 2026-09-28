@@ -6,6 +6,8 @@ signal destroyed(tower: ArrowTower)
 
 const TILE_SIZE: float = 32.0
 const DamageRules = preload("res://src/gameplay/combat/damage_calculator.gd")
+const ArtVisualScript = preload("res://src/gameplay/art/art_visual.gd")
+const BuildingGroundingScript = preload("res://src/gameplay/art/building_grounding.gd")
 
 @export var definition: TowerDefinition
 @export var target_provider_path: NodePath
@@ -24,6 +26,13 @@ var armor: int = 8
 
 
 func _ready() -> void:
+	var grounding: Node2D = BuildingGroundingScript.new() as Node2D
+	add_child(grounding)
+	grounding.configure(Vector2i.ONE, &"arrow_tower")
+	var art := ArtVisualScript.new() as ArtVisual
+	art.show_behind_parent = true
+	add_child(art)
+	art.configure("arrow_tower", Vector2(35, 64), &"lantern")
 	reset_statistics()
 	queue_redraw()
 
@@ -102,10 +111,6 @@ func _attack(target: EnemyActor) -> void:
 
 
 func _draw() -> void:
-	var color: Color = Color("5c8aa6") if definition == null else definition.body_color
-	draw_rect(Rect2(-17.0, -15.0, 34.0, 30.0), color)
-	draw_rect(Rect2(-6.0, -30.0, 12.0, 18.0), color.lightened(0.15))
-	draw_line(Vector2(0.0, -23.0), Vector2(18.0, -23.0), Color("d8e7ed"), 3.0)
 	if definition != null:
 		draw_arc(Vector2.ZERO, definition.attack_range_tiles * TILE_SIZE, 0.0, TAU, 64, Color(0.42, 0.7, 0.78, 0.18), 1.0)
 		var health_ratio: float = float(current_health) / float(maximum_health)

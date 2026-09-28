@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Waiting for Dawn"
-config/description="单夜十波的2D像素卡牌塔防"
+config/description="60分钟连续守城的2D像素卡牌塔防"
 run/main_scene="res://src/main/main.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 

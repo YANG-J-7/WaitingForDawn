@@ -154,7 +154,8 @@ func prepare_wave(
 	barracks: Barracks = null
 ) -> void:
 	refresh_jobs(builder, arrow_tower, barracks)
-	assignments_locked = true
+	# 60分钟连续守城没有波间解锁窗口，战斗中允许玩家即时调度人口。
+	assignments_locked = false
 	_apply_assignments_to_entities()
 	workers_assigned.emit(assigned_population, idle_population)
 	_emit_assignments_changed()
@@ -309,6 +310,20 @@ func job_capacity(job_id: StringName) -> int:
 
 func assigned_workers_for(job_id: StringName) -> int:
 	return int(worker_assignments.get(job_id, 0))
+
+
+func job_id_for_target(target: Node) -> StringName:
+	if target == null:
+		return &""
+	for job_id in job_order:
+		if job_targets.get(job_id) == target:
+			return job_id
+	return &""
+
+
+func job_target(job_id: StringName) -> Node:
+	var target: Variant = job_targets.get(job_id)
+	return target as Node if target is Node and is_instance_valid(target) else null
 
 
 func _apply_auto_distribution() -> void:

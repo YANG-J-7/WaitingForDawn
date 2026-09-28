@@ -1,6 +1,6 @@
 version: 1
 stage: production
 engine: godot-4.7-development-validation
-updated: 2026-09-17
-current_goal: "完成Story-024两局10～15分钟自然试玩，记录金币收入、购买、刷新、合成与失败原因"
-active_story: "production/stories/story-024-kill-gold-card-fusion-prototype.md"
+updated: 2026-09-28
+current_goal: "在36×36草地TileSet基础上继续正式水岸/崖壁地块与Y排序验收，并补动态单位软预约和局部避让"
+active_story: "production/stories/story-030-terrain-grid-and-building-grounding.md"

@@ -11,6 +11,7 @@ signal card_dropped(card_index: int, map_position: Vector2)
 	"farm",
 	"gold_mine",
 	"stone_mine",
+	"iron_mine",
 	"house",
 ])
 var interaction_enabled: bool = true

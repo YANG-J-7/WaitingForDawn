@@ -22,7 +22,7 @@ func _run_test() -> void:
 	var manager := main.get_node("FarmerManager") as FarmerManager
 	var builder := main.get_node("SettlementBuilder") as SettlementBuilder
 	var wave_economy := main.get_node("WaveEconomy") as WaveEconomy
-	var stone_site := main.get_node("ResourceSites/StoneDeposit") as ResourceSite
+	var stone_site := main.get_node("ResourceSites/stone_01") as ResourceSite
 
 	start_button.pressed.emit()
 	manager.set_process(false)
@@ -41,12 +41,12 @@ func _run_test() -> void:
 
 	var stone_before: int = RunEconomy.amount(&"stone")
 	_expect_true(wave_economy.advance_production(100.0).is_empty(), "building no longer deposits resources directly")
-	manager.advance(2.0)
+	manager.advance(12.0)
 	_expect_equal(RunEconomy.amount(&"stone"), stone_before, "outbound farmers do not add resources")
 	manager.advance(2.5)
 	manager.advance(1.1)
 	_expect_equal(RunEconomy.amount(&"stone"), stone_before, "gathered cargo is not credited before return")
-	manager.advance(4.0)
+	manager.advance(12.0)
 	_expect_true(RunEconomy.amount(&"stone") > stone_before, "cargo credits only after farmers reach city")
 
 	var house: ResourceBuilding = builder.place_card_at(HOUSE, Vector2(600.0, 160.0))
@@ -72,8 +72,8 @@ func _run_test() -> void:
 		farmer.carried_resource = &"stone"
 		farmer.carried_amount = 2
 		if won:
-			RunState.current_wave = RunState.LAST_WAVE
-			RunState.complete_current_wave()
+			RunState.advance_campaign_time(RunState.CAMPAIGN_DURATION_SECONDS)
+			await get_tree().process_frame
 		else:
 			RunState.damage_city(RunState.city_health)
 		var label := "胜利" if won else "失败"

@@ -114,7 +114,7 @@ func current_refresh_cost() -> int:
 func refresh() -> bool:
 	if not active:
 		return false
-	if selected_indices.size() + purchased_indices.size() >= offered_cards.size():
+	if not is_purchase_mode() and selected_indices.size() >= offered_cards.size():
 		last_error = "当前商店没有可刷新的卡牌。"
 		return false
 	var cost: int = current_refresh_cost()
@@ -123,6 +123,8 @@ func refresh() -> bool:
 		return false
 	last_error = ""
 	_rotate_unselected_offers()
+	if is_purchase_mode():
+		purchased_indices.clear()
 	refresh_count += 1
 	_emit_selection_changed()
 	shop_refreshed.emit(refresh_count, current_refresh_cost())
@@ -153,7 +155,8 @@ func _shuffle_offers() -> void:
 
 func _rotate_unselected_offers() -> void:
 	var locked: Array[int] = selected_indices.duplicate()
-	locked.append_array(purchased_indices)
+	if not is_purchase_mode():
+		locked.append_array(purchased_indices)
 	preload("res://src/gameplay/cards/shop_offer_refresh.gd").redraw(
 		card_pool, offered_cards, locked,
 		absi(hash("%s:%d:refresh:%d" % [RunState.run_id, wave_index, refresh_count]))

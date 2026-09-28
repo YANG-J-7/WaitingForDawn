@@ -1,12 +1,13 @@
 # 系统索引
 
-> 2026-09-15：当前目标为Steam单机，一局60分钟、每局从零开始；击杀金币与商店抽牌、三卡升星、自由建造、大地图地形与天气以[60分钟战役规则](sixty-minute-campaign-system.md)为当前依据。旧十波系统仅为现有灰盒依据；平台与商业化以[Steam方向调整](../../docs/architecture/change-impact-2026-09-14-steam-single-player.md)为准，微信、广告及在线排行要求暂停。
+> 2026-09-17：当前目标为Steam单机，一局60分钟、每局从零开始；Story-025已接通60分钟计时与循环威胁。击杀金币与商店抽牌、三卡升星、自由建造、大地图地形与天气以[60分钟战役规则](sixty-minute-campaign-system.md)为当前依据。旧十波系统仅为历史数据与回归依据；平台与商业化以[Steam方向调整](../../docs/architecture/change-impact-2026-09-14-steam-single-player.md)为准。
 
 | 系统 | 文档 | 状态 | 当前验证目标 |
 |---|---|---|---|
 | 60分钟战役与每局重置 | [sixty-minute-campaign-system.md](sixty-minute-campaign-system.md) | CAM-01方向已确定；未实现 | 细化结束判定、计时与新局边界 |
 | 击杀金币、商店抽牌与三卡升星 | [kill-gold-card-shop-fusion-system.md](kill-gold-card-shop-fusion-system.md) | Story-024灰盒实现与自动化通过；待两局自然试玩 | 采集10～15分钟经济数据，再按结果调平 |
 | 自由建造、大地图地形与天气 | [sixty-minute-campaign-system.md](sixty-minute-campaign-system.md) | CAM-04/05方向已确定；旧自由建造可复用 | 明确地形可达性、建造条件与天气影响 |
+| 网格地图、地形清晰度与单位寻路 | [grid-map-rendering-system.md](grid-map-rendering-system.md) | 方案待用户确认，尚未实施 | 确认36像素、80×45格方案及网格显示方式 |
 | 历史长流程构思 | [long-session-strategy-direction.md](long-session-strategy-direction.md) | 已被60分钟规则承接 | 仅保留讨论追溯，不按旧候选实施 |
 | 旧单夜十波、六卡商店与怪物王 | [single-night-wave-system.md](single-night-wave-system.md) | 旧十波灰盒通过；终局约束已取消；怪物王未实现 | 历史回归依据，不作新版最终验收 |
 | 资源建筑持续生产 | [continuous-production-system.md](continuous-production-system.md) | 历史规则：直接每秒到账已由农民运输替代 | 只保留波末不重复给资源、商店不中断生产的约束 |
