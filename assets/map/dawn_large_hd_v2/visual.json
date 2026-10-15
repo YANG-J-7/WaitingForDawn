@@ -1,0 +1,594 @@
+{
+  "schema": "waiting-for-dawn.hd-visual.v2",
+  "sourceSize": [
+    1672,
+    941
+  ],
+  "worldSize": [
+    4608,
+    2592
+  ],
+  "groundScale": 3,
+  "forestScale": 6,
+  "chunks": [
+    {
+      "path": "assets/map/dawn_large_hd_v2/ground-0-0.png",
+      "sourceRect": [
+        0,
+        0,
+        418,
+        314
+      ],
+      "pixelSize": [
+        1254,
+        942
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/ground-1-0.png",
+      "sourceRect": [
+        418,
+        0,
+        836,
+        314
+      ],
+      "pixelSize": [
+        1254,
+        942
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/ground-2-0.png",
+      "sourceRect": [
+        836,
+        0,
+        1254,
+        314
+      ],
+      "pixelSize": [
+        1254,
+        942
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/ground-3-0.png",
+      "sourceRect": [
+        1254,
+        0,
+        1672,
+        314
+      ],
+      "pixelSize": [
+        1254,
+        942
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/ground-0-1.png",
+      "sourceRect": [
+        0,
+        314,
+        418,
+        628
+      ],
+      "pixelSize": [
+        1254,
+        942
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/ground-1-1.png",
+      "sourceRect": [
+        418,
+        314,
+        836,
+        628
+      ],
+      "pixelSize": [
+        1254,
+        942
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/ground-2-1.png",
+      "sourceRect": [
+        836,
+        314,
+        1254,
+        628
+      ],
+      "pixelSize": [
+        1254,
+        942
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/ground-3-1.png",
+      "sourceRect": [
+        1254,
+        314,
+        1672,
+        628
+      ],
+      "pixelSize": [
+        1254,
+        942
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/ground-0-2.png",
+      "sourceRect": [
+        0,
+        628,
+        418,
+        941
+      ],
+      "pixelSize": [
+        1254,
+        939
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/ground-1-2.png",
+      "sourceRect": [
+        418,
+        628,
+        836,
+        941
+      ],
+      "pixelSize": [
+        1254,
+        939
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/ground-2-2.png",
+      "sourceRect": [
+        836,
+        628,
+        1254,
+        941
+      ],
+      "pixelSize": [
+        1254,
+        939
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/ground-3-2.png",
+      "sourceRect": [
+        1254,
+        628,
+        1672,
+        941
+      ],
+      "pixelSize": [
+        1254,
+        939
+      ]
+    }
+  ],
+  "forests": [
+    {
+      "id": "forest_02",
+      "path": "assets/map/dawn_large_hd_v2/forest_02.png",
+      "sourceRect": [
+        530,
+        258,
+        717,
+        417
+      ],
+      "pixelSize": [
+        1122,
+        954
+      ]
+    },
+    {
+      "id": "forest_04",
+      "path": "assets/map/dawn_large_hd_v2/forest_04.png",
+      "sourceRect": [
+        380,
+        378,
+        610,
+        567
+      ],
+      "pixelSize": [
+        1380,
+        1134
+      ]
+    },
+    {
+      "id": "forest_03",
+      "path": "assets/map/dawn_large_hd_v2/forest_03.png",
+      "sourceRect": [
+        714,
+        379,
+        914,
+        541
+      ],
+      "pixelSize": [
+        1200,
+        972
+      ]
+    },
+    {
+      "id": "forest_05",
+      "path": "assets/map/dawn_large_hd_v2/forest_05.png",
+      "sourceRect": [
+        585,
+        606,
+        796,
+        793
+      ],
+      "pixelSize": [
+        1266,
+        1122
+      ]
+    }
+  ],
+  "border": {
+    "path": "assets/map/dawn_large_hd_v2/border-forest.png",
+    "sourceRect": [
+      0,
+      0,
+      717,
+      941
+    ]
+  },
+  "occluders": [
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-0.png",
+      "sourceRect": [
+        474,
+        110,
+        783,
+        228
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-1.png",
+      "sourceRect": [
+        585,
+        0,
+        1041,
+        183
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-2.png",
+      "sourceRect": [
+        681,
+        172,
+        909,
+        292
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-3.png",
+      "sourceRect": [
+        925,
+        249,
+        1093,
+        356
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-4.png",
+      "sourceRect": [
+        1109,
+        48,
+        1492,
+        185
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-5.png",
+      "sourceRect": [
+        1125,
+        211,
+        1421,
+        320
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-6.png",
+      "sourceRect": [
+        1105,
+        351,
+        1318,
+        471
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-7.png",
+      "sourceRect": [
+        1408,
+        271,
+        1611,
+        388
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-8.png",
+      "sourceRect": [
+        1583,
+        148,
+        1672,
+        210
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-9.png",
+      "sourceRect": [
+        1016,
+        527,
+        1109,
+        575
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-10.png",
+      "sourceRect": [
+        1262,
+        508,
+        1439,
+        604
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-11.png",
+      "sourceRect": [
+        1060,
+        691,
+        1249,
+        787
+      ]
+    }
+  ],
+  "geometrySource": "../dawn_large_v1/map.json",
+  "artSource": "内置image_gen固定构图高清编辑；母图低频调色、共同接缝底色及原透明轮廓合成，不声称逐像素还原",
+  "rawAssets": [
+    {
+      "path": "raw-0-0.png",
+      "reference": "../dawn_large_v1/ground-0-0.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "path": "raw-1-0.png",
+      "reference": "../dawn_large_v1/ground-1-0.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "path": "raw-2-0.png",
+      "reference": "../dawn_large_v1/ground-2-0.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "path": "raw-3-0.png",
+      "reference": "../dawn_large_v1/ground-3-0.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "path": "raw-0-1.png",
+      "reference": "../dawn_large_v1/ground-0-1.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "path": "raw-1-1.png",
+      "reference": "../dawn_large_v1/ground-1-1.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "path": "raw-2-1.png",
+      "reference": "../dawn_large_v1/ground-2-1.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "path": "raw-3-1.png",
+      "reference": "../dawn_large_v1/ground-3-1.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "path": "raw-0-2.png",
+      "reference": "../dawn_large_v1/ground-0-2.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "path": "raw-1-2.png",
+      "reference": "../dawn_large_v1/ground-1-2.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "path": "raw-2-2.png",
+      "reference": "../dawn_large_v1/ground-2-2.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "path": "raw-3-2.png",
+      "reference": "../dawn_large_v1/ground-3-2.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ]
+    },
+    {
+      "path": "raw-forest_02.png",
+      "reference": "../dawn_large_v1/forest_02.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1360,
+        1157
+      ]
+    },
+    {
+      "path": "cutout-forest_02.png",
+      "reference": "raw-forest_02.png",
+      "prompt": "forest-cutout.prompt.txt",
+      "nativeSize": [
+        1360,
+        1157
+      ]
+    },
+    {
+      "path": "raw-forest_04.png",
+      "reference": "../dawn_large_v1/forest_04.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1383,
+        1137
+      ]
+    },
+    {
+      "path": "cutout-forest_04.png",
+      "reference": "raw-forest_04.png",
+      "prompt": "forest-cutout.prompt.txt",
+      "nativeSize": [
+        1383,
+        1137
+      ]
+    },
+    {
+      "path": "raw-forest_03.png",
+      "reference": "../dawn_large_v1/forest_03.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1393,
+        1129
+      ]
+    },
+    {
+      "path": "cutout-forest_03.png",
+      "reference": "raw-forest_03.png",
+      "prompt": "forest-cutout.prompt.txt",
+      "nativeSize": [
+        1393,
+        1129
+      ]
+    },
+    {
+      "path": "raw-forest_05.png",
+      "reference": "../dawn_large_v1/forest_05.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1332,
+        1181
+      ]
+    },
+    {
+      "path": "cutout-forest_05.png",
+      "reference": "raw-forest_05.png",
+      "prompt": "forest-cutout.prompt.txt",
+      "nativeSize": [
+        1332,
+        1181
+      ]
+    },
+    {
+      "path": "raw-border-0-0.png",
+      "reference": "border-reference-0-0.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1093,
+        1438
+      ]
+    },
+    {
+      "path": "raw-border-1-0.png",
+      "reference": "border-reference-1-0.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1095,
+        1436
+      ]
+    },
+    {
+      "path": "raw-border-0-1.png",
+      "reference": "border-reference-0-1.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1095,
+        1437
+      ]
+    },
+    {
+      "path": "raw-border-1-1.png",
+      "reference": "border-reference-1-1.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1096,
+        1435
+      ]
+    }
+  ],
+  "rawSHA256": {
+    "raw-0-0.png": "9b4fecbaa473b255968b2ff21a482336665b27e75b4fb601eb54624a8a24ce07",
+    "raw-1-0.png": "781d3407ca6841dc607858914baa8322d2d4d853a38993b6d2f1402bd95b241d",
+    "raw-2-0.png": "8a7aba90afcf16637c15f30d4d6957b324b669d49654a1c3101150314c78a30e",
+    "raw-3-0.png": "ef1db1649d0381a3cb2dad8336200208b7a9ac2d6e1fb1916d009df0f17005db",
+    "raw-0-1.png": "e93329309a8575501a4a56588cc1db586bcfb439662c69b1b12728d11b2a8e00",
+    "raw-1-1.png": "76b21b860c65ad98f066ba299d51d2c0dcb43a533ce5ab570a97bdc6f1e2c4e5",
+    "raw-2-1.png": "ba71ad500c145359734fe3a3471a125d30c51e14d6eaff31431bd3a533ba3a73",
+    "raw-3-1.png": "156ef06369e78e97a1a184981dd5ccae08a93683b368dbb001282d618fab5f14",
+    "raw-0-2.png": "489155701af0d47cea6bca980d457a1dc00019956e08e526f79e2c58f26856b5",
+    "raw-1-2.png": "780c137b3009309e083b05d30a50c674c3a16b1b648feb71cddd6a020a20341c",
+    "raw-2-2.png": "4a95ad44735c618e13b51dd7c89d6c3e4fc9d530de16e3824b6ea45ed012e19e",
+    "raw-3-2.png": "2173067c1cc54b952972928e396ceb19a32f50e5488aea9f61ec0abead0d2277",
+    "raw-forest_02.png": "2f616902b3d67c45b56061bde90e98ae78155b41949bcea13523d19fa0bfe3e8",
+    "cutout-forest_02.png": "99b98a486108835d5a53b45730ac0f649a160ead7c781e8478500541372343ad",
+    "raw-forest_04.png": "83e131adddf418a952261cd87613dbfadb7dee582167ad63b0f2f362dabc24e6",
+    "cutout-forest_04.png": "7990e4daa70a31857005e9a8dbcd5f7826c0cf33d0643f77f0e4750b8454207b",
+    "raw-forest_03.png": "348af6b9792a89b92deb4ebd86b2d544ede861251023f95943c86b50c4571e65",
+    "cutout-forest_03.png": "40e0ffdf3c9ab99f5e0f36247c15a76e21b4d68cadf158102ac8f97fe5d3b9d1",
+    "raw-forest_05.png": "b485e5e0b56b494e1d975d8173431d586b754c20b77ee8ed722fd7e91e97f503",
+    "cutout-forest_05.png": "2b4bd1603a53057bd495376caae8d4f0429e63e16138d0a069e2cfd3d96c067a",
+    "raw-border-0-0.png": "c4d791626b8c202233c161989fad05668880d0906f81ee90c072862c27b83344",
+    "raw-border-1-0.png": "ae5685eda9216f832840e72789617c2fcc45de41c5662db5a0927dc8213e7286",
+    "raw-border-0-1.png": "3322a39dc8368f81b0b5af83ebffdd0d87b7ec87f57a6d2e3eeb387b7e995d65",
+    "raw-border-1-1.png": "e826d3c9a38ab303527c88f7d2462af65e010e2be9c95fdc2d688f9484fd8123"
+  }
+}

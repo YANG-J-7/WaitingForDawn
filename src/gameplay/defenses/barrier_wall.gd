@@ -23,7 +23,7 @@ func _ready() -> void:
 	var art := ArtVisualScript.new() as ArtVisual
 	art.show_behind_parent = true
 	add_child(art)
-	art.configure("palisade_wall", Vector2(34, 37))
+	art.configure_world("palisade_wall", Vector2(34, 37))
 
 
 func build(card: OpeningCardDefinition) -> bool:

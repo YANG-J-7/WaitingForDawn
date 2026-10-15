@@ -50,6 +50,12 @@ func advance(
 	var remaining := speed * delta
 	while path_index < path.size() and remaining > 0.0:
 		var waypoint: Vector2 = path[path_index]
+		# 包括最后一段在内逐格检查；动态封路后绝不滑向非通行草台。
+		var from_cell: Vector2i = pathfinder.model.world_to_cell(result_position)
+		var to_cell: Vector2i = pathfinder.model.world_to_cell(waypoint)
+		if from_cell != to_cell and not pathfinder.model.can_step(from_cell,to_cell):
+			invalidate()
+			return {"position": result_position, "arrived": false, "has_path": false}
 		var distance := result_position.distance_to(waypoint)
 		if distance <= remaining:
 			result_position = waypoint

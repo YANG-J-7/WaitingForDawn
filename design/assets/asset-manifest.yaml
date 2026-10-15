@@ -1,0 +1,116 @@
+version: 1
+updated: 2026-10-14
+assets:
+  - id: MAP-DAWN-LARGE-HD-V2
+    name: 大地图高清分层视觉候选
+    specification: design/assets/specs/map-dawn-large-hd-v2.md
+    file: assets/map/dawn_large_hd_v2/layered-preview.png
+    metadata: assets/map/dawn_large_hd_v2/visual.json
+    prompt: assets/map/dawn_large_hd_v2/terrain.prompt.txt
+    forest_prompt: assets/map/dawn_large_hd_v2/forest.prompt.txt
+    cutout_prompt: assets/map/dawn_large_hd_v2/forest-cutout.prompt.txt
+    generation_record: assets/map/dawn_large_hd_v2/generation-record.json
+    status: candidate
+    integrated: true
+    integrated_date: 2026-10-14
+    generator: built-in-image_gen-fixed-framing-edits
+    assembled_dimensions: [5016, 2823]
+    world_dimensions: [4608, 2592]
+    review_status: 运行候选，最终细节与衔接待用户复核
+    validation: 实际原生稿尺寸和SHA256登记在visual.json；运行清晰度及视口证据见2026-10-14报告
+  - id: MAP-DAWN-LAYERED-LARGE-V1
+    name: 4608×2592分层山地平原地图
+    specification: design/gdd/large-map-design-restoration-system.md
+    file: assets/map/dawn_large_v1/base.png
+    metadata: assets/map/dawn_large_v1/map.json
+    prompt: assets/map/dawn_large_v1/ground-fill-source.prompt.txt
+    generation_record: assets/map/dawn_large_v1/generation-record.json
+    status: candidate
+    integrated: true
+    integrated_date: 2026-10-13
+    generator: built-in-image_gen-fill-and-reference-layer-extraction
+    source_dimensions: [1672, 941]
+    world_dimensions: [4608, 2592]
+    review_status: 已确认按方案实施，运行候选最终美术待用户复核
+    validation: 初态合成最大RGB差0；全量33组1402项，GL33项和真实输入28项通过；最大倍率高清细节未补
+  - id: MAP-MOUNTAIN-REDESIGN-PREVIEW-V2
+    name: 保留立体山地并恢复平原与树林的完整概念预览
+    specification: design/assets/specs/map-mountain-redesign-preview-v2.md
+    file: design/art/concepts/mountain-redesign-2026-10-13/mountain-redesign-preview-v2.png
+    prompt: design/art/concepts/mountain-redesign-2026-10-13/mountain-redesign-preview-v2.prompt.txt
+    status: candidate
+    integrated: false
+    generated: 2026-10-13
+    generation_status: success_after_interruption
+    generator: built-in-image_gen
+    metadata: design/art/concepts/mountain-redesign-2026-10-13/generation-record.json
+    review_status: 已查看预览，待用户整图视觉评审
+    validation: 原生1672×941 RGB PNG、提示词、两图参考及候选未接入状态已检查；当前仅概念图
+  - id: MAP-MOUNTAIN-REDESIGN-PREVIEW-V1
+    name: 立体山地、配套石阶与山路概念预览
+    specification: design/assets/specs/map-mountain-redesign-preview-v1.md
+    file: design/art/concepts/mountain-redesign-2026-10-12/mountain-redesign-preview-v1.png
+    prompt: design/art/concepts/mountain-redesign-2026-10-12/mountain-redesign-preview-v1.prompt.txt
+    status: candidate
+    integrated: false
+    generated: 2026-10-12
+    generation_status: success_after_retry
+    generator: built-in-image_gen
+    metadata: design/art/concepts/mountain-redesign-2026-10-12/generation-record.json
+    review_status: 已查看预览，待用户视觉评审
+    validation: 原生1672×941 RGB PNG与完整提示词/生成记录已检查；仅概念出图，运行地图保持
+  - id: MAP-MOUNTAIN-ROAD-V1
+    name: 山区石土道路与坡道表现
+    specification: design/assets/specs/map-mountain-road-v1.md
+    file: assets/art_candidates/night_set_v1/terrain_road.png
+    status: candidate
+    integrated: true
+    generated: 2026-09-20
+    integrated_date: 2026-10-10
+    generator: reused-built-in-image_gen-candidate
+    prompt: assets/art_candidates/night_set_v1/README.md
+    metadata: assets/map/mountain_roads_v1/runtime-meta.json
+    review_status: 待用户视觉复核
+    validation: 新生成两次HTTP429无产物；复用既有源图，山区道路及草台建造专项验证见本轮QA
+  - id: UI-HUD-PARCHMENT-V1
+    name: 羊皮纸卡面
+    specification: design/assets/specs/ui-hud-reference-v1.md
+    file: assets/ui/hud_reference_v1/parchment.png
+    dimensions: [1586, 992]
+    format: RGBA8
+    status: candidate
+    integrated: true
+    generated: 2026-10-09
+    generator: built-in-image_gen
+    prompt: assets/ui/hud_reference_v1/prompts.md
+    review_status: 待用户视觉复核
+    validation: 九片边角映射、透明边角、Godot导入与三分辨率GL目检通过
+  - id: UI-HUD-ICONS-V1
+    name: 资源与状态图标图集
+    specification: design/assets/specs/ui-hud-reference-v1.md
+    file: assets/ui/hud_reference_v1/icons.png
+    dimensions: [1448, 1086]
+    format: RGBA8
+    status: candidate
+    integrated: true
+    generated: 2026-10-09
+    generator: built-in-image_gen
+    prompt: assets/ui/hud_reference_v1/prompts.md
+    review_status: 待用户视觉复核
+    validation: 十二个主体区域、透明背景、图集边界、Godot导入与16至27逻辑像素显示通过
+  - id: UI-DAY-NIGHT-CLOCK-V1
+    name: 黎明日月转换图集
+    specification: design/assets/specs/ui-day-night-clock-v1.md
+    file: assets/ui/day_night_clock_v1/sheet-transparent.png
+    dimensions: [512, 256]
+    frame_dimensions: [128, 128]
+    frames: 8
+    format: RGBA8
+    status: candidate
+    integrated: true
+    generated: 2026-10-09
+    generator: built-in-image_gen
+    prompt: assets/ui/day_night_clock_v1/prompt-used.txt
+    metadata: assets/ui/day_night_clock_v1/pipeline-meta.json
+    review_status: 待用户视觉复核
+    validation: 严格QC八帧无空帧触边裁切；30项有效时间暂停重开专项与三视口GL目检通过

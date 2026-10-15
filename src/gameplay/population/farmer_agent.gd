@@ -31,17 +31,20 @@ var carried_resource: StringName = &""
 var state: WorkState = WorkState.IDLE
 var gather_elapsed: float = 0.0
 var path_follower: RefCounted = GridPathFollowerScript.new()
+var _needs_spawn_position := true
 
 
 func set_pathfinder(value: RefCounted) -> void:
 	path_follower.set_pathfinder(value)
+	_resolve_spawn_position()
 
 
 func _ready() -> void:
+	add_to_group(&"map_units")
 	var art := ArtVisualScript.new() as ArtVisual
 	art.show_behind_parent = true
 	add_child(art)
-	art.configure("villager", Vector2(12, 18), &"walk")
+	art.configure_world("villager", Vector2(12, 18), &"walk")
 
 
 func configure(index: int, home_position: Vector2) -> void:
@@ -49,6 +52,8 @@ func configure(index: int, home_position: Vector2) -> void:
 	city_position = home_position
 	current_health = maximum_health
 	global_position = _idle_position()
+	_needs_spawn_position = true
+	_resolve_spawn_position()
 	state = WorkState.IDLE
 	path_follower.invalidate()
 	queue_redraw()
@@ -156,12 +161,20 @@ func _workplace_is_valid() -> bool:
 func _idle_position() -> Vector2:
 	var angle: float = float(farmer_index % 8) / 8.0 * TAU
 	var ring: float = 108.0 + float(farmer_index / 8) * 18.0
-	return city_position + Vector2.from_angle(angle) * ring
+	var preferred := city_position + Vector2.from_angle(angle) * ring
+	if path_follower.pathfinder != null:
+		return path_follower.pathfinder.spawn_position(preferred,city_position,maxf(216.0,ring+36.0))
+	return preferred
+
+func _resolve_spawn_position() -> void:
+	if _needs_spawn_position and path_follower.pathfinder != null:
+		global_position = _idle_position()
+		_needs_spawn_position = false
 
 
 func _draw() -> void:
 	var job_label: String = str({&"lumber_camp": "木", &"farm": "农", &"gold_mine": "金", &"stone_mine": "石", &"iron_mine": "铁", &"arrow_tower": "箭", &"barracks": "兵"}.get(StringName(String(job_id).get_slice("#", 0)), "闲"))
-	draw_string(ThemeDB.fallback_font, Vector2(-24, -13), "%d·%s" % [farmer_index + 1, job_label], HORIZONTAL_ALIGNMENT_CENTER, 48.0, 10, Color.WHITE)
+	draw_string(ThemeDB.fallback_font, Vector2(-24, -45), "%d·%s" % [farmer_index + 1, job_label], HORIZONTAL_ALIGNMENT_CENTER, 48.0, 10, Color.WHITE)
 	if carried_amount > 0:
 		var resource_label: String = str({&"wood": "木", &"food": "食", &"gold": "金", &"stone": "石", &"iron": "铁"}.get(carried_resource, "货"))
 		draw_string(ThemeDB.fallback_font, Vector2(-15, 27), "%s%d" % [resource_label, carried_amount], HORIZONTAL_ALIGNMENT_CENTER, 30.0, 10, Color("ffe083"))

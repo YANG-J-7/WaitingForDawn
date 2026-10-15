@@ -90,7 +90,8 @@ func _run_test() -> void:
 	_expect_equal(controller.spawn_history.size(), 4, "first wave records four spawn points")
 	var unique_points: Dictionary = {}
 	for spawn_point in controller.spawn_history:
-		_expect_true(_is_on_perimeter(spawn_point, controller.playable_bounds), "enemy spawns on map perimeter")
+		var resolved: Array = controller.spawn_points.map(func(p): return main.grid_pathfinder.spawn_position(p))
+		_expect_true(spawn_point in resolved and controller.playable_bounds.has_point(spawn_point) and not main.grid_map_model.is_solid(main.grid_map_model.world_to_cell(spawn_point)), "敌人出生在标注入口附近的合法脚点")
 		unique_points[spawn_point] = true
 	_expect_true(unique_points.size() >= 2, "wave uses more than one random spawn direction")
 

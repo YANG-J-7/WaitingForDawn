@@ -1,0 +1,285 @@
+{
+  "date": "2026-10-14",
+  "tool": "built-in image_gen",
+  "status": "candidate-integrated",
+  "knownRetries": [
+    {
+      "asset": "raw-2-0.png",
+      "failure": "HTTP429",
+      "result": "重试成功"
+    },
+    {
+      "asset": "cutout-forest_05.png",
+      "failure": "network error",
+      "result": "重试成功，原稿在中断后保存"
+    }
+  ],
+  "operations": "原生高清参考编辑、树簇透明背景提取；脚本仅调色、合成、重采样、alpha处理、生成清单和验证",
+  "assets": [
+    {
+      "path": "raw-0-0.png",
+      "reference": "../dawn_large_v1/ground-0-0.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ],
+      "sha256": "9b4fecbaa473b255968b2ff21a482336665b27e75b4fb601eb54624a8a24ce07",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-4e969346-cd65-4317-8073-7bbe302eaab5.png"
+    },
+    {
+      "path": "raw-1-0.png",
+      "reference": "../dawn_large_v1/ground-1-0.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ],
+      "sha256": "781d3407ca6841dc607858914baa8322d2d4d853a38993b6d2f1402bd95b241d",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-f07b9e8a-a1db-4d1c-929b-c16336216647.png"
+    },
+    {
+      "path": "raw-2-0.png",
+      "reference": "../dawn_large_v1/ground-2-0.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ],
+      "sha256": "8a7aba90afcf16637c15f30d4d6957b324b669d49654a1c3101150314c78a30e",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-f1a0e566-bb13-42b3-b243-1f35a914c441.png"
+    },
+    {
+      "path": "raw-3-0.png",
+      "reference": "../dawn_large_v1/ground-3-0.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ],
+      "sha256": "ef1db1649d0381a3cb2dad8336200208b7a9ac2d6e1fb1916d009df0f17005db",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-592d08dc-aca4-4fed-892d-33daa066c722.png"
+    },
+    {
+      "path": "raw-0-1.png",
+      "reference": "../dawn_large_v1/ground-0-1.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ],
+      "sha256": "e93329309a8575501a4a56588cc1db586bcfb439662c69b1b12728d11b2a8e00",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-a659061b-5bee-4c13-9992-dc9ee8e4e401.png"
+    },
+    {
+      "path": "raw-1-1.png",
+      "reference": "../dawn_large_v1/ground-1-1.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ],
+      "sha256": "76b21b860c65ad98f066ba299d51d2c0dcb43a533ce5ab570a97bdc6f1e2c4e5",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-078b7eb4-c667-4890-8914-9195d0ff5de9.png"
+    },
+    {
+      "path": "raw-2-1.png",
+      "reference": "../dawn_large_v1/ground-2-1.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ],
+      "sha256": "ba71ad500c145359734fe3a3471a125d30c51e14d6eaff31431bd3a533ba3a73",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-6845b6e7-ecec-484b-b5a8-e3ac21c2fcb5.png"
+    },
+    {
+      "path": "raw-3-1.png",
+      "reference": "../dawn_large_v1/ground-3-1.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ],
+      "sha256": "156ef06369e78e97a1a184981dd5ccae08a93683b368dbb001282d618fab5f14",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-2bb83ea9-3f13-4bee-9f83-09b4dc58f3ee.png"
+    },
+    {
+      "path": "raw-0-2.png",
+      "reference": "../dawn_large_v1/ground-0-2.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ],
+      "sha256": "489155701af0d47cea6bca980d457a1dc00019956e08e526f79e2c58f26856b5",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-e85aee52-7f12-41d9-81a4-5a04a1cdfd1d.png"
+    },
+    {
+      "path": "raw-1-2.png",
+      "reference": "../dawn_large_v1/ground-1-2.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ],
+      "sha256": "780c137b3009309e083b05d30a50c674c3a16b1b648feb71cddd6a020a20341c",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-e69ffc30-ac12-4cca-9aae-b036c97851fc.png"
+    },
+    {
+      "path": "raw-2-2.png",
+      "reference": "../dawn_large_v1/ground-2-2.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ],
+      "sha256": "4a95ad44735c618e13b51dd7c89d6c3e4fc9d530de16e3824b6ea45ed012e19e",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-87f6bc01-978a-46ac-ad36-6a8eb2711cb4.png"
+    },
+    {
+      "path": "raw-3-2.png",
+      "reference": "../dawn_large_v1/ground-3-2.png",
+      "prompt": "terrain.prompt.txt",
+      "nativeSize": [
+        1448,
+        1086
+      ],
+      "sha256": "2173067c1cc54b952972928e396ceb19a32f50e5488aea9f61ec0abead0d2277",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-15253afb-31d9-4500-8b70-167205255cff.png"
+    },
+    {
+      "path": "raw-forest_02.png",
+      "reference": "../dawn_large_v1/forest_02.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1360,
+        1157
+      ],
+      "sha256": "2f616902b3d67c45b56061bde90e98ae78155b41949bcea13523d19fa0bfe3e8",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-361cfbfd-a70c-43d9-9183-8ab543878828.png"
+    },
+    {
+      "path": "cutout-forest_02.png",
+      "reference": "raw-forest_02.png",
+      "prompt": "forest-cutout.prompt.txt",
+      "nativeSize": [
+        1360,
+        1157
+      ],
+      "sha256": "99b98a486108835d5a53b45730ac0f649a160ead7c781e8478500541372343ad",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-dc7cdb10-7648-4068-8de2-43b5ad0d9ea0.png"
+    },
+    {
+      "path": "raw-forest_04.png",
+      "reference": "../dawn_large_v1/forest_04.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1383,
+        1137
+      ],
+      "sha256": "83e131adddf418a952261cd87613dbfadb7dee582167ad63b0f2f362dabc24e6",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-1b90f3ee-0080-4f30-8583-db382914cc5d.png"
+    },
+    {
+      "path": "cutout-forest_04.png",
+      "reference": "raw-forest_04.png",
+      "prompt": "forest-cutout.prompt.txt",
+      "nativeSize": [
+        1383,
+        1137
+      ],
+      "sha256": "7990e4daa70a31857005e9a8dbcd5f7826c0cf33d0643f77f0e4750b8454207b",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-bd0e2d8b-a545-4be7-98ed-a4915a79c43b.png"
+    },
+    {
+      "path": "raw-forest_03.png",
+      "reference": "../dawn_large_v1/forest_03.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1393,
+        1129
+      ],
+      "sha256": "348af6b9792a89b92deb4ebd86b2d544ede861251023f95943c86b50c4571e65",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-d6c0efd3-3ea3-4584-91b7-bceb927d6a4c.png"
+    },
+    {
+      "path": "cutout-forest_03.png",
+      "reference": "raw-forest_03.png",
+      "prompt": "forest-cutout.prompt.txt",
+      "nativeSize": [
+        1393,
+        1129
+      ],
+      "sha256": "40e0ffdf3c9ab99f5e0f36247c15a76e21b4d68cadf158102ac8f97fe5d3b9d1",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-8ed2d5ff-defa-4936-b01d-3fc8086df6fa.png"
+    },
+    {
+      "path": "raw-forest_05.png",
+      "reference": "../dawn_large_v1/forest_05.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1332,
+        1181
+      ],
+      "sha256": "b485e5e0b56b494e1d975d8173431d586b754c20b77ee8ed722fd7e91e97f503",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-9cf716d9-c746-4474-887c-5e48570129bb.png"
+    },
+    {
+      "path": "cutout-forest_05.png",
+      "reference": "raw-forest_05.png",
+      "prompt": "forest-cutout.prompt.txt",
+      "nativeSize": [
+        1332,
+        1181
+      ],
+      "sha256": "2b4bd1603a53057bd495376caae8d4f0429e63e16138d0a069e2cfd3d96c067a",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-17ecab24-7af9-46f1-8aa0-5e0378765895.png"
+    },
+    {
+      "path": "raw-border-0-0.png",
+      "reference": "border-reference-0-0.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1093,
+        1438
+      ],
+      "sha256": "c4d791626b8c202233c161989fad05668880d0906f81ee90c072862c27b83344",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-55387d55-76f8-4b7f-a166-686f752b83ff.png"
+    },
+    {
+      "path": "raw-border-1-0.png",
+      "reference": "border-reference-1-0.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1095,
+        1436
+      ],
+      "sha256": "ae5685eda9216f832840e72789617c2fcc45de41c5662db5a0927dc8213e7286",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-c96b82e5-517d-46ed-90d6-316bb5411632.png"
+    },
+    {
+      "path": "raw-border-0-1.png",
+      "reference": "border-reference-0-1.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1095,
+        1437
+      ],
+      "sha256": "3322a39dc8368f81b0b5af83ebffdd0d87b7ec87f57a6d2e3eeb387b7e995d65",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-88dbad49-4dfa-46b5-ae5e-b1e00c9a816d.png"
+    },
+    {
+      "path": "raw-border-1-1.png",
+      "reference": "border-reference-1-1.png",
+      "prompt": "forest.prompt.txt",
+      "nativeSize": [
+        1096,
+        1435
+      ],
+      "sha256": "e826d3c9a38ab303527c88f7d2462af65e010e2be9c95fdc2d688f9484fd8123",
+      "originalGeneratedPath": "C:\\Users\\y1971\\.codex\\generated_images\\01a11a57-876c-7f11-887e-37034318a251\\exec-6537b20b-d3b5-4cd5-8e03-e52b60080190.png"
+    }
+  ],
+  "successfulImages": 24
+}

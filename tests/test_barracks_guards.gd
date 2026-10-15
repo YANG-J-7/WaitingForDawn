@@ -92,13 +92,13 @@ func _test_barracks_battle_flow() -> void:
 
 	var inventory_before: int = inventory.card_count()
 	RunEconomy.try_pay({&"wood": 100})
-	map_surface.drop_card_data(barracks_payload, Vector2(620.0, 360.0))
+	map_surface.drop_card_data(barracks_payload, Vector2(1944, 1620))
 	_expect_true(not barracks.is_built(), "insufficient resources do not create barracks")
 	_expect_equal(inventory.card_count(), inventory_before, "failed barracks build preserves hand card")
 	_expect_true(main.get_node("HUD/BuildFailurePanel").visible, "failed barracks build shows shortage popup")
 	RunEconomy.add_resource(&"wood", 100)
 
-	map_surface.drop_card_data(barracks_payload, Vector2(620.0, 360.0))
+	map_surface.drop_card_data(barracks_payload, Vector2(1944, 1620))
 	await get_tree().process_frame
 	_expect_true(barracks.is_built(), "barracks becomes active after drop")
 	_expect_equal(RunEconomy.amount(&"wood"), 45, "barracks construction spends fifty five wood")
@@ -150,7 +150,7 @@ func _test_barracks_battle_flow() -> void:
 	economy.refresh_jobs(settlement_builder, arrow_tower, barracks)
 	await get_tree().process_frame
 	_expect_equal(barracks.active_guards().size(), 1, "job refresh does not respawn casualty mid wave")
-	map_surface.drop_card_data(arrow_payload, Vector2(650.0, 180.0))
+	map_surface.drop_card_data(arrow_payload, Vector2(1476, 1548))
 	var cleared_wave_index: int = RunState.current_wave
 	preload("res://tests/helpers/shop_wave_fixture.gd").clear_wave(controller)
 

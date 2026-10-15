@@ -5,13 +5,14 @@ const MapCameraScript = preload("res://src/gameplay/buildings/map_camera.gd")
 const GridMapModelScript = preload("res://src/gameplay/grid/grid_map_model.gd")
 const GridPathfinderScript = preload("res://src/gameplay/grid/grid_pathfinder.gd")
 const TerrainMapDataScript = preload("res://src/gameplay/grid/terrain_map_data.gd")
-const TerrainGridLayerScript = preload("res://src/gameplay/art/terrain_grid_layer.gd")
+const TerrainGridLayerScript = preload("res://src/gameplay/art/layered_map_layer.gd")
+const MapDefinitionScript = preload("res://src/gameplay/grid/map_definition.gd")
+const MountainRoadLayerScript = preload("res://src/gameplay/art/mountain_road_layer.gd")
 const BuildingGroundingScript = preload("res://src/gameplay/art/building_grounding.gd")
 const OverlayScript = preload("res://src/gameplay/buildings/placement_overlay.gd")
 const ArtVisualScript = preload("res://src/gameplay/art/art_visual.gd")
-const MAP_BASE_TEXTURE: Texture2D = preload("res://assets/map/moonlit_resource_map_16x9_base.png")
-const MAP_BORDER_FOREST_TEXTURE: Texture2D = preload("res://assets/map/moonlit_resource_map_16x9_border_forest.png")
-const MAP_SITE_DATA_PATH := "res://assets/map/moonlit_resource_map_16x9_sites.json"
+const MAP_BORDER_FOREST_TEXTURE: Texture2D = preload("res://assets/map/dawn_large_hd_v2/border-forest.png")
+const MAP_SITE_DATA_PATH := MapDefinitionScript.DATA_PATH
 var map_camera: Camera2D
 var placement_overlay: Node2D
 var additional_towers: Array[ArrowTower] = []
@@ -19,6 +20,7 @@ var additional_barracks: Array[Barracks] = []
 var grid_map_model: RefCounted = GridMapModelScript.new()
 var grid_pathfinder: RefCounted = GridPathfinderScript.new(grid_map_model)
 var terrain_grid_layer: Node2D
+var hud_reference: Node
 
 const COLOR_NIGHT := Color("101827")
 const COLOR_GRID := Color("1b2b3d")
@@ -118,7 +120,13 @@ var selected_job_id: StringName = &""
 
 
 func _ready() -> void:
-	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	# 以中间视口的不透明矩形裁剪世界子节点；HUD在独立CanvasLayer中。
+	clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
+	# 只对本节点绘制的高清底图使用连续采样；建筑、单位和界面保持原像素过滤。
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	for child in get_children():
+		if child is CanvasItem:
+			child.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_initialize_grid_map()
 	terrain_grid_layer = TerrainGridLayerScript.new() as Node2D
 	terrain_grid_layer.name = "TerrainGridLayer"
@@ -126,18 +134,31 @@ func _ready() -> void:
 	terrain_grid_layer.configure(grid_map_model)
 	add_child(terrain_grid_layer)
 	move_child(terrain_grid_layer, 0)
+	# 路面和石阶属于新地形美术；这里只保留路网层节点，不叠旧图道路。
+	var mountain_roads := Node2D.new()
+	mountain_roads.name = "MountainRoadLayer"
+	add_child(mountain_roads)
+	move_child(mountain_roads, 1)
 	var border_forest := Sprite2D.new()
 	border_forest.name = "BorderForest"
 	border_forest.texture = MAP_BORDER_FOREST_TEXTURE
 	border_forest.centered = false
-	border_forest.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	border_forest.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	var forest_material := ShaderMaterial.new()
+	forest_material.shader = preload("res://src/gameplay/art/border_forest_cutout.gdshader")
+	border_forest.material = forest_material
+	border_forest.scale = MapLayout.BOUNDS.size / MapDefinitionScript.SOURCE_SIZE / MapDefinitionScript.visual_data().groundScale
 	border_forest.z_index = 0
 	add_child(border_forest)
-	move_child(border_forest, 1)
+	move_child(border_forest, 2)
 	wave_controller.city_target_position = MapLayout.CITY_POSITION
 	wave_controller.playable_bounds = MapLayout.BOUNDS
 	wave_controller.spawn_points.assign(MapLayout.SPAWN_POINTS)
 	settlement_builder.build_bounds = MapLayout.BOUNDS
+	# 历史固定格接口保留，但落点跟随新主城，不能沿用已成为树林的旧坐标。
+	settlement_builder.slot_positions.assign([MapLayout.CITY_POSITION+Vector2(-252,36),MapLayout.CITY_POSITION+Vector2(-252,216),MapLayout.CITY_POSITION+Vector2(216,180)])
+	arrow_tower.position = MapLayout.CITY_POSITION+Vector2(-252,-72)
+	barracks.position = MapLayout.CITY_POSITION+Vector2(216,0)
 	settlement_builder.set_grid_map_model(grid_map_model)
 	wall_manager.build_bounds = MapLayout.BOUNDS
 	barracks.build_bounds = MapLayout.BOUNDS
@@ -153,7 +174,7 @@ func _ready() -> void:
 	add_child(map_camera)
 	var city_art := ArtVisualScript.new() as ArtVisual
 	city_art.position = wave_controller.city_target_position
-	city_art.configure("town_hall", Vector2(90, 88), &"lantern")
+	city_art.configure_world("town_hall", Vector2(90, 88), &"lantern")
 	add_child(city_art)
 	var city_grounding: Node2D = BuildingGroundingScript.new() as Node2D
 	city_grounding.position = wave_controller.city_target_position
@@ -168,6 +189,15 @@ func _ready() -> void:
 	placement_overlay.z_index = 100
 	add_child(placement_overlay)
 	_load_resource_sites()
+	var occlusion := preload("res://src/gameplay/art/map_occlusion_layer.gd").new()
+	occlusion.name = "MapOcclusionLayer"
+	occlusion.z_index = 2
+	add_child(occlusion)
+	occlusion.configure(self)
+	var navigation := preload("res://src/gameplay/art/map_navigation.gd").new()
+	navigation.name = "MapNavigation"
+	$HUD.add_child(navigation)
+	navigation.configure(self)
 	settlement_builder.set_resource_sites(resource_sites)
 	RunState.phase_changed.connect(_on_state_changed)
 	RunState.wave_changed.connect(_on_wave_changed)
@@ -238,6 +268,15 @@ func _ready() -> void:
 	wave_economy.assignments_changed.connect(_on_assignments_changed)
 	_create_card_buttons()
 	_apply_confirmed_hud_style()
+	hud_reference = preload("res://src/gameplay/art/hud_reference.gd").new()
+	add_child(hud_reference)
+	hud_reference.install(self)
+	var boundary := preload("res://src/gameplay/art/map_boundary_layer.gd").new()
+	boundary.name = "MapBoundaryLayer"
+	boundary.main = self
+	boundary.z_index = 10
+	add_child(boundary)
+	_update_map_view_rect()
 	_remove_arrow_tower()
 	_reset_walls()
 	_reset_barracks()
@@ -261,7 +300,7 @@ func _load_resource_sites() -> void:
 	if not parsed is Dictionary:
 		push_error("新地图资源点数据格式错误。")
 		return
-	for entry: Variant in (parsed as Dictionary).get("resourceSites", []):
+	for entry: Variant in MapDefinitionScript.resource_sites():
 		if not entry is Dictionary:
 			continue
 		var data := entry as Dictionary
@@ -278,6 +317,7 @@ func _load_resource_sites() -> void:
 		grid_map_model.register_resource_site(StringName(site.name), site.site_type, authored_position)
 		site.position = grid_map_model.resource_site_center(StringName(site.name))
 		site.radius = float(data.get("placementRadius", 72))
+		site.configure_map(grid_map_model, data)
 		resource_sites_root.add_child(site)
 		resource_sites.append(site)
 
@@ -288,6 +328,8 @@ func _initialize_grid_map() -> void:
 
 
 func _process(delta: float) -> void:
+	_update_map_view_rect()
+	queue_redraw()
 	RunState.advance_campaign_time(delta)
 	if hand_bar.visible:
 		_refresh_hand_scroll_buttons()
@@ -355,7 +397,13 @@ func _job_at_world_point(world_point: Vector2) -> StringName:
 		if target == null or not is_instance_valid(target) or not target.visible:
 			continue
 		var distance: float = target.global_position.distance_to(world_point)
-		if distance <= _job_target_radius(target) + 12.0 and distance < best_distance:
+		var hit_art := false
+		for child in target.get_children():
+			if child is ArtVisual and child.visible:
+				hit_art = child.get_rect().has_point(child.to_local(world_point))
+				if hit_art: break
+		# 放大的建筑屋顶也可点选岗位；不扩大占格或战斗半径。
+		if (hit_art or distance <= _job_target_radius(target) + 12.0) and distance < best_distance:
 			best_job = job_id
 			best_distance = distance
 	return best_job
@@ -451,12 +499,24 @@ func _on_selected_job_adjust_pressed(delta: int) -> void:
 
 
 func _draw() -> void:
-	draw_rect(MapLayout.BOUNDS.grow(2000), COLOR_NIGHT)
-	draw_texture_rect(MAP_BASE_TEXTURE, MapLayout.BOUNDS, false)
-	draw_rect(MapLayout.BOUNDS, Color("527078"), false, 3.0)
-	var selected_target: Node2D = wave_economy.job_target(selected_job_id) as Node2D
-	if selected_target != null and is_instance_valid(selected_target):
-		draw_arc(selected_target.global_position, _job_target_radius(selected_target) + 8.0, 0.0, TAU, 40, Color("f0c767"), 3.0)
+	if map_camera != null:
+		draw_rect(map_camera.visible_world_rect(), COLOR_NIGHT)
+
+func map_view_rect() -> Rect2:
+	var viewport_size: Vector2 = get_viewport_rect().size
+	var top: float = maxf(0.0, top_bar.get_global_rect().end.y)
+	if hud_reference != null and is_instance_valid(hud_reference.day_night_clock):
+		top = maxf(top, ceilf(hud_reference.day_night_clock.visual_rect().end.y))
+	var bottom: float = hand_bar.get_global_rect().position.y if hand_bar.visible else viewport_size.y
+	return Rect2(0, top, viewport_size.x, maxf(1.0, bottom-top))
+
+func _update_map_view_rect() -> void:
+	if map_camera == null: return
+	var rect := map_view_rect()
+	map_drop_surface.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	map_drop_surface.position = rect.position
+	map_drop_surface.size = rect.size
+	map_camera.set_play_rect(rect)
 
 
 func _on_start_pressed() -> void:
@@ -1253,7 +1313,8 @@ func _show_build_failure(card: OpeningCardDefinition) -> void:
 
 
 func _on_workers_assigned(assigned_population: int, idle_population: int) -> void:
-	population_value.text = "人口 %d/%d 岗%d 闲%d" % [
+	population_value.text = "人口 %d/%d" % [RunEconomy.current_population, RunEconomy.population_capacity]
+	population_value.tooltip_text = "人口 %d/%d 岗%d 闲%d" % [
 		RunEconomy.current_population,
 		RunEconomy.population_capacity,
 		assigned_population,
@@ -1331,7 +1392,10 @@ func _try_place_map_building_card(card_index: int, map_position: Vector2) -> boo
 func _can_place_free_building(map_position: Vector2, radius: float, card_id: StringName = &"") -> bool:
 	var footprint := MapLayout.footprint_for_card(card_id)
 	if not grid_map_model.can_place(map_position, footprint):
-		setup_hint_label.text = "目标网格包含水域、资源点或已占用地块。"
+		setup_hint_label.text = "目标网格包含水域、岩壁、石质坡道、资源点或已占用地块。"
+		return false
+	if card_id in [&"arrow_tower",&"barracks"] and not grid_map_model.has_work_access(map_position,footprint):
+		setup_hint_label.text = "山区岗位建筑需要靠近山路，留出人员可到达的入口。"
 		return false
 	if not MapLayout.is_buildable(map_position, radius):
 		setup_hint_label.text = "建筑必须放在地图可建造区域内。"
@@ -1416,6 +1480,8 @@ func placement_preview(card: OpeningCardDefinition, point: Vector2) -> Dictionar
 		if matched_site != null:
 			resource_site_id = StringName(matched_site.name)
 	valid = valid and grid_map_model.can_place(point, footprint, resource_site_id)
+	if card.category == "resource" or card.card_id in [&"arrow_tower",&"barracks"]:
+		valid = valid and grid_map_model.has_work_access(point,footprint)
 	valid = valid and MapLayout.is_buildable(point, radius) and RunEconomy.can_pay(card.build_costs)
 	for obstacle in _free_placement_obstacles(true, card.required_resource_site.is_empty()):
 		if point.distance_to(obstacle.position) < radius + float(obstacle.radius):
@@ -1487,7 +1553,8 @@ func _on_assignments_changed(
 		RunEconomy.current_population,
 		idle_population,
 	]
-	population_value.text = "人口 %d/%d 岗%d 闲%d" % [
+	population_value.text = "人口 %d/%d" % [RunEconomy.current_population, RunEconomy.population_capacity]
+	population_value.tooltip_text = "人口 %d/%d 岗%d 闲%d" % [
 		RunEconomy.current_population,
 		RunEconomy.population_capacity,
 		assigned_population,
@@ -1548,13 +1615,13 @@ func _apply_setup_panel_layout(shop_drawer: bool) -> void:
 	if shop_drawer:
 		var drawer_width: float = clampf(viewport_size.x * 0.38, 340.0, 420.0)
 		day_setup_panel.offset_left = viewport_size.x - drawer_width - 8.0
-		day_setup_panel.offset_top = 58.0
+		day_setup_panel.offset_top = 46.0
 		day_setup_panel.offset_right = viewport_size.x - 8.0
 		day_setup_panel.offset_bottom = hand_bar.get_global_rect().position.y - 6.0
 		card_grid.columns = 2
 		shop_close_button.visible = true
 		for button in card_buttons:
-			button.custom_minimum_size = Vector2((drawer_width - 46.0) * 0.5, 72.0)
+			button.custom_minimum_size = Vector2((drawer_width - 40.0) * 0.5, 88.0)
 	else:
 		day_setup_panel.offset_left = 20.0
 		day_setup_panel.offset_top = minf(204.0, viewport_size.y * 0.38)
@@ -1566,6 +1633,9 @@ func _apply_setup_panel_layout(shop_drawer: bool) -> void:
 		refresh_button.tooltip_text = ""
 		for button in card_buttons:
 			button.custom_minimum_size = Vector2(286.0, 52.0)
+
+	if hud_reference != null:
+		hud_reference.apply_shop_layout(shop_drawer)
 
 
 func _configure_battle_shop_panel() -> void:
@@ -1582,7 +1652,8 @@ func _configure_battle_shop_panel() -> void:
 	battle_shop_button.visible = false
 	for slot_button in settlement_slot_buttons:
 		slot_button.visible = false
-	day_title.text = "商店｜战斗继续"
+	day_title.text = "商店"
+	day_title.tooltip_text = "战斗继续进行"
 	timer_label.visible = false
 	selection_label.visible = true
 	pause_timer_button.visible = false
@@ -1592,7 +1663,7 @@ func _configure_battle_shop_panel() -> void:
 	ready_button.disabled = false
 	setup_hint_label.text = "购买后加入手牌"
 	setup_hint_label.tooltip_text = "商店打开时战斗、生产与黎明倒计时继续进行。"
-	refresh_button.custom_minimum_size = Vector2(156.0, 44.0)
+	refresh_button.custom_minimum_size = Vector2(156.0, 32.0)
 	_on_battle_shop_offers_changed()
 
 
@@ -1617,6 +1688,7 @@ func _close_battle_shop() -> void:
 func _on_battle_shop_card_pressed(card_index: int) -> void:
 	if not battle_shop.purchase_card(card_index, run_card_inventory):
 		setup_hint_label.text = battle_shop.last_error
+		_show_notice(battle_shop.last_error)
 		return
 	var card: OpeningCardDefinition = battle_shop.offered_cards[card_index]
 	_populate_battle_hand()
@@ -1628,7 +1700,7 @@ func _on_battle_shop_offers_changed() -> void:
 		return
 	selection_label.text = "金币 %d" % RunEconomy.amount(&"gold")
 	var refresh_cost: int = battle_shop.current_refresh_cost()
-	refresh_button.text = "刷新 %d金｜下次 %d金" % [refresh_cost, mini(refresh_cost + 1, 6)]
+	refresh_button.text = "刷新 %d金    │    下次 %d金" % [refresh_cost, mini(refresh_cost + 1, 6)]
 	refresh_button.disabled = RunEconomy.amount(&"gold") < refresh_cost
 	for card_index in range(card_buttons.size()):
 		if card_index >= battle_shop.offered_cards.size():
@@ -1655,6 +1727,8 @@ func _on_battle_shop_offers_changed() -> void:
 		card_buttons[card_index].modulate = Color.WHITE
 		card_buttons[card_index].disabled = purchased or inventory_full or lacks_gold
 		_apply_shop_card_style(card_buttons[card_index], card_buttons[card_index].disabled)
+		if hud_reference != null:
+			hud_reference.update_offer(card_buttons[card_index],card,held_count,state_text)
 
 
 func _begin_interwave_shop() -> void:

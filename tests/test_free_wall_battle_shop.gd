@@ -56,9 +56,9 @@ func _test_free_wall_and_battle_shop() -> void:
 	Engine.time_scale = 1.0
 	# 本例只验商店与拖墙，固定一条进攻线；外围随机性另有专测。
 	controller.spawning = false
-	tracked_enemy.position = Vector2(100, 1030)
+	tracked_enemy.position = controller.city_target_position + Vector2(-900,0)
 	tracked_enemy._resume_to_city()
-	var off_route_position := Vector2(700, 850)
+	var off_route_position := Vector2(900, 1188)
 	battle_shop.card_pool.resize(6)
 	# 重建本阶段报价，确保缩小后的六张夹具池全部出现，避免依赖run_id随机遗漏城墙。
 	battle_shop.reset()
@@ -131,7 +131,7 @@ func _test_free_wall_and_battle_shop() -> void:
 	_expect_equal(wall_manager.active_walls().size(), 1, "overlapping wall placement is rejected")
 	_expect_true(inventory.has_card(purchased_wall_id), "overlap rejection preserves purchased wall card")
 
-	var route_wall_position := Vector2(900, 1030)
+	var route_wall_position := controller.city_target_position + Vector2(-324,0)
 	map_surface.drop_card_data(purchased_wall_payload, route_wall_position)
 	_expect_equal(wall_manager.active_walls().size(), 2, "second wall can be placed at another free point (%s)" % (main.get_node("HUD/DaySetupPanel/Margin/Content/Controls/SetupHintLabel") as Label).text)
 	var route_wall: BarrierWall = wall_manager.active_walls()[1]

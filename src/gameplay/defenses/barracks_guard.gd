@@ -25,10 +25,11 @@ func set_pathfinder(value: RefCounted) -> void:
 
 
 func _ready() -> void:
+	add_to_group(&"map_units")
 	var art := ArtVisualScript.new() as ArtVisual
 	art.show_behind_parent = true
 	add_child(art)
-	art.configure("guard", Vector2(18, 25), &"walk")
+	art.configure_world("guard", Vector2(18, 25), &"walk")
 
 
 func configure(guard_definition: GuardDefinition, entity_index: int) -> void:
@@ -168,5 +169,5 @@ func _on_engaged_enemy_died(_enemy: EnemyActor) -> void:
 func _draw() -> void:
 	if definition != null and current_health > 0:
 		var health_ratio: float = float(current_health) / float(definition.maximum_health)
-		draw_rect(Rect2(-13.0, -25.0, 26.0, 3.0), Color("2b1d25"))
-		draw_rect(Rect2(-13.0, -25.0, 26.0 * health_ratio, 3.0), Color("7ecf75"))
+		draw_rect(Rect2(-13.0, -62.0, 26.0, 3.0), Color("2b1d25"))
+		draw_rect(Rect2(-13.0, -62.0, 26.0 * health_ratio, 3.0), Color("7ecf75"))

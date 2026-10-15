@@ -1,0 +1,96 @@
+{
+  "schema": "waiting_for_dawn.terrain_artwork.v2",
+  "source_origin": "builtin_imagegen",
+  "source": "moonlit_terrain_detail_source.png",
+  "prompt": "moonlit_terrain_detail_source.prompt.txt",
+  "source_sha256": "3784aaf8423abd072f9127fc34ddbff9cfaf4f524b01aa9701d55f74433ca122",
+  "source_size": [
+    1672,
+    941
+  ],
+  "native_size": [
+    3344,
+    1882
+  ],
+  "world_size": [
+    2880,
+    1620
+  ],
+  "region_directory": "terrain_detail_regions",
+  "regions": [
+    {
+      "source": "region-1-source.png",
+      "reference": "region-1-reference.png",
+      "prompt": "region-1-source.prompt.txt",
+      "source_size": [
+        1629,
+        966
+      ],
+      "output_box": [
+        0,
+        0,
+        1800,
+        1068
+      ],
+      "source_sha256": "8312a472df81134d313dee3a2d4e5603951f3c009a5f3f4411ce944f7d5baadb",
+      "reference_sha256": "2acb852fe1bfc25bd734e6ea9c221a76f3f7412e34089f8c0ea4ab0844b9c8d9"
+    },
+    {
+      "source": "region-2-source.png",
+      "reference": "region-2-reference.png",
+      "prompt": "region-2-source.prompt.txt",
+      "source_size": [
+        1628,
+        966
+      ],
+      "output_box": [
+        1544,
+        0,
+        3344,
+        1068
+      ],
+      "source_sha256": "d17a8645ab207a61eeaecce748c1f1025185d93c9f2266e242a56d8a52634bc9",
+      "reference_sha256": "20f2db4f5d3ef549d38cdd5b310dc85e69732a7f867b11509cf9ba50e5d083cb"
+    },
+    {
+      "source": "region-3-source.png",
+      "reference": "region-3-reference.png",
+      "prompt": "region-3-source.prompt.txt",
+      "source_size": [
+        1627,
+        967
+      ],
+      "output_box": [
+        0,
+        812,
+        1800,
+        1882
+      ],
+      "source_sha256": "de72fb203a4a08ff6938190e57f9c4db39173df204f78f30819cffbade66163c",
+      "reference_sha256": "18e5d06953aed5dda01499efc0dd36d5e568ebfee661d2b6e08ae3b5c2ed4d0b"
+    },
+    {
+      "source": "region-4-source.png",
+      "reference": "region-4-reference.png",
+      "prompt": "region-4-source.prompt.txt",
+      "source_size": [
+        1628,
+        966
+      ],
+      "output_box": [
+        1544,
+        812,
+        3344,
+        1882
+      ],
+      "source_sha256": "5359386e70750782f496d3f2fc28152b68c7fb0812b39ae885f2c814a8580575",
+      "reference_sha256": "65837e807c692d4b5d47d5cfda58a80f1b1dcfeafd83e6b6da53d8c94b5e8eff"
+    }
+  ],
+  "sampling": "linear",
+  "quantization": "none",
+  "pixel_world_size": 0.861244019138756,
+  "collision_source": "src/gameplay/grid/terrain_map_data.gd",
+  "seam_policy": "minimum_color_difference_with_4_pixel_feather",
+  "notes": "四片区分别生成真实岩面细节，重叠区沿最小色差路径拼接；细草叶和所有实体仍为独立层，玩法数据不取自图像。"
+}

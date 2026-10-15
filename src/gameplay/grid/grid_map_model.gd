@@ -1,9 +1,11 @@
 class_name GridMapModel
 extends RefCounted
 
-const CELL_SIZE: float = 36.0
-const GRID_SIZE := Vector2i(80, 45)
+const Definition = preload("res://src/gameplay/grid/map_definition.gd")
+const CELL_SIZE: float = Definition.CELL_SIZE
+const GRID_SIZE := Definition.GRID_SIZE
 const MAP_BOUNDS := Rect2(Vector2.ZERO, Vector2(GRID_SIZE) * CELL_SIZE)
+const BASE_NAVIGATION := {"level": 0, "stair": -1, "ends": []}
 
 var grid_size: Vector2i = GRID_SIZE
 var _cells: Array[Dictionary] = []
@@ -11,6 +13,36 @@ var _static_occupants: Dictionary = {}
 var _occupant_cells: Dictionary = {}
 var _resource_sites: Dictionary = {}
 var revision: int = 0
+var _navigation: Dictionary = {}
+
+
+func set_navigation_cell(cell: Vector2i, level: int, stair: int = -1, ends: Array = []) -> void:
+	var levels: Array[int] = []
+	for end in ends:
+		levels.append(int(end))
+	_navigation[cell] = {"level": level, "stair": stair, "ends": levels}
+	revision += 1
+
+
+func navigation_data(cell: Vector2i) -> Dictionary:
+	return _navigation.get(cell, BASE_NAVIGATION)
+
+
+func can_step(from: Vector2i, to: Vector2i) -> bool:
+	if is_solid(from) or is_solid(to) or absi(from.x-to.x)>1 or absi(from.y-to.y)>1:
+		return false
+	if from.x != to.x and from.y != to.y:
+		# 斜行的两个正交分解也须合法，不能切过岩角或跨越平台入口。
+		return can_step(from, Vector2i(from.x,to.y)) and can_step(Vector2i(from.x,to.y),to) and can_step(from,Vector2i(to.x,from.y)) and can_step(Vector2i(to.x,from.y),to)
+	var a := navigation_data(from)
+	var b := navigation_data(to)
+	if a.stair >= 0 and b.stair >= 0:
+		return a.stair == b.stair
+	if a.stair >= 0:
+		return b.level in a.ends
+	if b.stair >= 0:
+		return a.level in b.ends
+	return a.level == b.level
 
 
 func _init() -> void:
@@ -67,6 +99,34 @@ func is_walkable(cell: Vector2i) -> bool:
 
 func is_solid(cell: Vector2i) -> bool:
 	return not is_walkable(cell) or _static_occupants.has(cell)
+
+
+func interaction_clear(from: Vector2, target: Vector2) -> bool:
+	# 停距允许站在建筑外围，但不能隔着岩壁、水域或树林完成交互。
+	var steps := maxi(1,ceili(from.distance_to(target)/(CELL_SIZE*0.25)))
+	for index in range(steps+1):
+		var cell := world_to_cell(from.lerp(target,float(index)/steps))
+		if not is_inside(cell) or cell_data(cell).terrain_type in [&"cliff",&"water",&"forest"]:
+			return false
+	return true
+
+
+func has_work_access(center: Vector2, footprint: Vector2i, radius: float = 60.0) -> bool:
+	var occupied := footprint_cells(center,footprint)
+	var mountain := false
+	for cell in occupied:
+		mountain = mountain or cell_data(cell).get("terrain_type") == &"mountain_grass" or _navigation.has(cell)
+	if not mountain:
+		return true
+	var origin := world_to_cell(center)
+	var reach := ceili(radius/CELL_SIZE)+1
+	for y in range(origin.y-reach,origin.y+reach+1):
+		for x in range(origin.x-reach,origin.x+reach+1):
+			var cell := Vector2i(x,y)
+			var point := cell_center(cell)
+			if cell not in occupied and not is_solid(cell) and point.distance_to(center)<=radius and interaction_clear(point,center):
+				return true
+	return false
 
 
 func set_terrain_rect(

@@ -110,9 +110,9 @@ func _test_wall_battle_flow() -> void:
 		await get_tree().process_frame
 		spawn_budget -= 1
 	# 固定被测敌人的路径，避免出生在南北边时试图在主城占地内建墙。
-	controller.enemies[0].position = Vector2(100, 1030)
+	controller.enemies[0].position = controller.city_target_position + Vector2(-900,0)
 	controller.enemies[0]._resume_to_city()
-	var route_position := Vector2(900, 1030)
+	var route_position := controller.city_target_position + Vector2(-324,0)
 	RunEconomy.try_pay({&"wood": RunEconomy.amount(&"wood")})
 	map_surface.drop_card_data(wall_payload, route_position)
 	_expect_equal(wall_manager.active_walls().size(), 0, "insufficient resources do not create wall")

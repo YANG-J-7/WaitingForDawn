@@ -115,6 +115,7 @@ func _test_main_spawn_routes() -> void:
 	get_tree().root.add_child.call_deferred(main)
 	await get_tree().process_frame
 	for spawn_position in MapLayout.SPAWN_POINTS:
+		spawn_position = main.grid_pathfinder.spawn_position(spawn_position)
 		var path: PackedVector2Array = main.grid_pathfinder.find_path(
 			spawn_position, MapLayout.CITY_POSITION, 96.0
 		)

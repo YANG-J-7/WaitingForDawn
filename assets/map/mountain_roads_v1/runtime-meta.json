@@ -1,0 +1,37 @@
+{
+  "schema": "waiting_for_dawn.mountain_road_art.v1",
+  "updated": "2026-10-10",
+  "status": "candidate",
+  "integrated": true,
+  "source": "assets/art_candidates/night_set_v1/terrain_road.png",
+  "source_dimensions": [
+    1254,
+    1254
+  ],
+  "source_format": "RGBA8",
+  "source_origin": "reused_builtin_imagegen_candidate",
+  "source_generated": "2026-09-20",
+  "source_prompt_record": "assets/art_candidates/night_set_v1/README.md",
+  "new_generation": {
+    "date": "2026-10-09",
+    "attempts": 2,
+    "result": "HTTP429",
+    "output_created": false
+  },
+  "routes": "design/levels/mountain-resource-routes.json",
+  "rock_cells": "design/levels/mountain-rock-cells.json",
+  "road_width_world": 72,
+  "texture_tile_world": 144,
+  "sampling": "linear",
+  "edge_policy": "vertex_alpha_feather",
+  "seamless_tile_certified": false,
+  "review_status": "待用户视觉复核",
+  "stairs_attempt": {
+    "date": "2026-10-10",
+    "generated_candidates": 2,
+    "status": "用户否定并撤回",
+    "integrated": false,
+    "archive": ".codex-temp/rejected-stone-stairs-20261010/",
+    "runtime": "恢复此前完整石土道路与岩坡石路"
+  }
+}

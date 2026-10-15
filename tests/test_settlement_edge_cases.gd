@@ -35,7 +35,7 @@ func run_checks() -> void:
 	var stone_position := (main.get_node("ResourceSites/stone_01") as ResourceSite).global_position
 	var stone: ResourceBuilding = builder.place_card_at(STONE, stone_position)
 	main.wave_economy.refresh_jobs(builder, main.arrow_tower, main.barracks)
-	manager.advance(10)
+	manager.advance(100)
 	manager.advance(1.1)
 	var carrier: FarmerAgent = manager.farmers[0]
 	check(carrier.carried_amount == 2, "石矿农民采集两石后返回")
@@ -46,7 +46,10 @@ func run_checks() -> void:
 	stone.apply_enemy_attack(9999, &"wolf")
 	check(builder.building_count() == 0, "摧毁建筑移除建造记录")
 	check(carrier.carried_amount == 2, "建筑摧毁仍保留已采集货物")
-	manager.advance(30)
+	# 新路网要求绕行石阶，等待实际交付而不依赖旧地图的30秒上限。
+	for _step in range(4000):
+		manager.advance(0.05)
+		if manager.active_farmers().all(func(f): return f.carried_amount == 0): break
 	check(
 		RunEconomy.amount(&"stone") == balance + carried_before_destroy,
 		"建筑摧毁前已经携带的石材仍会按网格路径完成交付"
@@ -56,8 +59,12 @@ func run_checks() -> void:
 	main.wave_economy.refresh_jobs(builder, main.arrow_tower, main.barracks)
 	var victim: FarmerAgent = manager.farmers[0]
 	var survivor: FarmerAgent = manager.farmers[1]
-	manager.advance(10)
-	manager.advance(1.1)
+	# 坡道绕行后两人的运输长度不同，等待真实携货状态再验证死亡边界。
+	for _step in range(2400):
+		if victim.carried_amount == 2 and survivor.carried_amount == 2:
+			break
+		manager.advance(0.05)
+	check(victim.carried_amount == 2 and survivor.carried_amount == 2, "死亡夹具中的两名农民均已采集携货")
 	var population: int = RunEconomy.current_population
 	victim.apply_enemy_attack(999, &"wolf")
 	check(RunEconomy.current_population == population - 1, "农民死亡只扣一人口")
@@ -65,7 +72,10 @@ func run_checks() -> void:
 	check(survivor.workplace == builder.placed_buildings()[0] and survivor.carried_amount == 2, "死亡不打乱幸存者岗位或货物")
 	check(manager.active_farmers().size() == RunEconomy.current_population, "死亡后人口和实体一致")
 	balance = RunEconomy.amount(&"stone")
-	manager.advance(10)
+	for _step in range(2400):
+		manager.advance(0.05)
+		if RunEconomy.amount(&"stone") > balance:
+			break
 	check(RunEconomy.amount(&"stone") == balance + 2, "死亡农民的货物不会到账，仅幸存者交付")
 	var gold: int = RunEconomy.amount(&"gold")
 	main._on_train_farmer_pressed()
@@ -74,7 +84,7 @@ func run_checks() -> void:
 	check(RunEconomy.amount(&"gold") == gold - 10, "人口满员失败不扣金币")
 	check(main.status_label.text.contains("人口已满"), "满员生产提供明确提示")
 	check(builder.place_card_at(HOUSE, Vector2(600, -20)) == null, "民屋完整占地不能越界")
-	var house: ResourceBuilding = builder.place_card_at(HOUSE, Vector2(600, 175))
+	var house: ResourceBuilding = builder.place_card_at(HOUSE, Vector2(1260, 1800))
 	check(house != null and RunEconomy.population_capacity == 7, "民屋增加两人口容量")
 	RunEconomy.try_pay({&"gold": RunEconomy.amount(&"gold")})
 	main._on_train_farmer_pressed()

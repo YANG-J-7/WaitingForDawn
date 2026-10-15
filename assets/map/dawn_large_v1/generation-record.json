@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-13",
+  "tool": "built-in image_gen",
+  "attempts": [
+    "HTTP429",
+    "成功"
+  ],
+  "source": "ground-fill-source.png",
+  "reference": "design\\art\\concepts\\mountain-redesign-2026-10-13\\mountain-redesign-preview-v2.png",
+  "usage": "仅树林遮挡下的补地，母图其它像素保持",
+  "originalSize": [
+    1672,
+    941
+  ]
+}

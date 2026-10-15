@@ -32,7 +32,7 @@ func _ready() -> void:
 	var art := ArtVisualScript.new() as ArtVisual
 	art.show_behind_parent = true
 	add_child(art)
-	art.configure("arrow_tower", Vector2(35, 64), &"lantern")
+	art.configure_world("arrow_tower", Vector2(35, 64), &"lantern")
 	reset_statistics()
 	queue_redraw()
 

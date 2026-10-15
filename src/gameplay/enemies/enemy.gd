@@ -48,10 +48,11 @@ func set_pathfinder(value: RefCounted) -> void:
 
 
 func _ready() -> void:
+	add_to_group(&"map_units")
 	var art := ArtVisualScript.new() as ArtVisual
 	art.show_behind_parent = true
 	add_child(art)
-	art.configure("wolf", Vector2(23, 17), &"wolf")
+	art.configure_world("wolf", Vector2(23, 17), &"wolf")
 
 
 func configure(
@@ -185,6 +186,10 @@ func _physics_process(delta: float) -> void:
 		target_position = parent_2d.to_local(world_target.global_position) if parent_2d != null else world_target.global_position
 		if not is_on_route(world_target):
 			_resume_to_city()
+	if attack_target_kind == &"guard" and _has_valid_guard_target():
+		# 守卫沿格中心接近敌人后，目标脚点必须随之更新，避免继续走向旧位置。
+		var guard_parent := get_parent() as Node2D
+		target_position = guard_parent.to_local(guard_target.global_position) if guard_parent != null else guard_target.global_position
 	if path_follower.pathfinder != null:
 		var parent_for_target := get_parent() as Node2D
 		var current_target_global := parent_for_target.to_global(target_position) if parent_for_target != null else target_position
@@ -341,5 +346,5 @@ func _is_forward_target(candidate_position: Vector2) -> bool:
 func _draw() -> void:
 	if definition != null and current_health > 0:
 		var health_ratio: float = float(current_health) / float(definition.maximum_health)
-		draw_rect(Rect2(-14.0, -25.0, 28.0, 3.0), Color("3c1f2a"))
-		draw_rect(Rect2(-14.0, -25.0, 28.0 * health_ratio, 3.0), Color("7ecf75"))
+		draw_rect(Rect2(-14.0, -44.0, 28.0, 3.0), Color("3c1f2a"))
+		draw_rect(Rect2(-14.0, -44.0, 28.0 * health_ratio, 3.0), Color("7ecf75"))

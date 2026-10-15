@@ -1,0 +1,50 @@
+{
+  "schema": "waiting_for_dawn.map_reference_attempt.v1",
+  "asset_id": "MAP-MOUNTAIN-REDESIGN-PREVIEW-V2",
+  "date": "2026-10-13",
+  "map_mode": "baked_scene_mode",
+  "visual_model": "baked_raster",
+  "runtime_object_model": "none",
+  "collision_model": "none",
+  "engine_target": "raw_canvas",
+  "reference_only": true,
+  "references": [
+    {
+      "file": "design/art/concepts/mountain-redesign-2026-10-12/mountain-redesign-preview-v1.png",
+      "role": "用户认可的山体视觉方向/编辑目标"
+    },
+    {
+      "file": "tests/reports/images/roads-restored-2026-10-10/thin-hud-mountain-roads-full.png",
+      "role": "当前游戏平原、树林与湖岸布局参考，不复制HUD或建筑"
+    }
+  ],
+  "attempts": [
+    {
+      "date": "2026-10-12",
+      "mode": "two_reference_edit",
+      "result": "interrupted_result_unavailable",
+      "output_created": null,
+      "saved_output_found": false
+    },
+    {
+      "date": "2026-10-13",
+      "mode": "two_reference_edit_retry",
+      "result": "success",
+      "output_created": true,
+      "prompt": "mountain-redesign-preview-v2.prompt.txt"
+    }
+  ],
+  "image_file": "design/art/concepts/mountain-redesign-2026-10-13/mountain-redesign-preview-v2.png",
+  "image_dimensions": [
+    1672,
+    941
+  ],
+  "image_format": "RGB",
+  "image_sha256": "f9b44c0276b772763dca1cdb15f858fda390400898cf3687a289920fe59fe001",
+  "prompt": "design/art/concepts/mountain-redesign-2026-10-13/mountain-redesign-preview-v2.prompt.txt",
+  "generation_status": "success_after_interruption",
+  "art_status": "candidate",
+  "integrated": false,
+  "review_status": "已查看预览，待用户整图视觉评审",
+  "visual_review": "恢复大面积平原、边界密林和四簇平原树林；山体体积与嵌入阶梯保持，位置/轮廓仍为概念，未对齐权威资源和碰撞"
+}

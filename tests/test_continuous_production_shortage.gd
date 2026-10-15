@@ -24,7 +24,7 @@ func _run_test() -> void:
 	var shortage_panel := main.get_node("HUD/BuildFailurePanel") as PanelContainer
 	var shortage_detail := main.get_node("HUD/BuildFailurePanel/Margin/Content/Detail") as Label
 	var shortage_close := main.get_node("HUD/BuildFailurePanel/Margin/Content/CloseButton") as Button
-	var wood_label := main.get_node("HUD/ResourcesBar/Margin/Values/WoodValue") as Label
+	var wood_label := main.wood_value as Label
 	var settlement_slots: Array[Button] = [
 		main.get_node("HUD/SettlementSlot0") as Button,
 		main.get_node("HUD/SettlementSlot1") as Button,
@@ -54,7 +54,7 @@ func _run_test() -> void:
 	var food_after_build: int = RunEconomy.amount(&"food")
 	var stone_after_build: int = RunEconomy.amount(&"stone")
 	_expect_resource(&"wood", 10, "outbound trip keeps wood unchanged")
-	farmer_manager.advance(10.0)
+	farmer_manager.advance(100.0)
 	farmer_manager.advance(1.1)
 	_expect_resource(&"wood", 10, "loaded cargo is still outside city")
 	farmer_manager.advance(30.0)
@@ -64,11 +64,15 @@ func _run_test() -> void:
 	_expect_resource(&"gold", 0, "resource buildings do not produce passive gold")
 	_expect_true(str(RunEconomy.amount(&"wood")) in wood_label.text, "resource bar updates immediately")
 
+	# 等待下一趟石材实际携货再验证换岗，避免依赖旧地图的固定秒数。
+	for _step in range(2400):
+		if farmer_manager.active_farmers().any(func(f): return f.job_id == &"stone_mine" and f.carried_amount == 2): break
+		farmer_manager.advance(.05)
 	_expect_true(wave_economy.adjust_workers(&"stone_mine", -1), "stone worker can be removed")
 	var stone_before_trip: int = RunEconomy.amount(&"stone")
 	farmer_manager.advance(30.0)
 	var stone_after_carried_delivery: int = RunEconomy.amount(&"stone")
-	_expect_equal(stone_after_carried_delivery, stone_before_trip + 2, "reassigned farmer finishes carried stone delivery")
+	_expect_equal(stone_after_carried_delivery, stone_before_trip + 4, "两名石矿农民换岗后分别完成已有两石交付")
 	farmer_manager.advance(30.0)
 	_expect_equal(RunEconomy.amount(&"stone"), stone_after_carried_delivery, "unstaffed stone mine does not load new cargo")
 

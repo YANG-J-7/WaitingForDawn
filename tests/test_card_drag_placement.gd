@@ -72,7 +72,7 @@ func _run_test() -> void:
 	var arrow_hand := hand_slots.get_node("HandCard_3") as HandCardSlot
 	var arrow_data: Variant = arrow_hand.drag_payload()
 	_expect_true(map_surface.accepts_card_data(arrow_data), "arrow hand card accepts free map target")
-	map_surface.drop_card_data(arrow_data, Vector2(700.0, 270.0))
+	map_surface.drop_card_data(arrow_data, Vector2(900, 1008))
 	_expect_true(tower.visible and tower.enabled, "arrow hand drop constructs tower")
 	_expect_equal(RunEconomy.amount(&"wood"), 35, "arrow hand drop spends wood")
 	_expect_equal(RunEconomy.amount(&"stone"), 90, "arrow hand drop spends stone")
@@ -81,7 +81,7 @@ func _run_test() -> void:
 	var farm_hand := hand_slots.get_node("HandCard_1") as HandCardSlot
 	var farm_data: Variant = farm_hand.drag_payload()
 	var wood_before_occupied: int = RunEconomy.amount(&"wood")
-	map_surface.drop_card_data(farm_data, Vector2(2400, 1350))
+	map_surface.drop_card_data(farm_data, Vector2(4200, 2200))
 	_expect_equal(hand_slots.get_child_count(), 2, "rejected target keeps all remaining hand cards")
 	_expect_equal(RunEconomy.amount(&"wood"), wood_before_occupied, "rejected target keeps resources")
 	map_surface.drop_card_data(farm_data, Vector2(760, 1080))

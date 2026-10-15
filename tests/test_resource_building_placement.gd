@@ -35,7 +35,7 @@ func _run_test() -> void:
 	_expect_resource(&"gold", 0, "initial gold")
 	_expect_equal(RunEconomy.current_population, 5, "initial population")
 	_expect_equal(RunEconomy.population_capacity, 5, "initial population capacity")
-	_expect_true((main.get_node("HUD/ResourcesBar/Margin/Values/WoodValue") as Label).text.contains("100"), "resource bar shows wood")
+	_expect_true((main.wood_value as Label).text.contains("100"), "resource bar shows wood")
 
 	for card_index in [0, 1, 2, 3]:
 		(card_grid.get_child(card_index) as Button).pressed.emit()

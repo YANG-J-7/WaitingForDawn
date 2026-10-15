@@ -4,6 +4,7 @@
 
 | 系统 | 文档 | 状态 | 当前验证目标 |
 |---|---|---|---|
+| 大地图设计图还原与交互兼容 | [large-map-design-restoration-system.md](large-map-design-restoration-system.md) | 2026-10-13分层4608×2592已接入，自动化与GL通过 | 最终美术、放大清晰度与60分钟运输平衡评审 |
 | 60分钟战役与每局重置 | [sixty-minute-campaign-system.md](sixty-minute-campaign-system.md) | CAM-01方向已确定；未实现 | 细化结束判定、计时与新局边界 |
 | 击杀金币、商店抽牌与三卡升星 | [kill-gold-card-shop-fusion-system.md](kill-gold-card-shop-fusion-system.md) | Story-024灰盒实现与自动化通过；待两局自然试玩 | 采集10～15分钟经济数据，再按结果调平 |
 | 自由建造、大地图地形与天气 | [sixty-minute-campaign-system.md](sixty-minute-campaign-system.md) | CAM-04/05方向已确定；旧自由建造可复用 | 明确地形可达性、建造条件与天气影响 |

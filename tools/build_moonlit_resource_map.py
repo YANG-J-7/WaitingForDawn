@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MAP_DIR = ROOT / "assets" / "map"
 SITE_DIR = MAP_DIR / "resource_sites"
 SOURCE_DIR = SITE_DIR / "source"
-BASE = MAP_DIR / "moonlit_resource_map_16x9_base.png"
+BASE = MAP_DIR / "moonlit_terrain_detail.png"
 PREVIEW = MAP_DIR / "moonlit_resource_map_16x9_preview.png"
 BORDER_LAYER = MAP_DIR / "moonlit_resource_map_16x9_border_forest.png"
 DATA = MAP_DIR / "moonlit_resource_map_16x9_sites.json"
@@ -107,8 +107,10 @@ def _pine_placements() -> list[dict]:
 
 def main() -> None:
     base = Image.open(BASE).convert("RGBA")
-    if base.size != (WIDTH, HEIGHT):
-        raise ValueError(f"地图尺寸错误：{base.size}")
+    # 高密度底图与逻辑世界分离；预览仍按2880×1620坐标合成资源。
+    if abs(base.width / base.height - WIDTH / HEIGHT) > 0.01:
+        raise ValueError(f"地图宽高比错误：{base.size}")
+    base = base.resize((WIDTH, HEIGHT), Image.Resampling.LANCZOS)
     processed = {kind: _process_sprite(kind) for kind in SPRITES}
 
     pine_source = Image.open(PINE).convert("RGBA")
@@ -159,7 +161,7 @@ def main() -> None:
             {
                 "version": 1,
                 "mapSize": {"width": WIDTH, "height": HEIGHT},
-                "base": "assets/map/moonlit_resource_map_16x9_base.png",
+                "base": "assets/map/moonlit_terrain_detail.png",
                 "borderTreeSprite": "assets/art_candidates/night_set_v1/pine_tree.png",
                 "borderPines": _pine_placements(),
                 "resourceSites": site_data,

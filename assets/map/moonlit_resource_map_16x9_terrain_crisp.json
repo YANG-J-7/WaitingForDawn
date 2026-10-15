@@ -1,0 +1,28 @@
+{
+  "schema": "waiting_for_dawn.terrain_artwork.v1",
+  "source": "moonlit_resource_map_16x9_terrain_crisp_source.png",
+  "texture": "moonlit_resource_map_16x9_terrain_crisp.png",
+  "prompt": "moonlit_resource_map_16x9_terrain_crisp_source.prompt.txt",
+  "source_size": [
+    1672,
+    941
+  ],
+  "native_size": [
+    1440,
+    810
+  ],
+  "world_size": [
+    2880,
+    1620
+  ],
+  "pixel_world_size": 2,
+  "palette_limit": 64,
+  "palette_count": 64,
+  "sampling": "nearest",
+  "source_origin": "builtin_imagegen",
+  "source_sha256": "79d3ef43e99ffe762ab3e3bff936d953c5a5936ae8962ad1bd57fb755e4f5749",
+  "edit_reference": "moonlit_resource_map_16x9_terrain_crisp_draft_source.png",
+  "edit_reference_sha256": "b049c9f8c4a8f5aa38e6a4ce253eb418cb529aae491fea28a83f709fa75e67f3",
+  "collision_source": "src/gameplay/grid/terrain_map_data.gd",
+  "notes": "图像只定义外观；保持现有资源节点、地形、建造和寻路规则。"
+}

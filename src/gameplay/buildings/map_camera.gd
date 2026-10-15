@@ -11,6 +11,27 @@ var mouse_pan_button: MouseButton = MOUSE_BUTTON_NONE
 var mouse_pan_distance: float = 0.0
 var last_mouse_pan_distance: float = 0.0
 var surface: Control
+var play_rect := Rect2()
+
+func screen_view_rect() -> Rect2:
+	return play_rect if play_rect.size.x > 0 and play_rect.size.y > 0 else get_viewport_rect()
+
+func visible_world_rect() -> Rect2:
+	return get_canvas_transform().affine_inverse() * screen_view_rect()
+
+func set_play_rect(rect: Rect2) -> void:
+	if rect == play_rect: return
+	var was_full := is_equal_approx(zoom.x, minimum_zoom)
+	play_rect = rect
+	_refresh_fit_zoom()
+	if was_full: zoom = Vector2.ONE * minimum_zoom
+	_clamp_position()
+	force_update_scroll()
+
+func _apply_screen_offset() -> void:
+	# 镜头的世界中心映到中间视口中心，而不是整个含HUD窗口的中心。
+	offset = (get_viewport_rect().size * 0.5 - screen_view_rect().get_center()) / zoom
+	if get_parent() is CanvasItem: get_parent().queue_redraw()
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(_on_viewport_size_changed)
@@ -24,8 +45,20 @@ func reset_view() -> void:
 	mouse_pan_button = MOUSE_BUTTON_NONE
 	mouse_pan_distance = 0.0
 	last_mouse_pan_distance = 0.0
+	position = Layout.CITY_POSITION
+	zoom = Vector2.ONE * maxf(minimum_zoom, 0.72)
+	_clamp_position()
+	force_update_scroll()
+
+func show_full_map() -> void:
+	_refresh_fit_zoom()
 	position = Layout.BOUNDS.get_center()
 	zoom = Vector2.ONE * minimum_zoom
+	_clamp_position()
+	force_update_scroll()
+
+func focus_world(point: Vector2) -> void:
+	position = point
 	_clamp_position()
 	force_update_scroll()
 
@@ -35,6 +68,7 @@ func screen_to_world(point: Vector2) -> Vector2:
 func zoom_at(factor: float, point: Vector2) -> void:
 	var before := screen_to_world(point)
 	zoom = Vector2.ONE * clampf(zoom.x * factor, minimum_zoom, maximum_zoom)
+	_apply_screen_offset()
 	force_update_scroll()
 	position += before - screen_to_world(point)
 	_clamp_position()
@@ -46,7 +80,7 @@ func pan_by(screen_delta: Vector2) -> void:
 	force_update_scroll()
 
 func _clamp_position() -> void:
-	var viewport_size: Vector2 = get_viewport_rect().size
+	var viewport_size: Vector2 = screen_view_rect().size
 	if viewport_size.x <= 0.0 or viewport_size.y <= 0.0 or zoom.x <= 0.0:
 		return
 	var half_visible: Vector2 = viewport_size / (zoom * 2.0)
@@ -62,10 +96,11 @@ func _clamp_position() -> void:
 		Layout.BOUNDS.end.y - half_visible.y,
 		Layout.BOUNDS.get_center().y
 	)
+	_apply_screen_offset()
 
 
 func _refresh_fit_zoom() -> void:
-	var viewport_size: Vector2 = get_viewport_rect().size
+	var viewport_size: Vector2 = screen_view_rect().size
 	if viewport_size.x <= 0.0 or viewport_size.y <= 0.0:
 		return
 	var fit_zoom: float = minf(

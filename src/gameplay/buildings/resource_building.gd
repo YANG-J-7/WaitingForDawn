@@ -36,7 +36,7 @@ func configure(card_definition: OpeningCardDefinition, site: ResourceSite = null
 		&"house": "house",
 	}.get(definition.card_id, "house")) if definition != null else "house"
 	grounding.configure(Vector2i(2, 2), definition.card_id if definition != null else &"default")
-	art_visual.configure(art_name, Vector2(65, 56), &"lantern")
+	art_visual.configure_world(art_name, Vector2(65, 56), &"lantern")
 	if definition != null and definition.population_capacity_bonus > 0:
 		capacity_bonus_applied = RunEconomy.change_population_capacity(
 			definition.population_capacity_bonus

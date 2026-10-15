@@ -1,0 +1,77 @@
+{
+  "schema": "generate2dmap.terrain_tile_bundle.v1",
+  "source": "moonlit_grass_atlas.png",
+  "prompt": "moonlit_grass_refined_source.prompt.txt",
+  "grid": {
+    "rows": 1,
+    "cols": 4,
+    "source_cell_size": [
+      627,
+      627
+    ],
+    "output_tile_size": [
+      627,
+      627
+    ]
+  },
+  "runtime": {
+    "engine_target": "godot_mesh_top",
+    "world_size": 72.0,
+    "surface_y": 0.0,
+    "edge_policy": "seamless"
+  },
+  "terrains": {
+    "grass": {
+      "row": 0,
+      "variants": [
+        {
+          "path": "grass-1.png",
+          "source_cell": [
+            0,
+            0
+          ],
+          "mean_luminance": 0.178896,
+          "contrast": 0.083687
+        },
+        {
+          "path": "grass-2.png",
+          "source_cell": [
+            0,
+            1
+          ],
+          "mean_luminance": 0.178674,
+          "contrast": 0.087532
+        },
+        {
+          "path": "grass-3.png",
+          "source_cell": [
+            0,
+            2
+          ],
+          "mean_luminance": 0.17748,
+          "contrast": 0.086814
+        },
+        {
+          "path": "grass-4.png",
+          "source_cell": [
+            0,
+            3
+          ],
+          "mean_luminance": 0.179272,
+          "contrast": 0.087807
+        }
+      ],
+      "variant_difference_min": 0.025103,
+      "material": {
+        "roughness": 0.88,
+        "emission_energy": 0.0
+      }
+    }
+  },
+  "qc": {
+    "min_contrast": 0.035,
+    "min_variant_difference": 0.025,
+    "warnings": [],
+    "passed": true
+  }
+}

@@ -12,9 +12,9 @@ func _ready() -> void:
 	check(main.has_method("active_towers"), "支持多箭塔实例")
 	check(main.has_method("active_barracks"), "支持多兵营实例")
 	check(main.get_node_or_null("MapCamera") != null, "大地图有独立镜头")
-	check(main.wave_controller.playable_bounds.size == Vector2(2880, 1620), "运行地图使用2880×1620新底图")
+	check(main.wave_controller.playable_bounds.size == Vector2(4608, 2592), "运行地图使用4608×2592分层地图")
 	check(main.resource_sites.size() == 8, "新地图加载四处树林、两处石矿和两处铁矿")
-	check(not MapLayout.is_buildable(Vector2(2400, 1350), 24), "湖泊内部拒绝普通建筑")
+	check(not MapLayout.is_buildable(Vector2(4200, 2200), 24), "湖泊内部拒绝普通建筑")
 	check(MapLayout.is_buildable(Vector2(800, 1000), 24), "中央草地保持可建造")
 	main._on_start_pressed()
 	main.opening_draft.active = false
@@ -33,7 +33,7 @@ func _ready() -> void:
 	check(main.active_towers().is_empty() and main.active_barracks().is_empty(), "重置清理所有防御实例")
 	check(main.additional_towers.is_empty() and main.additional_barracks.is_empty(), "重置释放新增实体记录")
 	check(main.wave_economy.job_targets.is_empty(), "重置清空独立岗位目标")
-	check(main.map_camera.zoom.is_equal_approx(Vector2.ONE / 3.0), "重置恢复16:9全图视野")
+	check(main.map_camera.zoom.is_equal_approx(Vector2.ONE * .72), "重置恢复主城近景")
 	check(main.resource_sites.all(func(site): return not site.is_occupied()), "重置释放所有资源点")
 	main.queue_free()
 	get_tree().quit(failures)
@@ -41,11 +41,11 @@ func _ready() -> void:
 func _test_buildings() -> void:
 	var tower = preload("res://src/data/cards/arrow_tower_card.tres")
 	var camp = preload("res://src/data/cards/barracks.tres")
-	for point in [Vector2(300, 90), Vector2(370, 90)]:
+	for point in [Vector2(900, 900), Vector2(1008, 900)]:
 		var id: int = main.run_card_inventory.add_card(tower, 2)
 		check(main._try_place_defense_card(id, point), "独立卡片可重复建造箭塔")
 	check(main.active_towers().size() == 2, "两座箭塔同时存活")
-	for point in [Vector2(620, 360), Vector2(700, 450)]:
+	for point in [Vector2(900, 1200), Vector2(900, 1350)]:
 		var id: int = main.run_card_inventory.add_card(camp, 2)
 		check(main._try_place_barracks_card(id, point), "独立卡片可重复建造兵营")
 	check(main.active_barracks().size() == 2, "两座兵营同时存活")
@@ -64,7 +64,7 @@ func _test_buildings() -> void:
 				check(main._try_place_map_building_card(id, site.global_position), "资源地块允许多座同类建筑：" + card.display_name)
 				count += 1
 	var farm = preload("res://src/data/cards/farm.tres")
-	for point in [Vector2(650, 930), Vector2(780, 1080)]:
+	for point in [Vector2(900, 1650), Vector2(1008, 1836)]:
 		var farm_id: int = main.run_card_inventory.add_card(farm, 2)
 		check(main._try_place_map_building_card(farm_id, point), "农场可在草地空地自由建造")
 	check(main.settlement_builder.building_count() == 8, "三类资源点建筑及两座自由农场完成建造")
@@ -97,7 +97,7 @@ func _test_buildings() -> void:
 	var balance: int = RunEconomy.amount(&"wood")
 	check(not main._try_place_defense_card(id, second_tower.global_position), "重复建筑仍拒绝重叠")
 	check(main.run_card_inventory.has_card(id) and RunEconomy.amount(&"wood") == balance, "非法位置不消耗卡片或材料")
-	check(main._try_place_defense_card(id, Vector2(180, 520)), "新地图草地允许合法建筑")
+	check(main._try_place_defense_card(id, Vector2(900, 1980)), "新地图草地允许合法建筑")
 	check(not main._try_place_defense_card(id, Vector2(180, 650)), "同一库存卡不能重复使用")
 	var footprint: Dictionary = main.placement_preview(tower, second_tower.global_position)
 	check(not footprint.valid and footprint.radius == 24.0, "箭塔预览使用缩小后的实际碰撞半径")
@@ -105,7 +105,9 @@ func _test_buildings() -> void:
 
 func _test_camera() -> void:
 	var camera = main.map_camera
-	check(main.map_drop_surface.size.is_equal_approx(get_viewport().get_visible_rect().size), "地图交互层覆盖完整逻辑画面")
+	main._update_map_view_rect()
+	var play_rect: Rect2 = main.map_view_rect()
+	check(main.map_drop_surface.get_global_rect().is_equal_approx(play_rect), "地图交互层仅覆盖上下栏之间的可用区域")
 	var hud_size: Vector2 = main.train_farmer_button.size
 	var anchor := Vector2(420, 250)
 	var world_before: Vector2 = camera.screen_to_world(anchor)
@@ -116,15 +118,16 @@ func _test_camera() -> void:
 	check(is_equal_approx(camera.zoom.x, 1.6), "放大有上限")
 	camera.zoom_at(0.0001, anchor)
 	var expected_fit_zoom: float = minf(
-		get_viewport().get_visible_rect().size.x / MapLayout.BOUNDS.size.x,
-		get_viewport().get_visible_rect().size.y / MapLayout.BOUNDS.size.y
+		play_rect.size.x / MapLayout.BOUNDS.size.x,
+		play_rect.size.y / MapLayout.BOUNDS.size.y
 	)
 	check(is_equal_approx(camera.zoom.x, expected_fit_zoom), "最远只能缩放到完整地图边界")
-	camera.reset_view()
+	camera.show_full_map()
 	camera.pan_by(Vector2(40, 10))
 	check(camera.position.is_equal_approx(MapLayout.BOUNDS.get_center()), "全图倍率下不能把地图边界拖出视口")
-	check(camera.screen_to_world(Vector2.ZERO).is_equal_approx(MapLayout.BOUNDS.position), "全图倍率左上角贴合地图边界")
-	check(camera.screen_to_world(get_viewport().get_visible_rect().size).is_equal_approx(MapLayout.BOUNDS.end), "全图倍率右下角贴合地图边界")
+	var map_screen: Rect2 = camera.get_canvas_transform() * MapLayout.BOUNDS
+	check(play_rect.grow(.01).encloses(map_screen), "完整地图落在中间视口内")
+	check(map_screen.get_center().is_equal_approx(play_rect.get_center()), "全图以可用视口中心居中，保留等比留边")
 	var left_press := InputEventMouseButton.new()
 	left_press.button_index = MOUSE_BUTTON_LEFT
 	left_press.pressed = true
@@ -139,12 +142,15 @@ func _test_camera() -> void:
 	camera._input(left_release)
 	check(camera.last_mouse_pan_distance > camera.MOUSE_DRAG_THRESHOLD, "按住鼠标左键拖动地图并记录为拖拽")
 	camera.zoom_at(1.5, anchor)
-	var half_visible: Vector2 = get_viewport().get_visible_rect().size / (camera.zoom * 2.0)
+	var half_visible: Vector2 = play_rect.size / (camera.zoom * 2.0)
 	var card = preload("res://src/data/cards/house.tres")
 	var id: int = main.run_card_inventory.add_card(card, 2)
-	var point := Vector2(900, 300)
+	# 原900,300落点已按可见岩面登记为崖壁，反变换测试改用左侧平原。
+	var point := Vector2(1440, 1836)
+	check(main.grid_map_model.can_place(point, Vector2i(2,2)), "镜头投放夹具位于可建草地")
 	var screen: Vector2 = camera.get_canvas_transform() * point
 	main.map_drop_surface._drop_data(screen - main.map_drop_surface.global_position, {"card_index": id, "card_instance_id": id, "card_id": &"house"})
+	print("METRIC: 投放世界坐标=%s 屏幕坐标=%s 结果=%s" % [point, screen, main.setup_hint_label.text])
 	check(not main.run_card_inventory.has_card(id), "平移缩放后的UI投放成功消费卡片")
 	var snapped_point: Vector2 = main.grid_map_model.snap_footprint_center(point, Vector2i(2, 2))
 	check(main.settlement_builder.placed_buildings().back().global_position.is_equal_approx(snapped_point), "UI投放反变换后吸附到准确网格中心")

@@ -17,6 +17,7 @@ var illustration: TextureRect
 var title_label: Label
 var cost_label: Label
 var hint_label: Label
+var reference_face: Control
 
 
 func _ready() -> void:
@@ -51,12 +52,13 @@ func _make_label(at: Vector2, dimensions: Vector2, font_size: int) -> Label:
 	return label
 
 
-func _illustration_for(card_id: StringName) -> Texture2D:
+static func _illustration_for(card_id: StringName) -> Texture2D:
 	var art_name: String = str({
 		&"lumber_camp": "lumberyard",
 		&"farm": "farm",
 		&"stone_mine": "quarry",
 		&"gold_mine": "mine_entrance",
+		&"iron_mine": "mine_entrance",
 		&"arrow_tower": "arrow_tower",
 		&"wall": "palisade_wall",
 		&"barracks": "barracks",
@@ -93,7 +95,10 @@ func configure(instance_id: int, definition: OpeningCardDefinition, star: int = 
 		card_definition.build_cost_text,
 		"｜右键合成" if matching_count >= 3 and card_star < RunCardInventory.MAX_STAR else "｜拖动部署",
 	]
-	tooltip_text = card_definition.description
+	tooltip_text = "%s\n建造：%s\n拖动部署；%s" % [
+		card_definition.description, card_definition.build_cost_text,
+		"已达最高星级" if card_star >= RunCardInventory.MAX_STAR else "3张同名同星手牌可右键合成",
+	]
 	illustration.texture = _illustration_for(card_definition.card_id)
 	title_label.text = "%s  %s" % [card_definition.display_name, "★".repeat(card_star)]
 	cost_label.text = "建造 %s" % card_definition.build_cost_text
@@ -105,6 +110,21 @@ func configure(instance_id: int, definition: OpeningCardDefinition, star: int = 
 	add_theme_stylebox_override("normal", _card_style(Color("f1d8a8"), Color("8e6a31"), 2))
 	add_theme_stylebox_override("hover", _card_style(Color("ffe8b8"), Color("e4a846"), 3))
 	add_theme_stylebox_override("pressed", _card_style(Color("d9bd83"), Color("ffd27a"), 3))
+	for child in [illustration,title_label,cost_label,hint_label]:
+		child.hide()
+	if reference_face == null:
+		reference_face = preload("res://src/gameplay/art/hud_card_face.gd").new()
+		add_child(reference_face)
+	reference_face.definition = card_definition
+	reference_face.illustration = illustration.texture
+	reference_face.star = card_star
+	reference_face.count = matching_count
+	reference_face.highlighted = matching_count >= 3 and card_star < RunCardInventory.MAX_STAR
+	reference_face.update_icons()
+	for style_name in ["normal","hover","pressed","focus"]:
+		add_theme_stylebox_override(style_name,StyleBoxEmpty.new())
+	add_theme_font_size_override("font_size",1)
+
 
 
 func set_interaction_enabled(is_enabled: bool) -> void:

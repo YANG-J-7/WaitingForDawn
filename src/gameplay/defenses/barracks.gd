@@ -38,7 +38,7 @@ func _ready() -> void:
 	var art := ArtVisualScript.new() as ArtVisual
 	art.show_behind_parent = true
 	add_child(art)
-	art.configure("barracks", Vector2(52, 50), &"lantern")
+	art.configure_world("barracks", Vector2(52, 50), &"lantern")
 	RunState.phase_changed.connect(_on_phase_changed)
 	queue_redraw()
 
@@ -140,6 +140,11 @@ func _spawn_guard(guard_index: int) -> void:
 	if outward == Vector2.ZERO:
 		outward = Vector2.RIGHT
 	var spawn_position: Vector2 = global_position + outward * 50.0 + outward.orthogonal() * (-18.0 if guard_index == 0 else 18.0)
+	if pathfinder != null:
+		spawn_position = pathfinder.spawn_position(spawn_position,global_position,96.0)
+		if spawn_position == Vector2.INF:
+			guard.queue_free()
+			return
 	guard.global_position = spawn_position.clamp(build_bounds.position + Vector2(18, 18), build_bounds.end - Vector2(18, 18))
 	guard.configure(guard_definition, guard_index)
 	guard.set_pathfinder(pathfinder)

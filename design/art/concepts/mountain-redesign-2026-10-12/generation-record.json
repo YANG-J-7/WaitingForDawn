@@ -1,0 +1,56 @@
+{
+  "schema": "waiting_for_dawn.map_reference_attempt.v1",
+  "asset_id": "MAP-MOUNTAIN-REDESIGN-PREVIEW-V1",
+  "date": "2026-10-12",
+  "map_mode": "baked_scene_mode",
+  "visual_model": "baked_raster",
+  "runtime_object_model": "none",
+  "collision_model": "none",
+  "engine_target": "raw_canvas",
+  "reference_only": true,
+  "aspect_ratio_requested": "16:9",
+  "reference": "assets/map/moonlit_terrain_detail.png",
+  "reference_dimensions": [
+    3344,
+    1882
+  ],
+  "attempts": [
+    {
+      "mode": "reference_edit",
+      "prompt": "mountain-redesign-reference-edit.prompt.txt",
+      "result": "HTTP429",
+      "output_created": false
+    },
+    {
+      "mode": "independent_generation",
+      "prompt": "mountain-redesign-independent.prompt.txt",
+      "result": "HTTP429",
+      "output_created": false
+    },
+    {
+      "mode": "independent_generation_retry",
+      "prompt": "mountain-redesign-preview-v1.prompt.txt",
+      "result": "success",
+      "output_created": true,
+      "file": "mountain-redesign-preview-v1.png"
+    }
+  ],
+  "image_file": "design/art/concepts/mountain-redesign-2026-10-12/mountain-redesign-preview-v1.png",
+  "generation_status": "success_after_retry",
+  "art_status": "candidate",
+  "integrated": false,
+  "review_status": "已查看概念预览，待用户视觉评审",
+  "image_dimensions": [
+    1672,
+    941
+  ],
+  "image_format": "RGB",
+  "image_sha256": "fd6797dc67bb31acaff1cdbb2580b9ccaa7ee695fc364fec7f5a171aca7c7218",
+  "visual_review": "分层草台、前侧崖壁及嵌入式石阶可见；概念图布局有变化，未按原资源坐标或碰撞对齐，不作为运行地图",
+  "user_feedback": {
+    "date": "2026-10-12",
+    "accepted_direction": "山地表现",
+    "requested_revision": "参考当前游戏恢复平原和树林",
+    "next_asset_id": "MAP-MOUNTAIN-REDESIGN-PREVIEW-V2"
+  }
+}

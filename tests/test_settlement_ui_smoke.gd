@@ -33,6 +33,8 @@ func _ready() -> void:
 	await camera_inputs()
 	var lumber: HandCardSlot = main.hand_card_slots[0]
 	var forest_position: Vector2 = (main.get_node("ResourceSites/forest_02") as Node2D).global_position
+	main.map_camera.focus_world(forest_position + Vector2(0, 120))
+	await get_tree().process_frame
 	await drag(lumber.get_global_rect().get_center(), world_to_screen(forest_position))
 	check(main.settlement_builder.building_count() == 1, "引擎鼠标拖动伐木卡生成建筑")
 	check(main.run_card_inventory.card_count() == 3, "拖牌成功才消耗手牌")
@@ -50,7 +52,7 @@ func _ready() -> void:
 	await click(main.building_worker_close_button.get_global_rect().get_center())
 	await click(main.train_farmer_button.get_global_rect().get_center())
 	check(main.notice_panel.visible and main.notice_label.text.contains("人口已满"), "战斗中招募失败提示可见")
-	check(main.train_farmer_button.size.y >= 44, "主城招募按钮至少44像素高")
+	check(main.train_farmer_button.size.y >= 32, "主城招募按钮适配32像素薄顶栏")
 	await capture("battle")
 	await click(main.battle_shop_button.get_global_rect().get_center())
 	check(main.battle_shop.active and not main.build_failure_panel.visible, "输入事件打开商店且没有旧提示遮挡")
@@ -59,7 +61,7 @@ func _ready() -> void:
 	await click(main.shop_close_button.get_global_rect().get_center())
 	check(not main.battle_shop.active and main.hand_bar.visible, "输入事件关闭商店回到手牌")
 	var wall: HandCardSlot = main.hand_card_slots[3]
-	await drag(wall.get_global_rect().get_center(), world_to_screen(Vector2(980, 1030)), true)
+	await drag(wall.get_global_rect().get_center(), world_to_screen(forest_position + Vector2(220, 0)), true)
 	check(main.placement_overlay.dragged_card == null, "拖牌结束后隐藏占地覆盖层")
 	for _index in range(RunCardInventory.MAX_CARDS - main.run_card_inventory.card_count()):
 		main.run_card_inventory.add_card(preload("res://src/data/cards/farm.tres"), 2)

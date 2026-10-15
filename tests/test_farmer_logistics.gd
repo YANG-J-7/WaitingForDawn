@@ -18,7 +18,7 @@ func _run_test() -> void:
 	await get_tree().process_frame
 
 	var start_button := main.get_node("HUD/BottomPanel/Margin/Content/Buttons/StartButton") as Button
-	var train_button := main.get_node("HUD/TrainFarmerButton") as Button
+	var train_button := main.train_farmer_button as Button
 	var manager := main.get_node("FarmerManager") as FarmerManager
 	var builder := main.get_node("SettlementBuilder") as SettlementBuilder
 	var wave_economy := main.get_node("WaveEconomy") as WaveEconomy
@@ -41,15 +41,15 @@ func _run_test() -> void:
 
 	var stone_before: int = RunEconomy.amount(&"stone")
 	_expect_true(wave_economy.advance_production(100.0).is_empty(), "building no longer deposits resources directly")
-	manager.advance(12.0)
+	manager.advance(100.0)
 	_expect_equal(RunEconomy.amount(&"stone"), stone_before, "outbound farmers do not add resources")
 	manager.advance(2.5)
 	manager.advance(1.1)
 	_expect_equal(RunEconomy.amount(&"stone"), stone_before, "gathered cargo is not credited before return")
-	manager.advance(12.0)
+	manager.advance(100.0)
 	_expect_true(RunEconomy.amount(&"stone") > stone_before, "cargo credits only after farmers reach city")
 
-	var house: ResourceBuilding = builder.place_card_at(HOUSE, Vector2(600.0, 160.0))
+	var house: ResourceBuilding = builder.place_card_at(HOUSE, Vector2(1260, 1800))
 	_expect_true(house != null, "house builds on free ground")
 	_expect_equal(RunEconomy.population_capacity, 7, "house raises capacity by two")
 	var gold_before: int = RunEconomy.amount(&"gold")

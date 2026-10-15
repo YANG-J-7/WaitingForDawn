@@ -4,7 +4,7 @@
     "width": 2880,
     "height": 1620
   },
-  "base": "assets/map/moonlit_resource_map_16x9_base.png",
+  "base": "assets/map/moonlit_terrain_detail.png",
   "borderTreeSprite": "assets/art_candidates/night_set_v1/pine_tree.png",
   "borderPines": [
     {

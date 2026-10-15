@@ -74,7 +74,7 @@ func place_card(card: OpeningCardDefinition, slot_index: int) -> bool:
 	if grid_map_model != null and not grid_map_model.can_place(final_position, footprint, site_id):
 		_refund(card.build_costs)
 		building.queue_free()
-		last_error = "目标网格包含水域、资源点或已占用地块。"
+		last_error = "目标网格包含水域、岩壁、石质坡道、资源点或已占用地块。"
 		return false
 	building.position = final_position
 	building.configure(card, claimed_site)
@@ -124,10 +124,13 @@ func place_card_at(
 		final_position = claimed_site.global_position
 	var site_id := StringName(claimed_site.name) if claimed_site != null else &""
 	if grid_map_model != null and not grid_map_model.can_place(final_position, footprint, site_id):
-		last_error = "目标网格包含水域、资源点或已占用地块。"
+		last_error = "目标网格包含水域、岩壁、石质坡道、资源点或已占用地块。"
 		return null
 	if not MapLayout.is_buildable(final_position, card.footprint_radius):
 		last_error = "建筑的完整占地必须位于地图可建造区域内。"
+		return null
+	if card.category == "resource" and grid_map_model != null and not grid_map_model.has_work_access(final_position,footprint):
+		last_error = "山区岗位建筑需要靠近山路，留出人员可到达的入口。"
 		return null
 	if not _is_clear(final_position, card.footprint_radius, obstacles):
 		last_error = "这里已有建筑或单位，不能放置%s。" % card.display_name

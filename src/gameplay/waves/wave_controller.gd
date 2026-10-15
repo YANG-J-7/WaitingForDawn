@@ -153,6 +153,8 @@ func _spawn_enemy() -> void:
 	var enemy: EnemyActor = ENEMY_SCENE.instantiate() as EnemyActor
 	add_child(enemy)
 	var current_spawn_position: Vector2 = _next_spawn_position()
+	if pathfinder != null:
+		current_spawn_position = pathfinder.spawn_position(current_spawn_position)
 	spawn_history.append(current_spawn_position)
 	enemy.configure(
 		active_wave_definition.enemy_definition,
@@ -291,6 +293,10 @@ func _assign_defensive_targets() -> void:
 	for enemy in enemies:
 		if not is_instance_valid(enemy) or not enemy.is_alive():
 			continue
+		if enemy.attack_target_kind == &"guard" and is_instance_valid(enemy.guard_target) and enemy.guard_target.is_active():
+			var guard: BarracksGuard = enemy.guard_target
+			if guard.engaged_enemy == enemy and enemy.global_position.distance_to(guard.global_position) <= guard.definition.attack_range_pixels + guard.attackable_radius():
+				continue
 		var target: Node2D = _nearest_forward_world_target(enemy)
 		if target != null and (target == enemy.world_target or target == enemy.barrier_target or target == enemy.guard_target):
 			continue

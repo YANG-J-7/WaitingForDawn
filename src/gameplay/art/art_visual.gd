@@ -14,6 +14,10 @@ var phase_offset: float = 0.0
 func configure(asset_name: String, display_size: Vector2, kind: StringName = &"still") -> void:
 	configure_path(ROOT + asset_name + ".png", display_size, kind, asset_name)
 
+func configure_world(asset_name: String, display_size: Vector2, kind: StringName = &"still") -> void:
+	var factor: float = preload("res://src/gameplay/art/world_art_scale.gd").factor_for(asset_name)
+	configure(asset_name, display_size * factor, kind)
+
 
 func configure_path(path: String, display_size: Vector2, kind: StringName = &"still", cache_key: String = "") -> void:
 	var loaded: Resource = load(path)
