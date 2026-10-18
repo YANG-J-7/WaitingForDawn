@@ -72,6 +72,11 @@ func _ready() -> void:
 		var has_ramp := false
 		for p in path: has_ramp = has_ramp or grid.navigation_data(grid.world_to_cell(p)).stair == int(stair.id)
 		check(has_ramp,"路径实际经过对应石阶格")
+		var reverse: PackedVector2Array = finder.find_path(b,a)
+		var reverse_stair := false
+		for point in reverse:
+			reverse_stair = reverse_stair or grid.navigation_data(grid.world_to_cell(point)).stair == int(stair.id)
+		check(not reverse.is_empty() and _legal(grid,b,reverse) and reverse_stair,"对应石阶下山方向合法且不绕穿岩壁")
 	for terrain in [&"cliff",&"water",&"ramp"]:
 		var cells: Array[Vector2i] = grid.cells_of_type(terrain)
 		check(not cells.is_empty(),"地图存在%s" % terrain)

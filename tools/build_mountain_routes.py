@@ -13,7 +13,14 @@ REGION = [[450,0],[1672,0],[1672,441],[1455,465],[1285,489],[1135,500],
 HARD_CLIFFS = [
     [[990,89],[1009,82],[1024,87],[1030,108],[1042,126],[1033,154],
      [1005,169],[980,153],[968,129],[975,103]],
+    # 西北石梯左侧的上层岩壁；原道路把坡脚灌木误当作可走路肩。
+    [[965,10],[983,21],[1004,31],[1038,40],[1060,48],[1064,59],
+     [1059,82],[1041,83],[1019,76],[992,70],[972,65],[963,50],
+     [957,40],[957,25]],
 ]
+JUNCTION = [980,205]
+VALLEY_ROUTE = [JUNCTION,[1000,188],[1030,176],[1055,162],
+                [1080,143],[1080,128],[1065,110],[1065,95]]
 ROUTES = [
     (0, [[600,242],[613,201]]),
     (0, [[922,420],[994,390]]),
@@ -22,12 +29,15 @@ ROUTES = [
     (1, [[650,134],[635,112],[630,92],[610,77],[580,78],[550,90]]),
     (1, [[610,99],[630,92]]),
     (1, [[650,134],[666,121],[678,111]]),
-    (1, [[650,134],[737,144],[818,165],[885,181],[938,195],[980,214],[1020,225]]),
-    (1, [[988,241],[1015,225],[1044,254],[1090,270],[1121,266]]),
+    (1, [[650,134],[737,144],[818,165],[885,181],[938,195],JUNCTION,[1020,225]]),
+    # 东南分支沿前方岩缘北侧土路绕过凸角，不把单格断点当成绕行整山的理由。
+    (1, [[988,241],[1015,225],[1044,246],[1070,249],[1098,255],[1121,266]]),
     (1, [[1046,305],[1080,285],[1121,266]]),
     (1, [[1121,266],[1120,287],[1200,327],[1300,310],[1335,300],[1350,280],[1385,260],[1410,270],[1480,305]]),
     (1, [[1195,368],[1200,327]]),
-    (2, [[713,44],[760,32],[780,20],[820,20],[860,64],[920,70],[960,70],[980,74],[1010,74],[1030,80],[1065,86]]),
+    # 谷底从南侧山路绕到石梯下端；西侧高台在前景石壁处终止，不能直连。
+    (1, VALLEY_ROUTE),
+    (2, [[713,44],[760,32],[780,20],[820,20],[860,64],[920,70],[945,78],[960,85]]),
     (2, [[800,46],[800,20]]),
     (2, [[1155,215],[1194,182],[1280,194],[1360,204],[1402,186],[1455,200],[1505,190],[1500,148],[1472,159]]),
     (3, [[1086,55],[1120,31],[1200,30],[1300,42],[1390,55],[1416,83]]),
@@ -35,7 +45,7 @@ ROUTES = [
 STAIRS = [
     (0,1,[[613,201],[637,168],[650,134]]),
     (1,2,[[678,111],[699,78],[713,44]]),
-    (2,3,[[1065,86],[1075,75],[1086,62]]),
+    (1,3,[[1065,86],[1075,75],[1086,62]]),
     (3,2,[[1416,83],[1446,118],[1472,159]]),
     (1,2,[[1121,266],[1137,240],[1155,215]]),
     (0,1,[[994,390],[1014,348],[1046,305]]),
@@ -56,6 +66,8 @@ def build():
     region=Image.new('L',(1672,941));ImageDraw.Draw(region).polygon(REGION,fill=255)
     hard_cliff=Image.new('L',region.size)
     for poly in HARD_CLIFFS:ImageDraw.Draw(hard_cliff).polygon([tuple(p) for p in poly],fill=255)
+    # 硬岩壁同样预留脚点余量，石梯宽度容差不能重新开放这些格。
+    hard_cliff=hard_cliff.filter(ImageFilter.MaxFilter(9))
     cliff=Image.new('L',region.size)
     cliffs=data['cliffs'].copy()
     cliffs[3]=[[925,257],[953,270],[996,283],[1029,280],[1059,268],[1081,262],
@@ -90,7 +102,9 @@ def build():
                 cells.append(dict(cell=[x,y],kind='ramp',level=-1,stair=i,ends=ends))
             elif not cliff.getpixel(pixel):
                 level,line=min(ROUTES,key=lambda r:distance(p,r[1]))
-                if distance(p,line)<=14:cells.append(dict(cell=[x,y],kind='road',level=level,stair=-1,ends=[]))
+                # 谷底收窄，保持脚点位于土路内，避免贴着石梯侧墙接入。
+                half_width=11 if line is VALLEY_ROUTE else 14
+                if distance(p,line)<=half_width:cells.append(dict(cell=[x,y],kind='road',level=level,stair=-1,ends=[]))
     # 岩缘裁切偶尔留下单格路肩，不能作为与主路断开的落脚点。
     lookup={tuple(c['cell']):c for c in cells}
     def joined(a,b):
@@ -118,7 +132,8 @@ def build():
     cells=[c for c in cells if tuple(c['cell']) not in strays]
     result=dict(schema='waiting-for-dawn.mountain-navigation.v1',sourceSize=[1672,941],
                 worldSize=[4608,2592],region=REGION,hardCliffs=HARD_CLIFFS,mountainCells=mountain,cliffCells=rocks,
-                routes=[dict(level=l,points=p) for l,p in ROUTES],
+                junctions=[dict(id='central_mountain_fork',level=1,point=JUNCTION)],
+                routes=[dict(level=l,points=p,halfWidth=11 if p is VALLEY_ROUTE else 14) for l,p in ROUTES],
                 stairs=[dict(id=i,fromLevel=a,toLevel=b,points=p) for i,(a,b,p) in enumerate(STAIRS)],cells=cells)
     OUT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     # 诊断图只用于核对标注，绝不作为游戏地形贴图。

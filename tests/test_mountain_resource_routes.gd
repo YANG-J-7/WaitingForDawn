@@ -59,7 +59,9 @@ func _ready() -> void:
 			check(finder.find_path(start, point).is_empty(), "山区离路草台禁止单位直接走入：%s" % point)
 	_check_road_network(grid, start)
 	_check_height_gates()
-	for source in [Vector2(1005,95),Vector2(1020,110)]:
+	_check_northwest_cliff(grid,finder)
+	# 前景台地边缘同样是石壁，不能把高台到谷底之间的落差当成路肩。
+	for source in [Vector2(1005,95),Vector2(1005,130),Vector2(1020,110),Vector2(1025,98)]:
 		var point: Vector2 = Definition.source_to_world(source)
 		var cell: Vector2i = grid.world_to_cell(point)
 		check(grid.cell_data(cell).terrain_type == &"cliff" and grid.is_solid(cell) and not grid.cell_data(cell).buildable, "红圈岩壁明确禁行禁建：%s" % source)
@@ -150,6 +152,23 @@ func _check_height_gates() -> void:
 	var a: Vector2 = grid.cell_center(cells[0])
 	var b: Vector2 = grid.cell_center(cells[3])
 	check(not finder.find_path(a,b).is_empty() and not finder.find_path(b,a).is_empty(), "不同高度通过同一石梯双向连接")
+	var follower = preload("res://src/gameplay/grid/grid_path_follower.gd").new()
+	follower.set_pathfinder(finder)
+	var movement: Dictionary = follower.advance(a,b,0,80,.05)
+	var stopped_at: Vector2 = movement.position
+	var blocked: Array[Vector2i] = [cells[2]]
+	grid.set_terrain_cells(blocked,&"cliff",false,false,INF)
+	check(finder.find_path(a,b).is_empty() and finder.find_path(b,a).is_empty(), "封闭石梯后双向缓存路径立即失效")
+	movement = follower.advance(stopped_at,b,0,80,2)
+	check(not movement.has_path and movement.position == stopped_at, "移动中的单位遇到封闭石梯会停步，不越过岩壁")
+	grid.set_terrain_cells(blocked,&"ramp",true,false,1)
+	var reopened: PackedVector2Array = finder.find_path(a,b)
+	check(not reopened.is_empty() and _legal_path(grid,a,reopened), "石梯恢复后重新连接跨层路线")
+	for step in range(50):
+		movement = follower.advance(stopped_at,b,0,80,.05)
+		stopped_at = movement.position
+		if movement.arrived: break
+	check(movement.arrived and stopped_at == b, "封路解除后原单位自动重新寻路并到达")
 	check(not grid.can_step(cells[0],cells[2]) and not grid.can_step(cells[1],cells[3]), "单位不能从石梯中段跳进异层道路")
 	grid.set_navigation_cell(cells[2],-1,1,[1])
 	check(finder.find_path(a,b).is_empty(), "不同编号石梯即使相邻也不能拼接跨层")
@@ -202,6 +221,55 @@ func _check_mountain_units(main: Node,grid: RefCounted,finder: RefCounted) -> vo
 	check(guard.position.distance_to(enemy.position)<=guard.definition.attack_range_pixels and legal and stairs,"真实守卫从山区沿山路、石梯接近目标，逐帧无翻岩跨层")
 	guard.free()
 	enemy.free()
+
+func _check_northwest_cliff(grid: RefCounted,finder: RefCounted) -> void:
+	# 2026-10-17新截图：石梯西侧竖直岩壁不能当成通行路肩。
+	for source in [Vector2(980,74),Vector2(1000,74),Vector2(1020,74),Vector2(1040,80)]:
+		var cell: Vector2i = grid.world_to_cell(Definition.source_to_world(source))
+		var point: Vector2 = grid.cell_center(cell)
+		check(grid.cell_data(cell).terrain_type == &"cliff" and grid.is_solid(cell) and not grid.can_place(point,Vector2i.ONE), "新增红框石壁禁止通行和建造：%s" % source)
+		check(finder.find_path(LAYOUT.CITY_POSITION+Vector2(108,0),point).is_empty(), "新增红框石壁不能成为路径终点：%s" % source)
+	var a: Vector2 = grid.cell_center(grid.world_to_cell(Definition.source_to_world(Vector2(930,70))))
+	var b: Vector2 = grid.cell_center(grid.world_to_cell(Definition.source_to_world(Vector2(1086,62))))
+	var route: PackedVector2Array = finder.find_path(a,b)
+	var uses_stair := false
+	var uses_west_descent := false
+	for point in route:
+		uses_stair = uses_stair or grid.navigation_data(grid.world_to_cell(point)).stair == 2
+		uses_west_descent = uses_west_descent or grid.navigation_data(grid.world_to_cell(point)).stair == 1
+	check(not route.is_empty() and _legal_path(grid,a,route) and uses_stair and uses_west_descent, "西侧高台必须先走西侧石梯下山，再沿谷底进入北侧石梯")
+	var sealed = preload("res://src/gameplay/grid/grid_map_model.gd").new()
+	preload("res://src/gameplay/grid/terrain_map_data.gd").apply_to(sealed)
+	var west_stairs: Array[Vector2i] = []
+	for entry in Definition.navigation_data().cells:
+		if int(entry.stair) == 1: west_stairs.append(Vector2i(entry.cell[0],entry.cell[1]))
+	sealed.set_terrain_cells(west_stairs,&"cliff",false,false,INF)
+	var sealed_finder = preload("res://src/gameplay/grid/grid_pathfinder.gd").new(sealed)
+	check(sealed_finder.find_path(a,b).is_empty(), "西侧下山石梯封闭后高台无法离开，不能回退到穿石壁短路")
+	var valley: Vector2 = grid.cell_center(grid.world_to_cell(Definition.source_to_world(Vector2(1080,143))))
+	var approach: PackedVector2Array = finder.find_path(valley,b)
+	check(not approach.is_empty() and approach.size()<25 and _legal_path(grid,valley,approach), "谷底山路连续接入北侧石梯，无需穿过前景高台")
+	var follower = preload("res://src/gameplay/grid/grid_path_follower.gd").new()
+	follower.set_pathfinder(finder)
+	var current := a
+	var legal := true
+	var arrived := false
+	var travel_seconds := 0.0
+	var rocks: Array[PackedVector2Array] = []
+	for polygon in Definition.navigation_data().hardCliffs:
+		rocks.append(Definition.polygon_world(polygon))
+	for step in range(10000):
+		var movement: Dictionary = follower.advance(current,b,0,80,.02)
+		travel_seconds += .02
+		current = movement.position
+		legal = legal and not grid.is_solid(grid.world_to_cell(current))
+		for rock in rocks:
+			legal = legal and not Geometry2D.is_point_in_polygon(current,rock)
+		if movement.arrived:
+			arrived = true
+			break
+	check(arrived and legal, "逐帧脚点沿高台石梯与谷底绕行，不进入前后两面石壁")
+	print("METRIC: 西北高台经西侧下山再沿谷底到北侧石梯 路径点=%d 通行=%.2fs" % [route.size(),travel_seconds])
 
 func _legal_path(grid: RefCounted, start: Vector2, path: PackedVector2Array) -> bool:
 	var last: Vector2i = grid.world_to_cell(start)

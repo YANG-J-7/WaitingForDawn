@@ -9,6 +9,8 @@ var _astar := AStar2D.new()
 var _synced_revision: int = -1
 var _path_cache: Dictionary = {}
 var _point_navigation: Dictionary = {}
+var _spawn_cache: Dictionary = {}
+var _spawn_revision: int = -1
 
 
 func _init(grid_model: RefCounted) -> void:
@@ -37,15 +39,23 @@ func find_path(
 	var candidates: Array[Vector2i] = _target_candidates(target_world, stop_radius)
 	var best_ids: Array[Vector2i] = []
 	var best_cost: float = INF
+	var best_approach: float = INF
 	for target_cell in candidates:
 		var ids: Array[Vector2i] = []
 		for id in _astar.get_id_path(_id(start_cell), _id(target_cell)):
 			ids.append(Vector2i(id % model.grid_size.x, id / model.grid_size.x))
 		if ids.is_empty() and start_cell != target_cell:
 			continue
-		var cost: float = float(ids.size()) * CELL_SIZE + model.cell_center(target_cell).distance_to(target_world)
-		if cost < best_cost:
+		# 正交、斜行与地形权重的实际代价不同，不能按路径点数量选路。
+		# 单位只走到交互外围，不把没有实际行走的“外围到目标中心”加入成本。
+		var cost := 0.0
+		for index in range(1,ids.size()):
+			var distance: float = model.cell_center(ids[index-1]).distance_to(model.cell_center(ids[index]))
+			cost += distance * maxf(1.0,float(model.cell_data(ids[index]).movement_cost))
+		var approach: float = model.cell_center(target_cell).distance_to(target_world)
+		if cost < best_cost or (is_equal_approx(cost,best_cost) and approach < best_approach):
 			best_cost = cost
+			best_approach = approach
 			best_ids = ids
 	if best_ids.is_empty():
 		if start_cell in candidates:
@@ -121,6 +131,21 @@ func _id(cell: Vector2i) -> int:
 
 func spawn_position(preferred: Vector2, anchor: Vector2 = Vector2.INF, radius: float = 96.0) -> Vector2:
 	# 出生直接落合法格，不把一条穿岩直线作为初始寻路。
+	# 空闲农民每帧也查询待命脚点；地形和占用不变时复用结果。
+	if _spawn_revision != int(model.revision):
+		_spawn_cache.clear()
+		_spawn_revision = int(model.revision)
+	var key := "%s/%s/%.4f" % [preferred,anchor,radius]
+	if _spawn_cache.has(key):
+		return _spawn_cache[key]
+	var result := _find_spawn_position(preferred,anchor,radius)
+	if _spawn_cache.size() >= MAX_CACHED_PATHS:
+		_spawn_cache.erase(_spawn_cache.keys()[0])
+	_spawn_cache[key] = result
+	return result
+
+
+func _find_spawn_position(preferred: Vector2, anchor: Vector2, radius: float) -> Vector2:
 	if anchor == Vector2.INF:
 		var cell := _nearest_open_cell(model.world_to_cell(preferred))
 		return model.cell_center(cell) if model.is_inside(cell) else Vector2.INF

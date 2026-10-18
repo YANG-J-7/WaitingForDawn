@@ -26,7 +26,11 @@ func _run_test() -> void:
 	start_button.pressed.emit()
 	for card_index in [0, 1, 3, 4]:
 		(card_grid.get_child(card_index) as Button).pressed.emit()
+	# 本用例验证箭塔伤害与清场流程，使用可覆盖四向主城入口的合法落点。
+	# 默认西侧落点无法覆盖东侧入口；最近外围路径不应为迁就夹具绕进射程。
+	tower.position = preload("res://src/gameplay/grid/map_definition.gd").CITY_POSITION+Vector2(-108,-108)
 	slot_button.pressed.emit()
+	_expect_true(tower.position.distance_to(controller.city_target_position)+96<=tower.definition.attack_range_tiles*32,"箭塔夹具覆盖主城四向交互边缘")
 	ready_button.pressed.emit()
 	await get_tree().process_frame
 	_expect_equal(RunState.phase, RunState.Phase.WAVE_COMBAT, "opening draft enters wave combat")

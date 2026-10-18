@@ -11,7 +11,7 @@ func _ready() -> void:
 	var pathfinder = GridPathfinderScript.new(model)
 	model.set_terrain_rect(Rect2(360, 0, 36, 360), &"water", false, false, INF)
 	var path: PackedVector2Array = pathfinder.find_path(Vector2(90, 90), Vector2(630, 90))
-	check(path.size() > 0, "AStarGrid2D可绕过有限湖水阻挡")
+	check(path.size() > 0, "网格寻路可绕过有限湖水阻挡")
 	var all_walkable := true
 	var went_around := false
 	for point in path:
@@ -36,6 +36,7 @@ func _ready() -> void:
 	check(not model.is_solid(model.world_to_cell(approach[-1])), "建筑外围终点保持可行走")
 
 	_test_corner_rule()
+	_test_spawn_occupancy()
 	get_tree().quit(failures)
 
 
@@ -47,6 +48,19 @@ func _test_corner_rule() -> void:
 	var pathfinder = GridPathfinderScript.new(model)
 	var path: PackedVector2Array = pathfinder.find_path(origin, model.cell_center(Vector2i(5, 5)))
 	check(path.size() == 0 or path[0] != model.cell_center(Vector2i(5, 5)), "两个正交障碍夹角禁止对角穿越")
+
+
+func _test_spawn_occupancy() -> void:
+	var model = GridMapModelScript.new()
+	var finder = GridPathfinderScript.new(model)
+	var preferred: Vector2 = model.cell_center(Vector2i(8,8))
+	var anchor := preferred + Vector2(72,0)
+	check(finder.spawn_position(preferred,anchor,216) == preferred, "空闲待命点优先采用合法预定脚点")
+	check(model.occupy(&"new_wall",preferred,Vector2i.ONE), "待命脚点可以被新建筑占用")
+	var alternate: Vector2 = finder.spawn_position(preferred,anchor,216)
+	check(alternate != preferred and not model.is_solid(model.world_to_cell(alternate)), "建筑占用变化立即清除脚点缓存并选择新落点")
+	model.release(&"new_wall")
+	check(finder.spawn_position(preferred,anchor,216) == preferred, "建筑释放后脚点缓存恢复原合法落点")
 
 
 func check(condition: bool, label: String) -> void:
