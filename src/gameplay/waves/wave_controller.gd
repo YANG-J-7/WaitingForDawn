@@ -293,9 +293,11 @@ func _assign_defensive_targets() -> void:
 	for enemy in enemies:
 		if not is_instance_valid(enemy) or not enemy.is_alive():
 			continue
+		enemy.prepare_city_route()
 		if enemy.attack_target_kind == &"guard" and is_instance_valid(enemy.guard_target) and enemy.guard_target.is_active():
 			var guard: BarracksGuard = enemy.guard_target
-			if guard.engaged_enemy == enemy and enemy.global_position.distance_to(guard.global_position) <= guard.definition.attack_range_pixels + guard.attackable_radius():
+			var clear_contact: bool = enemy.path_follower.pathfinder == null or enemy.path_follower.pathfinder.model.interaction_clear(enemy.global_position,guard.global_position)
+			if guard.engaged_enemy == enemy and clear_contact and enemy.global_position.distance_to(guard.global_position) <= guard.definition.attack_range_pixels + guard.attackable_radius():
 				continue
 		var target: Node2D = _nearest_forward_world_target(enemy)
 		if target != null and (target == enemy.world_target or target == enemy.barrier_target or target == enemy.guard_target):
@@ -341,27 +343,38 @@ func _nearest_forward_world_target(enemy: EnemyActor) -> Node2D:
 	for wall in barrier_walls:
 		if is_instance_valid(wall) and wall not in candidates:
 			candidates.append(wall)
-	var route: Vector2 = city_target_position - enemy.global_position
-	var route_length: float = route.length()
-	if route_length <= 0.001:
-		return null
-	var direction: Vector2 = route / route_length
+	if enemy.path_follower.pathfinder != null:
+		var blockers: Array[Vector2] = []
+		for candidate in candidates:
+			if is_instance_valid(candidate) and not candidate is FarmerAgent and not candidate is BarracksGuard and candidate.has_method("is_attackable") and bool(candidate.call("is_attackable")):
+				blockers.append(candidate.global_position)
+		enemy.set_route_blockers(blockers)
+		enemy.prepare_city_route()
 	var best_target: Node2D = null
-	var best_forward_distance: float = INF
+	var best_distance: float = INF
+	var best_direct_distance: float = INF
 	for candidate in candidates:
 		if not is_instance_valid(candidate) or not candidate.has_method("is_attackable") or not bool(candidate.call("is_attackable")):
 			continue
-		var relative: Vector2 = candidate.global_position - enemy.global_position
-		var forward_distance: float = relative.dot(direction)
-		if forward_distance < 0.0 or forward_distance >= route_length:
+		if candidate is BarracksGuard and not candidate.is_available() and candidate.engaged_enemy != enemy:
 			continue
-		var radius: float = float(candidate.call("attackable_radius")) if candidate.has_method("attackable_radius") else 24.0
-		var perpendicular_distance: float = absf(relative.cross(direction))
-		if perpendicular_distance > radius + 14.0:
+		if not enemy.is_on_route(candidate):
 			continue
-		if forward_distance < best_forward_distance:
+		var distance: float = enemy.global_position.distance_to(candidate.global_position)
+		var direct_distance := distance
+		if enemy.path_follower.pathfinder != null:
+			var approach := enemy.attack_approach(candidate)
+			if approach.is_empty():
+				continue
+			distance = 0.0
+			var origin := enemy.global_position
+			for point in approach:
+				distance += origin.distance_to(point)*maxf(1.0,float(enemy.path_follower.pathfinder.model.cell_data(enemy.path_follower.pathfinder.model.world_to_cell(point)).movement_cost))
+				origin = point
+		if distance < best_distance-.001 or (is_equal_approx(distance,best_distance) and direct_distance < best_direct_distance-.001):
 			best_target = candidate
-			best_forward_distance = forward_distance
+			best_distance = distance
+			best_direct_distance = direct_distance
 	return best_target
 
 

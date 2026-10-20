@@ -1,6 +1,6 @@
 version: 1
 stage: production
 engine: godot-4.7-development-validation
-updated: 2026-10-19
-current_goal: "配置测试截图与设计预览PNG导入元数据的Git忽略，取消197个文件的跟踪并保留本地文件；玩法沿用10月17日34组1467项基线，后续仍优先首次寻路尖峰、单位避让与自然长局"
-active_story: "production/stories/story-031-layered-large-map.md"
+updated: 2026-10-20
+current_goal: "野怪出生即规划最短合法进城路线，沿真实路线选择最近可达攻击目标，封路破障与移动目标恢复已验证；全量36组1518项及GL8项通过。后续按反馈复核布防，首次寻路尖峰、动态避让和自然长局仍待处理"
+active_story: "production/stories/story-017-route-targeting.md"

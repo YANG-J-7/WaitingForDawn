@@ -1,5 +1,7 @@
 """从当前导航数据导出山区路线总览；只写说明图和清单，不改玩法数据。"""
 from collections import Counter
+from datetime import date
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -7,7 +9,6 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / 'design/levels/mountain-routes-2026-10-17'
 NAV = ROOT / 'assets/map/dawn_large_v1/mountain-navigation.json'
 COLORS = [(98, 230, 169), (74, 211, 255), (211, 151, 255), (255, 167, 107)]
 GOLD = (255, 219, 89)
@@ -19,16 +20,16 @@ NAMES = [
     '中央分叉北向谷底路', '西北高台主路', '西北石矿支路', '东侧高台主路', '北侧顶层主路',
 ]
 LABELS = [
-    ((606,225),(535,230)), ((960,404),(884,420)), ((1108,441),(1080,479)),
+    ((606,225),(535,230)), ((960,404),(884,420)), ((1103,466),(1075,493)),
     ((1610,382),(1590,439)), ((590,80),(533,61)), ((615,96),(533,119)),
     ((659,125),(735,108)), ((805,162),(812,207)), ((1073,249),(1055,223)),
-    ((1084,285),(1100,321)), ((1300,310),(1300,350)), ((1197,352),(1243,387)),
+    ((1084,285),(1100,321)), ((1300,310),(1300,350)), ((1225,355),(1270,387)),
     ((1050,162),(1123,143)), ((859,63),(860,25)), ((800,34),(761,64)),
     ((1300,195),(1283,155)), ((1250,35),(1250,73)),
 ]
-STAIR_LABELS = [(581,161),(735,145),(1124,92),(1517,100),(1198,249),(978,331),(1128,387),(1534,327)]
+STAIR_LABELS = [(581,161),(735,145),(1124,92),(1517,100),(1198,249),(978,331),(1180,477),(1534,327)]
 STAIR_NAMES = ['西侧上山口', '西北高台石梯', '北侧谷底石梯', '东北高台石梯',
-               '中央高台石梯', '西南上山口', '南侧上山口', '东侧下山口']
+               '中央高台石梯', '西南上山口', '南侧双段石梯', '东侧下山口']
 FONT = 'C:/Windows/Fonts/msyh.ttc'
 
 
@@ -36,7 +37,10 @@ def font(size):
     return ImageFont.truetype(FONT, size)
 
 
-def build():
+def build(date_stamp=None, output=None):
+    date_stamp = date_stamp or date.today().isoformat()
+    date.fromisoformat(date_stamp)
+    OUT = Path(output) if output else ROOT / f'design/levels/mountain-routes-{date_stamp}'
     OUT.mkdir(parents=True, exist_ok=True)
     raw = NAV.read_bytes()
     nav = json.loads(raw)
@@ -127,7 +131,7 @@ def build():
         badge(p,pos,name,(245,245,235),23)
 
     d.text((42,27),'山区路线总览',font=font(43),fill='#f7edcf')
-    d.text((width-42,47),'2026-10-17  ·  当前游戏导航数据',font=font(23),fill='#a8bdcb',anchor='rm')
+    d.text((width-42,47),f'{date_stamp}  ·  当前游戏导航数据',font=font(23),fill='#a8bdcb',anchor='rm')
     d.text((42,92),'17 段山路  /  8 处石梯  /  4 个矿点  /  J 中央分叉',font=font(28),fill='white')
     for i,text in enumerate(['L0 山脚','L1 中层','L2 高台','L3 顶层','石梯 S0–S7']):
         x = 50+i*350
@@ -145,14 +149,14 @@ def build():
     d.text((42,height-56),'分叉 J：向西 R08  /  向北 R13 → S2  /  向东南 R09 → R11；上下平台只能经过对应石梯。',font=font(25),fill=GOLD)
     canvas.convert('RGB').save(OUT/'all-mountain-routes.png')
 
-    snapshot = dict(date='2026-10-17',source=str(NAV.relative_to(ROOT)).replace('\\','/'),
+    snapshot = dict(date=date_stamp,source=str(NAV.relative_to(ROOT)).replace('\\','/'),
                     sourceSha256=hashlib.sha256(raw).hexdigest(),
                     note='编号为文档标识；参考折线不是单位实际路径，实际通行由路格、层级、石梯和占用共同决定。',
                     routes=[dict(id=f'R{i+1:02}',name=NAMES[i],**r) for i,r in enumerate(nav['routes'])],
                     stairs=[dict(name=STAIR_NAMES[i],**s) for i,s in enumerate(nav['stairs'])],
                     junctions=nav['junctions'],registeredCellCount=len(lookup),registeredEdgeCount=edges)
     (OUT/'routes.json').write_text(json.dumps(snapshot,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-    rows = ['# 山区全部路线清单','', '整理日期：2026-10-17。依据当前运行导航数据生成；本次只整理路线，不修改游戏规则或地图。','',
+    rows = ['# 山区全部路线清单','', f'整理日期：{date_stamp}。依据当前运行导航数据生成，S6已校正为两段踏面及中间平台。','',
             '![山区路线总览](all-mountain-routes.png)','',
             '## 山路','', '| 编号 | 位置/用途 | 层级 | 参考起点 → 终点（母图坐标） |','|---|---|---|---|']
     for r in snapshot['routes']:
@@ -166,7 +170,7 @@ def build():
     rows += ['', '## 各入口与矿点','',
              '- 西侧入口：平原 → R01 → S0 → 西侧中层路网。西侧铁矿由R05附近的R06支路接入。',
              '- 西南入口：平原 → R02 → S5 → R10。',
-             '- 南侧入口：平原 → R03 → S6 → R12 → R11。R03连接S5、S6下端，平原仍可自由寻路。',
+             '- 南侧入口：平原 → R03 → S6下段石梯 → 中间平台转弯 → S6上段石梯 → R12 → R11。上下山都沿两段踏面通行，左侧岩壁禁行；R03连接S5、S6下端，平原仍可自由寻路。',
              '- 东侧入口：R04 → S7 → R11；R04另一端通向东侧地图边缘。',
              '- 西北石矿：西侧中层 → R07 → S1 → R14 → R15。西北高台在岩缘终止，不能直接跨崖进入中央谷底。',
              '- 中央石矿：J分叉 → R08末端附近/R09西端附近的合法采集边缘；矿点占地不能穿越，实际入口由当前占用决定。',
@@ -174,19 +178,23 @@ def build():
              '## 中央分叉 J','',
              '母图坐标(980,205)，层级L1。向西接R08，向北接R13并经S2抵达R17，向东南经R08末段接R09及R11。单位按目的地与当前占用选择最短合法路径；道路封闭时重算，有替代路才绕行，无路则停止。','',
              '## 阅读边界','',
-             '- 共17条参考折线、8处石梯、538个道路/石梯登记格。R编号依导航数组顺序，仅用于文档，并非固定巡逻顺序。',
+             f'- 共{len(nav["routes"])}条参考折线、{len(nav["stairs"])}处石梯、{len(lookup)}个道路/石梯登记格。R编号依导航数组顺序，仅用于文档，并非固定巡逻顺序。',
              '- 图上色块显示已登记道路格，细线连接符合层级/石梯规则的相邻格；资源和建筑的运行时占用还会进一步阻挡。',
              '- 裸岩、垂直石壁和水域不能移动或建造；山区离路草台不能走，仍按既有建造规则判断能否建造。',
              '- 石梯可走、不可建。L2西北高台与L2东侧高台不是同一块连续地面；不能只凭层级相同越过岩壁。',
              '- 36像素网格仍有边缘离散误差；这是当前数据总览，不代表新增了全部岩缘的人工验收。',
-             '- 上次真实游戏选路证据：[分叉QA](../../../tests/reports/qa-2026-10-17-junction-routes.md)。本次未重跑玩法测试。','',
+             '- 既有分叉选路证据：[分叉QA](../../../tests/reports/qa-2026-10-17-junction-routes.md)。S6修正证据：[双段石梯QA](../../../tests/reports/qa-2026-10-20-s6-stairs.md)。','',
              '## 数据与复用','', '[全部路线坐标JSON](routes.json)。源数据：`assets/map/dawn_large_v1/mountain-navigation.json`。',
              f'源数据SHA256：`{snapshot["sourceSha256"]}`。',
-             '重建：用带Pillow的Python运行`tools/export_mountain_route_atlas.py`。','']
+             f'重建：用带Pillow的Python运行`tools/export_mountain_route_atlas.py --date {date_stamp}`。','']
     (OUT/'README.md').write_text('\n'.join(rows),encoding='utf-8')
     counts = Counter(c['kind'] for c in lookup.values())
     print(json.dumps(dict(routes=len(NAMES),stairs=len(nav['stairs']),cells=dict(counts),edges=edges,output=str(OUT)),ensure_ascii=False))
 
 
 if __name__ == '__main__':
-    build()
+    parser = argparse.ArgumentParser(description='按当前导航数据导出山区路线图与坐标清单')
+    parser.add_argument('--date', help='整理日期，YYYY-MM-DD，默认本机当日')
+    parser.add_argument('--output', help='输出目录，默认按整理日期新建目录')
+    args = parser.parse_args()
+    build(args.date,args.output)

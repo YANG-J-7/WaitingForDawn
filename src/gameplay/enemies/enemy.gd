@@ -41,10 +41,22 @@ var current_health: int = 0
 var spawn_index: int = -1
 var reward_transaction_id: StringName = &""
 var path_follower: RefCounted = GridPathFollowerScript.new()
+var city_route := PackedVector2Array()
+var blocked_city_route := PackedVector2Array()
+var _city_route_cell := Vector2i(-1, -1)
+var _city_route_revision: int = -1
+var _city_route_target := Vector2.INF
+var _route_blockers: Array[Vector2] = []
 
 
 func set_pathfinder(value: RefCounted) -> void:
 	path_follower.set_pathfinder(value)
+	_city_route_revision = -1
+	_route_blockers.clear()
+	if definition != null:
+		prepare_city_route()
+		if attack_target_kind == &"city":
+			path_follower.prepare(global_position, _city_global_position(), 96.0)
 
 
 func _ready() -> void:
@@ -78,6 +90,11 @@ func configure(
 	age_seconds = 0.0
 	attack_elapsed = 0.0
 	path_follower.invalidate()
+	_city_route_revision = -1
+	_route_blockers.clear()
+	if path_follower.pathfinder != null:
+		prepare_city_route()
+		path_follower.prepare(global_position, _city_global_position(), 96.0)
 	health_changed.emit(current_health, definition.maximum_health)
 	queue_redraw()
 
@@ -101,7 +118,7 @@ func set_barrier(wall: BarrierWall) -> bool:
 		if parent_2d != null
 		else wall.global_position
 	)
-	if not _is_forward_target(local_barrier_position):
+	if not _accepts_route_target(wall, local_barrier_position):
 		return false
 	barrier_target = wall
 	target_position = local_barrier_position
@@ -123,7 +140,7 @@ func set_guard(guard: BarracksGuard) -> bool:
 		if parent_2d != null
 		else guard.global_position
 	)
-	if not _is_forward_target(local_guard_position):
+	if not _accepts_route_target(guard, local_guard_position):
 		return false
 	if not guard.engage_enemy(self):
 		return false
@@ -145,7 +162,7 @@ func set_world_target(target: Node2D) -> bool:
 		return false
 	var parent_2d := get_parent() as Node2D
 	var local_target_position: Vector2 = parent_2d.to_local(target.global_position) if parent_2d != null else target.global_position
-	if not _is_forward_target(local_target_position):
+	if not _accepts_route_target(target, local_target_position):
 		return false
 	barrier_target = null
 	guard_target = null
@@ -221,7 +238,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		position = position.move_toward(target_position, speed_pixels * delta)
 
-	if has_reached_target or position.distance_to(target_position) <= _contact_range():
+	if has_reached_target or (path_follower.pathfinder == null and position.distance_to(target_position) <= _contact_range()):
 		has_reached_target = true
 		attack_elapsed = 0.0
 
@@ -240,6 +257,11 @@ func _process_attack(delta: float) -> void:
 	if attack_target_kind == &"world" and not _has_valid_world_target():
 		_resume_to_city()
 		return
+	if path_follower.pathfinder != null and attack_target_kind != &"city":
+		var target_global := _attack_target_global_position()
+		if global_position.distance_to(target_global) > _contact_range() or not path_follower.pathfinder.model.interaction_clear(global_position, target_global):
+			has_reached_target = false
+			return
 	attack_elapsed += delta
 	while attack_elapsed >= definition.attack_interval:
 		attack_elapsed -= definition.attack_interval
@@ -325,6 +347,23 @@ func _contact_range() -> float:
 
 
 func is_on_route(candidate: Node2D) -> bool:
+	if path_follower.pathfinder != null:
+		prepare_city_route()
+		var points := city_route if not city_route.is_empty() else blocked_city_route
+		if points.is_empty():
+			return false
+		var radius := float(candidate.call("attackable_radius")) if candidate.has_method("attackable_radius") else 24.0
+		var origin := global_position
+		for endpoint in points:
+			var segment := endpoint - origin
+			if segment.length_squared() > .001:
+				var projection := (candidate.global_position-origin).dot(segment)/segment.length_squared()
+				if (origin != global_position or projection >= 0.0) and (endpoint != points[-1] or projection <= 1.0):
+					var closest := origin + segment*clampf(projection,0.0,1.0)
+					if closest.distance_to(candidate.global_position) <= radius+definition.route_corridor_pixels and path_follower.pathfinder.model.interaction_clear(closest,candidate.global_position):
+						return true
+			origin = endpoint
+		return false
 	var route: Vector2 = city_target_position - position
 	if route.length() <= 0.001:
 		return false
@@ -332,6 +371,57 @@ func is_on_route(candidate: Node2D) -> bool:
 	var forward_distance: float = relative.dot(route.normalized())
 	var radius: float = float(candidate.call("attackable_radius"))
 	return forward_distance >= 0.0 and forward_distance < route.length() and absf(relative.cross(route.normalized())) <= radius + 14.0
+
+
+func _city_global_position() -> Vector2:
+	var parent_2d := get_parent() as Node2D
+	return parent_2d.to_global(city_target_position) if parent_2d != null else city_target_position
+
+
+func prepare_city_route() -> void:
+	var finder: RefCounted = path_follower.pathfinder
+	if finder == null:
+		return
+	var cell: Vector2i = finder.model.world_to_cell(global_position)
+	var city := _city_global_position()
+	if _city_route_cell == cell and _city_route_revision == finder.current_revision() and _city_route_target == city:
+		return
+	_city_route_cell = cell
+	_city_route_revision = finder.current_revision()
+	_city_route_target = city
+	blocked_city_route.clear()
+	# 正在进城时复用实际剩余路径，避免每经过一格重新搜索主城各入口。
+	if attack_target_kind == &"city" and path_follower.path_revision == _city_route_revision and path_follower.target_position == city:
+		city_route = path_follower.path.slice(path_follower.path_index)
+	else:
+		city_route = finder.find_path(global_position, city, 96.0)
+	if city_route.is_empty():
+		blocked_city_route = finder.find_siege_route(global_position, city, 96.0, _route_blockers)
+
+
+func set_route_blockers(positions: Array[Vector2]) -> void:
+	if _route_blockers == positions: return
+	_route_blockers = positions.duplicate()
+	_city_route_revision = -1
+	prepare_city_route()
+
+
+func _accepts_route_target(candidate: Node2D, local_position: Vector2) -> bool:
+	return is_on_route(candidate) if path_follower.pathfinder != null else _is_forward_target(local_position)
+
+
+func attack_approach(candidate: Node2D) -> PackedVector2Array:
+	var radius := float(candidate.call("attackable_radius")) if candidate.has_method("attackable_radius") else 0.0
+	if candidate is BarracksGuard:
+		radius = 0.0
+	return path_follower.pathfinder.find_path(global_position, candidate.global_position, definition.attack_range_pixels+radius)
+
+
+func _attack_target_global_position() -> Vector2:
+	if attack_target_kind == &"world" and is_instance_valid(world_target): return world_target.global_position
+	if attack_target_kind == &"guard" and is_instance_valid(guard_target): return guard_target.global_position
+	if attack_target_kind == &"barrier" and is_instance_valid(barrier_target): return barrier_target.global_position
+	return _city_global_position()
 
 
 func _is_forward_target(candidate_position: Vector2) -> bool:

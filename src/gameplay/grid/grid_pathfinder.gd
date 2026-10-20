@@ -11,6 +11,8 @@ var _path_cache: Dictionary = {}
 var _point_navigation: Dictionary = {}
 var _spawn_cache: Dictionary = {}
 var _spawn_revision: int = -1
+var _siege_pathfinder: RefCounted
+var _siege_key: String = ""
 
 
 func _init(grid_model: RefCounted) -> void:
@@ -77,6 +79,16 @@ func find_path(
 
 func current_revision() -> int:
 	return int(model.revision)
+
+
+func find_siege_route(start: Vector2, target: Vector2, radius: float, blockers: Array[Vector2]) -> PackedVector2Array:
+	if blockers.is_empty(): return PackedVector2Array()
+	var key := "%d/%s" % [model.revision, blockers]
+	if key != _siege_key:
+		_siege_pathfinder = GridPathfinder.new(model.copy_without_occupants_at(blockers))
+		_siege_key = key
+	# 仅忽略登记的可摧毁占用，地形、岩壁、石梯跨层及其他占用保持。
+	return _siege_pathfinder.find_path(start, target, radius)
 
 
 func _sync_if_needed() -> void:

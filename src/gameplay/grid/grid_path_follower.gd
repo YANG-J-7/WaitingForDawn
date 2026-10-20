@@ -23,6 +23,24 @@ func invalidate() -> void:
 	arrived = false
 
 
+func prepare(current_position: Vector2, next_target: Vector2, next_stop_radius: float) -> void:
+	if pathfinder == null:
+		return
+	var target_changed := (
+		target_position == Vector2.INF
+		or target_position.distance_to(next_target) >= 18.0
+		or not is_equal_approx(stop_radius, next_stop_radius)
+		or (arrived and current_position.distance_to(next_target) > next_stop_radius + .001)
+	)
+	if target_changed or path_revision != pathfinder.current_revision():
+		target_position = next_target
+		stop_radius = next_stop_radius
+		path = pathfinder.find_path(current_position, next_target, next_stop_radius)
+		path_index = 0
+		path_revision = pathfinder.current_revision()
+		arrived = false
+
+
 func advance(
 	current_position: Vector2,
 	next_target: Vector2,
@@ -32,18 +50,7 @@ func advance(
 ) -> Dictionary:
 	if pathfinder == null or speed <= 0.0 or delta <= 0.0:
 		return {"position": current_position, "arrived": false, "has_path": false}
-	var target_changed := (
-		target_position == Vector2.INF
-		or target_position.distance_to(next_target) >= 18.0
-		or not is_equal_approx(stop_radius, next_stop_radius)
-	)
-	if target_changed or path_revision != pathfinder.current_revision():
-		target_position = next_target
-		stop_radius = next_stop_radius
-		path = pathfinder.find_path(current_position, next_target, next_stop_radius)
-		path_index = 0
-		path_revision = pathfinder.current_revision()
-		arrived = false
+	prepare(current_position, next_target, next_stop_radius)
 	if path.is_empty():
 		return {"position": current_position, "arrived": false, "has_path": false}
 	var result_position := current_position

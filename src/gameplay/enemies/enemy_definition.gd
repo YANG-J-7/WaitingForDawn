@@ -12,6 +12,7 @@ extends Resource
 @export_range(1, 10000, 1) var base_damage: int = 1
 @export_range(0.1, 30.0, 0.05) var attack_interval: float = 1.0
 @export_range(0.0, 256.0, 1.0) var attack_range_pixels: float = 40.0
+@export_range(0.0, 128.0, 1.0) var route_corridor_pixels: float = 14.0
 @export_range(1.0, 3.0, 0.05) var rush_multiplier: float = 1.0
 @export_range(0.0, 10.0, 0.1) var rush_duration: float = 0.0
 @export var body_color: Color = Color("b94b62")

@@ -272,6 +272,22 @@ func clear_occupancy() -> void:
 	revision += 1
 
 
+func copy_without_occupants_at(positions: Array[Vector2]) -> RefCounted:
+	# 只供封路时判断破障方向；实际移动始终读取原网格。
+	var result := GridMapModel.new()
+	result.grid_size = grid_size
+	result._cells = _cells.duplicate(true)
+	result._navigation = _navigation.duplicate(true)
+	result._resource_sites = _resource_sites.duplicate(true)
+	result._static_occupants = _static_occupants.duplicate()
+	result._occupant_cells = _occupant_cells.duplicate(true)
+	for point in positions:
+		var occupant: StringName = _static_occupants.get(world_to_cell(point), &"")
+		if not occupant.is_empty(): result.release(occupant)
+	result.revision = revision
+	return result
+
+
 func occupied_cells_for(occupant_id: StringName) -> Array[Vector2i]:
 	if not _occupant_cells.has(occupant_id):
 		return []
