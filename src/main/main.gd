@@ -11,7 +11,7 @@ const MountainRoadLayerScript = preload("res://src/gameplay/art/mountain_road_la
 const BuildingGroundingScript = preload("res://src/gameplay/art/building_grounding.gd")
 const OverlayScript = preload("res://src/gameplay/buildings/placement_overlay.gd")
 const ArtVisualScript = preload("res://src/gameplay/art/art_visual.gd")
-const MAP_BORDER_FOREST_TEXTURE: Texture2D = preload("res://assets/map/dawn_large_hd_v2/border-forest.png")
+const MAP_BORDER_FOREST_TEXTURE: Texture2D = preload("res://assets/map/dawn_wide_v3/border-forest.png")
 const MAP_SITE_DATA_PATH := MapDefinitionScript.DATA_PATH
 var map_camera: Camera2D
 var placement_overlay: Node2D
@@ -144,10 +144,8 @@ func _ready() -> void:
 	border_forest.texture = MAP_BORDER_FOREST_TEXTURE
 	border_forest.centered = false
 	border_forest.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	var forest_material := ShaderMaterial.new()
-	forest_material.shader = preload("res://src/gameplay/art/border_forest_cutout.gdshader")
-	border_forest.material = forest_material
-	border_forest.scale = MapLayout.BOUNDS.size / MapDefinitionScript.SOURCE_SIZE / MapDefinitionScript.visual_data().groundScale
+	# 草地残片已离线裁除，整张透明边界层与世界共边，避免再次套用旧图比例。
+	border_forest.scale = MapLayout.BOUNDS.size / MAP_BORDER_FOREST_TEXTURE.get_size()
 	border_forest.z_index = 0
 	add_child(border_forest)
 	move_child(border_forest, 2)

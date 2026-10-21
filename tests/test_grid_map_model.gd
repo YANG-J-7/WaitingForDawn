@@ -7,7 +7,7 @@ var failures: int = 0
 
 func _ready() -> void:
 	var grid = GridMapModelScript.new()
-	check(grid.grid_size == Vector2i(128, 72), "4608×2592地图建立128×72逻辑网格")
+	check(grid.grid_size == Vector2i(196, 80), "7056×2880地图建立196×80逻辑网格")
 	check(grid.world_to_cell(Vector2(0, 0)) == Vector2i(0, 0), "地图原点转换到首格")
 	check(grid.world_to_cell(Vector2(1380, 1030)) == Vector2i(38, 28), "世界坐标转换到预期格")
 	check(grid.cell_center(Vector2i(38, 28)).is_equal_approx(Vector2(1386, 1026)), "格坐标转换到36像素格中心")

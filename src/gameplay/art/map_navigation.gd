@@ -1,8 +1,8 @@
 extends Control
 ## 屏幕层小地图不会缩放HUD；点击只移动地图镜头。
 const Definition = preload("res://src/gameplay/grid/map_definition.gd")
-const TEXTURE: Texture2D = preload("res://assets/map/dawn_large_hd_v2/minimap.png")
-const MAP_RECT := Rect2(6, 6, 160, 90)
+const TEXTURE: Texture2D = preload("res://assets/map/dawn_wide_v3/minimap.png")
+const MAP_RECT := Rect2(6, 6, 160, 160.0 * 2880.0 / 7056.0)
 var main: Node2D
 var city_button: Button
 var full_button: Button
@@ -11,19 +11,19 @@ func configure(owner_main: Node2D) -> void:
 	main = owner_main
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	custom_minimum_size = Vector2(172,124)
+	custom_minimum_size = Vector2(172,100)
 	size = custom_minimum_size
 	tooltip_text = "点击小地图定位；Home回主城，M查看全图"
 	city_button = Button.new()
 	city_button.text = "回主城"
-	city_button.position = Vector2(6,99)
+	city_button.position = Vector2(6,75)
 	city_button.size = Vector2(78,23)
 	city_button.add_theme_font_size_override("font_size",12)
 	city_button.pressed.connect(main.map_camera.reset_view)
 	add_child(city_button)
 	full_button = Button.new()
 	full_button.text = "全图"
-	full_button.position = Vector2(88,99)
+	full_button.position = Vector2(88,75)
 	full_button.size = Vector2(78,23)
 	full_button.add_theme_font_size_override("font_size",12)
 	full_button.pressed.connect(main.map_camera.show_full_map)

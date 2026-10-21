@@ -49,7 +49,7 @@ func _ready() -> void:
 	add_child(layer)
 	layer.configure(grid)
 	check(is_equal_approx(layer.cell_size, 36.0), "地形渲染使用36像素原生格")
-	check(layer.rendered_cell_count == 128 * 72, "地形工具覆盖当前128×72逻辑格")
+	check(layer.rendered_cell_count == 196 * 80, "地形工具覆盖当前196×80逻辑格")
 	check(layer.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST, "地形层使用最近邻过滤")
 	check(layer.material is ShaderMaterial and layer.material.shader == TerrainGridLayerScript.RELIEF_SHADER, "草地使用保留岩面和坡脚明暗的材质")
 	check(layer.grass_cells_per_tile == 2, "草地覆盖2×2逻辑格72世界像素，建造网格仍为36像素")
@@ -118,7 +118,7 @@ func _ready() -> void:
 	add_child(main)
 	var terrain_node: Node2D = main.get_node("TerrainGridLayer") as Node2D
 	var forest_node: Sprite2D = main.get_node("BorderForest") as Sprite2D
-	check(terrain_node.chunks.size()==12 and terrain_node.chunks[0].texture.resource_path == "res://assets/map/dawn_large_hd_v2/ground-0-0.png", "运行高清底图分块加载，不再叠加旧图专用草地遮罩")
+	check(terrain_node.chunks.size()==18 and terrain_node.chunks[0].texture.resource_path == "res://assets/map/dawn_wide_v3/ground-0-0.png", "运行连续地形分块加载，不再叠加旧图专用草地遮罩")
 	check(main.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR, "精修底图连续采样，不强制放大像素格")
 	var city_keeps_nearest := false
 	for child in main.get_children():

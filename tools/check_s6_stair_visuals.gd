@@ -10,6 +10,9 @@ var output := "res://tests/reports/images/s6-stairs-2026-10-20/"
 var failures := 0
 
 func _ready() -> void:
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--evidence-dir="):
+			output=argument.trim_prefix("--evidence-dir=").trim_suffix("/")+"/"
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output))
 	var view := SubViewport.new()
 	view.size = Vector2i(1280,720)
@@ -72,7 +75,9 @@ func _ready() -> void:
 	await capture(view,"s6-downhill-route")
 	var file := FileAccess.open(output+"s6-paths.json",FileAccess.WRITE)
 	var source_up := []
-	for point in upward: source_up.append([point.x/4608*1672,point.y/2592*941])
+	for point in upward:
+		var source: Vector2 = Definition.world_to_source(point)
+		source_up.append([source.x,source.y])
 	file.store_string(JSON.stringify({"sourceUpward":source_up,"worldUpward":str(upward),"worldDownward":str(downward)},"\t"))
 	main.queue_free()
 	view.queue_free()

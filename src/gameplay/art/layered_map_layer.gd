@@ -13,6 +13,10 @@ func configure(grid: RefCounted) -> void:
 	rendered_cell_count = grid.grid_size.x * grid.grid_size.y
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	for entry in Definition.visual_data().get("chunks", []):
+		if entry.has("worldRect"):
+			var rect: Array = entry.worldRect
+			chunks.append({"texture": load("res://" + entry.path), "rect": Rect2(rect[0],rect[1],rect[2],rect[3])})
+			continue
 		var box: Array = entry.sourceRect
 		var origin := Definition.source_to_world(Vector2(box[0], box[1]))
 		var end := Definition.source_to_world(Vector2(box[2], box[3]))

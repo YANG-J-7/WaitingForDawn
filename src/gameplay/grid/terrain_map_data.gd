@@ -6,7 +6,7 @@ const SHORE_MOVEMENT_COST: float = 1.2
 
 static func apply_to(grid: RefCounted) -> void:
 	var groups: Dictionary = Definition.data().get("cells", {})
-	for terrain_type in [&"cliff", &"water", &"forest", &"road", &"ramp"]:
+	for terrain_type in [&"cliff", &"water", &"forest", &"boundary", &"road", &"ramp"]:
 		var cells: Array[Vector2i] = []
 		for cell in groups.get(String(terrain_type), []):
 			cells.append(Vector2i(cell[0], cell[1]))

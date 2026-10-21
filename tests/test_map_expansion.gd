@@ -12,9 +12,9 @@ func _ready() -> void:
 	check(main.has_method("active_towers"), "支持多箭塔实例")
 	check(main.has_method("active_barracks"), "支持多兵营实例")
 	check(main.get_node_or_null("MapCamera") != null, "大地图有独立镜头")
-	check(main.wave_controller.playable_bounds.size == Vector2(4608, 2592), "运行地图使用4608×2592分层地图")
+	check(main.wave_controller.playable_bounds.size == Vector2(7056, 2880), "运行地图使用7056×2880视口比例地图")
 	check(main.resource_sites.size() == 8, "新地图加载四处树林、两处石矿和两处铁矿")
-	check(not MapLayout.is_buildable(Vector2(4200, 2200), 24), "湖泊内部拒绝普通建筑")
+	check(not MapLayout.is_buildable(Vector2(4200, 2200)+MapLayout.Definition.SOURCE_WORLD_ORIGIN, 24), "湖泊内部拒绝普通建筑")
 	check(MapLayout.is_buildable(Vector2(800, 1000), 24), "中央草地保持可建造")
 	main._on_start_pressed()
 	main.opening_draft.active = false

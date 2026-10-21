@@ -52,7 +52,7 @@ func _ready() -> void:
 		check(stayed_open, "%s农民全过程未穿越阻挡" % site_id)
 		farmer.queue_free()
 		workplace.queue_free()
-	for point in [Vector2(2052,108), Vector2(2484,72), Vector2(2592,540), Vector2(3600,540)]:
+	for point in [(Vector2(2052,108)+Definition.SOURCE_WORLD_ORIGIN), (Vector2(2484,72)+Definition.SOURCE_WORLD_ORIGIN), (Vector2(2592,540)+Definition.SOURCE_WORLD_ORIGIN), (Vector2(3600,540)+Definition.SOURCE_WORLD_ORIGIN)]:
 		print("METRIC: 山地草台 %s 格=%s" % [point, grid.cell_data(grid.world_to_cell(point))])
 		check(grid.can_place(point, Vector2i(2,2)), "山区草台可建双格建筑：%s" % point)
 		if not grid.is_walkable(grid.world_to_cell(point)):
@@ -84,7 +84,7 @@ func _ready() -> void:
 	check(main.get_node("MountainRoadLayer").get_index() > main.terrain_grid_layer.get_index() and main.get_node("MountainRoadLayer").get_index() < main.get_node("ResourceSites").get_index(), "可见道路位于草地上方、资源与单位下方")
 	_test_building_flow(main, grid)
 	main._on_reset_pressed()
-	check(grid.can_place(Vector2(2052,108), Vector2i(2,2)), "重置释放草台建筑占用")
+	check(grid.can_place((Vector2(2052,108)+Definition.SOURCE_WORLD_ORIGIN), Vector2i(2,2)), "重置释放草台建筑占用")
 	check(not finder.find_path(start, grid.resource_site_center(&"iron_01"), 60).is_empty(), "重置后山区资源道路仍可达")
 	main.queue_free()
 	RunState.reset_to_boot()
@@ -92,12 +92,12 @@ func _ready() -> void:
 
 func _test_building_flow(main: Node, grid: RefCounted) -> void:
 	var card = preload("res://src/data/cards/farm.tres")
-	for point in [Vector2(2052,108), Vector2(2592,540), Vector2(3600,540)]:
+	for point in [(Vector2(2052,108)+Definition.SOURCE_WORLD_ORIGIN), (Vector2(2592,540)+Definition.SOURCE_WORLD_ORIGIN), (Vector2(3600,540)+Definition.SOURCE_WORLD_ORIGIN)]:
 		var card_id: int = main.run_card_inventory.add_card(card, 1)
 		check(main.placement_preview(card, point).valid, "草台拖牌显示合法预览：%s" % point)
 		check(main._try_place_map_building_card(card_id, point), "草台实际建造成功：%s" % point)
 		check(not grid.can_place(point, Vector2i(2,2)), "草台建筑写入真实占用：%s" % point)
-	var remote := Vector2(2484,72)
+	var remote := (Vector2(2484,72)+Definition.SOURCE_WORLD_ORIGIN)
 	var remote_id: int = main.run_card_inventory.add_card(card, 1)
 	var before: int = RunEconomy.amount(&"wood")
 	check(not main.placement_preview(card, remote).valid and not main._try_place_map_building_card(remote_id,remote), "离路山区岗位建筑拒绝预览及实际投放")

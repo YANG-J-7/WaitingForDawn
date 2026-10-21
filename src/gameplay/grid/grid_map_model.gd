@@ -106,7 +106,7 @@ func interaction_clear(from: Vector2, target: Vector2) -> bool:
 	var steps := maxi(1,ceili(from.distance_to(target)/(CELL_SIZE*0.25)))
 	for index in range(steps+1):
 		var cell := world_to_cell(from.lerp(target,float(index)/steps))
-		if not is_inside(cell) or cell_data(cell).terrain_type in [&"cliff",&"water",&"forest"]:
+		if not is_inside(cell) or cell_data(cell).terrain_type in [&"cliff",&"water",&"forest",&"boundary"]:
 			return false
 	return true
 

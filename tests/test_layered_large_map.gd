@@ -16,11 +16,11 @@ func _ready() -> void:
 	var grid: RefCounted = main.grid_map_model
 	var finder: RefCounted = main.grid_pathfinder
 	var start: Vector2 = Definition.CITY_POSITION+Vector2(108,0)
-	check(grid.grid_size == Vector2i(128,72),"4608×2592地图共9216格，36像素格保持")
+	check(grid.grid_size == Vector2i(196,80),"7056×2880地图共15680格，36像素格保持")
 	check(main.wave_controller.playable_bounds == Definition.BOUNDS,"世界边界共用地图定义")
 	check(main.resource_sites.size()==8,"四林两石两铁保持")
-	check(Definition.data().qc.initialCompositeMaxChannelDifference==0,"原始v1分层候选合成像素差为0，高清v2不沿用此指标")
-	check(main.terrain_grid_layer.chunks.size()==12,"地形分成12片并按视口裁绘")
+	check(Definition.data().legacyQC.initialCompositeMaxChannelDifference==0,"历史v1分层合成像素差为0，当前扩边图不沿用此指标")
+	check(main.terrain_grid_layer.chunks.size()==18,"连续地形分成18片并按视口裁绘")
 	var terrain_only := preload("res://src/gameplay/grid/grid_map_model.gd").new()
 	preload("res://src/gameplay/grid/terrain_map_data.gd").apply_to(terrain_only)
 	for entry in Definition.resource_sites():

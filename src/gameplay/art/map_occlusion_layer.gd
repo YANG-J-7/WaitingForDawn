@@ -30,5 +30,11 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	if main == null or main.map_camera == null: return
+	var visible: Rect2 = main.map_camera.visible_world_rect()
 	for piece in pieces:
-		draw_texture_rect(piece.texture,piece.rect,false,Color(1,1,1,piece.alpha))
+		# 高Z岩缘不会继承同Z底图的父级裁剪，按实际可玩视口裁切采样区。
+		var clipped: Rect2 = piece.rect.intersection(visible)
+		if not clipped.has_area(): continue
+		var source := Rect2((clipped.position-piece.rect.position)/piece.rect.size*piece.texture.get_size(),clipped.size/piece.rect.size*piece.texture.get_size())
+		draw_texture_rect_region(piece.texture,clipped,source,Color(1,1,1,piece.alpha))

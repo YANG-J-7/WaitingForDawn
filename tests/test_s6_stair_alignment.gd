@@ -53,7 +53,7 @@ func _ready() -> void:
 	get_tree().quit(failures)
 
 func _source(point: Vector2) -> Vector2:
-	return point/Definition.BOUNDS.size*Definition.SOURCE_SIZE
+	return Definition.world_to_source(point)
 
 func _visits(path: PackedVector2Array,zone: Rect2) -> bool:
 	for point in path:

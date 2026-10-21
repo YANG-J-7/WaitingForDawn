@@ -96,18 +96,24 @@ func _ready() -> void:
 			var hd_chunks: Array = main.terrain_grid_layer.chunks.duplicate(true)
 			var occlusion: Node2D = main.get_node("MapOcclusionLayer")
 			occlusion.hide()
-			for index in range(hd_chunks.size()):
-				main.terrain_grid_layer.chunks[index].texture = load("res://"+Definition.data().chunks[index].path)
+			var old_map: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/map/dawn_large_v1/map.json"))
+			var old_chunks: Array[Dictionary] = []
+			for entry in old_map.chunks:
+				var box: Array = entry.sourceRect
+				var origin: Vector2 = Definition.source_to_world(Vector2(box[0],box[1]))
+				var end: Vector2 = Definition.source_to_world(Vector2(box[2],box[3]))
+				old_chunks.append({"texture":load("res://"+entry.path),"rect":Rect2(origin,end-origin)})
+			main.terrain_grid_layer.chunks=old_chunks
 			await capture(view,"stairs-max-zoom-old-source")
 			main.terrain_grid_layer.chunks = hd_chunks
 			occlusion.show()
-			check(main.terrain_grid_layer.chunks[6].texture.get_width()>=1200,"运行地形使用新增高清像素，未继续拉伸418像素旧图")
+			check(main.terrain_grid_layer.chunks[6].texture.get_width()>=1100,"运行地形使用独立高清像素，未继续拉伸418像素旧图")
 			main.map_camera.focus_world(forest.position)
 			await capture(view,"forest-max-zoom")
 			var hd_forest: Texture2D = forest.art_visual.texture
 			var hd_scale: Vector2 = forest.art_visual.scale
 			forest.art_visual.texture = load("res://assets/map/dawn_large_v1/forest_04.png")
-			forest.art_visual.scale = Definition.BOUNDS.size/Definition.SOURCE_SIZE
+			forest.art_visual.scale = Definition.SOURCE_WORLD_SIZE/Definition.SOURCE_SIZE
 			await capture(view,"forest-max-zoom-old-source")
 			forest.art_visual.texture = hd_forest
 			forest.art_visual.scale = hd_scale

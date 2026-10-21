@@ -1,0 +1,429 @@
+{
+  "schema": "waiting-for-dawn.hd-visual.v3",
+  "sourceSize": [
+    1672,
+    941
+  ],
+  "worldSize": [
+    7056,
+    2880
+  ],
+  "groundScale": 1,
+  "forestScale": 6,
+  "chunks": [
+    {
+      "path": "assets/map/dawn_wide_v3/ground-0-0.png",
+      "worldRect": [
+        0,
+        0,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-1-0.png",
+      "worldRect": [
+        1176,
+        0,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-2-0.png",
+      "worldRect": [
+        2352,
+        0,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-3-0.png",
+      "worldRect": [
+        3528,
+        0,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-4-0.png",
+      "worldRect": [
+        4704,
+        0,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-5-0.png",
+      "worldRect": [
+        5880,
+        0,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-0-1.png",
+      "worldRect": [
+        0,
+        960,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-1-1.png",
+      "worldRect": [
+        1176,
+        960,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-2-1.png",
+      "worldRect": [
+        2352,
+        960,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-3-1.png",
+      "worldRect": [
+        3528,
+        960,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-4-1.png",
+      "worldRect": [
+        4704,
+        960,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-5-1.png",
+      "worldRect": [
+        5880,
+        960,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-0-2.png",
+      "worldRect": [
+        0,
+        1920,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-1-2.png",
+      "worldRect": [
+        1176,
+        1920,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-2-2.png",
+      "worldRect": [
+        2352,
+        1920,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-3-2.png",
+      "worldRect": [
+        3528,
+        1920,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-4-2.png",
+      "worldRect": [
+        4704,
+        1920,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/ground-5-2.png",
+      "worldRect": [
+        5880,
+        1920,
+        1176,
+        960
+      ],
+      "pixelSize": [
+        1176,
+        960
+      ]
+    }
+  ],
+  "forests": [
+    {
+      "id": "forest_02",
+      "path": "assets/map/dawn_large_hd_v2/forest_02.png",
+      "sourceRect": [
+        530,
+        258,
+        717,
+        417
+      ],
+      "pixelSize": [
+        1122,
+        954
+      ]
+    },
+    {
+      "id": "forest_04",
+      "path": "assets/map/dawn_large_hd_v2/forest_04.png",
+      "sourceRect": [
+        380,
+        378,
+        610,
+        567
+      ],
+      "pixelSize": [
+        1380,
+        1134
+      ]
+    },
+    {
+      "id": "forest_03",
+      "path": "assets/map/dawn_large_hd_v2/forest_03.png",
+      "sourceRect": [
+        714,
+        379,
+        914,
+        541
+      ],
+      "pixelSize": [
+        1200,
+        972
+      ]
+    },
+    {
+      "id": "forest_05",
+      "path": "assets/map/dawn_large_hd_v2/forest_05.png",
+      "sourceRect": [
+        585,
+        606,
+        796,
+        793
+      ],
+      "pixelSize": [
+        1266,
+        1122
+      ]
+    }
+  ],
+  "occluders": [
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-0.png",
+      "sourceRect": [
+        474,
+        110,
+        783,
+        228
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/cliff-1-repaired.png",
+      "sourceRect": [
+        585,
+        0,
+        1041,
+        183
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-2.png",
+      "sourceRect": [
+        681,
+        172,
+        909,
+        292
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-3.png",
+      "sourceRect": [
+        925,
+        249,
+        1093,
+        356
+      ]
+    },
+    {
+      "path": "assets/map/dawn_wide_v3/cliff-4-repaired.png",
+      "sourceRect": [
+        1109,
+        48,
+        1492,
+        185
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-5.png",
+      "sourceRect": [
+        1125,
+        211,
+        1421,
+        320
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-6.png",
+      "sourceRect": [
+        1105,
+        351,
+        1318,
+        471
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-7.png",
+      "sourceRect": [
+        1408,
+        271,
+        1611,
+        388
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-8.png",
+      "sourceRect": [
+        1583,
+        148,
+        1672,
+        210
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-9.png",
+      "sourceRect": [
+        1016,
+        527,
+        1109,
+        575
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-10.png",
+      "sourceRect": [
+        1262,
+        508,
+        1439,
+        604
+      ]
+    },
+    {
+      "path": "assets/map/dawn_large_hd_v2/cliff-11.png",
+      "sourceRect": [
+        1060,
+        691,
+        1249,
+        787
+      ]
+    }
+  ],
+  "border": {
+    "sprite": "assets/map/dawn_wide_v3/border-forest.png",
+    "worldRect": [
+      0,
+      0,
+      7056,
+      2880
+    ],
+    "occlusionClass": "tall",
+    "actorSafeArea": null,
+    "occupantPolicy": "blocked_boundary"
+  }
+}

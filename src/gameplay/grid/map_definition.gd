@@ -2,22 +2,24 @@ class_name MapDefinition
 extends RefCounted
 ## 显示、地形、资源、镜头与出生共享的地图定义入口。
 const CELL_SIZE := 36.0
-const GRID_SIZE := Vector2i(128, 72)
-const BOUNDS := Rect2(0, 0, 4608, 2592)
+const GRID_SIZE := Vector2i(196, 80)
+const BOUNDS := Rect2(0, 0, 7056, 2880)
 const SOURCE_SIZE := Vector2(1672, 941)
-const CITY_POSITION := Vector2(1728, 1620)
+const SOURCE_WORLD_SIZE := Vector2(4608, 2592)
+const SOURCE_WORLD_ORIGIN := Vector2(2448, 288)
+const CITY_POSITION := Vector2(4176, 1908)
 const SPAWN_POINTS: Array[Vector2] = [
-	Vector2(756, 216), Vector2(2808, 36),
-	Vector2(468, 1116), Vector2(828, 2160),
+	Vector2(3204, 504), Vector2(5256, 324),
+	Vector2(2916, 1404), Vector2(3276, 2448),
 ]
-const DATA_PATH := "res://assets/map/dawn_large_v1/map.json"
+const DATA_PATH := "res://assets/map/dawn_wide_v3/map.json"
 static var _data: Dictionary = {}
 static var _visual: Dictionary = {}
 static var _navigation: Dictionary = {}
 
 static func navigation_data() -> Dictionary:
 	if _navigation.is_empty():
-		var parsed = JSON.parse_string(FileAccess.get_file_as_string("res://assets/map/dawn_large_v1/mountain-navigation.json"))
+		var parsed = JSON.parse_string(FileAccess.get_file_as_string("res://assets/map/dawn_wide_v3/mountain-navigation.json"))
 		if parsed is Dictionary:
 			_navigation = parsed
 		else:
@@ -26,7 +28,7 @@ static func navigation_data() -> Dictionary:
 
 static func visual_data() -> Dictionary:
 	if _visual.is_empty():
-		var parsed = JSON.parse_string(FileAccess.get_file_as_string("res://assets/map/dawn_large_hd_v2/visual.json"))
+		var parsed = JSON.parse_string(FileAccess.get_file_as_string("res://assets/map/dawn_wide_v3/visual.json"))
 		if parsed is Dictionary: _visual = parsed
 	return _visual
 
@@ -40,7 +42,11 @@ static func data() -> Dictionary:
 	return _data
 
 static func source_to_world(point: Vector2) -> Vector2:
-	return point / SOURCE_SIZE * BOUNDS.size
+	# 原山区不随扩边拉伸；旧图坐标与新增世界范围分别定义。
+	return SOURCE_WORLD_ORIGIN + point / SOURCE_SIZE * SOURCE_WORLD_SIZE
+
+static func world_to_source(point: Vector2) -> Vector2:
+	return (point - SOURCE_WORLD_ORIGIN) / SOURCE_WORLD_SIZE * SOURCE_SIZE
 
 static func polygon_world(points: Array) -> PackedVector2Array:
 	var result := PackedVector2Array()

@@ -1,0 +1,101 @@
+{
+  "date": "2026-10-21",
+  "tool": "built-in image_gen",
+  "mapMode": "scene_mode",
+  "visualModel": "layered_raster",
+  "runtimeObjectModel": "existing_separate_props",
+  "collisionModel": "project-native grid + blocked north boundary",
+  "engineTarget": "Godot 4.7",
+  "worldSize": [
+    7056,
+    2880
+  ],
+  "legacyWorldOffset": [
+    2448,
+    288
+  ],
+  "generatedAssets": [
+    {
+      "path": "extension-source.png",
+      "prompt": "extension-source.prompt.txt",
+      "reference": "references/extension-guide.png",
+      "nativeSize": [
+        1964,
+        801
+      ],
+      "sha256": "fe125440fe5ad2888453290aa25393e47d428e5d4fe8c15b597ab3ddad011951"
+    },
+    {
+      "path": "north-source.png",
+      "prompt": "north-source.prompt.txt",
+      "reference": "references/north-guide.png",
+      "nativeSize": [
+        2106,
+        747
+      ],
+      "sha256": "d532b8b7d52ec989d17b540872098224ede7a4904aef9cffd59e78eb10e126ba"
+    },
+    {
+      "path": "grass-repair-source.png",
+      "prompt": "grass-repair-source.prompt.txt",
+      "reference": "references/grass-seam-reference.png",
+      "nativeSize": [
+        1024,
+        1536
+      ],
+      "sha256": "eb582aed760813801c902bfc1c09425296f0601809c1a0a2c24acb9ef18446b1"
+    },
+    {
+      "path": "west-source.png",
+      "prompt": "west-source.prompt.txt",
+      "reference": "references/west-guide.png",
+      "nativeSize": [
+        1058,
+        1487
+      ],
+      "sha256": "b95fadbb1c0a12d9d71f85ad1eb0ee063760695619eddbcbd9d2aa32eb8d7e1c"
+    },
+    {
+      "path": "grass-material-v2-source.png",
+      "prompt": "grass-material-v2-source.prompt.txt",
+      "reference": "references/grass-material-v2.png",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "sha256": "b6731237edc7da90edf33d4ace233405bc39ca2efe15d08e2830d2a1c27418d6"
+    },
+    {
+      "path": "north-join-v2-source.png",
+      "prompt": "north-join-v2-source.prompt.txt",
+      "reference": "references/north-join-v2.png",
+      "nativeSize": [
+        2089,
+        753
+      ],
+      "sha256": "08c1f522c02e97651b3cab1b614c400a6219c62484fdf461c6844edea3967697"
+    },
+    {
+      "path": "north-continuity-v3-source.png",
+      "prompt": "north-continuity-v3-source.prompt.txt",
+      "reference": "references/north-continuity-v3.png",
+      "nativeSize": [
+        2103,
+        748
+      ],
+      "sha256": "fee863ff8552c27b23be4a9d5539ccb08412affaea3cbe2a256e11fea2c233e0"
+    },
+    {
+      "path": "north-clean-v4-source.png",
+      "prompt": "north-clean-v4-source.prompt.txt",
+      "reference": "references/north-clean-v4.png",
+      "nativeSize": [
+        2103,
+        748
+      ],
+      "sha256": "cc38c9dfbfddb828fe6d2911423757ba30acc70d8a13e6bce530984784d5a5cc"
+    }
+  ],
+  "revision": "join-repair-v4",
+  "composition": "原山区像素保护；顶部真实坐标补绘；全平原共用一份生成草地材质，以重叠区最小色差剪切线拼合"
+}
