@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-23",
+  "generator": "内置 image_gen",
+  "reference_roles": {
+    "assets/art_candidates/night_set_v1/town_hall.png": "建筑身份、原结构与材质",
+    "design/art/concepts/town-hall-redesign-2026-10-23/town-hall-design-v1.png": "用户确认的阴影、动画与冷暖方向"
+  },
+  "original_directory": "C:/Users/y1971/.codex/generated_images/01a1667b-fa09-78a2-a2e3-9fa205c6b7ce",
+  "originals": {
+    "body-raw.png": "exec-2a96b2b9-fab6-444e-be1e-1bb45d37f84a.png",
+    "flag-raw.png": "exec-379a3a43-747e-47b4-86c0-9639cdf50430.png",
+    "flame-raw.png": "exec-a06f56fe-bb65-41b2-adcb-16258dda2f8c.png",
+    "smoke-raw.png": "exec-e720399c-dbf1-4254-8aaf-94468f7731d0.png"
+  },
+  "processing": "generate2dsprite process：body为1×1，其余2×2；统一preserve缩放，largest主体，strict-qc；随后tools/build_town_hall.py仅作根部平移、烟去色和alpha轮廓投影",
+  "status": "runtime_candidate"
+}

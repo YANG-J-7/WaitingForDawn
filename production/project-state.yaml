@@ -1,6 +1,6 @@
 version: 1
 stage: production
 engine: godot-4.7-development-validation
-updated: 2026-10-21
-current_goal: "用户指出上一轮仍有西侧竖向草地接缝与顶部山区水带/错层，正修复两处合成；保持7056×2880世界、资源及导航，必须补查完整交界与近景，原视觉通过结论待本轮纠正"
-active_story: "production/stories/story-031-layered-large-map.md"
+updated: 2026-10-23
+current_goal: "Story-032主城分层阴影与待机动画已接入；18项专项、38组1560项回归、GL35项与素材检查通过，待用户最终视觉复核；原地图交界反馈与首次寻路尖峰保留"
+active_story: "production/stories/story-032-town-hall-idle.md"
