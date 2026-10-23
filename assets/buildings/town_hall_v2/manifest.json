@@ -1,0 +1,271 @@
+{
+  "status": "runtime_candidate",
+  "body_bbox": [
+    257,
+    32,
+    1215,
+    1075
+  ],
+  "body_size": [
+    958,
+    1043
+  ],
+  "anchors": {
+    "flag": [
+      0.4519832985386221,
+      0.07574304889741132
+    ],
+    "fire_left": [
+      0.2536534446764092,
+      0.785234899328859
+    ],
+    "fire_right": [
+      0.4311064718162839,
+      0.8418024928092043
+    ],
+    "smoke": [
+      0.8068893528183716,
+      0.33557046979865773
+    ]
+  },
+  "display_size": [
+    180,
+    176
+  ],
+  "animations": {
+    "flag": {
+      "roots": [
+        {
+          "before": [
+            59,
+            125.5
+          ],
+          "shift": [
+            -11,
+            2
+          ],
+          "target": [
+            48,
+            128
+          ]
+        },
+        {
+          "before": [
+            60,
+            124.5
+          ],
+          "shift": [
+            -12,
+            4
+          ],
+          "target": [
+            48,
+            128
+          ]
+        },
+        {
+          "before": [
+            61,
+            125.0
+          ],
+          "shift": [
+            -13,
+            3
+          ],
+          "target": [
+            48,
+            128
+          ]
+        },
+        {
+          "before": [
+            62,
+            124.5
+          ],
+          "shift": [
+            -14,
+            4
+          ],
+          "target": [
+            48,
+            128
+          ]
+        }
+      ],
+      "qc": {
+        "frame_count": 4,
+        "valid_frame_count": 4,
+        "empty_count": 0,
+        "edge_touch_count": 0,
+        "paste_clamped_count": 0,
+        "body_scale_mean": 0.3846532117673605,
+        "output_subject_height_mean": 64.5,
+        "body_scale_cv": 0.018492989498732505,
+        "anchor_x_std": 0.03131874364106655,
+        "anchor_y_std": 0.06206742784276939,
+        "anchor_y_mean": 0.4846230158730159
+      }
+    },
+    "flame": {
+      "roots": [
+        {
+          "before": [
+            127.0,
+            249
+          ],
+          "shift": [
+            1,
+            -17
+          ],
+          "target": [
+            128,
+            232
+          ]
+        },
+        {
+          "before": [
+            127.0,
+            249
+          ],
+          "shift": [
+            1,
+            -17
+          ],
+          "target": [
+            128,
+            232
+          ]
+        },
+        {
+          "before": [
+            127.0,
+            249
+          ],
+          "shift": [
+            1,
+            -17
+          ],
+          "target": [
+            128,
+            232
+          ]
+        },
+        {
+          "before": [
+            127.0,
+            249
+          ],
+          "shift": [
+            1,
+            -17
+          ],
+          "target": [
+            128,
+            232
+          ]
+        }
+      ],
+      "qc": {
+        "frame_count": 4,
+        "valid_frame_count": 4,
+        "empty_count": 0,
+        "edge_touch_count": 0,
+        "paste_clamped_count": 0,
+        "body_scale_mean": 0.26410746132993135,
+        "output_subject_height_mean": 109.25,
+        "body_scale_cv": 0.02240011392832137,
+        "anchor_x_std": 0.006611760277053223,
+        "anchor_y_std": 0.028282510496326265,
+        "anchor_y_mean": 0.8060515873015873
+      }
+    },
+    "smoke": {
+      "roots": [
+        {
+          "before": [
+            123.5,
+            252
+          ],
+          "shift": [
+            4,
+            -20
+          ],
+          "target": [
+            128,
+            232
+          ]
+        },
+        {
+          "before": [
+            126.5,
+            251
+          ],
+          "shift": [
+            2,
+            -19
+          ],
+          "target": [
+            128,
+            232
+          ]
+        },
+        {
+          "before": [
+            123.5,
+            253
+          ],
+          "shift": [
+            4,
+            -21
+          ],
+          "target": [
+            128,
+            232
+          ]
+        },
+        {
+          "before": [
+            127.5,
+            247
+          ],
+          "shift": [
+            0,
+            -15
+          ],
+          "target": [
+            128,
+            232
+          ]
+        }
+      ],
+      "qc": {
+        "frame_count": 4,
+        "valid_frame_count": 4,
+        "empty_count": 0,
+        "edge_touch_count": 0,
+        "paste_clamped_count": 0,
+        "body_scale_mean": 0.13586600840170024,
+        "output_subject_height_mean": 58.25,
+        "body_scale_cv": 0.20908666980038237,
+        "anchor_x_std": 0.05671059345947026,
+        "anchor_y_std": 0.04259703341397429,
+        "anchor_y_mean": 0.7929964539007092
+      }
+    }
+  },
+  "sources": {
+    "body-raw.png": "bd81f7c47051ea48a4e62ac3942104d5e1624bf8768bc4e339248e776cdbe3af",
+    "body-raw.png.import": "1319d9b31a1fcce83b983a8d1b04ddcc7f44a389d1c028626a95181949f47064",
+    "body.prompt.txt": "5ba88ed39080abb56f3488cea03a823e010cc9fc311ca31dc666f524a2b3d76b",
+    "flag-raw.png": "7a653f86245f0d800da8dbd2cd7401f04a2544b9b4cbdf7a1fa492cd42c1f33b",
+    "flag-raw.png.import": "9343336b3abc88aaeeec04a16e12f8b859f442263e04507a82e851345108b109",
+    "flag.prompt.txt": "587629843b30845298e5ecdd35b7916d83107bb8763420f6cd4953120c33006d",
+    "flame-raw.png": "894b96c5a7d3ccf9e790422c65ee3832805355cc2a68fddeb18cb6334921a224",
+    "flame-raw.png.import": "05fcf3b4eb6af14382ff28cdaecb1f6e5926602c945cf710d7d8ca2a6032f79a",
+    "flame.prompt.txt": "cd18876f04a150bd654db1e4e7ac1f3ce4fb577ba583346b435f59c7cd71ad5c",
+    "generation-record.json": "c6a7d257620fee7591055b01f73d9574e732c115fb84e003978238fe319b861a",
+    "smoke-raw.png": "9aa7908d8c069fac952d1390139fa8dddc96cca05b9b3ab11479b313bde36a58",
+    "smoke-raw.png.import": "ce4ddccecd06ec271850f1e1b84dd73573b4892e8aa8e7f1b556e41d3db33f56",
+    "smoke.prompt.txt": "f5fc946bef4bf6f7086805161a6530a31785fa7a14607b7a7d377194645c7a6b"
+  }
+}

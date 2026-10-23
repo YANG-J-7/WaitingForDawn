@@ -8,7 +8,7 @@ const TerrainMapDataScript = preload("res://src/gameplay/grid/terrain_map_data.g
 const TerrainGridLayerScript = preload("res://src/gameplay/art/layered_map_layer.gd")
 const MapDefinitionScript = preload("res://src/gameplay/grid/map_definition.gd")
 const MountainRoadLayerScript = preload("res://src/gameplay/art/mountain_road_layer.gd")
-const BuildingGroundingScript = preload("res://src/gameplay/art/building_grounding.gd")
+const TownHallVisualScript = preload("res://src/gameplay/art/town_hall_visual.gd")
 const OverlayScript = preload("res://src/gameplay/buildings/placement_overlay.gd")
 const ArtVisualScript = preload("res://src/gameplay/art/art_visual.gd")
 const MAP_BORDER_FOREST_TEXTURE: Texture2D = preload("res://assets/map/dawn_wide_v3/border-forest.png")
@@ -170,14 +170,10 @@ func _ready() -> void:
 	map_camera = MapCameraScript.new()
 	map_camera.name = "MapCamera"
 	add_child(map_camera)
-	var city_art := ArtVisualScript.new() as ArtVisual
+	var city_art := TownHallVisualScript.new() as Node2D
+	city_art.name = "TownHallVisual"
 	city_art.position = wave_controller.city_target_position
-	city_art.configure_world("town_hall", Vector2(90, 88), &"lantern")
 	add_child(city_art)
-	var city_grounding: Node2D = BuildingGroundingScript.new() as Node2D
-	city_grounding.position = wave_controller.city_target_position
-	city_grounding.configure(MapLayout.CITY_FOOTPRINT, &"town_hall")
-	add_child(city_grounding)
 	map_camera.surface = map_drop_surface
 	map_drop_surface.screen_to_world = map_camera.screen_to_world
 	map_drop_surface.gui_input.connect(map_camera.handle_map_input)

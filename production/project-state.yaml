@@ -1,6 +1,12 @@
 version: 1
 stage: production
 engine: godot-4.7-development-validation
+<<<<<<< HEAD
 updated: 2026-10-22
 current_goal: "草地二次优化已接入：细草v3、条带降幅与色调分离过渡；144项回归、GL38项及61项确定性检查通过，最终观感待复核；首次寻路尖峰与自然长局待后续"
 active_story: "production/stories/story-031-layered-large-map.md"
+=======
+updated: 2026-10-23
+current_goal: "Story-032主城分层阴影与待机动画已接入；18项专项、38组1560项回归、GL35项与素材检查通过，待用户最终视觉复核；原地图交界反馈与首次寻路尖峰保留"
+active_story: "production/stories/story-032-town-hall-idle.md"
+>>>>>>> dbbe02aa62253eddf3a849c0c79956867a0fd4a3

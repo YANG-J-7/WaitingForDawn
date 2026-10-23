@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-23",
+  "status": "candidate",
+  "integrated": false,
+  "generator": "内置 image_gen",
+  "image": "town-hall-design-v1.png",
+  "prompt": "prompt-used.txt",
+  "source": "C:/Users/y1971/.codex/generated_images/01a1667b-fa09-78a2-a2e3-9fa205c6b7ce/exec-7049d1ce-585d-4714-9c03-0141c398cd86.png",
+  "references": [
+    "assets/art_candidates/night_set_v1/town_hall.png",
+    "tests/reports/images/map-join-repair-2026-10-21/1280x720-city.png"
+  ],
+  "sha256": "A85BEEC6B27A619D942B4D75401F8C32ECCAC11861CEE2D4706A251AAC67DAD9",
+  "scope": "静态概念设计板；动画关键姿态为示意，非生产序列帧；未接入游戏"
+}

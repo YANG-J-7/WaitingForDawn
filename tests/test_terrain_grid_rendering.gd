@@ -112,7 +112,8 @@ func _ready() -> void:
 		"res://src/gameplay/defenses/barrier_wall.gd",
 	]:
 		var file := FileAccess.open(path, FileAccess.READ)
-		check(file != null and file.get_as_text().contains("BuildingGroundingScript"), "%s接入建筑地基" % path.get_file())
+		var source := file.get_as_text() if file != null else ""
+		check(source.contains("TownHallVisualScript") if path.ends_with("main.gd") else source.contains("BuildingGroundingScript"), "%s接入建筑地基" % path.get_file())
 
 	var main := MAIN_SCENE.instantiate()
 	add_child(main)
@@ -120,10 +121,7 @@ func _ready() -> void:
 	var forest_node: Sprite2D = main.get_node("BorderForest") as Sprite2D
 	check(terrain_node.chunks.size()==18 and terrain_node.chunks[0].texture.resource_path == "res://assets/map/dawn_wide_v3/ground-0-0.png", "运行连续地形分块加载，不再叠加旧图专用草地遮罩")
 	check(main.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR, "精修底图连续采样，不强制放大像素格")
-	var city_keeps_nearest := false
-	for child in main.get_children():
-		if child is ArtVisual and child.texture.resource_path.ends_with("town_hall.png"):
-			city_keeps_nearest = child.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST
+	var city_keeps_nearest: bool = main.get_node("TownHallVisual").texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST
 	check(city_keeps_nearest, "建筑保留原最近邻过滤，不随底图改成平滑")
 	check(forest_node.texture != null and forest_node.visible, "地图边界树林运行时可见")
 	check(terrain_node.z_index >= 0 and forest_node.z_index >= 0, "地形和边界树林不会绘制在主底图之后被覆盖")
