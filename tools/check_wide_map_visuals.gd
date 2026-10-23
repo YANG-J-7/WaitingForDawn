@@ -2,7 +2,7 @@ extends Node
 const Definition = preload("res://src/gameplay/grid/map_definition.gd")
 const MAIN = preload("res://src/main/main.tscn")
 var failures := 0
-const OUT = "res://tests/reports/images/map-join-repair-2026-10-21/"
+const OUT = "res://tests/reports/images/grass-transition-v2-2026-10-22/"
 
 func _ready() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
@@ -38,12 +38,12 @@ func _ready() -> void:
 		check(main.map_camera.position.distance_to(Vector2(.30,.55)*Definition.BOUNDS.size)<.01,"%s小地图点击与宽地图一致" % resolution)
 		check(absf(nav.MAP_RECT.size.x/nav.MAP_RECT.size.y-Definition.BOUNDS.size.x/Definition.BOUNDS.size.y)<.001,"%s小地图保持地形比例" % resolution)
 		if resolution==Vector2i(960,540):
-			for target in [Vector2(2500,600),Vector2(2500,1500),Vector2(2500,2450),Vector2(4100,350),Vector2(5800,350)]:
+			for target in [Vector2(3650,600),Vector2(4500,1500),Vector2(4500,2450),Vector2(4100,350),Vector2(5800,350)]:
 				main.map_camera.zoom=Vector2.ONE*.72
 				main.map_camera.focus_world(target)
 				await capture(view,"join-%d-%d" % [target.x,target.y])
 			main.map_camera.zoom=Vector2.ONE*1.6
-			main.map_camera.focus_world(Vector2(2500,1500))
+			main.map_camera.focus_world(Vector2(4500,1500))
 			await capture(view,"grass-join-detail")
 			main.map_camera.focus_world(Vector2(4750,350))
 			await capture(view,"north-join-detail")

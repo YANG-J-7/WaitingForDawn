@@ -55,7 +55,7 @@ def main():
     assert border.size==base.size and border.mode=='RGBA' and border.getchannel('A').getextrema()==(0,255)
     record=read(OUT/'generation-record.json')
     assert record['revision']=='join-repair-v4'
-    assert len(record['generatedAssets'])==8
+    assert len(record['generatedAssets'])==9
     for entry in record['generatedAssets']:
         path=OUT/entry['path']
         assert Image.open(path).size==tuple(entry['nativeSize']) and digest(path)==entry['sha256']
@@ -70,6 +70,10 @@ def main():
     assert v1<v0*.6 and h1<h0*.6, '历史母图局部接缝指标应保持；不代表扩边接缝视觉验收'
     plain=np.asarray(Image.open(OUT/'plain-material-mask-v2.png'))
     assert np.all(plain[:,1800:3000]==255), '用户反馈的全高交界必须完全共用同一草地材质'
+    delta=plain.astype(np.int16)
+    assert max(np.abs(np.diff(delta,axis=0)).max(),np.abs(np.diff(delta,axis=1)).max())<=3, '草地过渡不得被山体硬遮罩截断'
+    for y in (600,1500,2450):
+        assert np.count_nonzero((plain[y]>0)&(plain[y]<255))>=300, '上中下交界至少保留300世界像素的渐变'
     # 北部补绘仅占顶部440世界像素；其下山区保护区应保持原地形像素。
     from PIL import ImageDraw
     protection=Image.new('L',base.size)
@@ -89,7 +93,7 @@ def main():
     print('PASS: 7056×2880素材、196×80格及八资源保持同步')
     print('PASS: 原547路格/八石梯/所有岩壁格仅按68列8行迁移')
     print('PASS: 18片地表重组与连续底图逐像素一致')
-    print('PASS: 复用树簇/岩缘/边界alpha与八张生成稿的提示词、参考、尺寸和哈希有效')
+    print('PASS: 复用树簇/岩缘/边界alpha与九张生成稿的提示词、参考、尺寸和哈希有效')
     print('PASS: 原竖带区域完全共用统一草地；顶部补绘及两处局部植被清理区外原山区逐像素保持，视觉另查GL')
     print(f'PASS: 横缝均差{h0:.3f}→{h1:.3f}，竖缝{v0:.3f}→{v1:.3f}；此为局部指标，仍需GL目检')
     print(f'PASS: {len(files)}项素材/数据/提示词确定性重建一致，旧源文件哈希保持')

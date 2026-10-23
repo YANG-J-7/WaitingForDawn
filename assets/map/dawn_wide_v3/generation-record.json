@@ -94,8 +94,25 @@
         748
       ],
       "sha256": "cc38c9dfbfddb828fe6d2911423757ba30acc70d8a13e6bce530984784d5a5cc"
+    },
+    {
+      "path": "grass-material-v3-source.png",
+      "prompt": "grass-material-v3-source.prompt.txt",
+      "reference": "references/grass-material-v3.png",
+      "nativeSize": [
+        1254,
+        1254
+      ],
+      "sha256": "bd5e6f7c8eb5ffb7e0bbe569d2322d15d468a16ba50a0d1e0ef491172bdfafe5"
     }
   ],
   "revision": "join-repair-v4",
+  "grassTransition": {
+    "date": "2026-10-22",
+    "method": "细草v3、条带降幅、低频色调与细节分开过渡",
+    "blurRadius": 150,
+    "toneBlurRadius": 400,
+    "protectedPixelsUnchanged": true
+  },
   "composition": "原山区像素保护；顶部真实坐标补绘；全平原共用一份生成草地材质，以重叠区最小色差剪切线拼合"
 }

@@ -71,12 +71,12 @@ def minimum_seam(cost):
 
 def grass_field():
     """只裁切和拼合一份生成材质，不绘制草叶或程序生成美术。"""
-    source=Image.open(OUT/'grass-material-v2-source.png').convert('RGB')
+    source=Image.open(OUT/'grass-material-v3-source.png').convert('RGB')
     pixels=np.asarray(source,dtype=float)
     low=np.asarray(source.filter(ImageFilter.GaussianBlur(20)),dtype=float)
     # 材质只提供细草高频；整片草地的缓慢光照来自同一份已有生成底色。
     source=Image.fromarray(np.uint8(np.clip(np.rint(128+(pixels-low)*.7),0,255)))
-    save_image(source,OUT/'grass-material-v2.png')
+    save_image(source,OUT/'grass-material-v3.png')
     field=np.zeros((SIZE[1],SIZE[0],3),np.uint8)
     tile_size,overlap=576,96
     crop_size=min(source.width,source.height,960)
@@ -103,7 +103,10 @@ def grass_field():
                 weight[:band]=np.minimum(weight[:band],top)
             field[y:y+h,x:x+w]=np.uint8(np.rint(current*(1-weight[:,:,None])+patch*weight[:,:,None]))
     macro=Image.open(OUT/'west-source.png').convert('RGB').filter(ImageFilter.GaussianBlur(12)).resize(SIZE,Image.Resampling.LANCZOS)
-    return Image.fromarray(np.uint8(np.clip(np.rint(np.asarray(macro,dtype=float)+(field.astype(float)-128)*.5),0,255)))
+    # 降低旧底色的横向明暗条带；细草与山脚使用接近的灰绿色基调。
+    macro_pixels=np.asarray(macro,dtype=np.float32)
+    macro_pixels=(macro_pixels-macro_pixels.mean(axis=(0,1)))*.3+np.array([46,78,65])
+    return Image.fromarray(np.uint8(np.clip(np.rint(macro_pixels+(field.astype(float)-128)*.8),0,255)))
 
 def repair_joins(base,legacy,mountain_region):
     # 原有山体从原高清图精确恢复，不保留上一版压缩补绘侵入旧山区的部分。
@@ -152,7 +155,25 @@ def repair_joins(base,legacy,mountain_region):
     ImageDraw.Draw(extended).polygon(draw_points,fill=255)
     plain=extended.filter(ImageFilter.GaussianBlur(20)).crop((64,64,SIZE[0]+64,SIZE[1]+64))
     mask=np.asarray(plain,dtype=float)*(1-np.asarray(protect)/255)
-    blend(base,grass_field(),(0,0),Image.fromarray(np.uint8(mask)))
+    # 先合并山体保护区，再向平原内侧羽化；不能在羽化后用硬保护区截断。
+    # 约600世界像素的交接范围让草色、纹理密度一起渐变，岩壁与水岸保持原像素。
+    allowed=Image.fromarray(np.uint8(mask))
+    padded=np.pad(np.asarray(allowed),600,mode='edge')
+    softened=Image.fromarray(padded).filter(ImageFilter.GaussianBlur(150))
+    t=np.clip((np.asarray(softened.crop((600,600,SIZE[0]+600,SIZE[1]+600)),dtype=float)/255-.5)*2,0,1)
+    mask=np.minimum(mask,np.rint(t*t*(3-2*t)*255))
+    grass=grass_field()
+    # 色调在比细节更宽的范围内接近原山脚，避免羽化后仍能辨认出暗色草坪边。
+    # 只转移低频颜色，细草不模糊；最后仍由保护遮罩限制实际写入范围。
+    padded=np.pad(np.asarray(allowed),1600,mode='edge')
+    broad=Image.fromarray(padded).filter(ImageFilter.GaussianBlur(400))
+    tone=np.clip((np.asarray(broad.crop((1600,1600,SIZE[0]+1600,SIZE[1]+1600)),dtype=np.float32)/255-.5)*2,0,1)
+    tone=1-tone*tone*(3-2*tone)
+    original_low=np.asarray(base.filter(ImageFilter.GaussianBlur(48)),dtype=np.float32)
+    grass_low=np.asarray(grass.filter(ImageFilter.GaussianBlur(48)),dtype=np.float32)
+    matched=np.asarray(grass,dtype=np.float32)+(original_low-grass_low)*tone[:,:,None]
+    grass=Image.fromarray(np.uint8(np.clip(np.rint(matched),0,255)))
+    blend(base,grass,(0,0),Image.fromarray(np.uint8(mask)))
     save_image(Image.fromarray(np.uint8(mask)),OUT/'plain-material-mask-v2.png')
 
 def main():
@@ -265,8 +286,10 @@ def main():
     save_image(preview.convert('RGB').resize((1764,720),Image.Resampling.LANCZOS),OUT/'overview.png')
     record = dict(date='2026-10-21',tool='built-in image_gen',mapMode='scene_mode',visualModel='layered_raster',runtimeObjectModel='existing_separate_props',collisionModel='project-native grid + blocked north boundary',engineTarget='Godot 4.7',worldSize=list(SIZE),legacyWorldOffset=list(OFFSET),generatedAssets=[])
     record['revision']='join-repair-v4'
+    record['grassTransition']={'date':'2026-10-22','method':'细草v3、条带降幅、低频色调与细节分开过渡','blurRadius':150,'toneBlurRadius':400,'protectedPixelsUnchanged':True}
     record['composition']='原山区像素保护；顶部真实坐标补绘；全平原共用一份生成草地材质，以重叠区最小色差剪切线拼合'
     references = {'extension-source':'extension-guide','north-source':'north-guide','grass-repair-source':'grass-seam-reference','west-source':'west-guide','grass-material-v2-source':'grass-material-v2','north-join-v2-source':'north-join-v2','north-continuity-v3-source':'north-continuity-v3','north-clean-v4-source':'north-clean-v4'}
+    references['grass-material-v3-source']='grass-material-v3'
     for name in references:
         path = OUT/(name+'.png')
         record['generatedAssets'].append(dict(path=path.name,prompt=name+'.prompt.txt',reference='references/'+references[name]+'.png',nativeSize=list(Image.open(path).size),sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
