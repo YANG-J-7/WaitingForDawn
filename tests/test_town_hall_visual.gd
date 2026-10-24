@@ -12,6 +12,10 @@ func _ready() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var city: Node2D = main.get_node("TownHallVisual")
+	check(main.start_button.is_visible_in_tree() and main.top_bar.is_visible_in_tree(), "启动界面和开始按钮正常加载")
+	check(is_instance_valid(city.body) and is_instance_valid(city.flag), "主城完整初始化，无缺失配置中断")
+	check(city._shadow_rect({}, false) == Rect2(-100, -10, 290, 70), "旧清单缺少shadows时投影兼容")
+	check(city._shadow_rect({}, true) == Rect2(-90, -25, 180, 25), "旧清单缺少shadows时接触影兼容")
 	check(city.position == Layout.CITY_POSITION, "主城脚点与权威位置保持")
 	check(city.body.texture.get_size() == Vector2(958, 1043), "运行使用独立生成建筑而非概念板切图")
 	check((city.body.texture.get_size() * city.body.scale).is_equal_approx(Vector2(180,176)), "建筑180×176显示尺寸保持")

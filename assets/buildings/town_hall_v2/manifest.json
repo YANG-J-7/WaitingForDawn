@@ -253,19 +253,31 @@
       }
     }
   },
+  "shadows": {
+    "origin": [
+      -108,
+      -54
+    ],
+    "size": [
+      304,
+      144
+    ],
+    "pixels_per_world_unit": 4,
+    "method": "逐列墙脚alpha接触带与右下投影",
+    "direction": [
+      0.58,
+      0.44
+    ]
+  },
   "sources": {
     "body-raw.png": "bd81f7c47051ea48a4e62ac3942104d5e1624bf8768bc4e339248e776cdbe3af",
-    "body-raw.png.import": "1319d9b31a1fcce83b983a8d1b04ddcc7f44a389d1c028626a95181949f47064",
     "body.prompt.txt": "5ba88ed39080abb56f3488cea03a823e010cc9fc311ca31dc666f524a2b3d76b",
     "flag-raw.png": "7a653f86245f0d800da8dbd2cd7401f04a2544b9b4cbdf7a1fa492cd42c1f33b",
-    "flag-raw.png.import": "9343336b3abc88aaeeec04a16e12f8b859f442263e04507a82e851345108b109",
     "flag.prompt.txt": "587629843b30845298e5ecdd35b7916d83107bb8763420f6cd4953120c33006d",
     "flame-raw.png": "894b96c5a7d3ccf9e790422c65ee3832805355cc2a68fddeb18cb6334921a224",
-    "flame-raw.png.import": "05fcf3b4eb6af14382ff28cdaecb1f6e5926602c945cf710d7d8ca2a6032f79a",
     "flame.prompt.txt": "cd18876f04a150bd654db1e4e7ac1f3ce4fb577ba583346b435f59c7cd71ad5c",
     "generation-record.json": "c6a7d257620fee7591055b01f73d9574e732c115fb84e003978238fe319b861a",
     "smoke-raw.png": "9aa7908d8c069fac952d1390139fa8dddc96cca05b9b3ab11479b313bde36a58",
-    "smoke-raw.png.import": "ce4ddccecd06ec271850f1e1b84dd73573b4892e8aa8e7f1b556e41d3db33f56",
     "smoke.prompt.txt": "f5fc946bef4bf6f7086805161a6530a31785fa7a14607b7a7d377194645c7a6b"
   }
 }

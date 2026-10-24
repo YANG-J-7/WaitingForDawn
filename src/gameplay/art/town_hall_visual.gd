@@ -32,12 +32,16 @@ func _ready() -> void:
 	get_parent().add_child.call_deferred(grounding)
 	grounding.position = position
 	var cast := _sprite(CAST_TEXTURE, grounding)
-	cast.position = Vector2(-100, -10)
-	cast.scale = Vector2(290, 70) / CAST_TEXTURE.get_size()
+	cast.name = "CastShadow"
+	var cast_rect := _shadow_rect(data, false)
+	cast.position = cast_rect.position
+	cast.scale = cast_rect.size / CAST_TEXTURE.get_size()
 	cast.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	var contact := _sprite(CONTACT_TEXTURE, grounding)
-	contact.position = Vector2(-90, -25)
-	contact.scale = Vector2(180, 25) / CONTACT_TEXTURE.get_size()
+	contact.name = "ContactShadow"
+	var contact_rect := _shadow_rect(data, true)
+	contact.position = contact_rect.position
+	contact.scale = contact_rect.size / CONTACT_TEXTURE.get_size()
 	contact.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	_place_grounding.call_deferred()
 	body = _sprite(BODY_TEXTURE)
@@ -65,6 +69,15 @@ func _ready() -> void:
 	_on_phase_changed(RunState.phase)
 	_on_health_changed(RunState.city_health, RunState.city_max_health)
 	_apply_animation()
+
+
+func _shadow_rect(data: Dictionary, contact: bool) -> Rect2:
+	# 旧版素材清单没有shadows字段，仍能启动并按旧贴图位置显示。
+	if not data.has("shadows"):
+		return Rect2(-90, -25, 180, 25) if contact else Rect2(-100, -10, 290, 70)
+	var origin: Array = data.shadows.origin
+	var size: Array = data.shadows.size
+	return Rect2(origin[0], origin[1], size[0], size[1])
 
 
 func _sprite(image: Texture2D, parent: Node = self) -> Sprite2D:

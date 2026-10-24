@@ -3,9 +3,53 @@ import hashlib
 import json
 from pathlib import Path
 from PIL import Image, ImageFilter, ImageChops
+import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'assets/buildings/town_hall_v2'
+
+
+def build_shadows(body):
+    """从同一主体的alpha提取每列墙脚，再投到地面；不把脚点压到水平线上。"""
+    bw, bh = body.size
+    alpha = np.asarray(body.getchannel('A'))
+    occupied = alpha >= 180
+    feet = bh - 1 - np.argmax(occupied[::-1], axis=0)
+    # 灯笼等悬挂物不能成为地面接触点；只用下部确有墙脚的列。
+    valid = occupied.any(axis=0) & (feet > bh * .78)
+    origin = (-108, -54)
+    size = (304, 144)
+    density = 4
+    sw, sh = size[0] * density, size[1] * density
+    yy, xx = np.indices(alpha.shape)
+    height = np.maximum(0, (feet[None, :] - yy) * 176 / bh)
+    ground_y = -176 + feet * 176 / bh
+    world_x = -90 + xx * 180 / bw
+    projected_x = np.rint((world_x + height * .58 - origin[0]) * density).astype(int)
+    projected_y = np.rint((ground_y[None, :] + height * .44 - origin[1]) * density).astype(int)
+    inside = (alpha > 0) & valid[None, :] & (projected_x >= 0) & (projected_x < sw) & (projected_y >= 0) & (projected_y < sh)
+    cast = np.zeros((sh, sw), dtype=np.uint8)
+    # 近端较实，远端略淡；最大值合成避免同一建筑的投影自我叠黑。
+    strength = alpha * (.62 - .14 * np.minimum(height / 176, 1))
+    np.maximum.at(cast, (projected_y[inside], projected_x[inside]), strength[inside].astype(np.uint8))
+    cast = Image.fromarray(cast).filter(ImageFilter.MaxFilter(5)).filter(ImageFilter.GaussianBlur(7))
+    shadow = Image.new('RGBA', (sw, sh), (3, 10, 18, 0))
+    shadow.putalpha(cast)
+    shadow.save(OUT / 'cast-shadow.png')
+
+    # 每列最下缘形成接触带，保留透视底边和台阶形状，向外露出约4～6世界像素。
+    contact = np.zeros((sh, sw), dtype=np.uint8)
+    edge = inside & (yy >= feet[None, :] - bh * .035)
+    contact_x = np.rint((world_x - origin[0]) * density).astype(int)
+    contact_y = np.rint((-176 + yy * 176 / bh + 1.5 - origin[1]) * density).astype(int)
+    np.maximum.at(contact, (contact_y[edge], contact_x[edge]), alpha[edge])
+    contact = Image.fromarray(contact).filter(ImageFilter.MaxFilter(9))
+    core = contact.filter(ImageFilter.GaussianBlur(5)).point(lambda a: round(a * .76))
+    soft = contact.filter(ImageFilter.GaussianBlur(18)).point(lambda a: round(a * .26))
+    shadow.putalpha(ImageChops.lighter(core, soft))
+    shadow.save(OUT / 'contact-shadow.png')
+    return {'origin': list(origin), 'size': list(size), 'pixels_per_world_unit': density,
+            'method': '逐列墙脚alpha接触带与右下投影', 'direction': [.58, .44]}
 
 
 def build():
@@ -64,27 +108,11 @@ def build():
         frames[0].save(folder / 'preview.gif', save_all=True, append_images=frames[1:],
                        duration={'flag':230,'flame':120,'smoke':400}[name], loop=0, disposal=2)
         records[name] = {'roots': roots, 'qc': meta['qc_summary']}
-    # 由建筑alpha推导投影。左上月光使上部向右下投射，绝不增加玩法占地。
-    # 世界输出矩形(-100,-10,290,70)，源点投影 x=-90+180u+55(1-v), y=-4+45(1-v)。
-    sw, sh = 1160, 280
-    alpha = body.getchannel('A')
-    projected = alpha.transform((sw,sh), Image.Transform.AFFINE,
-        (bw/720, -bw*55/(180*180), bw*(-10+55*6/45)/180,
-         0, -bh/180, bh*(1+6/45)), Image.Resampling.BICUBIC)
-    projected = projected.filter(ImageFilter.GaussianBlur(5))
-    projected = projected.point(lambda a: round(a*.36))
-    shadow = Image.new('RGBA', (sw,sh), (6,15,26,0))
-    shadow.putalpha(projected)
-    shadow.save(OUT/'cast-shadow.png')
-    # 建筑下缘alpha经竖向压缩作为接触影，轮廓与建筑脚部一致。
-    contact = alpha.crop((0, int(bh*.75), bw, bh)).resize((720,100),Image.Resampling.LANCZOS)
-    contact = contact.filter(ImageFilter.GaussianBlur(4)).point(lambda a: round(a*.42))
-    img = Image.new('RGBA',contact.size,(5,13,22,0)); img.putalpha(contact)
-    img.save(OUT/'contact-shadow.png')
+    shadows = build_shadows(body)
     record = {'status':'runtime_candidate','body_bbox':bbox,'body_size':[bw,bh],
-              'anchors': anchors, 'display_size':[180,176], 'animations':records,
+              'anchors': anchors, 'display_size':[180,176], 'animations':records, 'shadows':shadows,
               'sources':{p.name:hashlib.sha256(p.read_bytes()).hexdigest()
-                         for p in sorted((OUT/'source').glob('*'))}}
+                         for p in sorted((OUT/'source').glob('*')) if p.suffix != '.import'}}
     (OUT/'manifest.json').write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print(json.dumps({'body_size':[bw,bh],'anchors':anchors,'qc':{k:v['qc'] for k,v in records.items()}},ensure_ascii=False))
 

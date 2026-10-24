@@ -10,5 +10,8 @@ void fragment() {
 	source.rgb *= 1.0 + 0.035 * warm * pulse;
 	// 生成稿在纯色底上较亮，统一压回当前冷蓝夜景的材质亮度。
 	source.rgb *= vec3(0.84, 0.90, 0.98);
+	// 墙脚承接地面的冷暗环境色，暖窗保留亮度；不整体压暗屋顶。
+	float ground_blend = smoothstep(0.73, 1.0, UV.y) * (1.0 - warm);
+	source.rgb *= mix(vec3(1.0), vec3(0.72, 0.81, 0.85), ground_blend);
 	COLOR = source;
 }
