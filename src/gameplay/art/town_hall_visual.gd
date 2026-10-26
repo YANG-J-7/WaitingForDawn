@@ -7,6 +7,8 @@ const DISPLAY_SIZE := Vector2(180, 176)
 const BODY_TEXTURE: Texture2D = preload(ROOT + "body.png")
 const CAST_TEXTURE: Texture2D = preload(ROOT + "cast-shadow.png")
 const CONTACT_TEXTURE: Texture2D = preload(ROOT + "contact-shadow.png")
+const GROUND_TEXTURE: Texture2D = preload(ROOT + "ground-base/ground-base.png")
+const GROUND_RECT := Rect2(-166, -120, 320, 198)
 const WINDOW_SHADER: Shader = preload("res://src/gameplay/art/town_hall_windows.gdshader")
 
 var body: Sprite2D
@@ -16,6 +18,7 @@ var fire_right: Sprite2D
 var smoke: Sprite2D
 var smoke_next: Sprite2D
 var grounding: Node2D
+var ground_base: Sprite2D
 var animation_time := 0.0
 var animation_frame := 0
 var frame_sets: Dictionary = {}
@@ -31,6 +34,12 @@ func _ready() -> void:
 	# 阴影独立到地面层，不能涂暗从城前经过的单位。
 	get_parent().add_child.call_deferred(grounding)
 	grounding.position = position
+	# 地面、草缘在投影之下，沿用主城脚点，不参与输入、占格或碰撞。
+	ground_base = _sprite(GROUND_TEXTURE, grounding)
+	ground_base.name = "GroundBase"
+	ground_base.position = GROUND_RECT.position
+	ground_base.scale = GROUND_RECT.size / GROUND_TEXTURE.get_size()
+	ground_base.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	var cast := _sprite(CAST_TEXTURE, grounding)
 	cast.name = "CastShadow"
 	var cast_rect := _shadow_rect(data, false)

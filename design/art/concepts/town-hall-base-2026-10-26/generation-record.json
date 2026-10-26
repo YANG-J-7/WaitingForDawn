@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-26",
+  "status": "candidate",
+  "integrated": false,
+  "generator": "内置 image_gen",
+  "intent": "基于真实最大倍率截图编辑的主城地面底座设计预览",
+  "source": "C:\\Users\\y1971\\.codex\\generated_images\\01a1667b-fa09-78a2-a2e3-9fa205c6b7ce\\exec-96715649-ff64-47db-869c-3ee0759b4474.png",
+  "image": "town-hall-ground-base-v1.png",
+  "size": [
+    1672,
+    941
+  ],
+  "sha256": "d6635bd6ee52c3419b9645edc7ecb1a43b9dc85753b035b59c59c63252852d39",
+  "prompt": "prompt-used.txt",
+  "references": [
+    {
+      "path": "tests/reports/images/town-hall-2026-10-25/1280x720-close.png",
+      "sha256": "66993cb838cb23b3847daf46b1ac86ccfa564b7dc66af6cc1dda3c8430b8d18f"
+    },
+    {
+      "path": "design/art/concepts/town-hall-redesign-2026-10-23/town-hall-design-v1.png",
+      "sha256": "a85beec6b27a619d942b4d75401f8c32eccac11861cee2d4706a251aac67dad9"
+    }
+  ],
+  "detail": {
+    "image": "town-hall-ground-base-detail-v1.png",
+    "source_crop_pixels": [
+      485,
+      151,
+      1221,
+      715
+    ],
+    "scope": "仅预览裁图，非可用运行素材"
+  },
+  "review": {
+    "ground": "低石基、旧石板与压实泥土、碎石、短草和渐疏草缘可见",
+    "limitations": "实际输出1672×941，生成编辑重采样了HUD和建筑细节，不声称输入截图逐像素保持；草缘中有少量浅色草花点缀，后续素材可进一步收敛",
+    "runtime": "未接入游戏、未改变玩法或运行素材"
+  }
+}

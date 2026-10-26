@@ -1,6 +1,6 @@
 extends Node
 const MAIN = preload("res://src/main/main.tscn")
-const OUT := "res://tests/reports/images/town-hall-2026-10-25/"
+const OUT := "res://tests/reports/images/town-hall-base-rear-left-2026-10-26/"
 var failures := 0
 
 
@@ -31,16 +31,19 @@ func _ready() -> void:
 		city.set_process(false)
 		main.map_camera.reset_view()
 		await capture(view,"%dx%d-default" % [resolution.x,resolution.y])
+		await verify_base(view, main, city, "默认")
 		await verify_shadows(view, main, city, "默认")
 		main.map_camera.zoom = Vector2.ONE*1.6
 		main.map_camera.focus_world(city.position + Vector2(0,-55))
 		await capture(view,"%dx%d-close" % [resolution.x,resolution.y])
+		await verify_base(view, main, city, "近景")
 		await verify_shadows(view, main, city, "近景")
 		if resolution == Vector2i(1280,720):
 			# 在主城下方的空地采样，证明投影实际进入GL画面，而非被地形层盖住。
 			await RenderingServer.frame_post_draw
 			var with_shadow: Image = view.get_texture().get_image()
-			city.grounding.hide()
+			city.grounding.get_node("CastShadow").hide()
+			city.grounding.get_node("ContactShadow").hide()
 			await get_tree().process_frame
 			await RenderingServer.frame_post_draw
 			var without_shadow: Image = view.get_texture().get_image()
@@ -52,11 +55,16 @@ func _ready() -> void:
 					if absf(difference.r) + absf(difference.g) + absf(difference.b) > .008:
 						changed += 1
 			check(changed > 100,"主城右下投影实际可见：%d个变化像素" % changed)
-			city.grounding.show()
+			city.grounding.get_node("CastShadow").show()
+			city.grounding.get_node("ContactShadow").show()
 			for index in range(24):
 				city.animation_time = float(index)*.10
 				city._apply_animation()
 				await capture(view,"loop-%02d" % index)
+			var tower_card: int = main.run_card_inventory.add_card(preload("res://src/data/cards/arrow_tower_card.tres"), 1)
+			check(main._try_place_defense_card(tower_card, city.position + Vector2(-126,-18)), "底座草缘附近通过真实手牌建造箭塔")
+			check(city.ground_base.visible and main.active_towers().size() == 1, "相邻建筑与底座同时显示")
+			await capture(view,"adjacent-tower")
 			var material_time: float = city.window_material.get_shader_parameter("animation_time")
 			get_tree().paused = true
 			process_mode = Node.PROCESS_MODE_ALWAYS
@@ -71,6 +79,36 @@ func _ready() -> void:
 		view.queue_free()
 		await get_tree().process_frame
 	get_tree().quit(failures)
+
+
+func verify_base(view: SubViewport, main: Node, city: Node2D, label: String) -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	get_tree().paused = true
+	await get_tree().process_frame
+	await RenderingServer.frame_post_draw
+	var full := view.get_texture().get_image()
+	city.ground_base.hide()
+	await get_tree().process_frame
+	await RenderingServer.frame_post_draw
+	var empty := view.get_texture().get_image()
+	var canvas: Transform2D = main.map_camera.get_canvas_transform()
+	var point := Vector2i(canvas * (city.position + Vector2(-30,30)))
+	var difference := full.get_pixelv(point) - empty.get_pixelv(point)
+	check(absf(difference.r)+absf(difference.g)+absf(difference.b) > .025, label+"门前石土地面实际显示")
+	# 用户红框区域：左塔楼旁从后向前的三个地面点，均须实际显示补片。
+	for sample in [Vector2(-112,-70), Vector2(-108,-45), Vector2(-104,-25)]:
+		var rear := Vector2i(canvas * (city.position + sample))
+		# 草叶之间有透明空隙，按5×5邻域检查，避免把单个空隙误判成地块断裂。
+		var change := 0.0
+		for dx in range(-2,3):
+			for dy in range(-2,3):
+				var delta := full.get_pixelv(rear+Vector2i(dx,dy)) - empty.get_pixelv(rear+Vector2i(dx,dy))
+				change += absf(delta.r)+absf(delta.g)+absf(delta.b)
+		check(change / 25.0 > .018, label+"左后侧草缘连续显示："+str(sample))
+	var outside := Vector2i(canvas * (city.position + Vector2(180,55)))
+	check(full.get_pixelv(outside) == empty.get_pixelv(outside), label+"底座范围外地表无变化")
+	city.ground_base.show()
+	get_tree().paused = false
 
 
 func verify_shadows(view: SubViewport, main: Node, city: Node2D, label: String) -> void:
@@ -116,7 +154,8 @@ func darkness_reduction(shadowed: Image, clear: Image, point: Vector2i) -> float
 func capture(view: SubViewport, label: String) -> void:
 	await get_tree().process_frame
 	await RenderingServer.frame_post_draw
-	var folder := "res://.codex-temp/town-hall-loop/" if label.begins_with("loop-") else OUT
+	# 先写忽略目录，避免用户打开的编辑器导入PNG时与截图写入争用文件锁。
+	var folder := "res://.codex-temp/town-hall-loop/" if label.begins_with("loop-") else "res://.codex-temp/town-base-rear-evidence/"
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(folder))
 	check(view.get_texture().get_image().save_png(folder+label+".png")==OK,"GL截图："+label)
 

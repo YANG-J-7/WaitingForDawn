@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-26",
+  "generator": "内置 image_gen",
+  "selected": {
+    "raw": "rear-left-raw-v2.png",
+    "source": "C:/Users/y1971/.codex/generated_images/01a1667b-fa09-78a2-a2e3-9fa205c6b7ce/exec-7f477cec-b25f-4c38-91b8-328f12b9d138.png",
+    "prompt": "rear-left-v2.prompt.txt",
+    "sha256": "57e9ada8d8761e108c95ee67ecf49beda384e0e45447fe1f19bec1f3a12484f3",
+    "references": [
+      {
+        "path": "assets/buildings/town_hall_v2/ground-base/source/rear-left-raw.png",
+        "sha256": "25d8cf1da2dc464b0027e38667ac17717b287e9a53369f960b9e6606f93262b6"
+      },
+      {
+        "path": "design/art/concepts/town-hall-base-2026-10-26/town-hall-ground-base-v1.png",
+        "sha256": "d6635bd6ee52c3419b9645edc7ecb1a43b9dc85753b035b59c59c63252852d39"
+      }
+    ]
+  },
+  "superseded": {
+    "raw": "rear-left-raw.png",
+    "source": "C:/Users/y1971/.codex/generated_images/01a1667b-fa09-78a2-a2e3-9fa205c6b7ce/exec-62f2cc0f-830c-404e-a17f-32e714ebf288.png",
+    "prompt": "rear-left.prompt.txt",
+    "sha256": "25d8cf1da2dc464b0027e38667ac17717b287e9a53369f960b9e6606f93262b6",
+    "reason": "斜向下端被建筑遮挡，未形成沿左墙连续地表；当前不用于运行，只作v2参考"
+  },
+  "scope": "独立生成左后侧草石补片，与门前独立底座按世界坐标透明合成，非概念场景切图"
+}

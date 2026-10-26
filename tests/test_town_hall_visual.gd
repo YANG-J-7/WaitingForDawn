@@ -22,6 +22,14 @@ func _ready() -> void:
 	check(Layout.CITY_FOOTPRINT == Vector2i(4,4), "主城仍占4×4格")
 	check(city.grounding.get_parent() == main, "阴影独立于动画主体")
 	check(city.grounding.get_index() > main.get_node("BorderForest").get_index() and city.grounding.get_index() < main.get_node("FarmerManager").get_index(), "阴影在地面之上、人物之下")
+	check(city.ground_base.texture.get_size() == Vector2(1280, 792), "含左后侧草缘的独立底座完整加载")
+	check(city.ground_base.get_parent() == city.grounding and city.ground_base.get_index() < city.grounding.get_node("CastShadow").get_index(), "底座位于主城投影及人物之下")
+	check(main.grid_map_model.occupied_cells_for(&"city").size() == 16, "底座装饰没有扩大主城16格占用")
+	check(main.grid_map_model.can_place(city.position + Vector2(108,0), Vector2i.ONE), "侧面草缘仍可放置相邻建筑")
+	check(main.grid_map_model.can_place(city.position + Vector2(-36,90), Vector2i.ONE), "门前合法草地仍可建造")
+	check(not main.grid_map_model.can_place(city.position + Vector2(0,108), Vector2i.ONE), "底座未放开原有南侧树林禁建格")
+	var base_transform: Transform2D = city.ground_base.transform
+	var base_node: Sprite2D = city.ground_base
 	var body_transform: Transform2D = city.body.transform
 	var shadow_transform: Transform2D = city.grounding.transform
 	var cloth_position: Vector2 = city.flag.position
@@ -34,6 +42,7 @@ func _ready() -> void:
 	check(city.fire_left.texture != city.fire_right.texture, "两侧火焰错相播放")
 	check(city.smoke.texture != city.smoke_next.texture, "薄烟使用相邻帧过渡")
 	check(city.body.transform == body_transform and city.grounding.transform == shadow_transform and city.flag.position == cloth_position, "建筑、阴影、旗杆附着点均不随动画漂移")
+	check(city.ground_base.transform == base_transform, "底座及草缘不随待机动画漂移")
 	var time: float = city.animation_time
 	get_tree().paused = true
 	city._process(1.0)
@@ -45,6 +54,7 @@ func _ready() -> void:
 	main._on_reset_pressed()
 	check(city.animation_time == 0.0 and city.animation_frame == 0, "重开复位动画相位")
 	check(city.flag.visible and city.fire_left.visible, "重开恢复旗帜与火焰")
+	check(city.ground_base.visible and city.ground_base.transform == base_transform, "重开保持底座且不重复创建")
 	RunState.begin_new_run()
 	RunState.start_current_wave()
 	RunState.damage_city(999999)
@@ -64,6 +74,7 @@ func _ready() -> void:
 	main.queue_free()
 	await get_tree().process_frame
 	check(not is_instance_valid(city), "场景释放清理主城表现")
+	check(not is_instance_valid(base_node), "场景释放同时清理独立地面底座")
 	get_tree().quit(failures)
 
 

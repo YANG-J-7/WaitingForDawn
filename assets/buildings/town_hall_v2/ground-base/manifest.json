@@ -1,0 +1,63 @@
+{
+  "status": "runtime_candidate",
+  "generator": "内置 image_gen + generate2dsprite去底",
+  "source": "source/raw.png",
+  "processed": "processed/clean.png",
+  "source_crop": [
+    77,
+    502,
+    1459,
+    1034
+  ],
+  "texture_size": [
+    1280,
+    792
+  ],
+  "display_rect": [
+    -166,
+    -120,
+    320,
+    198
+  ],
+  "tint": [
+    0.8,
+    0.88,
+    0.92
+  ],
+  "edge_fade": {
+    "inner_radius": 0.66,
+    "outer_radius": 1.04
+  },
+  "layers": {
+    "front": {
+      "rect": [
+        -158,
+        -72,
+        312,
+        150
+      ]
+    },
+    "rear_left": {
+      "rect": [
+        -144,
+        -110,
+        110,
+        125
+      ],
+      "source_crop": [
+        420,
+        77,
+        1115,
+        1459
+      ]
+    }
+  },
+  "sources": {
+    "source/raw.png": "79ad98122b0fe584c307e08a721131f675f00d434833841ccad7ad75cdd48f71",
+    "source/prompt-used.txt": "c1dd718a0a0f12da898054ac3898f5db086e70a4b17d8f9b4458bf378dc5a099",
+    "processed/clean.png": "5c28765705685d692bb439aa6cc85273cb82e96c9b13517f1b63d402b83ebd70",
+    "source/rear-left-raw-v2.png": "57e9ada8d8761e108c95ee67ecf49beda384e0e45447fe1f19bec1f3a12484f3",
+    "source/rear-left-v2.prompt.txt": "cff29c4ac686bbc89d2c22192cae7f341d700ea9056677f205031bafaaf3a9b6",
+    "processed-rear-left-v2/clean.png": "1311b5452210459e571259b759cbc9eb6901aa6ccff3f8a852d90c62e98f167c"
+  }
+}

@@ -1,5 +1,5 @@
 version: 1
-updated: 2026-10-14
+updated: 2026-10-26
 assets:
   - id: MAP-DAWN-LARGE-HD-V2
     name: 大地图高清分层视觉候选
@@ -128,3 +128,17 @@ assets:
     metadata: assets/buildings/town_hall_v2/manifest.json
     review_status: 用户确认设计方向；运行最终审美待复核
     validation: 四份原稿、三组四帧严格QC与透明边缘/确定性检查；18项专项、38组1560项回归及三视口GL通过
+  - id: BLD-TOWN-HALL-GROUND-BASE-V1
+    name: 主城石土地面与周围草地底座
+    specification: design/assets/specs/town-hall-ground-base-v1.md
+    file: assets/buildings/town_hall_v2/ground-base/ground-base.png
+    dimensions: [1280, 792]
+    format: RGBA8
+    status: candidate
+    integrated: true
+    generated: 2026-10-26
+    generator: built-in-image_gen
+    prompt: assets/buildings/town_hall_v2/ground-base/source/prompt-used.txt
+    metadata: assets/buildings/town_hall_v2/ground-base/manifest.json
+    review_status: 用户确认设计方向；运行最终观感待复核
+    validation: 独立生成/单图去底及确定性透明边缘检查；4组185项相关回归、三视口GL104项通过；含红框左后侧连续草缘验证

@@ -8,4 +8,6 @@
 
 `source/`保存内置image_gen四张原稿、四份完整提示词、原生成路径与参考记录。`processed/`保存generate2dsprite严格QC、透明图集和处理元数据。`manifest.json`记录原稿哈希、建筑附着点、平移和QC信息。`tools/build_town_hall.py`完成后处理重建；`tools/check_town_hall_assets.py`复核确定性、透明边缘及帧差异。
 
+2026-10-26新增`ground-base/`独立地面底座及左后侧草缘，显示矩形(-166,-120,320,198)，素材与来源见该目录说明。
+
 本素材包由TownHallVisual组件读取，与主城4×4逻辑占地、资源交付及战斗分离。暂停/胜负冻结、重开复位，摧毁隐藏附着特效。窗光仅作用于暖色窗芯，非整栋建筑变亮。

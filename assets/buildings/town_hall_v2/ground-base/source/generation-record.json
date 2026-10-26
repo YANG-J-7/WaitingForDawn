@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-26",
+  "generator": "内置 image_gen",
+  "source": "C:/Users/y1971/.codex/generated_images/01a1667b-fa09-78a2-a2e3-9fa205c6b7ce/exec-2fa90a1f-15bf-4844-a56b-88e893daeef7.png",
+  "raw": "raw.png",
+  "prompt": "prompt-used.txt",
+  "sha256": "79ad98122b0fe584c307e08a721131f675f00d434833841ccad7ad75cdd48f71",
+  "references": [
+    {
+      "path": "design/art/concepts/town-hall-base-2026-10-26/town-hall-ground-base-v1.png",
+      "sha256": "d6635bd6ee52c3419b9645edc7ecb1a43b9dc85753b035b59c59c63252852d39"
+    },
+    {
+      "path": "assets/buildings/town_hall_v2/body.png",
+      "sha256": "0fc7710a63f3b50b99130a1b6032366591963287d7a94e1ca4597b69e59b83e0"
+    }
+  ],
+  "scope": "独立生成地面贴花，设计图仅作参考，未从概念场景切图",
+  "postprocess": "generate2dsprite单图去底；确定性裁边、等比缩放、夜景调色与透明度羽化"
+}
