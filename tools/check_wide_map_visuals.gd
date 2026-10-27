@@ -2,9 +2,11 @@ extends Node
 const Definition = preload("res://src/gameplay/grid/map_definition.gd")
 const MAIN = preload("res://src/main/main.tscn")
 var failures := 0
-const OUT = "res://tests/reports/images/grass-transition-v2-2026-10-22/"
+var OUT = "res://tests/reports/images/grass-transition-v2-2026-10-22/"
 
 func _ready() -> void:
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--output="): OUT = argument.trim_prefix("--output=").trim_suffix("/") + "/"
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
 	for resolution in [Vector2i(960,540),Vector2i(1280,720),Vector2i(1024,768)]:
 		var view := SubViewport.new()

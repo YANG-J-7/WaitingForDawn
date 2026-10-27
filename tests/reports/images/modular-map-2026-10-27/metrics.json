@@ -1,0 +1,6 @@
+{
+	"border_trees": 1185,
+	"notes": "渲染纹理监视值为当前进程总量，不等于独立地图最低显存",
+	"parts": 3,
+	"texture_memory_bytes": 396544734.0
+}

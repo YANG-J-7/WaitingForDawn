@@ -16,15 +16,16 @@ const DATA_PATH := "res://assets/map/dawn_wide_v3/map.json"
 static var _data: Dictionary = {}
 static var _visual: Dictionary = {}
 static var _navigation: Dictionary = {}
+static var _runtime: RefCounted
+
+static func runtime() -> RefCounted:
+	# 旧工具入口保留默认关卡；主场景持有自己的实例，不共享动态状态。
+	if _runtime == null:
+		_runtime = preload("res://src/gameplay/map/level_map_runtime.gd").create_default()
+	return _runtime
 
 static func navigation_data() -> Dictionary:
-	if _navigation.is_empty():
-		var parsed = JSON.parse_string(FileAccess.get_file_as_string("res://assets/map/dawn_wide_v3/mountain-navigation.json"))
-		if parsed is Dictionary:
-			_navigation = parsed
-		else:
-			push_error("山区通行标注无法读取")
-	return _navigation
+	return runtime().navigation
 
 static func visual_data() -> Dictionary:
 	if _visual.is_empty():
@@ -33,13 +34,7 @@ static func visual_data() -> Dictionary:
 	return _visual
 
 static func data() -> Dictionary:
-	if _data.is_empty():
-		var parsed = JSON.parse_string(FileAccess.get_file_as_string(DATA_PATH))
-		if parsed is Dictionary:
-			_data = parsed
-		else:
-			push_error("大地图定义无法读取")
-	return _data
+	return runtime().compiled
 
 static func source_to_world(point: Vector2) -> Vector2:
 	# 原山区不随扩边拉伸；旧图坐标与新增世界范围分别定义。
@@ -55,8 +50,4 @@ static func polygon_world(points: Array) -> PackedVector2Array:
 	return result
 
 static func resource_sites() -> Array:
-	var sites: Array = data().get("resourceSites", []).duplicate(true)
-	for site in sites:
-		for entry in visual_data().get("forests", []):
-			if site.id == entry.id: site.sprite = entry.path
-	return sites
+	return runtime().resource_sites()

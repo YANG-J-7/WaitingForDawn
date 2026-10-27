@@ -19,8 +19,8 @@ func _ready() -> void:
 	check(grid.grid_size == Vector2i(196,80),"7056×2880地图共15680格，36像素格保持")
 	check(main.wave_controller.playable_bounds == Definition.BOUNDS,"世界边界共用地图定义")
 	check(main.resource_sites.size()==8,"四林两石两铁保持")
-	check(Definition.data().legacyQC.initialCompositeMaxChannelDifference==0,"历史v1分层合成像素差为0，当前扩边图不沿用此指标")
-	check(main.terrain_grid_layer.chunks.size()==18,"连续地形分成18片并按视口裁绘")
+	check(main.map_runtime.definition.level_id==&"level_001" and main.map_runtime.errors.is_empty(),"第一关组件配置独立编译且无数据错误")
+	check(main.terrain_grid_layer.parts.size()==3,"草地、山体和湖泊是三个独立表面，不读取18片旧整图")
 	var terrain_only := preload("res://src/gameplay/grid/grid_map_model.gd").new()
 	preload("res://src/gameplay/grid/terrain_map_data.gd").apply_to(terrain_only)
 	for entry in Definition.resource_sites():

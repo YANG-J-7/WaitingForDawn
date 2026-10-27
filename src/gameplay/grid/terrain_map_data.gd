@@ -4,15 +4,15 @@ extends RefCounted
 const Definition = preload("res://src/gameplay/grid/map_definition.gd")
 const SHORE_MOVEMENT_COST: float = 1.2
 
-static func apply_to(grid: RefCounted) -> void:
-	var groups: Dictionary = Definition.data().get("cells", {})
+static func apply_to(grid: RefCounted, runtime: RefCounted = null) -> void:
+	var groups: Dictionary = (runtime.compiled if runtime != null else Definition.data()).get("cells", {})
 	for terrain_type in [&"cliff", &"water", &"forest", &"boundary", &"road", &"ramp"]:
 		var cells: Array[Vector2i] = []
 		for cell in groups.get(String(terrain_type), []):
 			cells.append(Vector2i(cell[0], cell[1]))
 		var walkable: bool = terrain_type in [&"road", &"ramp"]
 		grid.set_terrain_cells(cells, terrain_type, walkable, terrain_type == &"road", 1.0 if walkable else INF)
-	_apply_mountain_navigation(grid)
+	_apply_mountain_navigation(grid, runtime)
 	var shores: Array[Vector2i] = []
 	var seen := {}
 	for water_cell in grid.cells_of_type(&"water"):
@@ -23,8 +23,8 @@ static func apply_to(grid: RefCounted) -> void:
 				shores.append(next)
 	grid.set_terrain_cells(shores, &"shore", true, false, SHORE_MOVEMENT_COST)
 
-static func _apply_mountain_navigation(grid: RefCounted) -> void:
-	var data := Definition.navigation_data()
+static func _apply_mountain_navigation(grid: RefCounted, runtime: RefCounted = null) -> void:
+	var data: Dictionary = runtime.navigation if runtime != null else Definition.navigation_data()
 	# 清除旧的宽泛山路/石阶开放；高清图校核后的标注才是当前通行权威。
 	for point in data.get("mountainCells", []):
 		var cell := Vector2i(point[0],point[1])
@@ -46,13 +46,7 @@ static func _apply_mountain_navigation(grid: RefCounted) -> void:
 		grid.set_navigation_cell(cell, int(entry.level), int(entry.stair), entry.ends)
 
 static func is_water_world_point(point: Vector2) -> bool:
-	for points in Definition.data().get("islands", []):
-		if Geometry2D.is_point_in_polygon(point, Definition.polygon_world(points)):
-			return false
-	for points in Definition.data().get("water", []):
-		if Geometry2D.is_point_in_polygon(point, Definition.polygon_world(points)):
-			return true
-	return false
+	return Definition.runtime().is_water_point(point)
 
 static func first_cell_of_type(grid: RefCounted, terrain_type: StringName) -> Vector2i:
 	var cells: Array[Vector2i] = grid.cells_of_type(terrain_type)

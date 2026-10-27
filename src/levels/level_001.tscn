@@ -1,0 +1,24 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" path="res://src/levels/modules/ground.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://src/levels/modules/mountain.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://src/levels/modules/lake.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://src/levels/modules/boundary.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://src/levels/modules/markers.tscn" id="5"]
+
+[node name="Level001Assembly" type="Node2D"]
+
+[node name="Ground" parent="." instance=ExtResource("1")]
+position = Vector2(0, 0)
+
+[node name="Mountain" parent="." instance=ExtResource("2")]
+position = Vector2(3600, 216)
+
+[node name="Lake" parent="." instance=ExtResource("3")]
+position = Vector2(0, 0)
+
+[node name="Boundary" parent="." instance=ExtResource("4")]
+position = Vector2(0, 0)
+
+[node name="Markers" parent="." instance=ExtResource("5")]
+position = Vector2(0, 0)

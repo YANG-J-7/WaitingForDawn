@@ -6,9 +6,22 @@ const MAP_RECT := Rect2(6, 6, 160, 160.0 * 2880.0 / 7056.0)
 var main: Node2D
 var city_button: Button
 var full_button: Button
+var preview: SubViewport
+var preview_texture: Texture2D
 
 func configure(owner_main: Node2D) -> void:
 	main = owner_main
+	# 小地图由当前组件组合渲染，不能继续显示旧关卡截图。
+	preview = SubViewport.new()
+	preview.size = Vector2i(320,131)
+	preview.disable_3d = true
+	preview.render_target_update_mode = SubViewport.UPDATE_ONCE
+	add_child(preview)
+	preview.canvas_transform = Transform2D(0,Vector2.ONE*(320.0/main.map_runtime.bounds.size.x),0,Vector2.ZERO)
+	var ground := preload("res://src/gameplay/art/modular_map_layer.gd").new()
+	ground.configure(main.grid_map_model,main.map_runtime)
+	preview.add_child(ground)
+	preview_texture = preview.get_texture()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	custom_minimum_size = Vector2(172,100)
@@ -43,7 +56,7 @@ func _gui_input(event: InputEvent) -> void:
 func focus_minimap(point: Vector2) -> void:
 	var ratio := ((point-MAP_RECT.position)/MAP_RECT.size).clamp(Vector2.ZERO,Vector2.ONE)
 	main.map_camera.zoom = Vector2.ONE * maxf(main.map_camera.zoom.x, 0.72)
-	main.map_camera.focus_world(ratio*Definition.BOUNDS.size)
+	main.map_camera.focus_world(ratio*main.map_runtime.bounds.size)
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not visible or not event is InputEventKey or not event.pressed or event.echo: return
@@ -57,17 +70,17 @@ func _unhandled_key_input(event: InputEvent) -> void:
 func _draw() -> void:
 	if main == null: return
 	draw_style_box(_panel_style(),Rect2(Vector2.ZERO,size))
-	draw_texture_rect(TEXTURE,MAP_RECT,false)
+	if preview_texture != null: draw_texture_rect(preview_texture,MAP_RECT,false)
 	for site in main.resource_sites:
-		var point: Vector2 = MAP_RECT.position + site.position / Definition.BOUNDS.size * MAP_RECT.size
+		var point: Vector2 = MAP_RECT.position + site.position / main.map_runtime.bounds.size * MAP_RECT.size
 		if site.site_type == &"forest":
 			draw_colored_polygon(PackedVector2Array([point+Vector2(0,-3),point+Vector2(-3,3),point+Vector2(3,3)]),Color("b9d693"))
 		else:
 			draw_rect(Rect2(point-Vector2(2,2),Vector2(4,4)),Color("ffcd78") if site.site_type == &"iron_deposit" else Color("e5e7e9"))
-	var city: Vector2 = MAP_RECT.position + Definition.CITY_POSITION / Definition.BOUNDS.size * MAP_RECT.size
+	var city: Vector2 = MAP_RECT.position + main.map_runtime.city_position / main.map_runtime.bounds.size * MAP_RECT.size
 	draw_rect(Rect2(city-Vector2(3,3),Vector2(6,6)),Color("ffd477"),false,1.5)
-	var world_rect: Rect2 = main.map_camera.visible_world_rect().intersection(Definition.BOUNDS)
-	draw_rect(Rect2(MAP_RECT.position+world_rect.position/Definition.BOUNDS.size*MAP_RECT.size,world_rect.size/Definition.BOUNDS.size*MAP_RECT.size),Color("fff0c6"),false,1.0)
+	var world_rect: Rect2 = main.map_camera.visible_world_rect().intersection(main.map_runtime.bounds)
+	draw_rect(Rect2(MAP_RECT.position+world_rect.position/main.map_runtime.bounds.size*MAP_RECT.size,world_rect.size/main.map_runtime.bounds.size*MAP_RECT.size),Color("fff0c6"),false,1.0)
 
 func _panel_style() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()

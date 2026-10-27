@@ -1,0 +1,13 @@
+{
+  "result": "通过",
+  "deterministic_outputs": {
+    "detail.png": "27ed05a75e5bf2995b334d36d59599b832e8efa7e92fc80986fee0c1aed3ae61",
+    "macro-mask.png": "cfbcebb540b9bb78e755737fd73aa57f79e6de0c86b29dc3ada3cd456e2582d1",
+    "material-record.json": "82d113fb00d9020f071f4dabb0d0d8bdca188e81f9e014d0a5e8281df8fef02b"
+  },
+  "repetition_correlation": {
+    "horizontal_216_world": 0.07843574292656207,
+    "vertical_162_world": 0.0583976936358433
+  },
+  "note": "两种原纹理周期的像素相关性检查，不替代美术复核或长时间漫游"
+}

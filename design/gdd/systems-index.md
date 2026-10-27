@@ -4,6 +4,7 @@
 
 | 系统 | 文档 | 状态 | 当前验证目标 |
 |---|---|---|---|
+| 多关卡模块化地图 | [modular-level-map-system.md](modular-level-map-system.md) | 2026-10-27设计提案，未实施 | 关卡实例、可复用地形、建筑融合、操作/总览镜头、4K密度与互动样区 |
 | 大地图设计图还原与交互兼容 | [large-map-design-restoration-system.md](large-map-design-restoration-system.md) | 2026-10-13分层4608×2592已接入，自动化与GL通过 | 最终美术、放大清晰度与60分钟运输平衡评审 |
 | 60分钟战役与每局重置 | [sixty-minute-campaign-system.md](sixty-minute-campaign-system.md) | CAM-01方向已确定；未实现 | 细化结束判定、计时与新局边界 |
 | 击杀金币、商店抽牌与三卡升星 | [kill-gold-card-shop-fusion-system.md](kill-gold-card-shop-fusion-system.md) | Story-024灰盒实现与自动化通过；待两局自然试玩 | 采集10～15分钟经济数据，再按结果调平 |

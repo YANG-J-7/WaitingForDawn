@@ -118,12 +118,12 @@ func _ready() -> void:
 	var main := MAIN_SCENE.instantiate()
 	add_child(main)
 	var terrain_node: Node2D = main.get_node("TerrainGridLayer") as Node2D
-	var forest_node: Sprite2D = main.get_node("BorderForest") as Sprite2D
-	check(terrain_node.chunks.size()==18 and terrain_node.chunks[0].texture.resource_path == "res://assets/map/dawn_wide_v3/ground-0-0.png", "运行连续地形分块加载，不再叠加旧图专用草地遮罩")
+	var forest_node: Node2D = main.get_node("BorderForest") as Node2D
+	check(terrain_node.parts.size()==3 and terrain_node.parts[0].material.shader.resource_path == "res://src/gameplay/art/modular_terrain.gdshader", "运行组件地表使用共享材质，不加载旧整图")
 	check(main.texture_filter == CanvasItem.TEXTURE_FILTER_LINEAR, "精修底图连续采样，不强制放大像素格")
 	var city_keeps_nearest: bool = main.get_node("TownHallVisual").texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST
 	check(city_keeps_nearest, "建筑保留原最近邻过滤，不随底图改成平滑")
-	check(forest_node.texture != null and forest_node.visible, "地图边界树林运行时可见")
+	check(forest_node.tree_count>0 and forest_node.visible, "可复用单树组成的边界树林运行时可见")
 	check(terrain_node.z_index >= 0 and forest_node.z_index >= 0, "地形和边界树林不会绘制在主底图之后被覆盖")
 	check(terrain_node.get_index() < forest_node.get_index(), "地形层先于边界树林绘制")
 	check(forest_node.get_index() < main.get_node("ResourceSites").get_index(), "边界树林位于资源与单位层下方")

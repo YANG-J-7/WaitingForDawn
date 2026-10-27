@@ -5,7 +5,7 @@ const MapCameraScript = preload("res://src/gameplay/buildings/map_camera.gd")
 const GridMapModelScript = preload("res://src/gameplay/grid/grid_map_model.gd")
 const GridPathfinderScript = preload("res://src/gameplay/grid/grid_pathfinder.gd")
 const TerrainMapDataScript = preload("res://src/gameplay/grid/terrain_map_data.gd")
-const TerrainGridLayerScript = preload("res://src/gameplay/art/layered_map_layer.gd")
+const TerrainGridLayerScript = preload("res://src/gameplay/art/modular_map_layer.gd")
 const MapDefinitionScript = preload("res://src/gameplay/grid/map_definition.gd")
 const MountainRoadLayerScript = preload("res://src/gameplay/art/mountain_road_layer.gd")
 const TownHallVisualScript = preload("res://src/gameplay/art/town_hall_visual.gd")
@@ -13,6 +13,8 @@ const OverlayScript = preload("res://src/gameplay/buildings/placement_overlay.gd
 const ArtVisualScript = preload("res://src/gameplay/art/art_visual.gd")
 const MAP_BORDER_FOREST_TEXTURE: Texture2D = preload("res://assets/map/dawn_wide_v3/border-forest.png")
 const MAP_SITE_DATA_PATH := MapDefinitionScript.DATA_PATH
+@export var level_definition: Resource = preload("res://src/levels/level_001.tres")
+var map_runtime: RefCounted
 var map_camera: Camera2D
 var placement_overlay: Node2D
 var additional_towers: Array[ArrowTower] = []
@@ -127,11 +129,14 @@ func _ready() -> void:
 	for child in get_children():
 		if child is CanvasItem:
 			child.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	y_sort_enabled = true
+	for node_name in ["ResourceSites","FarmerManager","WaveController","SettlementBuilder","WallManager","Barracks"]:
+		get_node(node_name).y_sort_enabled = true
 	_initialize_grid_map()
 	terrain_grid_layer = TerrainGridLayerScript.new() as Node2D
 	terrain_grid_layer.name = "TerrainGridLayer"
 	terrain_grid_layer.z_index = 0
-	terrain_grid_layer.configure(grid_map_model)
+	terrain_grid_layer.configure(grid_map_model, map_runtime)
 	add_child(terrain_grid_layer)
 	move_child(terrain_grid_layer, 0)
 	# 路面和石阶属于新地形美术；这里只保留路网层节点，不叠旧图道路。
@@ -139,27 +144,22 @@ func _ready() -> void:
 	mountain_roads.name = "MountainRoadLayer"
 	add_child(mountain_roads)
 	move_child(mountain_roads, 1)
-	var border_forest := Sprite2D.new()
+	var border_forest := preload("res://src/gameplay/art/modular_border_forest.gd").new()
 	border_forest.name = "BorderForest"
-	border_forest.texture = MAP_BORDER_FOREST_TEXTURE
-	border_forest.centered = false
-	border_forest.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	# 草地残片已离线裁除，整张透明边界层与世界共边，避免再次套用旧图比例。
-	border_forest.scale = MapLayout.BOUNDS.size / MAP_BORDER_FOREST_TEXTURE.get_size()
-	border_forest.z_index = 0
+	border_forest.configure(map_runtime)
 	add_child(border_forest)
 	move_child(border_forest, 2)
-	wave_controller.city_target_position = MapLayout.CITY_POSITION
-	wave_controller.playable_bounds = MapLayout.BOUNDS
-	wave_controller.spawn_points.assign(MapLayout.SPAWN_POINTS)
-	settlement_builder.build_bounds = MapLayout.BOUNDS
+	wave_controller.city_target_position = map_runtime.city_position
+	wave_controller.playable_bounds = map_runtime.bounds
+	wave_controller.spawn_points.assign(map_runtime.spawn_points)
+	settlement_builder.build_bounds = map_runtime.bounds
 	# 历史固定格接口保留，但落点跟随新主城，不能沿用已成为树林的旧坐标。
-	settlement_builder.slot_positions.assign([MapLayout.CITY_POSITION+Vector2(-252,36),MapLayout.CITY_POSITION+Vector2(-252,216),MapLayout.CITY_POSITION+Vector2(216,180)])
-	arrow_tower.position = MapLayout.CITY_POSITION+Vector2(-252,-72)
-	barracks.position = MapLayout.CITY_POSITION+Vector2(216,0)
+	settlement_builder.slot_positions.assign([map_runtime.city_position+Vector2(-252,36),map_runtime.city_position+Vector2(-252,216),map_runtime.city_position+Vector2(216,180)])
+	arrow_tower.position = map_runtime.city_position+Vector2(-252,-72)
+	barracks.position = map_runtime.city_position+Vector2(216,0)
 	settlement_builder.set_grid_map_model(grid_map_model)
-	wall_manager.build_bounds = MapLayout.BOUNDS
-	barracks.build_bounds = MapLayout.BOUNDS
+	wall_manager.build_bounds = map_runtime.bounds
+	barracks.build_bounds = map_runtime.bounds
 	farmer_manager.economy = wave_economy
 	farmer_manager.set_pathfinder(grid_pathfinder)
 	wave_controller.set_pathfinder(grid_pathfinder)
@@ -169,6 +169,7 @@ func _ready() -> void:
 	wave_controller.additional_barracks = additional_barracks
 	map_camera = MapCameraScript.new()
 	map_camera.name = "MapCamera"
+	map_camera.configure(map_runtime)
 	add_child(map_camera)
 	var city_art := TownHallVisualScript.new() as Node2D
 	city_art.name = "TownHallVisual"
@@ -183,11 +184,6 @@ func _ready() -> void:
 	placement_overlay.z_index = 100
 	add_child(placement_overlay)
 	_load_resource_sites()
-	var occlusion := preload("res://src/gameplay/art/map_occlusion_layer.gd").new()
-	occlusion.name = "MapOcclusionLayer"
-	occlusion.z_index = 2
-	add_child(occlusion)
-	occlusion.configure(self)
 	var navigation := preload("res://src/gameplay/art/map_navigation.gd").new()
 	navigation.name = "MapNavigation"
 	$HUD.add_child(navigation)
@@ -286,15 +282,7 @@ func _load_resource_sites() -> void:
 	resource_sites.clear()
 	for child in resource_sites_root.get_children():
 		child.queue_free()
-	var file := FileAccess.open(MAP_SITE_DATA_PATH, FileAccess.READ)
-	if file == null:
-		push_error("无法读取新地图资源点数据：%s" % MAP_SITE_DATA_PATH)
-		return
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	if not parsed is Dictionary:
-		push_error("新地图资源点数据格式错误。")
-		return
-	for entry: Variant in MapDefinitionScript.resource_sites():
+	for entry: Variant in map_runtime.resource_sites():
 		if not entry is Dictionary:
 			continue
 		var data := entry as Dictionary
@@ -317,8 +305,12 @@ func _load_resource_sites() -> void:
 
 
 func _initialize_grid_map() -> void:
-	TerrainMapDataScript.apply_to(grid_map_model)
-	grid_map_model.occupy(&"city", MapLayout.CITY_POSITION, MapLayout.CITY_FOOTPRINT)
+	map_runtime = preload("res://src/gameplay/map/level_map_runtime.gd").from_definition(level_definition)
+	assert(map_runtime.errors.is_empty(), str(map_runtime.errors))
+	grid_map_model = GridMapModelScript.new(map_runtime.grid_size)
+	grid_pathfinder = GridPathfinderScript.new(grid_map_model)
+	TerrainMapDataScript.apply_to(grid_map_model, map_runtime)
+	grid_map_model.occupy(&"city", map_runtime.city_position, MapLayout.CITY_FOOTPRINT)
 
 
 func _process(delta: float) -> void:
@@ -546,7 +538,7 @@ func _on_reset_pressed() -> void:
 	wave_economy.reset(settlement_builder)
 	farmer_manager.reset()
 	grid_map_model.clear_occupancy()
-	grid_map_model.occupy(&"city", MapLayout.CITY_POSITION, MapLayout.CITY_FOOTPRINT)
+	grid_map_model.occupy(&"city", map_runtime.city_position, MapLayout.CITY_FOOTPRINT)
 	for tower in additional_towers:
 		tower.free()
 	additional_towers.clear()
@@ -840,7 +832,7 @@ func _try_place_barracks_card(card_index: int, map_position: Vector2 = Vector2.I
 	if placed_camp.is_built():
 		placed_camp = preload("res://src/gameplay/defenses/barracks.tscn").instantiate()
 		add_child(placed_camp)
-		placed_camp.build_bounds = MapLayout.BOUNDS
+		placed_camp.build_bounds = map_runtime.bounds
 		placed_camp.set_pathfinder(grid_pathfinder)
 		additional_barracks.append(placed_camp)
 		placed_camp.destroyed.connect(_on_world_defense_destroyed)
@@ -1391,7 +1383,7 @@ func _can_place_free_building(map_position: Vector2, radius: float, card_id: Str
 	if card_id in [&"arrow_tower",&"barracks"] and not grid_map_model.has_work_access(map_position,footprint):
 		setup_hint_label.text = "山区岗位建筑需要靠近山路，留出人员可到达的入口。"
 		return false
-	if not MapLayout.is_buildable(map_position, radius):
+	if not _is_map_buildable(map_position, radius):
 		setup_hint_label.text = "建筑必须放在地图可建造区域内。"
 		return false
 	for obstacle in _free_placement_obstacles(true):
@@ -1476,7 +1468,7 @@ func placement_preview(card: OpeningCardDefinition, point: Vector2) -> Dictionar
 	valid = valid and grid_map_model.can_place(point, footprint, resource_site_id)
 	if card.category == "resource" or card.card_id in [&"arrow_tower",&"barracks"]:
 		valid = valid and grid_map_model.has_work_access(point,footprint)
-	valid = valid and MapLayout.is_buildable(point, radius) and RunEconomy.can_pay(card.build_costs)
+	valid = valid and _is_map_buildable(point, radius) and RunEconomy.can_pay(card.build_costs)
 	for obstacle in _free_placement_obstacles(true, card.required_resource_site.is_empty()):
 		if point.distance_to(obstacle.position) < radius + float(obstacle.radius):
 			valid = false
@@ -1919,3 +1911,10 @@ func _refresh_all_labels() -> void:
 	city_health_bar.max_value = RunState.city_max_health
 	city_health_bar.value = RunState.city_health
 	enemy_value.text = "0 / 0"
+
+
+func _is_map_buildable(point: Vector2, radius: float = 0.0) -> bool:
+	if not map_runtime.bounds.grow(-radius).has_point(point): return false
+	for delta in [Vector2.ZERO,Vector2(radius,0),Vector2(-radius,0),Vector2(0,radius),Vector2(0,-radius)]:
+		if map_runtime.is_water_point(point+delta): return false
+	return true

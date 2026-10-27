@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-27",
+  "generator": "内置 image_gen（既有原稿）",
+  "source": "design/art/concepts/grass-redesign-2026-10-26/detail-native.png",
+  "source_sha256": "b7084ee4b106673533fe754900aef93e74ebed780e953bdcbeb585c9d6311bd8",
+  "native_size": [
+    1448,
+    1086
+  ],
+  "world_coverage": [
+    216,
+    162
+  ],
+  "texels_per_world_pixel": 6.703703703703703,
+  "world_size": [
+    7056,
+    2880
+  ],
+  "processing": "40像素低频分离、40像素边缘闭合；未放大、未程序绘制草叶",
+  "layout": "世界坐标三角格混合三个固定随机偏移；不旋转月光方向；不按地图片重新铺纹理",
+  "scope": "既有平原草地遮罩内；山区、岩缘、湖岸和导航保持",
+  "animation": "静态接入阶段；无昆虫、无时间位移；后续全草地风动另行设计",
+  "map_sources": {
+    "base.png": "dde48079dd5c3b32276bca7f5c0afe16cee14575f84fae861081106cb53376df",
+    "plain-material-mask-v2.png": "3201ec8842d2acdc762906bc4500baea419426f3d0516e59bd43335a7572c00b"
+  },
+  "outputs": {
+    "detail.png": "27ed05a75e5bf2995b334d36d59599b832e8efa7e92fc80986fee0c1aed3ae61",
+    "macro-mask.png": "cfbcebb540b9bb78e755737fd73aa57f79e6de0c86b29dc3ada3cd456e2582d1"
+  }
+}

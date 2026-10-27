@@ -1,0 +1,208 @@
+{
+  "origin": [
+    0,
+    0
+  ],
+  "resource_sites": [
+    {
+      "id": "forest_02",
+      "siteType": "forest",
+      "position": {
+        "x": 4140.0,
+        "y": 1332.0
+      },
+      "placementRadius": 110,
+      "sprite": "assets/map/dawn_large_v1/forest_02.png",
+      "sourceRect": [
+        530,
+        258,
+        717,
+        417
+      ],
+      "sourceFoot": [
+        620,
+        381
+      ],
+      "blockedSourceRect": [
+        530,
+        258,
+        717,
+        417
+      ]
+    },
+    {
+      "id": "forest_04",
+      "siteType": "forest",
+      "position": {
+        "x": 3816.0,
+        "y": 1728.0
+      },
+      "placementRadius": 110,
+      "sprite": "assets/map/dawn_large_v1/forest_04.png",
+      "sourceRect": [
+        380,
+        378,
+        610,
+        567
+      ],
+      "sourceFoot": [
+        500,
+        518
+      ],
+      "blockedSourceRect": [
+        380,
+        378,
+        610,
+        567
+      ]
+    },
+    {
+      "id": "forest_03",
+      "siteType": "forest",
+      "position": {
+        "x": 4680.0,
+        "y": 1692.0
+      },
+      "placementRadius": 110,
+      "sprite": "assets/map/dawn_large_v1/forest_03.png",
+      "sourceRect": [
+        714,
+        379,
+        914,
+        541
+      ],
+      "sourceFoot": [
+        815,
+        505
+      ],
+      "blockedSourceRect": [
+        714,
+        379,
+        914,
+        541
+      ]
+    },
+    {
+      "id": "forest_05",
+      "siteType": "forest",
+      "position": {
+        "x": 4356.0,
+        "y": 2340.0
+      },
+      "placementRadius": 110,
+      "sprite": "assets/map/dawn_large_v1/forest_05.png",
+      "sourceRect": [
+        585,
+        606,
+        796,
+        793
+      ],
+      "sourceFoot": [
+        694,
+        750
+      ],
+      "blockedSourceRect": [
+        585,
+        606,
+        796,
+        793
+      ]
+    },
+    {
+      "id": "stone_01",
+      "siteType": "stone_deposit",
+      "position": {
+        "x": 4644.0,
+        "y": 432.0
+      },
+      "placementRadius": 90
+    },
+    {
+      "id": "stone_02",
+      "siteType": "stone_deposit",
+      "position": {
+        "x": 5184.0,
+        "y": 936.0
+      },
+      "placementRadius": 90
+    },
+    {
+      "id": "iron_01",
+      "siteType": "iron_deposit",
+      "position": {
+        "x": 6192.0,
+        "y": 900.0
+      },
+      "placementRadius": 90
+    },
+    {
+      "id": "iron_02",
+      "siteType": "iron_deposit",
+      "position": {
+        "x": 4104.0,
+        "y": 576.0
+      },
+      "placementRadius": 90
+    }
+  ],
+  "spawn_points": [
+    [
+      3204,
+      504
+    ],
+    [
+      5256,
+      324
+    ],
+    [
+      2916,
+      1404
+    ],
+    [
+      3276,
+      2448
+    ]
+  ],
+  "forest_visuals": [
+    {
+      "id": "forest_02",
+      "path": "assets/map/dawn_large_hd_v2/forest_02.png",
+      "rect": [
+        3908.6698564593303,
+        998.6652497343251,
+        515.3684210526312,
+        437.9681190223167
+      ]
+    },
+    {
+      "id": "forest_04",
+      "path": "assets/map/dawn_large_hd_v2/forest_04.png",
+      "rect": [
+        3495.272727272727,
+        1329.2072263549417,
+        633.8755980861251,
+        520.6036131774706
+      ]
+    },
+    {
+      "id": "forest_03",
+      "path": "assets/map/dawn_large_hd_v2/forest_03.png",
+      "rect": [
+        4415.770334928229,
+        1331.96174282678,
+        551.196172248804,
+        446.231668437832
+      ]
+    },
+    {
+      "id": "forest_05",
+      "path": "assets/map/dawn_large_hd_v2/forest_05.png",
+      "rect": [
+        4060.2488038277515,
+        1957.2369819341125,
+        581.5119617224882,
+        515.0945802337942
+      ]
+    }
+  ]
+}

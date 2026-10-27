@@ -117,11 +117,11 @@ func _test_camera() -> void:
 	camera.zoom_at(100, anchor)
 	check(is_equal_approx(camera.zoom.x, 1.6), "放大有上限")
 	camera.zoom_at(0.0001, anchor)
-	var expected_fit_zoom: float = minf(
+	var expected_fit_zoom: float = maxf(
 		play_rect.size.x / MapLayout.BOUNDS.size.x,
 		play_rect.size.y / MapLayout.BOUNDS.size.y
 	)
-	check(is_equal_approx(camera.zoom.x, expected_fit_zoom), "最远只能缩放到完整地图边界")
+	check(is_equal_approx(camera.zoom.x, expected_fit_zoom), "操作镜头最远按cover填满可用视口")
 	camera.show_full_map()
 	camera.pan_by(Vector2(40, 10))
 	check(camera.position.is_equal_approx(MapLayout.BOUNDS.get_center()), "全图倍率下不能把地图边界拖出视口")

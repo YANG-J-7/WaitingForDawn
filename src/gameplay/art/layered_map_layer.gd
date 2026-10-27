@@ -1,6 +1,9 @@
 extends Node2D
 ## 地形分块来自同一母图，使用共边世界坐标避免接缝。
 const Definition = preload("res://src/gameplay/grid/map_definition.gd")
+const GRASS_SHADER = preload("res://src/gameplay/art/grass_ground.gdshader")
+const GRASS_DETAIL = preload("res://assets/map/grass_hd_v1/detail.png")
+const GRASS_MACRO_MASK = preload("res://assets/map/grass_hd_v1/macro-mask.png")
 var chunks: Array[Dictionary] = []
 var grid_model: RefCounted
 var rendered_cell_count := 0
@@ -12,6 +15,12 @@ func configure(grid: RefCounted) -> void:
 	grid_model = grid
 	rendered_cell_count = grid.grid_size.x * grid.grid_size.y
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	var grass_material := ShaderMaterial.new()
+	grass_material.shader = GRASS_SHADER
+	grass_material.set_shader_parameter("grass_detail", GRASS_DETAIL)
+	grass_material.set_shader_parameter("macro_mask", GRASS_MACRO_MASK)
+	grass_material.set_shader_parameter("map_size", Definition.BOUNDS.size)
+	material = grass_material
 	for entry in Definition.visual_data().get("chunks", []):
 		if entry.has("worldRect"):
 			var rect: Array = entry.worldRect

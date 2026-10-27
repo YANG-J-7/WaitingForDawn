@@ -107,6 +107,12 @@ func _effect(kind: String, normalized: Array, root: Vector2, magnification: floa
 func _place_grounding() -> void:
 	if not is_instance_valid(grounding) or not grounding.is_inside_tree():
 		return
+	if get_parent().y_sort_enabled:
+		# 地基固定在公共排序域底部；主体仍按真实墙脚Y排序。
+		var origin := grounding.position
+		for child in grounding.get_children():
+			if child is Node2D: child.position += origin
+		grounding.position = Vector2.ZERO
 	var forest := get_parent().get_node_or_null("BorderForest")
 	if forest != null:
 		get_parent().move_child(grounding, forest.get_index() + 1)

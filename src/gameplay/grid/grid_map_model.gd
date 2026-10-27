@@ -45,7 +45,8 @@ func can_step(from: Vector2i, to: Vector2i) -> bool:
 	return a.level == b.level
 
 
-func _init() -> void:
+func _init(size: Vector2i = GRID_SIZE) -> void:
+	grid_size = size
 	_cells.resize(grid_size.x * grid_size.y)
 	for index in range(_cells.size()):
 		_cells[index] = _make_cell(&"grass", true, true, 1.0)

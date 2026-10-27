@@ -1,0 +1,164 @@
+{
+  "date": "2026-10-26",
+  "verified_date": "2026-10-27",
+  "generator": "内置 image_gen",
+  "status": "static-detail-integrated-animation-historical",
+  "integrated": true,
+  "sources": [
+    {
+      "image": "overall-v1.png",
+      "source": "C:\\Users\\y1971\\.codex\\generated_images\\01a176f1-6b84-7492-923a-d75973af9a54\\exec-1c1a3981-5204-48d1-b2e8-992d396e38bd.png",
+      "size": [
+        1964,
+        801
+      ],
+      "sha256": "8f9cf1273beb61e35d4b672965a1ef98405cb7bcfd2f9b0e48956d6516542611",
+      "prompt": "overall-prompt.txt",
+      "notes": "首稿，草团偏大，保留对照",
+      "references": [
+        {
+          "path": "assets/map/dawn_wide_v3/layered-preview.png",
+          "sha256": "9e5ae6d60777976ec15789645709f1927e7681241e557e7c42662c1b4d86b7d2"
+        }
+      ]
+    },
+    {
+      "image": "overall-v2.png",
+      "source": "C:\\Users\\y1971\\.codex\\generated_images\\01a176f1-6b84-7492-923a-d75973af9a54\\exec-9f62a0de-0418-4946-9e1e-1f93992a4a72.png",
+      "size": [
+        1962,
+        801
+      ],
+      "sha256": "55cf3ef8d72d84e53fddf8dd9ef898138d3eff1a640f28da3cbcac436a0bb4ac",
+      "prompt": "overall-v2-prompt.txt",
+      "notes": "整体样式候选，非运行底图",
+      "references": [
+        {
+          "path": "design/art/concepts/grass-redesign-2026-10-26/overall-v1.png",
+          "sha256": "8f9cf1273beb61e35d4b672965a1ef98405cb7bcfd2f9b0e48956d6516542611"
+        }
+      ]
+    },
+    {
+      "image": "detail-native.png",
+      "source": "C:\\Users\\y1971\\.codex\\generated_images\\01a176f1-6b84-7492-923a-d75973af9a54\\exec-18370e6b-b80e-44c9-b639-0ddbcee1cead.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "sha256": "b7084ee4b106673533fe754900aef93e74ebed780e953bdcbeb585c9d6311bd8",
+      "prompt": "detail-prompt.txt",
+      "notes": "近景细节候选，非无缝地砖",
+      "references": [
+        {
+          "path": "assets/map/dawn_wide_v3/layered-preview.png",
+          "sha256": "9e5ae6d60777976ec15789645709f1927e7681241e557e7c42662c1b4d86b7d2"
+        },
+        {
+          "path": "tests/reports/images/town-hall-base-rear-left-2026-10-26/1280x720-close.png",
+          "sha256": "3cc76cc588b91b41ae4605b16eb416ec5595ac42310a368323c5bd49394fd3e6"
+        }
+      ]
+    },
+    {
+      "image": "wind/generated-source.png",
+      "source": "C:\\Users\\y1971\\.codex\\generated_images\\01a176f1-6b84-7492-923a-d75973af9a54\\exec-8d3838bb-74fb-49bf-992a-934af9e3ccf9.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "sha256": "00feb3055eae806945b8c9b4286100c9d8a2a923fb20fb6bf617e5f37b3d95bd",
+      "prompt": "wind-prompt.txt",
+      "notes": "稀疏长草点缀风动样片；raw-sheet为处理器重编码RGBA副本",
+      "references": [
+        {
+          "path": "tests/reports/images/town-hall-base-rear-left-2026-10-26/1280x720-close.png",
+          "sha256": "3cc76cc588b91b41ae4605b16eb416ec5595ac42310a368323c5bd49394fd3e6"
+        }
+      ]
+    },
+    {
+      "image": "beetle/generated-source.png",
+      "source": "C:\\Users\\y1971\\.codex\\generated_images\\01a176f1-6b84-7492-923a-d75973af9a54\\exec-3a410b8f-9bdc-4e0c-a66f-fc628de9f128.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "sha256": "1b64c9567c64bcf782f8670e8dbf4e6067f535ae1ccabb4dbe803d2592f5d8ad",
+      "prompt": "beetle-prompt.txt",
+      "notes": "单种步甲六帧爬行样片；raw-sheet为处理器重编码RGBA副本",
+      "references": [
+        {
+          "path": "tests/reports/images/town-hall-base-rear-left-2026-10-26/1280x720-close.png",
+          "sha256": "3cc76cc588b91b41ae4605b16eb416ec5595ac42310a368323c5bd49394fd3e6"
+        }
+      ]
+    }
+  ],
+  "runtime_material": "assets/map/grass_hd_v1/material-record.json",
+  "detail": {
+    "native_size": [
+      1448,
+      1086
+    ],
+    "world_coverage": [
+      384,
+      288
+    ],
+    "texels_per_world_pixel": 3.7708333333333335,
+    "camera_zoom": 1.6,
+    "window": [
+      1280,
+      720
+    ],
+    "logical_viewport": [
+      960,
+      540
+    ],
+    "physical_pixels_per_source_pixel": 0.5657458563535911,
+    "note": "此为历史离线样区预算；正式静态接入覆盖216×162，参见runtime_material"
+  },
+  "animation": {
+    "wind_frames": 6,
+    "beetle_frames": 0,
+    "archived_beetle_frames": 6,
+    "sample_gif_seconds": 7.2,
+    "encoded_frame_count": 60,
+    "instance_count": {
+      "wind": 7,
+      "beetle_max": 0
+    },
+    "note": "昆虫取消，原稿仅留溯源；此GIF仅保留历史草簇演示，不是新全图风方案；游戏先静态接入"
+  },
+  "postprocess": {
+    "wind_despill": "可见像素R>1.3G且B>1.3G且R>35时R置为G；不改alpha；幂等"
+  },
+  "qc": {
+    "wind": {
+      "frame_count": 6,
+      "valid_frame_count": 6,
+      "empty_count": 0,
+      "edge_touch_count": 0,
+      "paste_clamped_count": 0,
+      "body_scale_mean": 0.37714137383897145,
+      "output_subject_height_mean": 234.33333333333334,
+      "body_scale_cv": 0.006538148095076362,
+      "anchor_x_std": 0.0,
+      "anchor_y_std": 1.1102230246251565e-16,
+      "anchor_y_mean": 0.8154761904761906
+    },
+    "beetle": {
+      "frame_count": 6,
+      "valid_frame_count": 6,
+      "empty_count": 0,
+      "edge_touch_count": 0,
+      "paste_clamped_count": 0,
+      "body_scale_mean": 0.3005750739240454,
+      "output_subject_height_mean": 140.0,
+      "body_scale_cv": 0.002661325010905181,
+      "anchor_x_std": 0.004199214649206431,
+      "anchor_y_std": 0.009194073263530287,
+      "anchor_y_mean": 0.5281084656084657
+    }
+  }
+}

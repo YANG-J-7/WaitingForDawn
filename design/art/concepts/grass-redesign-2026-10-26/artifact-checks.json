@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-27",
+  "result": "通过",
+  "image_count": 28,
+  "outputs": {
+    "beetle/animation.gif": "f6a1c19b5e64d447b954cd4127bddc6144fb2d238fad27552d179874957005af",
+    "beetle/generated-source.png": "1b64c9567c64bcf782f8670e8dbf4e6067f535ae1ccabb4dbe803d2592f5d8ad",
+    "beetle/raw-sheet-clean.png": "a8c1df5ae32e9f34f5d99297fbb305a64598fe9ad9224b79638aedbb38969ca6",
+    "beetle/raw-sheet.png": "3aea94fe344f5bfc570d1707efa472a4c2883b39ef0e5284922f0cbe9429c2c6",
+    "beetle/sheet-transparent.png": "2c9520909d7ce32b71b400ae3551d059a7077dde65d9e94feb02116ce7121cfc",
+    "beetle/walk-1.png": "2cf719f71bbcee854eead11c54ec22ea18071546242da6d6c37dcddef79e69cf",
+    "beetle/walk-2.png": "179fd4c1caf3e8590724a138d569e5025a14a5e819a6dd60e6e982445b9ee2ee",
+    "beetle/walk-3.png": "38e2309a1a6ded37786c4b76e29e9cca6bdf18a3485e8d567aa171b06f4ee918",
+    "beetle/walk-4.png": "369594ada64e7fe4b7c2912437619894c92a2765ac1a5c11f5a7ce7d6c2bc992",
+    "beetle/walk-5.png": "030d2055efd68a69104997eed4ebe73e5eee0db6dd26d3d85bd42f21a920dd6b",
+    "beetle/walk-6.png": "8b3f6ecd3dd82b125d5d3807d6d88e2f66a4c1ae49d3b4b72a5a47104e120ffc",
+    "detail-max-zoom-1280.png": "3d371c823ec7a853352f2fe1c60ba439a04455ff568eab12dcd56611163d4589",
+    "detail-native.png": "b7084ee4b106673533fe754900aef93e74ebed780e953bdcbeb585c9d6311bd8",
+    "overall-v1.png": "8f9cf1273beb61e35d4b672965a1ef98405cb7bcfd2f9b0e48956d6516542611",
+    "overall-v2.png": "55cf3ef8d72d84e53fddf8dd9ef898138d3eff1a640f28da3cbcac436a0bb4ac",
+    "scene-motion-preview.gif": "06ec3f1d15053de8a3e4a328bc56eee34f0963bd7b9aadf674664587ef5d81fa",
+    "scene-motion-still.png": "e0b5aeee3a70da7d7441e44c89b49650c18126f4ffdb9ddee6aab1678fe98bf7",
+    "wind/animation.gif": "346bde673aff3d42de193748374a1e683a13f3de06f910c5d2009607a3cd2b32",
+    "wind/generated-source.png": "00feb3055eae806945b8c9b4286100c9d8a2a923fb20fb6bf617e5f37b3d95bd",
+    "wind/idle-1.png": "d02cb7264e8fc9058621ba45f0b1c573d167491181dcadf53a1010ff1a25ea85",
+    "wind/idle-2.png": "88bc78ed8c65d30147057f9b12ce50ba3cfcde5d2e0fd40e5e3c0b4997760e8e",
+    "wind/idle-3.png": "5234b852734136368daa1fe770ff5a92f0d340ce03f6dea5be75a447f3335061",
+    "wind/idle-4.png": "1553db60dd8b270b0fafa5c58463918b4cac32d377a7518228d87a832484f928",
+    "wind/idle-5.png": "c717b62f13f9ebcadc285157fb06e32fd6a2742d415e35689c5ce961fdeeb8a4",
+    "wind/idle-6.png": "568e6151be21dc624cf78d8e58e98656e86c679637b4168313812f7f94a8f074",
+    "wind/raw-sheet-clean.png": "c969f80612522ab5fde46ca6680b5edaaee1d85ab54c40f6f10b283bb476c5c0",
+    "wind/raw-sheet.png": "1c8bddd71f0cb77153768ae5161e2edb5b129813a2ef9c493103eebcb773e8ff",
+    "wind/sheet-transparent.png": "370052341ce31d18d2805cac8d0298c38ff55e4c7b59eed1f51913faea751f30"
+  },
+  "checks": [
+    "5张原稿归档，外部缓存存在时校验SHA256",
+    "2张处理器RGBA原稿与生成RGB像素等价",
+    "12帧RGBA透明边界",
+    "两套6帧严格QC",
+    "共享缩放无逐帧归一化",
+    "72个采样时刻/7.2秒场景GIF解码与源帧逐像素相符",
+    "原生像素与最大倍率算式"
+  ],
+  "not_verified": [
+    "此工具不验证Godot，运行证据见静态草地QA",
+    "最终美术接受",
+    "全图风动尚未实现"
+  ]
+}

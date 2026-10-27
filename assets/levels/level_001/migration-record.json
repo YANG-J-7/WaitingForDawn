@@ -1,0 +1,12 @@
+{
+  "source": "dawn_wide_v3 semantics only",
+  "source_sha256": {
+    "map.json": "1e01161aedb643456be66d1b1bfc13b65c993efc19f4755107316d974fb43d45",
+    "mountain-navigation.json": "88492fadb445ba9f8485b0ec4a10d8cd0419fd4e28b7e9fa975b5cccf8287b28"
+  },
+  "world_size": [
+    7056,
+    2880
+  ],
+  "note": "旧图只用于一次语义迁移，组件JSON与场景是后续编辑源；控制图不含可见美术"
+}

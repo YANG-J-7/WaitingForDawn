@@ -27,19 +27,24 @@ func _ready() -> void:
 	art_visual = ArtVisualScript.new() as ArtVisual
 	art_visual.show_behind_parent = true
 	add_child(art_visual)
-	if map_data.has("sourceRect"):
+	if map_data.has("worldRect") or map_data.has("sourceRect"):
 		var definition = preload("res://src/gameplay/grid/map_definition.gd")
-		var box: Array = map_data.sourceRect
+		var box: Array = map_data.get("sourceRect",[0,0,1,1])
 		var origin: Vector2 = definition.source_to_world(Vector2(box[0],box[1]))
+		var visual_size: Vector2 = definition.source_to_world(Vector2(box[2],box[3]))-origin
+		if map_data.has("worldRect"):
+			var world: Array = map_data.worldRect
+			origin = Vector2(world[0],world[1])
+			visual_size = Vector2(world[2],world[3])
 		art_visual.texture = load("res://" + map_data.sprite)
 		art_visual.centered = false
 		art_visual.position = origin - position
-		art_visual.scale = (definition.source_to_world(Vector2(box[2],box[3]))-origin) / art_visual.texture.get_size()
+		art_visual.scale = visual_size / art_visual.texture.get_size()
 		art_visual.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 		art_visual.show_behind_parent = false
 		hide_visual_when_occupied = true
 		# 阻挡的是树簇地面占区，树冠仍由独立图层显示。
-		var rect := Rect2(origin, definition.source_to_world(Vector2(box[2],box[3]))-origin)
+		var rect := Rect2(origin, visual_size)
 		forest_rect = rect
 		# 树簇不再因单位进入宽矩形而整片变透明，单位在独立前景层保持可读。
 		z_index = 0

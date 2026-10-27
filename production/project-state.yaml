@@ -1,6 +1,6 @@
 version: 1
 stage: production
 engine: godot-4.7-development-validation
-updated: 2026-10-26
-current_goal: "主城底座与左后侧红框修正已接入；185项相关回归、GL104项及素材检查通过，待最终观感复核；原地图/性能与自然长局待办保留"
-active_story: "production/stories/story-032-town-hall-idle.md"
+updated: 2026-10-27
+current_goal: "用户已授权按方案重开发当前地图；Story-033开发中：保留世界/资源/八梯拓扑，拆关卡与组件、新地形材质、建筑贴地和操作/总览镜头，完成实际运行效果与回归验证；原性能和自然长局限制保留"
+active_story: "production/stories/story-033-modular-level-map.md"

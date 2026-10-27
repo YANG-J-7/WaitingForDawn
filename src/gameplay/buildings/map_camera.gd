@@ -12,6 +12,14 @@ var mouse_pan_distance: float = 0.0
 var last_mouse_pan_distance: float = 0.0
 var surface: Control
 var play_rect := Rect2()
+var map_bounds := Layout.BOUNDS
+var city_position := Layout.CITY_POSITION
+var overview: bool = false
+var overview_zoom: float = 0.1
+
+func configure(context: RefCounted) -> void:
+	map_bounds = context.bounds
+	city_position = context.city_position
 
 func screen_view_rect() -> Rect2:
 	return play_rect if play_rect.size.x > 0 and play_rect.size.y > 0 else get_viewport_rect()
@@ -21,10 +29,10 @@ func visible_world_rect() -> Rect2:
 
 func set_play_rect(rect: Rect2) -> void:
 	if rect == play_rect: return
-	var was_full := is_equal_approx(zoom.x, minimum_zoom)
+	var was_full := overview
 	play_rect = rect
 	_refresh_fit_zoom()
-	if was_full: zoom = Vector2.ONE * minimum_zoom
+	if was_full: zoom = Vector2.ONE * overview_zoom
 	_clamp_position()
 	force_update_scroll()
 
@@ -39,25 +47,30 @@ func _ready() -> void:
 	reset_view()
 
 func reset_view() -> void:
+	overview = false
 	_refresh_fit_zoom()
 	touches.clear()
 	mouse_panning = false
 	mouse_pan_button = MOUSE_BUTTON_NONE
 	mouse_pan_distance = 0.0
 	last_mouse_pan_distance = 0.0
-	position = Layout.CITY_POSITION
+	position = city_position
 	zoom = Vector2.ONE * maxf(minimum_zoom, 0.72)
 	_clamp_position()
 	force_update_scroll()
 
 func show_full_map() -> void:
+	overview = true
 	_refresh_fit_zoom()
-	position = Layout.BOUNDS.get_center()
-	zoom = Vector2.ONE * minimum_zoom
+	position = map_bounds.get_center()
+	zoom = Vector2.ONE * overview_zoom
 	_clamp_position()
 	force_update_scroll()
 
 func focus_world(point: Vector2) -> void:
+	if overview:
+		overview = false
+		zoom = Vector2.ONE * maxf(.72,minimum_zoom)
 	position = point
 	_clamp_position()
 	force_update_scroll()
@@ -66,6 +79,9 @@ func screen_to_world(point: Vector2) -> Vector2:
 	return get_canvas_transform().affine_inverse() * point
 
 func zoom_at(factor: float, point: Vector2) -> void:
+	if overview:
+		overview = false
+		zoom = Vector2.ONE * minimum_zoom
 	var before := screen_to_world(point)
 	zoom = Vector2.ONE * clampf(zoom.x * factor, minimum_zoom, maximum_zoom)
 	_apply_screen_offset()
@@ -84,17 +100,21 @@ func _clamp_position() -> void:
 	if viewport_size.x <= 0.0 or viewport_size.y <= 0.0 or zoom.x <= 0.0:
 		return
 	var half_visible: Vector2 = viewport_size / (zoom * 2.0)
+	if overview:
+		position = map_bounds.get_center()
+		_apply_screen_offset()
+		return
 	position.x = _clamp_axis(
 		position.x,
-		Layout.BOUNDS.position.x + half_visible.x,
-		Layout.BOUNDS.end.x - half_visible.x,
-		Layout.BOUNDS.get_center().x
+		map_bounds.position.x + half_visible.x,
+		map_bounds.end.x - half_visible.x,
+		map_bounds.get_center().x
 	)
 	position.y = _clamp_axis(
 		position.y,
-		Layout.BOUNDS.position.y + half_visible.y,
-		Layout.BOUNDS.end.y - half_visible.y,
-		Layout.BOUNDS.get_center().y
+		map_bounds.position.y + half_visible.y,
+		map_bounds.end.y - half_visible.y,
+		map_bounds.get_center().y
 	)
 	_apply_screen_offset()
 
@@ -103,13 +123,13 @@ func _refresh_fit_zoom() -> void:
 	var viewport_size: Vector2 = screen_view_rect().size
 	if viewport_size.x <= 0.0 or viewport_size.y <= 0.0:
 		return
-	var fit_zoom: float = minf(
-		viewport_size.x / Layout.BOUNDS.size.x,
-		viewport_size.y / Layout.BOUNDS.size.y
+	overview_zoom = minf(
+		viewport_size.x / map_bounds.size.x,
+		viewport_size.y / map_bounds.size.y
 	)
-	minimum_zoom = minf(fit_zoom, maximum_zoom)
+	minimum_zoom = minf(maxf(viewport_size.x/map_bounds.size.x,viewport_size.y/map_bounds.size.y), maximum_zoom)
 	default_zoom = minimum_zoom
-	if zoom.x < minimum_zoom:
+	if not overview and zoom.x < minimum_zoom:
 		zoom = Vector2.ONE * minimum_zoom
 
 
@@ -120,10 +140,10 @@ func _clamp_axis(value: float, minimum: float, maximum: float, center: float) ->
 
 
 func _on_viewport_size_changed() -> void:
-	var was_at_full_map: bool = is_equal_approx(zoom.x, minimum_zoom)
+	var was_at_full_map: bool = overview
 	_refresh_fit_zoom()
 	if was_at_full_map:
-		zoom = Vector2.ONE * minimum_zoom
+		zoom = Vector2.ONE * overview_zoom
 	_clamp_position()
 	force_update_scroll()
 

@@ -1,0 +1,48 @@
+{
+  "generated_by": "内置image_gen；soil复用已生成独立道路素材",
+  "processing": "32像素边缘闭合，不放大，不新增细节",
+  "materials": {
+    "rock": {
+      "source": "assets/map_kits/moonlit_v2/materials/source/rock-raw.png",
+      "source_sha256": "12cc77b63f5600506c1eac322803a557c4c4e2f6f52ec08d6ee01b6ef2c46293",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "world_coverage": [
+        156,
+        156
+      ],
+      "min_density": 8.038461538461538,
+      "output_sha256": "42e2e14c7aaa0b0f0012bd000497acd93f6e9546655c55b187e3ea58c865366d"
+    },
+    "water": {
+      "source": "assets/map_kits/moonlit_v2/materials/source/water-raw.png",
+      "source_sha256": "9b8ac8133d31de4ddd71b0f43f73748d0d023b1f8383ee89f2ffef22baf2f706",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "world_coverage": [
+        156,
+        156
+      ],
+      "min_density": 8.038461538461538,
+      "output_sha256": "c7aef7baea0d1f7950764d5a4786d4b508e74a0758be8e696e0c27ce656c9600"
+    },
+    "soil": {
+      "source": "assets/art_candidates/night_set_v1/terrain_road.png",
+      "source_sha256": "0c0226448fe07c536d3b4899cbfee90f1e7462c4f45067b8a8f42cf92c0d5503",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "world_coverage": [
+        144,
+        144
+      ],
+      "min_density": 8.708333333333334,
+      "output_sha256": "c921cbd0237767ed2047840c697ed0fbb84b57254f20b00865d82ae32552c28a"
+    }
+  }
+}
