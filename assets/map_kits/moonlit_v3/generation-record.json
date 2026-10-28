@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-28",
+  "generator": "built-in-image_gen",
+  "processing": "透明条带上下有效裁切、预乘边缘32像素周期闭合、上下12%透明羽化；草地双向闭合；无放大或程序新增美术",
+  "references": {
+    "foundation-reference.png": "8dc0516000d49a6bf17b9e99604a9c9dea2a1ec512cfa134a2ac737c36320ff8",
+    "dressed-reference.png": "323c704482dfebaea48e49ec57c49d7c084e0f5892d305c5ac5ed3159e202f6e"
+  },
+  "assets": {
+    "cliff": {
+      "source": "assets/map_kits/moonlit_v3/source/cliff.png",
+      "source_sha256": "a1eca637b843d405f16b1ec85688643a1babeefeb2e0b268dc68dcc9bfd4d29e",
+      "native_size": [
+        1774,
+        887
+      ],
+      "crop": [
+        0,
+        112,
+        1774,
+        785
+      ],
+      "runtime_size": [
+        1774,
+        673
+      ],
+      "output_sha256": "f0e0684a9f7d9dd109747d8bc9d12fa992c7393f8e26317b4fee452c5696e2bb",
+      "prompt": "assets/map_kits/moonlit_v3/source/cliff.prompt.txt"
+    },
+    "shore": {
+      "source": "assets/map_kits/moonlit_v3/source/shore.png",
+      "source_sha256": "224865d5a1d76ad5e57c3d546848693d23d6205d9414907bcbf6174f5aa78a79",
+      "native_size": [
+        2172,
+        724
+      ],
+      "crop": [
+        0,
+        222,
+        2172,
+        597
+      ],
+      "runtime_size": [
+        2172,
+        375
+      ],
+      "output_sha256": "c46f8ac9cb5c7243f03d240f5f53311c7b0b290e8d3a0075d97124d885050e30",
+      "prompt": "assets/map_kits/moonlit_v3/source/shore.prompt.txt"
+    },
+    "meadow": {
+      "source": "assets/map_kits/moonlit_v3/source/meadow.png",
+      "source_sha256": "222fe9e38b014b4bbd30196920d786905bfb4275978352d556436af785434281",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "crop": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "runtime_size": [
+        1254,
+        1254
+      ],
+      "output_sha256": "429ea8f585c888a72006c5980328f9911f09b96bc311c239977b0c224a33c271",
+      "prompt": "assets/map_kits/moonlit_v3/source/meadow.prompt.txt"
+    },
+    "cliff-tall": {
+      "source": "assets/map_kits/moonlit_v3/source/cliff-tall.png",
+      "source_sha256": "a68f93a4d86a22c0294bde5647630201a205d9fefec0ea42ad4fd403efb2e837",
+      "native_size": [
+        1024,
+        1536
+      ],
+      "crop": [
+        64,
+        200,
+        960,
+        1350
+      ],
+      "runtime_size": [
+        896,
+        1150
+      ],
+      "output_sha256": "aff29554d4560a4e68f6e4b0290ee870aabc86e851cd557a50ff9846c213b21d",
+      "prompt": "assets/map_kits/moonlit_v3/source/cliff-tall.prompt.txt"
+    }
+  }
+}

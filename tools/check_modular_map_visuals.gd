@@ -1,7 +1,7 @@
 extends Node
 ## 真实GL截图与组件位移验证；不把截图替代自然长局试玩。
 const MAIN = preload("res://src/main/main.tscn")
-const OUT = "res://tests/reports/images/modular-map-2026-10-27/"
+const OUT = "res://tests/reports/images/modular-art-v3-2026-10-28/"
 var failures := 0
 var metrics := {}
 
@@ -24,7 +24,9 @@ func _ready() -> void:
 	for enemy in main.wave_controller.enemies: enemy.set_physics_process(false)
 	main.notice_seconds=0
 	main.notice_panel.hide()
-	for resolution in [Vector2i(1280,720),Vector2i(1024,768),Vector2i(2560,1080),Vector2i(3840,2160)]:
+	var resolutions := [Vector2i(1280,720),Vector2i(1024,768),Vector2i(2560,1080),Vector2i(3840,2160)]
+	if OS.get_cmdline_user_args().has("--quick"): resolutions=[Vector2i(1280,720)]
+	for resolution in resolutions:
 		view.size=resolution
 		if resolution==Vector2i(1024,768): view.size_2d_override=Vector2i(1024,768)
 		elif resolution==Vector2i(2560,1080): view.size_2d_override=Vector2i(1280,540)
@@ -33,11 +35,11 @@ func _ready() -> void:
 		main._update_map_view_rect()
 		main.map_camera.show_full_map()
 		var shot := await frame(view)
-		shot.save_png(OUT+"%dx%d-overview.png" % [resolution.x,resolution.y])
+		check(shot.save_png(OUT+"%dx%d-overview.png" % [resolution.x,resolution.y])==OK,"保存总览截图")
 		check(main.map_camera.overview,"%s全图使用独立总览状态" % resolution)
 		main.map_camera.reset_view()
 		shot=await frame(view)
-		shot.save_png(OUT+"%dx%d-city.png" % [resolution.x,resolution.y])
+		check(shot.save_png(OUT+"%dx%d-city.png" % [resolution.x,resolution.y])==OK,"保存主城截图")
 		main.map_camera.zoom_at(.001,Vector2(480,270))
 		var projected: Rect2=main.map_camera.get_canvas_transform()*main.map_runtime.bounds
 		check(projected.grow(.1).encloses(main.map_view_rect()),"%s操作最远镜头由地图填满" % resolution)
@@ -46,8 +48,8 @@ func _ready() -> void:
 			main.map_camera.focus_world(place.point)
 			shot=await frame(view)
 			check(shot.get_size()==resolution,"%s-%s实际渲染尺寸" % [resolution,place.name])
-			shot.save_png(OUT+"%dx%d-%s.png" % [resolution.x,resolution.y,place.name])
-		if resolution.x==3840: shot.get_region(Rect2i(1450,480,1000,800)).save_png(OUT+"4k-native-shore-crop.png")
+			check(shot.save_png(OUT+"%dx%d-%s.png" % [resolution.x,resolution.y,place.name])==OK,"保存近景截图")
+		if resolution.x==3840: check(shot.get_region(Rect2i(1450,480,1000,800)).save_png(OUT+"4k-native-shore-crop.png")==OK,"保存4K原尺寸局部")
 	main._on_reset_pressed()
 	check(main.resource_sites.all(func(site):return not site.is_occupied()),"重开释放全部资源点")
 	metrics["parts"]=main.terrain_grid_layer.parts.size()

@@ -1,7 +1,6 @@
 extends Control
 ## 屏幕层小地图不会缩放HUD；点击只移动地图镜头。
 const Definition = preload("res://src/gameplay/grid/map_definition.gd")
-const TEXTURE: Texture2D = preload("res://assets/map/dawn_wide_v3/minimap.png")
 const MAP_RECT := Rect2(6, 6, 160, 160.0 * 2880.0 / 7056.0)
 var main: Node2D
 var city_button: Button

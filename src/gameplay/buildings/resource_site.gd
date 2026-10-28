@@ -40,7 +40,7 @@ func _ready() -> void:
 		art_visual.centered = false
 		art_visual.position = origin - position
 		art_visual.scale = visual_size / art_visual.texture.get_size()
-		art_visual.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		art_visual.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		art_visual.show_behind_parent = false
 		hide_visual_when_occupied = true
 		# 阻挡的是树簇地面占区，树冠仍由独立图层显示。

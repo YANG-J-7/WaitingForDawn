@@ -40,6 +40,7 @@ def build():
     mountain={'origin':origin,'world_size':[end[i]-origin[i] for i in range(2)],'terrain':{k:[local_cell(p,origin) for p in old['cells'][k]] for k in ['cliff','road','ramp']},'navigation':{k:[local_cell(p,origin) for p in nav[k]] for k in ['mountainCells','cliffCells']}}
     mountain['navigation']['cells']=[dict(e,cell=local_cell(e['cell'],origin)) for e in nav['cells']]
     mountain['navigation'].update({k:nav[k] for k in ['routes','stairs']})
+    mountain['navigation'].update({k:nav[k] for k in ['hardCliffs','junctions','region']})
     mountain['paths']=[]
     for kind,entries in [('road',nav['routes']),('stair',nav['stairs'])]:
         for index,e in enumerate(entries): mountain['paths'].append({'id':f'{kind}_{index}','kind':kind,'points':[local_point(world(p),origin) for p in e['points']], 'width':float(e.get('halfWidth',12))*4608/1672*2})

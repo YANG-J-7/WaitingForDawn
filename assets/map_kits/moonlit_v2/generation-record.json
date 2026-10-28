@@ -1,0 +1,21 @@
+{
+  "updated": "2026-10-28",
+  "generator": "内置image_gen",
+  "status": "candidate",
+  "reference_only": "references/dressed-reference.png",
+  "references_sha256": {
+    "references/foundation-reference.png": "8dc0516000d49a6bf17b9e99604a9c9dea2a1ec512cfa134a2ac737c36320ff8",
+    "references/city-style-reference.png": "06b730e40257412d0861e426d0a2f5af1690d99b0c8d939b5084420ea42d8b9e",
+    "references/dressed-reference.png": "323c704482dfebaea48e49ec57c49d7c084e0f5892d305c5ac5ed3159e202f6e"
+  },
+  "successful_sources": [
+    "references/dressed-reference.png",
+    "materials/source/rock-raw.png",
+    "materials/source/water-raw.png"
+  ],
+  "failed_requests": [
+    "首次大图参考编辑network error，无产物；缩小输入后重试成功",
+    "独立石阶生成HTTP429，无产物；改为生成岩面材质包裹原生石阶几何，无假素材登记"
+  ],
+  "runtime_art": "独立草/岩/土/水材质+地形控制/石阶几何+既有透明单树和资源主体；运行不读取dressed-reference"
+}

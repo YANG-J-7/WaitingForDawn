@@ -11,8 +11,6 @@ const MountainRoadLayerScript = preload("res://src/gameplay/art/mountain_road_la
 const TownHallVisualScript = preload("res://src/gameplay/art/town_hall_visual.gd")
 const OverlayScript = preload("res://src/gameplay/buildings/placement_overlay.gd")
 const ArtVisualScript = preload("res://src/gameplay/art/art_visual.gd")
-const MAP_BORDER_FOREST_TEXTURE: Texture2D = preload("res://assets/map/dawn_wide_v3/border-forest.png")
-const MAP_SITE_DATA_PATH := MapDefinitionScript.DATA_PATH
 @export var level_definition: Resource = preload("res://src/levels/level_001.tres")
 var map_runtime: RefCounted
 var map_camera: Camera2D

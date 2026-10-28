@@ -15,8 +15,9 @@ func configure(runtime: RefCounted) -> void:
 		occupied[key]=true
 		var tree := ART.new()
 		var seed_value := posmod(cell.x*173+cell.y*79,97)
-		tree.position = (Vector2(cell)+Vector2(.5,.5))*36+Vector2(float(seed_value%17)-8,0)
-		tree.configure("pine_tree",Vector2(90+seed_value%16,132+seed_value%20))
+		tree.position = (Vector2(cell)+Vector2(.5,.5))*36+Vector2(float(seed_value%31)-15,float(posmod(seed_value*19,47))-23)
+		tree.configure("pine_tree",Vector2(78+seed_value%45,128+seed_value%69))
+		tree.modulate=Color(.87+float(seed_value%11)/100,.91+float(seed_value%7)/100,1)
 		tree.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		add_child(tree)
 		tree_count+=1
@@ -31,3 +32,32 @@ func configure(runtime: RefCounted) -> void:
 				tree.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 				add_child(tree)
 				tree_count+=1
+	_dress_highlands(runtime)
+
+func _dress_highlands(runtime: RefCounted) -> void:
+	# 仅在原有不可通行山台布景；离路径两格以上，不新增树障碍或资源。
+	var forbidden := {}
+	for entry in runtime.navigation.cells:
+		var cell := Vector2i(entry.cell[0],entry.cell[1])
+		for y in range(-2,3):
+			for x in range(-2,3): forbidden[cell+Vector2i(x,y)]=true
+	for kind in ["cliff","water"]:
+		for pair in runtime.compiled.cells[kind]:
+			var cell := Vector2i(pair[0],pair[1])
+			for y in range(-1,2):
+				for x in range(-1,2): forbidden[cell+Vector2i(x,y)]=true
+	for pair in runtime.navigation.mountainCells:
+		var cell := Vector2i(pair[0],pair[1])
+		var seed_value := posmod(cell.x*173+cell.y*79,997)
+		if seed_value%37!=0 or forbidden.has(cell): continue
+		var point := (Vector2(cell)+Vector2(.5,.5))*36
+		var near_resource := false
+		for site in runtime.compiled.resourceSites:
+			if point.distance_to(Vector2(site.position.x,site.position.y))<180: near_resource=true
+		if near_resource: continue
+		var tree := ART.new()
+		tree.position=point
+		tree.configure("pine_tree",Vector2(78+seed_value%25,128+seed_value%49))
+		tree.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		add_child(tree)
+		tree_count+=1

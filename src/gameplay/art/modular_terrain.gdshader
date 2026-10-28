@@ -3,6 +3,7 @@ render_mode unshaded;
 
 // 控制图只保存几何权重；草、岩、水的可见细节均来自生成或复用美术。
 uniform sampler2D grass_detail : filter_linear_mipmap, repeat_enable;
+uniform sampler2D meadow_detail : source_color, filter_linear_mipmap, repeat_enable;
 uniform sampler2D rock_detail : source_color, filter_linear_mipmap, repeat_enable;
 uniform sampler2D water_detail : source_color, filter_linear_mipmap, repeat_enable;
 uniform sampler2D soil_detail : source_color, filter_linear_mipmap, repeat_enable;
@@ -36,9 +37,14 @@ vec3 grass_at(vec2 position) {
         +textureGrad(grass_detail,uv+offset_for(b),dx,dy).rgb*w.y
         +textureGrad(grass_detail,uv+offset_for(c),dx,dy).rgb*w.z;
     detail=(detail-vec3(128.0/255.0))/sqrt(dot(w,w));
-    // 大色场连续且低对比，不随组件重新起纹理或产生竖向拼贴。
-    float macro=1.0+.028*sin(position.x/610.0+position.y/430.0)+.018*cos(position.y/720.0-position.x/940.0);
-    return clamp(vec3(.135,.235,.205)*macro+detail*.72,vec3(0),vec3(1));
+    // 疏密、裸土和苔藓来自独立生成草甸；世界坐标混合避免组件起纹理。
+    vec2 meadow_uv=position/vec2(156.0);
+    vec3 meadow=textureGrad(meadow_detail,meadow_uv+offset_for(a),dFdx(meadow_uv),dFdy(meadow_uv)).rgb*w.x
+        +textureGrad(meadow_detail,meadow_uv+offset_for(b),dFdx(meadow_uv),dFdy(meadow_uv)).rgb*w.y
+        +textureGrad(meadow_detail,meadow_uv+offset_for(c),dFdx(meadow_uv),dFdy(meadow_uv)).rgb*w.z;
+    vec3 broad=textureLod(meadow_detail,position/780.0,5.0).rgb;
+    float macro=clamp(dot(broad,vec3(.333))/.245,.82,1.16);
+    return clamp(meadow*vec3(.82,.87,.92)*macro+detail*.14,vec3(0),vec3(1));
 }
 
 void vertex() {
@@ -67,7 +73,8 @@ void fragment() {
         float cast=texture(control_map,uv-vec2(9,14)/module_size).r;
         color=grass*1.06;
         color*=1.0-max(cast-mask.r,0.0)*.48;
-        color=mix(color,rock,smoothstep(.08,.92,mask.r));
+        // 岩崖主体由StructureArt独立位图覆盖；此处只留底部环境暗色。
+        color=mix(color,rock,smoothstep(.08,.92,mask.r)*.18);
         color=mix(color,grass,lip*.20);
         // 路域由同一通行组件提供，浅土路不会开放硬岩。
         vec3 soil=texture(soil_detail,world_position/vec2(144.0,144.0)).rgb;
@@ -79,7 +86,7 @@ void fragment() {
         float wet=mask.r;
         float bank=mask.g;
         vec3 stone=texture(rock_detail,world_position/rock_coverage).rgb;
-        vec3 water=pow(texture(water_detail,world_position/water_coverage).rgb,vec3(.55))*vec3(.95,1.05,1.2);
+        vec3 water=pow(texture(water_detail,world_position/water_coverage).rgb,vec3(.55))*vec3(.30,.40,.48);
         water*=mix(1.12,.88,mask.b);
         vec3 shore=mix(vec3(.16,.205,.20),vec3(.32,.355,.34),dot(stone,vec3(.333)));
         float fringe=smoothstep(.015,.23,bank)*(1.0-smoothstep(.6,.95,bank));

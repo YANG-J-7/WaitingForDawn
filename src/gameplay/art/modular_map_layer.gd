@@ -29,6 +29,7 @@ func configure(grid: RefCounted, context: RefCounted = null) -> void:
 		var shader_material := ShaderMaterial.new()
 		shader_material.shader = SHADER
 		shader_material.set_shader_parameter("grass_detail",GRASS)
+		shader_material.set_shader_parameter("meadow_detail",load("res://assets/map_kits/moonlit_v3/meadow.png"))
 		for pair in [["rock_detail","rock"],["water_detail","water"],["soil_detail","soil"]]:
 			var path := "res://assets/map_kits/moonlit_v2/materials/%s.png" % pair[1]
 			if ResourceLoader.exists(path): shader_material.set_shader_parameter(pair[0],load(path))
@@ -41,10 +42,18 @@ func configure(grid: RefCounted, context: RefCounted = null) -> void:
 		add_child(part)
 		parts.append(part)
 		chunks.append({"module_id":component.module_id,"rect":Rect2(component.origin+rect.position,rect.size),"role":component.role})
+	var structures := preload("res://src/gameplay/art/map_structure_art.gd").new()
+	structures.name = "StructureArt"
+	structures.configure(runtime)
+	add_child(structures)
 	var stairs := preload("res://src/gameplay/art/modular_stair_layer.gd").new()
 	stairs.name = "Stairs"
 	stairs.configure(runtime)
 	add_child(stairs)
+	var edges:=preload("res://src/gameplay/art/modular_edge_dressing.gd").new()
+	edges.name="EdgeDressing"
+	edges.configure(runtime,grid)
+	add_child(edges)
 
 func _process(_delta: float) -> void:
 	# 只作可见性裁剪，不把它冒充流式卸载或影响地图模拟。

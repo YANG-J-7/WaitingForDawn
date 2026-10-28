@@ -53,6 +53,9 @@ static func from_assembly(source: Resource, scene: Node2D) -> LevelMapRuntime:
 			result.navigation.cells.append(moved)
 		for key in ["routes","stairs"]:
 			result.navigation[key].append_array(payload.get("navigation",{}).get(key,[]).duplicate(true))
+		# 路线图册使用源坐标注释；实际寻路继续只读已变换的格和层级边。
+		for key in ["hardCliffs","junctions","region"]:
+			if payload.get("navigation",{}).has(key): result.navigation[key]=payload.navigation[key].duplicate(true)
 		for entry in payload.get("resource_sites",[]):
 			var moved: Dictionary = entry.duplicate(true)
 			moved.position.x += child.position.x

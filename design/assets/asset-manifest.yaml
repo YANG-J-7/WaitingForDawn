@@ -1,94 +1,118 @@
 version: 1
-updated: 2026-10-27
+updated: 2026-10-28
 assets:
   - id: ASSET-0001
     name: 模块化草地材质家族
     category: environment
     specification: design/assets/specs/asset-0001.md
     target_path: assets/map_kits/moonlit_v2/grass/
-    status: specified
-    scope_approved: false
-    integrated: false
+    status: candidate
+    scope_approved: true
+    integrated: true
     generated: false
+    production_completion: partial
+    review_status: 首版运行候选，完整变体与最终审美待复核
   - id: ASSET-0002
     name: 模块化压实土与路面材质
     category: environment
     specification: design/assets/specs/asset-0002.md
     target_path: assets/map_kits/moonlit_v2/dirt/
-    status: specified
-    scope_approved: false
-    integrated: false
+    status: candidate
+    scope_approved: true
+    integrated: true
     generated: false
+    production_completion: partial
+    review_status: 首版运行候选，完整变体与最终审美待复核
   - id: ASSET-0003
     name: 模块化岩面材质家族
     category: environment
     specification: design/assets/specs/asset-0003.md
     target_path: assets/map_kits/moonlit_v2/rock/
-    status: specified
-    scope_approved: false
-    integrated: false
-    generated: false
+    status: candidate
+    scope_approved: true
+    integrated: true
+    generated: true
+    production_completion: partial
+    review_status: 首版运行候选，完整变体与最终审美待复核
+    file: assets/map_kits/moonlit_v2/materials/rock.png
+    prompt: assets/map_kits/moonlit_v2/materials/source/rock.prompt.txt
+    metadata: assets/map_kits/moonlit_v2/materials/material-record.json
   - id: ASSET-0004
     name: 模块化低噪水面材质
     category: environment
     specification: design/assets/specs/asset-0004.md
     target_path: assets/map_kits/moonlit_v2/water/
-    status: specified
-    scope_approved: false
-    integrated: false
-    generated: false
+    status: candidate
+    scope_approved: true
+    integrated: true
+    generated: true
+    production_completion: partial
+    review_status: 首版运行候选，完整变体与最终审美待复核
+    file: assets/map_kits/moonlit_v2/materials/water.png
+    prompt: assets/map_kits/moonlit_v2/materials/source/water.prompt.txt
+    metadata: assets/map_kits/moonlit_v2/materials/material-record.json
   - id: ASSET-0005
     name: 湖岸连接结构包
     category: environment
     specification: design/assets/specs/asset-0005.md
     target_path: assets/map_kits/moonlit_v2/shore/
-    status: specified
-    scope_approved: false
-    integrated: false
+    status: candidate
+    scope_approved: true
+    integrated: true
     generated: false
+    production_completion: partial
+    review_status: 首版运行候选，完整变体与最终审美待复核
   - id: ASSET-0006
     name: 山崖连接结构包
     category: environment
     specification: design/assets/specs/asset-0006.md
     target_path: assets/map_kits/moonlit_v2/cliff/
-    status: specified
-    scope_approved: false
-    integrated: false
+    status: candidate
+    scope_approved: true
+    integrated: true
     generated: false
+    production_completion: partial
+    review_status: 首版运行候选，完整变体与最终审美待复核
   - id: ASSET-0007
     name: 草台坡脚过渡包
     category: environment
     specification: design/assets/specs/asset-0007.md
     target_path: assets/map_kits/moonlit_v2/terrace/
-    status: specified
-    scope_approved: false
-    integrated: false
+    status: candidate
+    scope_approved: true
+    integrated: true
     generated: false
+    production_completion: partial
+    review_status: 首版运行候选，完整变体与最终审美待复核
   - id: ASSET-0008
     name: 石梯与转弯平台结构包
     category: environment
     specification: design/assets/specs/asset-0008.md
     target_path: assets/map_kits/moonlit_v2/stairs/
-    status: specified
-    scope_approved: false
-    integrated: false
+    status: candidate
+    scope_approved: true
+    integrated: true
     generated: false
+    production_completion: partial
+    review_status: 首版运行候选，完整变体与最终审美待复核
   - id: ASSET-0009
     name: 林簇与林缘分层包
     category: prop
     specification: design/assets/specs/asset-0009.md
     target_path: assets/map_kits/moonlit_v2/forest/
-    status: specified
-    scope_approved: false
-    integrated: false
+    status: candidate
+    scope_approved: true
+    integrated: true
     generated: false
+    production_completion: partial
+    review_status: 首版运行候选，完整变体与最终审美待复核
   - id: ASSET-0010
     name: 低矮草簇砾石装饰包
     category: prop
     specification: design/assets/specs/asset-0010.md
     target_path: assets/map_kits/moonlit_v2/dressing/
     status: specified
-    scope_approved: false
+    scope_approved: true
     integrated: false
     generated: false
   - id: ASSET-0011
@@ -96,19 +120,23 @@ assets:
     category: prop
     specification: design/assets/specs/asset-0011.md
     target_path: assets/map_kits/moonlit_v2/foundation/
-    status: specified
-    scope_approved: false
-    integrated: false
+    status: candidate
+    scope_approved: true
+    integrated: true
     generated: false
+    production_completion: partial
+    review_status: 首版运行候选，完整变体与最终审美待复核
   - id: ASSET-0012
     name: 外围景观与收边包
     category: environment
     specification: design/assets/specs/asset-0012.md
     target_path: assets/map_kits/moonlit_v2/boundary/
-    status: specified
-    scope_approved: false
-    integrated: false
+    status: candidate
+    scope_approved: true
+    integrated: true
     generated: false
+    production_completion: partial
+    review_status: 首版运行候选，完整变体与最终审美待复核
   - id: MAP-DAWN-LARGE-HD-V2
     name: 大地图高清分层视觉候选
     specification: design/assets/specs/map-dawn-large-hd-v2.md
