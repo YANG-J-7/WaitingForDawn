@@ -1,0 +1,322 @@
+{
+  "version": 1,
+  "world_size": [
+    7056,
+    2880
+  ],
+  "reference_size": [
+    1962,
+    801
+  ],
+  "reference_sha256": "9a8f0cb364666cfa3388eb1a56f633342abec331d5c8d15ee736bc4d475cb1ba",
+  "regions": [
+    {
+      "id": "region-0-0",
+      "core": [
+        0,
+        0,
+        1176,
+        960
+      ],
+      "rect": [
+        0,
+        0,
+        1248,
+        1032
+      ],
+      "reference": "source/region-0-0-reference.png",
+      "source": "source/region-0-0.png"
+    },
+    {
+      "id": "region-1-0",
+      "core": [
+        1176,
+        0,
+        2352,
+        960
+      ],
+      "rect": [
+        1104,
+        0,
+        2424,
+        1032
+      ],
+      "reference": "source/region-1-0-reference.png",
+      "source": "source/region-1-0.png"
+    },
+    {
+      "id": "region-2-0",
+      "core": [
+        2352,
+        0,
+        3528,
+        960
+      ],
+      "rect": [
+        2280,
+        0,
+        3600,
+        1032
+      ],
+      "reference": "source/region-2-0-reference.png",
+      "source": "source/region-2-0.png"
+    },
+    {
+      "id": "region-3-0",
+      "core": [
+        3528,
+        0,
+        4704,
+        960
+      ],
+      "rect": [
+        3456,
+        0,
+        4776,
+        1032
+      ],
+      "reference": "source/region-3-0-reference.png",
+      "source": "source/region-3-0.png"
+    },
+    {
+      "id": "region-4-0",
+      "core": [
+        4704,
+        0,
+        5880,
+        960
+      ],
+      "rect": [
+        4632,
+        0,
+        5952,
+        1032
+      ],
+      "reference": "source/region-4-0-reference.png",
+      "source": "source/region-4-0.png"
+    },
+    {
+      "id": "region-5-0",
+      "core": [
+        5880,
+        0,
+        7056,
+        960
+      ],
+      "rect": [
+        5808,
+        0,
+        7056,
+        1032
+      ],
+      "reference": "source/region-5-0-reference.png",
+      "source": "source/region-5-0.png"
+    },
+    {
+      "id": "region-0-1",
+      "core": [
+        0,
+        960,
+        1176,
+        1920
+      ],
+      "rect": [
+        0,
+        888,
+        1248,
+        1992
+      ],
+      "reference": "source/region-0-1-reference.png",
+      "source": "source/region-0-1.png"
+    },
+    {
+      "id": "region-1-1",
+      "core": [
+        1176,
+        960,
+        2352,
+        1920
+      ],
+      "rect": [
+        1104,
+        888,
+        2424,
+        1992
+      ],
+      "reference": "source/region-1-1-reference.png",
+      "source": "source/region-1-1.png"
+    },
+    {
+      "id": "region-2-1",
+      "core": [
+        2352,
+        960,
+        3528,
+        1920
+      ],
+      "rect": [
+        2280,
+        888,
+        3600,
+        1992
+      ],
+      "reference": "source/region-2-1-reference.png",
+      "source": "source/region-2-1.png"
+    },
+    {
+      "id": "region-3-1",
+      "core": [
+        3528,
+        960,
+        4704,
+        1920
+      ],
+      "rect": [
+        3456,
+        888,
+        4776,
+        1992
+      ],
+      "reference": "source/region-3-1-reference.png",
+      "source": "source/region-3-1.png"
+    },
+    {
+      "id": "region-4-1",
+      "core": [
+        4704,
+        960,
+        5880,
+        1920
+      ],
+      "rect": [
+        4632,
+        888,
+        5952,
+        1992
+      ],
+      "reference": "source/region-4-1-reference.png",
+      "source": "source/region-4-1.png"
+    },
+    {
+      "id": "region-5-1",
+      "core": [
+        5880,
+        960,
+        7056,
+        1920
+      ],
+      "rect": [
+        5808,
+        888,
+        7056,
+        1992
+      ],
+      "reference": "source/region-5-1-reference.png",
+      "source": "source/region-5-1.png"
+    },
+    {
+      "id": "region-0-2",
+      "core": [
+        0,
+        1920,
+        1176,
+        2880
+      ],
+      "rect": [
+        0,
+        1848,
+        1248,
+        2880
+      ],
+      "reference": "source/region-0-2-reference.png",
+      "source": "source/region-0-2.png"
+    },
+    {
+      "id": "region-1-2",
+      "core": [
+        1176,
+        1920,
+        2352,
+        2880
+      ],
+      "rect": [
+        1104,
+        1848,
+        2424,
+        2880
+      ],
+      "reference": "source/region-1-2-reference.png",
+      "source": "source/region-1-2.png"
+    },
+    {
+      "id": "region-2-2",
+      "core": [
+        2352,
+        1920,
+        3528,
+        2880
+      ],
+      "rect": [
+        2280,
+        1848,
+        3600,
+        2880
+      ],
+      "reference": "source/region-2-2-reference.png",
+      "source": "source/region-2-2.png"
+    },
+    {
+      "id": "region-3-2",
+      "core": [
+        3528,
+        1920,
+        4704,
+        2880
+      ],
+      "rect": [
+        3456,
+        1848,
+        4776,
+        2880
+      ],
+      "reference": "source/region-3-2-reference.png",
+      "source": "source/region-3-2.png"
+    },
+    {
+      "id": "region-4-2",
+      "core": [
+        4704,
+        1920,
+        5880,
+        2880
+      ],
+      "rect": [
+        4632,
+        1848,
+        5952,
+        2880
+      ],
+      "reference": "source/region-4-2-reference.png",
+      "source": "source/region-4-2.png"
+    },
+    {
+      "id": "region-5-2",
+      "core": [
+        5880,
+        1920,
+        7056,
+        2880
+      ],
+      "rect": [
+        5808,
+        1848,
+        7056,
+        2880
+      ],
+      "reference": "source/region-5-2-reference.png",
+      "source": "source/region-5-2.png"
+    }
+  ],
+  "generation_source": "builtin_imagegen",
+  "status": "待生成，不接入运行"
+}

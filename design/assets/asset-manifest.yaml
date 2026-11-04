@@ -1,6 +1,48 @@
 version: 1
-updated: 2026-10-28
+updated: 2026-11-03
 assets:
+  - id: ASSET-0015
+    name: 7056×2880参考图地形与冷蓝针叶密林
+    category: environment
+    specification: design/assets/specs/reference-hd-7056-20261103.md
+    target_path: assets/map_kits/reference_hd_20261102/
+    status: candidate
+    scope_approved: true
+    integrated: true
+    generated: true
+    production_completion: partial
+    file: assets/map_kits/reference_hd_20261102/map-7056x2880.png
+    prompt: assets/map_kits/reference_hd_20261102/source/region-0-0.prompt.txt
+    metadata: assets/map_kits/reference_hd_20261102/map.json
+    review_status: 18张独立地形原稿及两种针叶树接入；最终视觉与导航贴合待复核，不宣称逐像素复制
+  - id: ASSET-0014
+    name: 用户参考图新版地形与八个高清重绘区域
+    category: environment
+    specification: design/assets/specs/reference-map-20261029.md
+    target_path: assets/map_kits/reference_20261029/
+    status: candidate
+    scope_approved: true
+    integrated: false
+    generated: true
+    production_completion: partial
+    file: assets/map_kits/reference_20261029/terrain.png
+    prompt: assets/map_kits/reference_20261029/source/foundation.prompt.txt
+    metadata: assets/map_kits/reference_20261029/map.json
+    review_status: 2026-11-03由ASSET-0015替代，旧图与八片保留作历史对照，退出运行
+  - id: ASSET-0013
+    name: 第一关固定布局地形瓦片
+    category: environment
+    specification: design/assets/specs/asset-0013.md
+    target_path: assets/tilesets/dawn_20261029/
+    status: candidate
+    scope_approved: true
+    integrated: false
+    generated: true
+    production_completion: partial
+    file: assets/tilesets/dawn_20261029/terrain.png
+    prompt: assets/tilesets/dawn_20261029/source/foundation.prompt.txt
+    metadata: assets/tilesets/dawn_20261029/tiles.json
+    review_status: 2026-10-30已退出运行引用，原文件归档到本地.codex-temp/retired-map-20261030；由ASSET-0014替换
   - id: ASSET-0001
     name: 模块化草地材质家族
     category: environment

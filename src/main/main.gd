@@ -5,7 +5,7 @@ const MapCameraScript = preload("res://src/gameplay/buildings/map_camera.gd")
 const GridMapModelScript = preload("res://src/gameplay/grid/grid_map_model.gd")
 const GridPathfinderScript = preload("res://src/gameplay/grid/grid_pathfinder.gd")
 const TerrainMapDataScript = preload("res://src/gameplay/grid/terrain_map_data.gd")
-const TerrainGridLayerScript = preload("res://src/gameplay/art/modular_map_layer.gd")
+const TerrainGridLayerScript = preload("res://src/gameplay/art/reference_map_layer.gd")
 const MapDefinitionScript = preload("res://src/gameplay/grid/map_definition.gd")
 const MountainRoadLayerScript = preload("res://src/gameplay/art/mountain_road_layer.gd")
 const TownHallVisualScript = preload("res://src/gameplay/art/town_hall_visual.gd")
@@ -142,7 +142,7 @@ func _ready() -> void:
 	mountain_roads.name = "MountainRoadLayer"
 	add_child(mountain_roads)
 	move_child(mountain_roads, 1)
-	var border_forest := preload("res://src/gameplay/art/modular_border_forest.gd").new()
+	var border_forest := preload("res://src/gameplay/art/reference_border_forest.gd").new()
 	border_forest.name = "BorderForest"
 	border_forest.configure(map_runtime)
 	add_child(border_forest)
@@ -284,6 +284,7 @@ func _load_resource_sites() -> void:
 		if not entry is Dictionary:
 			continue
 		var data := entry as Dictionary
+		data["visual_suppressed"] = data.get("siteType","")=="forest" and not level_definition.show_resource_forests
 		var site := ResourceSite.new()
 		site.name = str(data.get("id", "ResourceSite"))
 		site.site_type = StringName(data.get("siteType", ""))

@@ -1,0 +1,2176 @@
+{
+  "date": "2026-10-29",
+  "status": "candidate_preview_only",
+  "integrated": false,
+  "map_mode": "tile_mode",
+  "visual_model": "layered_tilemap",
+  "engine_target": "project-native-preview",
+  "overview": {
+    "file": "map-overview.png",
+    "native_size": [
+      1962,
+      801
+    ],
+    "generator": "built-in-image_gen",
+    "prompt": "map-overview.prompt.txt",
+    "sha256": "2bc4f96aa1dfb4a5c4bf5275ed7aeaafed2803e948d0b206f2c97779cdd20a5f",
+    "purpose": "构图预览及固定布局分片；不是全图高清运行资产"
+  },
+  "reference": {
+    "file": "user-reference.png",
+    "sha256": "edf80b9d8d75f61f9da83e0ee8db2e858effad41bbcb0e3b3fae007abb381de5"
+  },
+  "overview_tiles": {
+    "tile_pixels": 128,
+    "world_cell": null,
+    "cells": [
+      {
+        "file": "overview-tiles/00-00.png",
+        "cell": [
+          0,
+          0
+        ],
+        "source_rect": [
+          0,
+          0,
+          128,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-01.png",
+        "cell": [
+          1,
+          0
+        ],
+        "source_rect": [
+          128,
+          0,
+          256,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-02.png",
+        "cell": [
+          2,
+          0
+        ],
+        "source_rect": [
+          256,
+          0,
+          384,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-03.png",
+        "cell": [
+          3,
+          0
+        ],
+        "source_rect": [
+          384,
+          0,
+          512,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-04.png",
+        "cell": [
+          4,
+          0
+        ],
+        "source_rect": [
+          512,
+          0,
+          640,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-05.png",
+        "cell": [
+          5,
+          0
+        ],
+        "source_rect": [
+          640,
+          0,
+          768,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-06.png",
+        "cell": [
+          6,
+          0
+        ],
+        "source_rect": [
+          768,
+          0,
+          896,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-07.png",
+        "cell": [
+          7,
+          0
+        ],
+        "source_rect": [
+          896,
+          0,
+          1024,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-08.png",
+        "cell": [
+          8,
+          0
+        ],
+        "source_rect": [
+          1024,
+          0,
+          1152,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-09.png",
+        "cell": [
+          9,
+          0
+        ],
+        "source_rect": [
+          1152,
+          0,
+          1280,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-10.png",
+        "cell": [
+          10,
+          0
+        ],
+        "source_rect": [
+          1280,
+          0,
+          1408,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-11.png",
+        "cell": [
+          11,
+          0
+        ],
+        "source_rect": [
+          1408,
+          0,
+          1536,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-12.png",
+        "cell": [
+          12,
+          0
+        ],
+        "source_rect": [
+          1536,
+          0,
+          1664,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-13.png",
+        "cell": [
+          13,
+          0
+        ],
+        "source_rect": [
+          1664,
+          0,
+          1792,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-14.png",
+        "cell": [
+          14,
+          0
+        ],
+        "source_rect": [
+          1792,
+          0,
+          1920,
+          128
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/00-15.png",
+        "cell": [
+          15,
+          0
+        ],
+        "source_rect": [
+          1920,
+          0,
+          1962,
+          128
+        ],
+        "native_size": [
+          42,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-00.png",
+        "cell": [
+          0,
+          1
+        ],
+        "source_rect": [
+          0,
+          128,
+          128,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-01.png",
+        "cell": [
+          1,
+          1
+        ],
+        "source_rect": [
+          128,
+          128,
+          256,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-02.png",
+        "cell": [
+          2,
+          1
+        ],
+        "source_rect": [
+          256,
+          128,
+          384,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-03.png",
+        "cell": [
+          3,
+          1
+        ],
+        "source_rect": [
+          384,
+          128,
+          512,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-04.png",
+        "cell": [
+          4,
+          1
+        ],
+        "source_rect": [
+          512,
+          128,
+          640,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-05.png",
+        "cell": [
+          5,
+          1
+        ],
+        "source_rect": [
+          640,
+          128,
+          768,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-06.png",
+        "cell": [
+          6,
+          1
+        ],
+        "source_rect": [
+          768,
+          128,
+          896,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-07.png",
+        "cell": [
+          7,
+          1
+        ],
+        "source_rect": [
+          896,
+          128,
+          1024,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-08.png",
+        "cell": [
+          8,
+          1
+        ],
+        "source_rect": [
+          1024,
+          128,
+          1152,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-09.png",
+        "cell": [
+          9,
+          1
+        ],
+        "source_rect": [
+          1152,
+          128,
+          1280,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-10.png",
+        "cell": [
+          10,
+          1
+        ],
+        "source_rect": [
+          1280,
+          128,
+          1408,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-11.png",
+        "cell": [
+          11,
+          1
+        ],
+        "source_rect": [
+          1408,
+          128,
+          1536,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-12.png",
+        "cell": [
+          12,
+          1
+        ],
+        "source_rect": [
+          1536,
+          128,
+          1664,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-13.png",
+        "cell": [
+          13,
+          1
+        ],
+        "source_rect": [
+          1664,
+          128,
+          1792,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-14.png",
+        "cell": [
+          14,
+          1
+        ],
+        "source_rect": [
+          1792,
+          128,
+          1920,
+          256
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/01-15.png",
+        "cell": [
+          15,
+          1
+        ],
+        "source_rect": [
+          1920,
+          128,
+          1962,
+          256
+        ],
+        "native_size": [
+          42,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-00.png",
+        "cell": [
+          0,
+          2
+        ],
+        "source_rect": [
+          0,
+          256,
+          128,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-01.png",
+        "cell": [
+          1,
+          2
+        ],
+        "source_rect": [
+          128,
+          256,
+          256,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-02.png",
+        "cell": [
+          2,
+          2
+        ],
+        "source_rect": [
+          256,
+          256,
+          384,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-03.png",
+        "cell": [
+          3,
+          2
+        ],
+        "source_rect": [
+          384,
+          256,
+          512,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-04.png",
+        "cell": [
+          4,
+          2
+        ],
+        "source_rect": [
+          512,
+          256,
+          640,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-05.png",
+        "cell": [
+          5,
+          2
+        ],
+        "source_rect": [
+          640,
+          256,
+          768,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-06.png",
+        "cell": [
+          6,
+          2
+        ],
+        "source_rect": [
+          768,
+          256,
+          896,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-07.png",
+        "cell": [
+          7,
+          2
+        ],
+        "source_rect": [
+          896,
+          256,
+          1024,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-08.png",
+        "cell": [
+          8,
+          2
+        ],
+        "source_rect": [
+          1024,
+          256,
+          1152,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-09.png",
+        "cell": [
+          9,
+          2
+        ],
+        "source_rect": [
+          1152,
+          256,
+          1280,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-10.png",
+        "cell": [
+          10,
+          2
+        ],
+        "source_rect": [
+          1280,
+          256,
+          1408,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-11.png",
+        "cell": [
+          11,
+          2
+        ],
+        "source_rect": [
+          1408,
+          256,
+          1536,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-12.png",
+        "cell": [
+          12,
+          2
+        ],
+        "source_rect": [
+          1536,
+          256,
+          1664,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-13.png",
+        "cell": [
+          13,
+          2
+        ],
+        "source_rect": [
+          1664,
+          256,
+          1792,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-14.png",
+        "cell": [
+          14,
+          2
+        ],
+        "source_rect": [
+          1792,
+          256,
+          1920,
+          384
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/02-15.png",
+        "cell": [
+          15,
+          2
+        ],
+        "source_rect": [
+          1920,
+          256,
+          1962,
+          384
+        ],
+        "native_size": [
+          42,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-00.png",
+        "cell": [
+          0,
+          3
+        ],
+        "source_rect": [
+          0,
+          384,
+          128,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-01.png",
+        "cell": [
+          1,
+          3
+        ],
+        "source_rect": [
+          128,
+          384,
+          256,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-02.png",
+        "cell": [
+          2,
+          3
+        ],
+        "source_rect": [
+          256,
+          384,
+          384,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-03.png",
+        "cell": [
+          3,
+          3
+        ],
+        "source_rect": [
+          384,
+          384,
+          512,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-04.png",
+        "cell": [
+          4,
+          3
+        ],
+        "source_rect": [
+          512,
+          384,
+          640,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-05.png",
+        "cell": [
+          5,
+          3
+        ],
+        "source_rect": [
+          640,
+          384,
+          768,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-06.png",
+        "cell": [
+          6,
+          3
+        ],
+        "source_rect": [
+          768,
+          384,
+          896,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-07.png",
+        "cell": [
+          7,
+          3
+        ],
+        "source_rect": [
+          896,
+          384,
+          1024,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-08.png",
+        "cell": [
+          8,
+          3
+        ],
+        "source_rect": [
+          1024,
+          384,
+          1152,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-09.png",
+        "cell": [
+          9,
+          3
+        ],
+        "source_rect": [
+          1152,
+          384,
+          1280,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-10.png",
+        "cell": [
+          10,
+          3
+        ],
+        "source_rect": [
+          1280,
+          384,
+          1408,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-11.png",
+        "cell": [
+          11,
+          3
+        ],
+        "source_rect": [
+          1408,
+          384,
+          1536,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-12.png",
+        "cell": [
+          12,
+          3
+        ],
+        "source_rect": [
+          1536,
+          384,
+          1664,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-13.png",
+        "cell": [
+          13,
+          3
+        ],
+        "source_rect": [
+          1664,
+          384,
+          1792,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-14.png",
+        "cell": [
+          14,
+          3
+        ],
+        "source_rect": [
+          1792,
+          384,
+          1920,
+          512
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/03-15.png",
+        "cell": [
+          15,
+          3
+        ],
+        "source_rect": [
+          1920,
+          384,
+          1962,
+          512
+        ],
+        "native_size": [
+          42,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-00.png",
+        "cell": [
+          0,
+          4
+        ],
+        "source_rect": [
+          0,
+          512,
+          128,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-01.png",
+        "cell": [
+          1,
+          4
+        ],
+        "source_rect": [
+          128,
+          512,
+          256,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-02.png",
+        "cell": [
+          2,
+          4
+        ],
+        "source_rect": [
+          256,
+          512,
+          384,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-03.png",
+        "cell": [
+          3,
+          4
+        ],
+        "source_rect": [
+          384,
+          512,
+          512,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-04.png",
+        "cell": [
+          4,
+          4
+        ],
+        "source_rect": [
+          512,
+          512,
+          640,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-05.png",
+        "cell": [
+          5,
+          4
+        ],
+        "source_rect": [
+          640,
+          512,
+          768,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-06.png",
+        "cell": [
+          6,
+          4
+        ],
+        "source_rect": [
+          768,
+          512,
+          896,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-07.png",
+        "cell": [
+          7,
+          4
+        ],
+        "source_rect": [
+          896,
+          512,
+          1024,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-08.png",
+        "cell": [
+          8,
+          4
+        ],
+        "source_rect": [
+          1024,
+          512,
+          1152,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-09.png",
+        "cell": [
+          9,
+          4
+        ],
+        "source_rect": [
+          1152,
+          512,
+          1280,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-10.png",
+        "cell": [
+          10,
+          4
+        ],
+        "source_rect": [
+          1280,
+          512,
+          1408,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-11.png",
+        "cell": [
+          11,
+          4
+        ],
+        "source_rect": [
+          1408,
+          512,
+          1536,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-12.png",
+        "cell": [
+          12,
+          4
+        ],
+        "source_rect": [
+          1536,
+          512,
+          1664,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-13.png",
+        "cell": [
+          13,
+          4
+        ],
+        "source_rect": [
+          1664,
+          512,
+          1792,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-14.png",
+        "cell": [
+          14,
+          4
+        ],
+        "source_rect": [
+          1792,
+          512,
+          1920,
+          640
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/04-15.png",
+        "cell": [
+          15,
+          4
+        ],
+        "source_rect": [
+          1920,
+          512,
+          1962,
+          640
+        ],
+        "native_size": [
+          42,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-00.png",
+        "cell": [
+          0,
+          5
+        ],
+        "source_rect": [
+          0,
+          640,
+          128,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-01.png",
+        "cell": [
+          1,
+          5
+        ],
+        "source_rect": [
+          128,
+          640,
+          256,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-02.png",
+        "cell": [
+          2,
+          5
+        ],
+        "source_rect": [
+          256,
+          640,
+          384,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-03.png",
+        "cell": [
+          3,
+          5
+        ],
+        "source_rect": [
+          384,
+          640,
+          512,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-04.png",
+        "cell": [
+          4,
+          5
+        ],
+        "source_rect": [
+          512,
+          640,
+          640,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-05.png",
+        "cell": [
+          5,
+          5
+        ],
+        "source_rect": [
+          640,
+          640,
+          768,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-06.png",
+        "cell": [
+          6,
+          5
+        ],
+        "source_rect": [
+          768,
+          640,
+          896,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-07.png",
+        "cell": [
+          7,
+          5
+        ],
+        "source_rect": [
+          896,
+          640,
+          1024,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-08.png",
+        "cell": [
+          8,
+          5
+        ],
+        "source_rect": [
+          1024,
+          640,
+          1152,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-09.png",
+        "cell": [
+          9,
+          5
+        ],
+        "source_rect": [
+          1152,
+          640,
+          1280,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-10.png",
+        "cell": [
+          10,
+          5
+        ],
+        "source_rect": [
+          1280,
+          640,
+          1408,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-11.png",
+        "cell": [
+          11,
+          5
+        ],
+        "source_rect": [
+          1408,
+          640,
+          1536,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-12.png",
+        "cell": [
+          12,
+          5
+        ],
+        "source_rect": [
+          1536,
+          640,
+          1664,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-13.png",
+        "cell": [
+          13,
+          5
+        ],
+        "source_rect": [
+          1664,
+          640,
+          1792,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-14.png",
+        "cell": [
+          14,
+          5
+        ],
+        "source_rect": [
+          1792,
+          640,
+          1920,
+          768
+        ],
+        "native_size": [
+          128,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/05-15.png",
+        "cell": [
+          15,
+          5
+        ],
+        "source_rect": [
+          1920,
+          640,
+          1962,
+          768
+        ],
+        "native_size": [
+          42,
+          128
+        ]
+      },
+      {
+        "file": "overview-tiles/06-00.png",
+        "cell": [
+          0,
+          6
+        ],
+        "source_rect": [
+          0,
+          768,
+          128,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-01.png",
+        "cell": [
+          1,
+          6
+        ],
+        "source_rect": [
+          128,
+          768,
+          256,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-02.png",
+        "cell": [
+          2,
+          6
+        ],
+        "source_rect": [
+          256,
+          768,
+          384,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-03.png",
+        "cell": [
+          3,
+          6
+        ],
+        "source_rect": [
+          384,
+          768,
+          512,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-04.png",
+        "cell": [
+          4,
+          6
+        ],
+        "source_rect": [
+          512,
+          768,
+          640,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-05.png",
+        "cell": [
+          5,
+          6
+        ],
+        "source_rect": [
+          640,
+          768,
+          768,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-06.png",
+        "cell": [
+          6,
+          6
+        ],
+        "source_rect": [
+          768,
+          768,
+          896,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-07.png",
+        "cell": [
+          7,
+          6
+        ],
+        "source_rect": [
+          896,
+          768,
+          1024,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-08.png",
+        "cell": [
+          8,
+          6
+        ],
+        "source_rect": [
+          1024,
+          768,
+          1152,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-09.png",
+        "cell": [
+          9,
+          6
+        ],
+        "source_rect": [
+          1152,
+          768,
+          1280,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-10.png",
+        "cell": [
+          10,
+          6
+        ],
+        "source_rect": [
+          1280,
+          768,
+          1408,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-11.png",
+        "cell": [
+          11,
+          6
+        ],
+        "source_rect": [
+          1408,
+          768,
+          1536,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-12.png",
+        "cell": [
+          12,
+          6
+        ],
+        "source_rect": [
+          1536,
+          768,
+          1664,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-13.png",
+        "cell": [
+          13,
+          6
+        ],
+        "source_rect": [
+          1664,
+          768,
+          1792,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-14.png",
+        "cell": [
+          14,
+          6
+        ],
+        "source_rect": [
+          1792,
+          768,
+          1920,
+          801
+        ],
+        "native_size": [
+          128,
+          33
+        ]
+      },
+      {
+        "file": "overview-tiles/06-15.png",
+        "cell": [
+          15,
+          6
+        ],
+        "source_rect": [
+          1920,
+          768,
+          1962,
+          801
+        ],
+        "native_size": [
+          42,
+          33
+        ]
+      }
+    ],
+    "reassembly_exact": true
+  },
+  "hd_sample": {
+    "file": "hd-cliff-sample.png",
+    "native_size": [
+      1024,
+      768
+    ],
+    "world_size": [
+      144,
+      108
+    ],
+    "source": "复用已生成独立草地与崖体素材；仅合成和向下缩采样，不放大",
+    "tiles": {
+      "tile_pixels": 256,
+      "world_cell": 36,
+      "cells": [
+        {
+          "file": "detail-tiles/00-00.png",
+          "cell": [
+            0,
+            0
+          ],
+          "source_rect": [
+            0,
+            0,
+            256,
+            256
+          ],
+          "native_size": [
+            256,
+            256
+          ]
+        },
+        {
+          "file": "detail-tiles/00-01.png",
+          "cell": [
+            1,
+            0
+          ],
+          "source_rect": [
+            256,
+            0,
+            512,
+            256
+          ],
+          "native_size": [
+            256,
+            256
+          ]
+        },
+        {
+          "file": "detail-tiles/00-02.png",
+          "cell": [
+            2,
+            0
+          ],
+          "source_rect": [
+            512,
+            0,
+            768,
+            256
+          ],
+          "native_size": [
+            256,
+            256
+          ]
+        },
+        {
+          "file": "detail-tiles/00-03.png",
+          "cell": [
+            3,
+            0
+          ],
+          "source_rect": [
+            768,
+            0,
+            1024,
+            256
+          ],
+          "native_size": [
+            256,
+            256
+          ]
+        },
+        {
+          "file": "detail-tiles/01-00.png",
+          "cell": [
+            0,
+            1
+          ],
+          "source_rect": [
+            0,
+            256,
+            256,
+            512
+          ],
+          "native_size": [
+            256,
+            256
+          ]
+        },
+        {
+          "file": "detail-tiles/01-01.png",
+          "cell": [
+            1,
+            1
+          ],
+          "source_rect": [
+            256,
+            256,
+            512,
+            512
+          ],
+          "native_size": [
+            256,
+            256
+          ]
+        },
+        {
+          "file": "detail-tiles/01-02.png",
+          "cell": [
+            2,
+            1
+          ],
+          "source_rect": [
+            512,
+            256,
+            768,
+            512
+          ],
+          "native_size": [
+            256,
+            256
+          ]
+        },
+        {
+          "file": "detail-tiles/01-03.png",
+          "cell": [
+            3,
+            1
+          ],
+          "source_rect": [
+            768,
+            256,
+            1024,
+            512
+          ],
+          "native_size": [
+            256,
+            256
+          ]
+        },
+        {
+          "file": "detail-tiles/02-00.png",
+          "cell": [
+            0,
+            2
+          ],
+          "source_rect": [
+            0,
+            512,
+            256,
+            768
+          ],
+          "native_size": [
+            256,
+            256
+          ]
+        },
+        {
+          "file": "detail-tiles/02-01.png",
+          "cell": [
+            1,
+            2
+          ],
+          "source_rect": [
+            256,
+            512,
+            512,
+            768
+          ],
+          "native_size": [
+            256,
+            256
+          ]
+        },
+        {
+          "file": "detail-tiles/02-02.png",
+          "cell": [
+            2,
+            2
+          ],
+          "source_rect": [
+            512,
+            512,
+            768,
+            768
+          ],
+          "native_size": [
+            256,
+            256
+          ]
+        },
+        {
+          "file": "detail-tiles/02-03.png",
+          "cell": [
+            3,
+            2
+          ],
+          "source_rect": [
+            768,
+            512,
+            1024,
+            768
+          ],
+          "native_size": [
+            256,
+            256
+          ]
+        }
+      ],
+      "reassembly_exact": true
+    },
+    "density": 7.111111111111111,
+    "required_density_at_4k_zoom_1_6": 6.4,
+    "sources": [
+      {
+        "file": "assets/map_kits/moonlit_v3/meadow.png",
+        "sha256": "429ea8f585c888a72006c5980328f9911f09b96bc311c239977b0c224a33c271"
+      },
+      {
+        "file": "assets/map_kits/moonlit_v3/cliff.png",
+        "sha256": "f0e0684a9f7d9dd109747d8bc9d12fa992c7393f8e26317b4fee452c5696e2bb"
+      }
+    ]
+  },
+  "limits": [
+    "总览不是4K原生整图，实际1962×801",
+    "高清局部重绘三次限流无产物；瓦片样区复用已有生成素材",
+    "固定布局切片不是任意重组的自动瓦片库",
+    "外围树林只在总览概念中显示，运行时仍应分层",
+    "未新增运行碰撞或改资源配置；没有引擎内清晰度和性能验收"
+  ]
+}

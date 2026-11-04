@@ -8,6 +8,8 @@ extends Resource
 @export var cell_size: int = 36
 @export var city_position := Vector2(4176,1908)
 @export var assembly: PackedScene
+@export var terrain_tiles: PackedScene
+@export var show_resource_forests: bool = true
 @export var source_size := Vector2(1672,941)
 @export var source_world_size := Vector2(4608,2592)
 @export var source_world_origin := Vector2(2448,288)

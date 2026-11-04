@@ -436,5 +436,6 @@ func _is_forward_target(candidate_position: Vector2) -> bool:
 func _draw() -> void:
 	if definition != null and current_health > 0:
 		var health_ratio: float = float(current_health) / float(definition.maximum_health)
-		draw_rect(Rect2(-14.0, -44.0, 28.0, 3.0), Color("3c1f2a"))
-		draw_rect(Rect2(-14.0, -44.0, 28.0 * health_ratio, 3.0), Color("7ecf75"))
+		var head_y: float = -preload("res://src/gameplay/art/world_art_scale.gd").height_for("wolf",17.0)-7.0
+		draw_rect(Rect2(-14.0, head_y, 28.0, 3.0), Color("3c1f2a"))
+		draw_rect(Rect2(-14.0, head_y, 28.0 * health_ratio, 3.0), Color("7ecf75"))

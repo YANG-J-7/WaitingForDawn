@@ -174,7 +174,8 @@ func _resolve_spawn_position() -> void:
 
 func _draw() -> void:
 	var job_label: String = str({&"lumber_camp": "木", &"farm": "农", &"gold_mine": "金", &"stone_mine": "石", &"iron_mine": "铁", &"arrow_tower": "箭", &"barracks": "兵"}.get(StringName(String(job_id).get_slice("#", 0)), "闲"))
-	draw_string(ThemeDB.fallback_font, Vector2(-24, -45), "%d·%s" % [farmer_index + 1, job_label], HORIZONTAL_ALIGNMENT_CENTER, 48.0, 10, Color.WHITE)
+	var head_y: float = -preload("res://src/gameplay/art/world_art_scale.gd").height_for("villager",18.0)-6.0
+	draw_string(ThemeDB.fallback_font, Vector2(-24, head_y), "%d·%s" % [farmer_index + 1, job_label], HORIZONTAL_ALIGNMENT_CENTER, 48.0, 10, Color.WHITE)
 	if carried_amount > 0:
 		var resource_label: String = str({&"wood": "木", &"food": "食", &"gold": "金", &"stone": "石", &"iron": "铁"}.get(carried_resource, "货"))
 		draw_string(ThemeDB.fallback_font, Vector2(-15, 27), "%s%d" % [resource_label, carried_amount], HORIZONTAL_ALIGNMENT_CENTER, 30.0, 10, Color("ffe083"))

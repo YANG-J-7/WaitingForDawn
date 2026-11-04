@@ -1,7 +1,7 @@
 extends Node
 ## 真实GL截图与组件位移验证；不把截图替代自然长局试玩。
 const MAIN = preload("res://src/main/main.tscn")
-const OUT = "res://tests/reports/images/modular-art-v3-2026-10-28/"
+const OUT = "res://tests/reports/images/tiled-map-runtime-2026-10-29/"
 var failures := 0
 var metrics := {}
 

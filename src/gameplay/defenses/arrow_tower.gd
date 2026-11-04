@@ -114,5 +114,6 @@ func _draw() -> void:
 	if definition != null:
 		draw_arc(Vector2.ZERO, definition.attack_range_tiles * TILE_SIZE, 0.0, TAU, 64, Color(0.42, 0.7, 0.78, 0.18), 1.0)
 		var health_ratio: float = float(current_health) / float(maximum_health)
-		draw_rect(Rect2(-18, -38, 36, 4), Color("2b1d25"))
-		draw_rect(Rect2(-18, -38, 36 * health_ratio, 4), Color("7ecf75"))
+		var head_y: float = -preload("res://src/gameplay/art/world_art_scale.gd").height_for("arrow_tower",64.0)-7.0
+		draw_rect(Rect2(-18, head_y, 36, 4), Color("2b1d25"))
+		draw_rect(Rect2(-18, head_y, 36 * health_ratio, 4), Color("7ecf75"))

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "mountain-west",
+    "reference_rect": [
+      970,
+      0,
+      400,
+      275
+    ],
+    "reference_file": "mountain-west-reference.png"
+  },
+  {
+    "id": "mountain-north",
+    "reference_rect": [
+      1300,
+      0,
+      400,
+      275
+    ],
+    "reference_file": "mountain-north-reference.png"
+  },
+  {
+    "id": "mountain-east",
+    "reference_rect": [
+      1630,
+      0,
+      332,
+      275
+    ],
+    "reference_file": "mountain-east-reference.png"
+  },
+  {
+    "id": "mountain-southwest",
+    "reference_rect": [
+      970,
+      220,
+      400,
+      275
+    ],
+    "reference_file": "mountain-southwest-reference.png"
+  },
+  {
+    "id": "mountain-southeast",
+    "reference_rect": [
+      1320,
+      220,
+      400,
+      275
+    ],
+    "reference_file": "mountain-southeast-reference.png"
+  },
+  {
+    "id": "peninsula",
+    "reference_rect": [
+      1640,
+      230,
+      322,
+      300
+    ],
+    "reference_file": "peninsula-reference.png"
+  },
+  {
+    "id": "shore-middle",
+    "reference_rect": [
+      1230,
+      420,
+      400,
+      275
+    ],
+    "reference_file": "shore-middle-reference.png"
+  },
+  {
+    "id": "shore-east",
+    "reference_rect": [
+      1560,
+      470,
+      402,
+      300
+    ],
+    "reference_file": "shore-east-reference.png"
+  },
+  {
+    "id": "shore-south",
+    "reference_rect": [
+      1050,
+      600,
+      450,
+      201
+    ],
+    "reference_file": "shore-south-reference.png"
+  }
+]

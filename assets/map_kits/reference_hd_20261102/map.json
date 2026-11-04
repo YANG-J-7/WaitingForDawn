@@ -1,0 +1,665 @@
+{
+  "version": 1,
+  "world_size": [
+    7056,
+    2880
+  ],
+  "reference_size": [
+    1962,
+    801
+  ],
+  "reference_sha256": "9a8f0cb364666cfa3388eb1a56f633342abec331d5c8d15ee736bc4d475cb1ba",
+  "regions": [
+    {
+      "id": "region-0-0",
+      "core": [
+        0,
+        0,
+        1176,
+        960
+      ],
+      "rect": [
+        0,
+        0,
+        1248,
+        1032
+      ],
+      "reference": "source/region-0-0-reference.png",
+      "source": "source/region-0-0.png",
+      "native_size": [
+        1379,
+        1141
+      ],
+      "sha256": "f95e9518733c058b83f2638f1fb0025794fdb79869278605b2f83f67713b69e1",
+      "prompt": "source/region-0-0.prompt.txt",
+      "native_density": [
+        1.1049679487179487,
+        1.1056201550387597
+      ]
+    },
+    {
+      "id": "region-1-0",
+      "core": [
+        1176,
+        0,
+        2352,
+        960
+      ],
+      "rect": [
+        1104,
+        0,
+        2424,
+        1032
+      ],
+      "reference": "source/region-1-0-reference.png",
+      "source": "source/region-1-0.png",
+      "native_size": [
+        1418,
+        1109
+      ],
+      "sha256": "4e3e02b672a96106dbb93ed504c9d3e1ce93f74f13a6037cd21b8fd340889c62",
+      "prompt": "source/region-1-0.prompt.txt",
+      "native_density": [
+        1.0742424242424242,
+        1.074612403100775
+      ]
+    },
+    {
+      "id": "region-2-0",
+      "core": [
+        2352,
+        0,
+        3528,
+        960
+      ],
+      "rect": [
+        2280,
+        0,
+        3600,
+        1032
+      ],
+      "reference": "source/region-2-0-reference.png",
+      "source": "source/region-2-0.png",
+      "native_size": [
+        1418,
+        1109
+      ],
+      "sha256": "02c74aeb77113c1df6e0b9041b0c3d6cbd95c3050a7f643b15c587ee2f5c0975",
+      "prompt": "source/region-2-0.prompt.txt",
+      "native_density": [
+        1.0742424242424242,
+        1.074612403100775
+      ]
+    },
+    {
+      "id": "region-3-0",
+      "core": [
+        3528,
+        0,
+        4704,
+        960
+      ],
+      "rect": [
+        3456,
+        0,
+        4776,
+        1032
+      ],
+      "reference": "source/region-3-0-reference.png",
+      "source": "source/region-3-0.png",
+      "native_size": [
+        1418,
+        1109
+      ],
+      "sha256": "be5127ff5fbeb155583388c9f21144eef6301d0cce61a2e523eeddddcd40d409",
+      "prompt": "source/region-3-0.prompt.txt",
+      "native_density": [
+        1.0742424242424242,
+        1.074612403100775
+      ]
+    },
+    {
+      "id": "region-4-0",
+      "core": [
+        4704,
+        0,
+        5880,
+        960
+      ],
+      "rect": [
+        4632,
+        0,
+        5952,
+        1032
+      ],
+      "reference": "source/region-4-0-reference.png",
+      "source": "source/region-4-0.png",
+      "native_size": [
+        1418,
+        1109
+      ],
+      "sha256": "19cab944e518fa9ab06c8d6451d55e8187b2461cf1ae242df0cce622c68bde81",
+      "prompt": "source/region-4-0.prompt.txt",
+      "native_density": [
+        1.0742424242424242,
+        1.074612403100775
+      ]
+    },
+    {
+      "id": "region-5-0",
+      "core": [
+        5880,
+        0,
+        7056,
+        960
+      ],
+      "rect": [
+        5808,
+        0,
+        7056,
+        1032
+      ],
+      "reference": "source/region-5-0-reference.png",
+      "source": "source/region-5-0.png",
+      "native_size": [
+        1379,
+        1141
+      ],
+      "sha256": "89eaed7ba619e43710213bf5c58ba72d4cf9c74fe5ab7eabd7347d809525ec26",
+      "prompt": "source/region-5-0.prompt.txt",
+      "native_density": [
+        1.1049679487179487,
+        1.1056201550387597
+      ]
+    },
+    {
+      "id": "region-0-1",
+      "core": [
+        0,
+        960,
+        1176,
+        1920
+      ],
+      "rect": [
+        0,
+        888,
+        1248,
+        1992
+      ],
+      "reference": "source/region-0-1-reference.png",
+      "source": "source/region-0-1.png",
+      "native_size": [
+        1333,
+        1180
+      ],
+      "sha256": "8f549c48e1736300ea492d5adf8cdfde1a756056ff92e3be797e95b7b6bddd17",
+      "prompt": "source/region-0-1.prompt.txt",
+      "native_density": [
+        1.0681089743589745,
+        1.068840579710145
+      ]
+    },
+    {
+      "id": "region-1-1",
+      "core": [
+        1176,
+        960,
+        2352,
+        1920
+      ],
+      "rect": [
+        1104,
+        888,
+        2424,
+        1992
+      ],
+      "reference": "source/region-1-1-reference.png",
+      "source": "source/region-1-1.png",
+      "native_size": [
+        1371,
+        1147
+      ],
+      "sha256": "23e37ade5567c00366a419346b21aa160a3a07ec70232d0b0d73a80fd531e38e",
+      "prompt": "source/region-1-1.prompt.txt",
+      "native_density": [
+        1.0386363636363636,
+        1.0389492753623188
+      ]
+    },
+    {
+      "id": "region-2-1",
+      "core": [
+        2352,
+        960,
+        3528,
+        1920
+      ],
+      "rect": [
+        2280,
+        888,
+        3600,
+        1992
+      ],
+      "reference": "source/region-2-1-reference.png",
+      "source": "source/region-2-1.png",
+      "native_size": [
+        1372,
+        1147
+      ],
+      "sha256": "fc6abf4f55c08d3727812b04316566b846b049df8a0179048e85c695d66cbcb9",
+      "prompt": "source/region-2-1.prompt.txt",
+      "native_density": [
+        1.0393939393939393,
+        1.0389492753623188
+      ]
+    },
+    {
+      "id": "region-3-1",
+      "core": [
+        3528,
+        960,
+        4704,
+        1920
+      ],
+      "rect": [
+        3456,
+        888,
+        4776,
+        1992
+      ],
+      "reference": "source/region-3-1-reference.png",
+      "source": "source/region-3-1.png",
+      "native_size": [
+        1371,
+        1147
+      ],
+      "sha256": "5fa17ee483b8bf5d2ab09825881c956fc73967067f915c651b20fac925ccac0f",
+      "prompt": "source/region-3-1.prompt.txt",
+      "native_density": [
+        1.0386363636363636,
+        1.0389492753623188
+      ]
+    },
+    {
+      "id": "region-4-1",
+      "core": [
+        4704,
+        960,
+        5880,
+        1920
+      ],
+      "rect": [
+        4632,
+        888,
+        5952,
+        1992
+      ],
+      "reference": "source/region-4-1-reference.png",
+      "source": "source/region-4-1.png",
+      "native_size": [
+        1371,
+        1147
+      ],
+      "sha256": "8e1e74e0413b76315fb33dcdcf72488c16c6225c6f7fc1811e2a1530905cc9d9",
+      "prompt": "source/region-4-1.prompt.txt",
+      "native_density": [
+        1.0386363636363636,
+        1.0389492753623188
+      ]
+    },
+    {
+      "id": "region-5-1",
+      "core": [
+        5880,
+        960,
+        7056,
+        1920
+      ],
+      "rect": [
+        5808,
+        888,
+        7056,
+        1992
+      ],
+      "reference": "source/region-5-1-reference.png",
+      "source": "source/region-5-1.png",
+      "native_size": [
+        1333,
+        1180
+      ],
+      "sha256": "0fd5cf4b2a6a6c859abe4ba36e0c0c8ff25e8d32db22c5f92b2ec30b340a57b4",
+      "prompt": "source/region-5-1.prompt.txt",
+      "native_density": [
+        1.0681089743589745,
+        1.068840579710145
+      ]
+    },
+    {
+      "id": "region-0-2",
+      "core": [
+        0,
+        1920,
+        1176,
+        2880
+      ],
+      "rect": [
+        0,
+        1848,
+        1248,
+        2880
+      ],
+      "reference": "source/region-0-2-reference.png",
+      "source": "source/region-0-2.png",
+      "native_size": [
+        1379,
+        1141
+      ],
+      "sha256": "f94275e75a59e7c75cea075d2d379cbe57e1cc49cd60705ac5dfe5807c8e982e",
+      "prompt": "source/region-0-2.prompt.txt",
+      "native_density": [
+        1.1049679487179487,
+        1.1056201550387597
+      ]
+    },
+    {
+      "id": "region-1-2",
+      "core": [
+        1176,
+        1920,
+        2352,
+        2880
+      ],
+      "rect": [
+        1104,
+        1848,
+        2424,
+        2880
+      ],
+      "reference": "source/region-1-2-reference.png",
+      "source": "source/region-1-2.png",
+      "native_size": [
+        1417,
+        1110
+      ],
+      "sha256": "cfa4fd7c9c5ae80297eb556deebc197aa76ba644e74326fad78b6a70742491c7",
+      "prompt": "source/region-1-2.prompt.txt",
+      "native_density": [
+        1.0734848484848485,
+        1.0755813953488371
+      ]
+    },
+    {
+      "id": "region-2-2",
+      "core": [
+        2352,
+        1920,
+        3528,
+        2880
+      ],
+      "rect": [
+        2280,
+        1848,
+        3600,
+        2880
+      ],
+      "reference": "source/region-2-2-reference.png",
+      "source": "source/region-2-2.png",
+      "native_size": [
+        1418,
+        1109
+      ],
+      "sha256": "ea20b47d9685952cfd82b0bf239bbec9ccf83719dffd8d4165a4ef7d3f5f6a0d",
+      "prompt": "source/region-2-2.prompt.txt",
+      "native_density": [
+        1.0742424242424242,
+        1.074612403100775
+      ]
+    },
+    {
+      "id": "region-3-2",
+      "core": [
+        3528,
+        1920,
+        4704,
+        2880
+      ],
+      "rect": [
+        3456,
+        1848,
+        4776,
+        2880
+      ],
+      "reference": "source/region-3-2-reference.png",
+      "source": "source/region-3-2.png",
+      "native_size": [
+        1418,
+        1109
+      ],
+      "sha256": "974785cdaf82f3aac25bd213b99953af144085a73240aec7b0c53367bf8a1caa",
+      "prompt": "source/region-3-2.prompt.txt",
+      "native_density": [
+        1.0742424242424242,
+        1.074612403100775
+      ]
+    },
+    {
+      "id": "region-4-2",
+      "core": [
+        4704,
+        1920,
+        5880,
+        2880
+      ],
+      "rect": [
+        4632,
+        1848,
+        5952,
+        2880
+      ],
+      "reference": "source/region-4-2-reference.png",
+      "source": "source/region-4-2.png",
+      "native_size": [
+        1418,
+        1109
+      ],
+      "sha256": "121330dfc61cbc867e27ca018019d6edfa38857644c545f1d2675b0343369e96",
+      "prompt": "source/region-4-2.prompt.txt",
+      "native_density": [
+        1.0742424242424242,
+        1.074612403100775
+      ]
+    },
+    {
+      "id": "region-5-2",
+      "core": [
+        5880,
+        1920,
+        7056,
+        2880
+      ],
+      "rect": [
+        5808,
+        1848,
+        7056,
+        2880
+      ],
+      "reference": "source/region-5-2-reference.png",
+      "source": "source/region-5-2.png",
+      "native_size": [
+        1379,
+        1141
+      ],
+      "sha256": "fb65ac7571c37043baac28d1ff9e37c63a9504fdbdbb47ba9982991054b95cf5",
+      "prompt": "source/region-5-2.prompt.txt",
+      "native_density": [
+        1.1049679487179487,
+        1.1056201550387597
+      ]
+    }
+  ],
+  "generation_source": "builtin_imagegen",
+  "status": "assembled_candidate",
+  "output_size": [
+    7056,
+    2880
+  ],
+  "foundation": "terrain-master.png",
+  "patches": [],
+  "missing_regions": [],
+  "forest": "forest.json",
+  "atlas_count": 14,
+  "atlas_tile_size": 144,
+  "runtime_scale": 1,
+  "low_frequency_tone_source": "../reference_20261029/source/foundation.png",
+  "limitation": "7056×2880分区原稿装配，不代表4K窗口最大倍率无源纹素放大；独立树木非逐棵像素复制",
+  "files": {
+    "terrain-master.png": {
+      "sha256": "a3f75383095e140cbc86de0b05f276327dd83ef996e559c162acfd933a544897",
+      "size": [
+        7056,
+        2880
+      ]
+    },
+    "map-7056x2880.png": {
+      "sha256": "75b105a3bd4f6533e013e7744155d69dfc496a9fbd643bd14573495fcc21a638",
+      "size": [
+        7056,
+        2880
+      ]
+    },
+    "pine-a.png": {
+      "sha256": "3c12051aff8fe93a14a90ddd5121f081c7d80d3866297721ce9424a6b5a1dd6d",
+      "size": [
+        851,
+        1460
+      ]
+    },
+    "pine-b.png": {
+      "sha256": "eb7bc6f9a6291a08913784a044f5bd6f7680b916fa4fbe87f5b70418e3fa440b",
+      "size": [
+        910,
+        1333
+      ]
+    },
+    "atlases/ground-0-0.png": {
+      "sha256": "7af23edfc922acb243ff5443a5579d5a192aeca81736c4439cf277ddbfab2516",
+      "size": [
+        1024,
+        1456
+      ]
+    },
+    "atlases/ground-0-1.png": {
+      "sha256": "b716424203225db2d6e4844a15d5e771b30b236a13c2bc85e61850af5e597d1e",
+      "size": [
+        1024,
+        1456
+      ]
+    },
+    "atlases/ground-1-0.png": {
+      "sha256": "bf7eb7f116d1302b6e719809db33d057effc6f7aa2f168c0a10b836ce8ed1495",
+      "size": [
+        1024,
+        1456
+      ]
+    },
+    "atlases/ground-1-1.png": {
+      "sha256": "0640f66c6ae43ca0c784351aea4b6ae1c2d2afee76fdaad814186d733de02398",
+      "size": [
+        1024,
+        1456
+      ]
+    },
+    "atlases/ground-2-0.png": {
+      "sha256": "58b4086cb03eb044cb3392c63d46784e78e10795267548341edc609d374a21c9",
+      "size": [
+        1024,
+        1456
+      ]
+    },
+    "atlases/ground-2-1.png": {
+      "sha256": "3d05b162b9772eaa1fd093fae5e902b789ec2023256809d78fa4b0cd998d4044",
+      "size": [
+        1024,
+        1456
+      ]
+    },
+    "atlases/ground-3-0.png": {
+      "sha256": "90b9ae4a8d3970dacd5060321fddb3dee0e1aad12cd3c462d4be2cd4a203e018",
+      "size": [
+        1024,
+        1456
+      ]
+    },
+    "atlases/ground-3-1.png": {
+      "sha256": "8d9995ce374a74bc1c0ed645f8e0c7db4f46135c4c4d839d15450cef46435df8",
+      "size": [
+        1024,
+        1456
+      ]
+    },
+    "atlases/ground-4-0.png": {
+      "sha256": "174b224c498afce912ae586d35f3e483a50112377aa10213459b7381c761dcd7",
+      "size": [
+        1024,
+        1456
+      ]
+    },
+    "atlases/ground-4-1.png": {
+      "sha256": "20f7ab836e7e9cb7a921d59d0e9ac5cb43f909eb864e7bac5cb34d80fc2a35f3",
+      "size": [
+        1024,
+        1456
+      ]
+    },
+    "atlases/ground-5-0.png": {
+      "sha256": "70d3a35b0a43790b2b4f62a1e9e6824a0325d8aa4d9ce889bb3dedad7facfa3a",
+      "size": [
+        1024,
+        1456
+      ]
+    },
+    "atlases/ground-5-1.png": {
+      "sha256": "5b17f93408a5599b84aa887c121df796fee511585985b189fc825126527de1f2",
+      "size": [
+        1024,
+        1456
+      ]
+    },
+    "atlases/ground-6-0.png": {
+      "sha256": "bac8883109a520bcf2126316e599fe8086e65e1640fbfc92e71f91f6870e5761",
+      "size": [
+        1024,
+        1456
+      ]
+    },
+    "atlases/ground-6-1.png": {
+      "sha256": "9a2c6a0c4932ca1cda531fdbde63a086038ac1083b8fa85c84b459a84fa08a3d",
+      "size": [
+        1024,
+        1456
+      ]
+    }
+  },
+  "sprite_sources": [
+    {
+      "file": "source/pine-a.png",
+      "prompt": "source/pine-a.prompt.txt",
+      "reference": "source/pine-reference.png",
+      "native_size": [
+        1024,
+        1536
+      ],
+      "sha256": "dcd8615e21dbb6760653c177f897cccb7c7130feb6903bc4a734055fceb4ca09"
+    },
+    {
+      "file": "source/pine-b.png",
+      "prompt": "source/pine-b.prompt.txt",
+      "reference": "source/pine-reference.png",
+      "native_size": [
+        1024,
+        1536
+      ],
+      "sha256": "4041c42ed09aa1cf0ff4e108088e12e47445d4ebaff95fc022a2c49ecb6a58e0"
+    }
+  ]
+}

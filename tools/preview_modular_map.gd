@@ -1,6 +1,7 @@
 extends Node
 ## 人工看图入口：冻结战斗与计时，保留镜头/手牌/建筑交互；正式入口仍为main。
 func _ready() -> void:
+	get_window().title="Waiting for Dawn · 瓦片地图预览 2026-10-29"
 	var main=preload("res://src/main/main.tscn").instantiate()
 	add_child(main)
 	main._on_start_pressed()

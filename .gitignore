@@ -2,6 +2,9 @@
 .godot/
 .codex-temp/
 
+# 用户要求：整个测试目录仅留本地，不提交脚本、报告或截图。
+/tests/
+
 # 测试截图和设计预览图的自动导入配置仅留本地；正式素材导入配置继续跟踪。
 *.png.import
 !assets/map/grass_hd_v1/*.png.import

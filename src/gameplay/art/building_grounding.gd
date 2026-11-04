@@ -19,6 +19,7 @@ func configure(value: Vector2i, kind: StringName = &"default") -> void:
 	footprint = Vector2i(maxi(1, value.x), maxi(1, value.y))
 	footprint_size = Vector2(footprint) * CELL_SIZE
 	shadow_size = Vector2(maxf(24.0, footprint_size.x * 0.72), clampf(footprint_size.y * 0.12, 4.0, 8.0))
+	shadow_size *= preload("res://src/gameplay/art/world_art_scale.gd").CITY_FACTOR
 	surface_kind = kind
 	queue_redraw()
 

@@ -107,5 +107,6 @@ func _draw() -> void:
 	if not visible:
 		return
 	var health_ratio: float = float(current_health) / float(maximum_health)
-	draw_rect(Rect2(-19.0, -48.0, 38.0, 5.0), Color("2b1d25"))
-	draw_rect(Rect2(-19.0, -48.0, 38.0 * health_ratio, 5.0), Color("7ecf75"))
+	var head_y: float = -preload("res://src/gameplay/art/world_art_scale.gd").height_for("palisade_wall",37.0)-7.0
+	draw_rect(Rect2(-19.0, head_y, 38.0, 5.0), Color("2b1d25"))
+	draw_rect(Rect2(-19.0, head_y, 38.0 * health_ratio, 5.0), Color("7ecf75"))

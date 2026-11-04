@@ -26,6 +26,7 @@ var window_material: ShaderMaterial
 
 
 func _ready() -> void:
+	scale = Vector2.ONE * preload("res://src/gameplay/art/world_art_scale.gd").CITY_FACTOR
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	var file := FileAccess.open(ROOT + "manifest.json", FileAccess.READ)
 	var data: Dictionary = JSON.parse_string(file.get_as_text())
@@ -34,6 +35,7 @@ func _ready() -> void:
 	# 阴影独立到地面层，不能涂暗从城前经过的单位。
 	get_parent().add_child.call_deferred(grounding)
 	grounding.position = position
+	grounding.scale = scale
 	# 地面、草缘在投影之下，沿用主城脚点，不参与输入、占格或碰撞。
 	ground_base = _sprite(GROUND_TEXTURE, grounding)
 	ground_base.name = "GroundBase"
@@ -111,7 +113,7 @@ func _place_grounding() -> void:
 		# 地基固定在公共排序域底部；主体仍按真实墙脚Y排序。
 		var origin := grounding.position
 		for child in grounding.get_children():
-			if child is Node2D: child.position += origin
+			if child is Node2D: child.position += origin / grounding.scale
 		grounding.position = Vector2.ZERO
 	var forest := get_parent().get_node_or_null("BorderForest")
 	if forest != null:

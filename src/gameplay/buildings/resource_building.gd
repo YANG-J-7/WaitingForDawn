@@ -104,5 +104,6 @@ func _draw() -> void:
 			Color("e8ddb5")
 		)
 		var health_ratio: float = float(current_health) / float(definition.maximum_health)
-		draw_rect(Rect2(-34, -52, 68, 4), Color("2b1d25"))
-		draw_rect(Rect2(-34, -52, 68 * health_ratio, 4), Color("7ecf75"))
+		var head_y: float = -art_visual.region_rect.size.y*art_visual.base_scale.y-7.0
+		draw_rect(Rect2(-34, head_y, 68, 4), Color("2b1d25"))
+		draw_rect(Rect2(-34, head_y, 68 * health_ratio, 4), Color("7ecf75"))

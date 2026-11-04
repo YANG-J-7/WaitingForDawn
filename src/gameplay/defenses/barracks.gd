@@ -190,5 +190,6 @@ func _draw() -> void:
 		return
 	draw_string(ThemeDB.fallback_font, Vector2(-22.0, 39.0), "兵营", HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color.WHITE)
 	var health_ratio: float = float(current_health) / float(maximum_health)
-	draw_rect(Rect2(-28, -52, 56, 4), Color("2b1d25"))
-	draw_rect(Rect2(-28, -52, 56 * health_ratio, 4), Color("7ecf75"))
+	var head_y: float = -preload("res://src/gameplay/art/world_art_scale.gd").height_for("barracks",50.0)-7.0
+	draw_rect(Rect2(-28, head_y, 56, 4), Color("2b1d25"))
+	draw_rect(Rect2(-28, head_y, 56 * health_ratio, 4), Color("7ecf75"))

@@ -17,16 +17,22 @@ var grid_model: RefCounted
 var forest_cells: Array[Vector2i] = []
 var forest_rect := Rect2()
 var pending_forest_block := false
+var visual_suppressed := false
 
 func configure_map(grid: RefCounted, entry: Dictionary) -> void:
 	grid_model = grid
 	map_data = entry
+	visual_suppressed = bool(entry.get("visual_suppressed",false))
 
 
 func _ready() -> void:
 	art_visual = ArtVisualScript.new() as ArtVisual
 	art_visual.show_behind_parent = true
 	add_child(art_visual)
+	if visual_suppressed:
+		# 资源钩子保留供后续树林制作；当前不显示、不产生隐形林区阻挡。
+		art_visual.hide()
+		return
 	if map_data.has("worldRect") or map_data.has("sourceRect"):
 		var definition = preload("res://src/gameplay/grid/map_definition.gd")
 		var box: Array = map_data.get("sourceRect",[0,0,1,1])
@@ -104,7 +110,7 @@ func claim(building: ResourceBuilding) -> bool:
 func release(building: ResourceBuilding) -> void:
 	if occupied_building == building:
 		occupied_building = null
-		art_visual.visible = true
+		art_visual.visible = not visual_suppressed
 		art_visual.modulate = Color.WHITE
 		_set_forest_blocked(true)
 		queue_redraw()
@@ -112,7 +118,7 @@ func release(building: ResourceBuilding) -> void:
 
 func reset() -> void:
 	occupied_building = null
-	art_visual.visible = true
+	art_visual.visible = not visual_suppressed
 	art_visual.modulate = Color.WHITE
 	_set_forest_blocked(true)
 	queue_redraw()

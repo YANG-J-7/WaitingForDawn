@@ -3,8 +3,6 @@ extends Control
 const Definition = preload("res://src/gameplay/grid/map_definition.gd")
 const MAP_RECT := Rect2(6, 6, 160, 160.0 * 2880.0 / 7056.0)
 var main: Node2D
-var city_button: Button
-var full_button: Button
 var preview: SubViewport
 var preview_texture: Texture2D
 
@@ -17,29 +15,15 @@ func configure(owner_main: Node2D) -> void:
 	preview.render_target_update_mode = SubViewport.UPDATE_ONCE
 	add_child(preview)
 	preview.canvas_transform = Transform2D(0,Vector2.ONE*(320.0/main.map_runtime.bounds.size.x),0,Vector2.ZERO)
-	var ground := preload("res://src/gameplay/art/modular_map_layer.gd").new()
-	ground.configure(main.grid_map_model,main.map_runtime)
+	var ground := preload("res://src/gameplay/art/reference_map_layer.gd").new()
+	ground.configure(main.grid_map_model,main.map_runtime,true)
 	preview.add_child(ground)
 	preview_texture = preview.get_texture()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	custom_minimum_size = Vector2(172,100)
+	custom_minimum_size = Vector2(172,ceilf(MAP_RECT.end.y+6))
 	size = custom_minimum_size
-	tooltip_text = "点击小地图定位；Home回主城，M查看全图"
-	city_button = Button.new()
-	city_button.text = "回主城"
-	city_button.position = Vector2(6,75)
-	city_button.size = Vector2(78,23)
-	city_button.add_theme_font_size_override("font_size",12)
-	city_button.pressed.connect(main.map_camera.reset_view)
-	add_child(city_button)
-	full_button = Button.new()
-	full_button.text = "全图"
-	full_button.position = Vector2(88,75)
-	full_button.size = Vector2(78,23)
-	full_button.add_theme_font_size_override("font_size",12)
-	full_button.pressed.connect(main.map_camera.show_full_map)
-	add_child(full_button)
+	tooltip_text = "点击小地图定位；Home回主城，M切换全图与原视野"
 
 func _process(_delta: float) -> void:
 	var viewport_rect: Rect2 = main.map_camera.screen_view_rect()
@@ -54,16 +38,17 @@ func _gui_input(event: InputEvent) -> void:
 
 func focus_minimap(point: Vector2) -> void:
 	var ratio := ((point-MAP_RECT.position)/MAP_RECT.size).clamp(Vector2.ZERO,Vector2.ONE)
-	main.map_camera.zoom = Vector2.ONE * maxf(main.map_camera.zoom.x, 0.72)
+	if not main.map_camera.overview:
+		main.map_camera.zoom = Vector2.ONE * maxf(main.map_camera.zoom.x, main.map_camera.build_zoom)
 	main.map_camera.focus_world(ratio*main.map_runtime.bounds.size)
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not visible or not event is InputEventKey or not event.pressed or event.echo: return
 	if event.keycode == KEY_HOME:
-		main.map_camera.reset_view()
+		main.map_camera.reset_view(true)
 		get_viewport().set_input_as_handled()
 	elif event.keycode == KEY_M:
-		main.map_camera.show_full_map()
+		main.map_camera.toggle_overview(true)
 		get_viewport().set_input_as_handled()
 
 func _draw() -> void:
@@ -71,6 +56,7 @@ func _draw() -> void:
 	draw_style_box(_panel_style(),Rect2(Vector2.ZERO,size))
 	if preview_texture != null: draw_texture_rect(preview_texture,MAP_RECT,false)
 	for site in main.resource_sites:
+		if site.get("visual_suppressed"): continue
 		var point: Vector2 = MAP_RECT.position + site.position / main.map_runtime.bounds.size * MAP_RECT.size
 		if site.site_type == &"forest":
 			draw_colored_polygon(PackedVector2Array([point+Vector2(0,-3),point+Vector2(-3,3),point+Vector2(3,3)]),Color("b9d693"))

@@ -66,8 +66,8 @@ func _ready() -> void:
 		view.push_input(event,true)
 		await get_tree().process_frame
 		check(main.map_camera.position!=before,"%s引擎小地图点击移动镜头" % size)
-		nav.city_button.pressed.emit()
-		check(main.map_camera.position==Definition.CITY_POSITION,"%s回主城按钮有效" % size)
+		main.map_camera.reset_view()
+		check(main.map_camera.position==Definition.CITY_POSITION,"%s回主城镜头接口有效" % size)
 		if size == Vector2i(960,540):
 			RunEconomy.add_resource(&"wood",100)
 			var forest: ResourceSite = main.get_node("ResourceSites/forest_04")

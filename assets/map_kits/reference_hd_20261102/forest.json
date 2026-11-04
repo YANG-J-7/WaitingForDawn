@@ -1,0 +1,1999 @@
+{
+  "version": 1,
+  "world_size": [
+    7056,
+    2880
+  ],
+  "sprites": [
+    "pine-a.png",
+    "pine-b.png"
+  ],
+  "trees": [
+    {
+      "id": "pine-000",
+      "variant": 0,
+      "position": [
+        -39.56,
+        -21.573
+      ],
+      "size": [
+        157.088,
+        280.449
+      ],
+      "sort_y": -21.573,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-003",
+      "variant": 1,
+      "position": [
+        424.367,
+        -21.573
+      ],
+      "size": [
+        157.088,
+        280.449
+      ],
+      "sort_y": -21.573,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-006",
+      "variant": 0,
+      "position": [
+        827.156,
+        -21.573
+      ],
+      "size": [
+        157.088,
+        280.449
+      ],
+      "sort_y": -21.573,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-009",
+      "variant": 1,
+      "position": [
+        1255.119,
+        -21.573
+      ],
+      "size": [
+        157.088,
+        280.449
+      ],
+      "sort_y": -21.573,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-012",
+      "variant": 0,
+      "position": [
+        1704.661,
+        -21.573
+      ],
+      "size": [
+        157.088,
+        280.449
+      ],
+      "sort_y": -21.573,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-015",
+      "variant": 1,
+      "position": [
+        2143.413,
+        -21.573
+      ],
+      "size": [
+        157.088,
+        280.449
+      ],
+      "sort_y": -21.573,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-001",
+      "variant": 1,
+      "position": [
+        107.89,
+        46.742
+      ],
+      "size": [
+        203.408,
+        363.146
+      ],
+      "sort_y": 46.742,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-004",
+      "variant": 0,
+      "position": [
+        499.89,
+        46.742
+      ],
+      "size": [
+        203.408,
+        363.146
+      ],
+      "sort_y": 46.742,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-007",
+      "variant": 1,
+      "position": [
+        913.468,
+        46.742
+      ],
+      "size": [
+        203.408,
+        363.146
+      ],
+      "sort_y": 46.742,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-010",
+      "variant": 0,
+      "position": [
+        1352.22,
+        46.742
+      ],
+      "size": [
+        203.408,
+        363.146
+      ],
+      "sort_y": 46.742,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-013",
+      "variant": 1,
+      "position": [
+        1873.688,
+        46.742
+      ],
+      "size": [
+        203.408,
+        363.146
+      ],
+      "sort_y": 46.742,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-016",
+      "variant": 0,
+      "position": [
+        2308.844,
+        46.742
+      ],
+      "size": [
+        203.408,
+        363.146
+      ],
+      "sort_y": 46.742,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-112",
+      "variant": 0,
+      "position": [
+        2711.633,
+        68.315
+      ],
+      "size": [
+        193.339,
+        345.169
+      ],
+      "sort_y": 68.315,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-002",
+      "variant": 0,
+      "position": [
+        262.532,
+        115.056
+      ],
+      "size": [
+        249.729,
+        445.843
+      ],
+      "sort_y": 115.056,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-005",
+      "variant": 1,
+      "position": [
+        661.725,
+        115.056
+      ],
+      "size": [
+        249.729,
+        445.843
+      ],
+      "sort_y": 115.056,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-008",
+      "variant": 0,
+      "position": [
+        1086.092,
+        115.056
+      ],
+      "size": [
+        249.729,
+        445.843
+      ],
+      "sort_y": 115.056,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-011",
+      "variant": 1,
+      "position": [
+        1532.037,
+        115.056
+      ],
+      "size": [
+        249.729,
+        445.843
+      ],
+      "sort_y": 115.056,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-014",
+      "variant": 0,
+      "position": [
+        1970.789,
+        115.056
+      ],
+      "size": [
+        249.729,
+        445.843
+      ],
+      "sort_y": 115.056,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-113",
+      "variant": 1,
+      "position": [
+        3484.844,
+        133.034
+      ],
+      "size": [
+        231.604,
+        413.483
+      ],
+      "sort_y": 133.034,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-017",
+      "variant": 1,
+      "position": [
+        14.385,
+        168.989
+      ],
+      "size": [
+        205.422,
+        366.742
+      ],
+      "sort_y": 168.989,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-020",
+      "variant": 0,
+      "position": [
+        474.716,
+        168.989
+      ],
+      "size": [
+        205.422,
+        366.742
+      ],
+      "sort_y": 168.989,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-023",
+      "variant": 1,
+      "position": [
+        1039.339,
+        168.989
+      ],
+      "size": [
+        205.422,
+        366.742
+      ],
+      "sort_y": 168.989,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-026",
+      "variant": 0,
+      "position": [
+        1614.752,
+        168.989
+      ],
+      "size": [
+        205.422,
+        366.742
+      ],
+      "sort_y": 168.989,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-029",
+      "variant": 1,
+      "position": [
+        2129.028,
+        168.989
+      ],
+      "size": [
+        205.422,
+        366.742
+      ],
+      "sort_y": 168.989,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-018",
+      "variant": 0,
+      "position": [
+        190.606,
+        237.303
+      ],
+      "size": [
+        251.743,
+        449.438
+      ],
+      "sort_y": 237.303,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-021",
+      "variant": 1,
+      "position": [
+        654.532,
+        237.303
+      ],
+      "size": [
+        251.743,
+        449.438
+      ],
+      "sort_y": 237.303,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-024",
+      "variant": 0,
+      "position": [
+        1158.018,
+        237.303
+      ],
+      "size": [
+        251.743,
+        449.438
+      ],
+      "sort_y": 237.303,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-027",
+      "variant": 1,
+      "position": [
+        1719.046,
+        237.303
+      ],
+      "size": [
+        251.743,
+        449.438
+      ],
+      "sort_y": 237.303,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-019",
+      "variant": 1,
+      "position": [
+        366.826,
+        305.618
+      ],
+      "size": [
+        298.064,
+        532.135
+      ],
+      "sort_y": 305.618,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-022",
+      "variant": 0,
+      "position": [
+        848.734,
+        305.618
+      ],
+      "size": [
+        298.064,
+        532.135
+      ],
+      "sort_y": 305.618,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-025",
+      "variant": 1,
+      "position": [
+        1416.954,
+        305.618
+      ],
+      "size": [
+        298.064,
+        532.135
+      ],
+      "sort_y": 305.618,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-028",
+      "variant": 0,
+      "position": [
+        1924.037,
+        305.618
+      ],
+      "size": [
+        298.064,
+        532.135
+      ],
+      "sort_y": 305.618,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-118",
+      "variant": 0,
+      "position": [
+        5887.193,
+        337.978
+      ],
+      "size": [
+        104.725,
+        186.966
+      ],
+      "sort_y": 337.978,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-030",
+      "variant": 0,
+      "position": [
+        -7.193,
+        366.742
+      ],
+      "size": [
+        213.478,
+        381.124
+      ],
+      "sort_y": 366.742,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-033",
+      "variant": 1,
+      "position": [
+        449.541,
+        366.742
+      ],
+      "size": [
+        213.478,
+        381.124
+      ],
+      "sort_y": 366.742,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-036",
+      "variant": 0,
+      "position": [
+        953.028,
+        366.742
+      ],
+      "size": [
+        213.478,
+        381.124
+      ],
+      "sort_y": 366.742,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-031",
+      "variant": 1,
+      "position": [
+        172.624,
+        435.056
+      ],
+      "size": [
+        259.799,
+        463.82
+      ],
+      "sort_y": 435.056,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-034",
+      "variant": 0,
+      "position": [
+        650.936,
+        435.056
+      ],
+      "size": [
+        259.799,
+        463.82
+      ],
+      "sort_y": 435.056,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-037",
+      "variant": 1,
+      "position": [
+        1711.853,
+        435.056
+      ],
+      "size": [
+        259.799,
+        463.82
+      ],
+      "sort_y": 435.056,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-116",
+      "variant": 0,
+      "position": [
+        5229.064,
+        449.438
+      ],
+      "size": [
+        96.669,
+        172.584
+      ],
+      "sort_y": 449.438,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-114",
+      "variant": 0,
+      "position": [
+        4502.606,
+        478.202
+      ],
+      "size": [
+        126.879,
+        226.517
+      ],
+      "sort_y": 478.202,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-032",
+      "variant": 0,
+      "position": [
+        348.844,
+        503.371
+      ],
+      "size": [
+        306.12,
+        546.517
+      ],
+      "sort_y": 503.371,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-035",
+      "variant": 1,
+      "position": [
+        834.349,
+        503.371
+      ],
+      "size": [
+        306.12,
+        546.517
+      ],
+      "sort_y": 503.371,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-038",
+      "variant": 0,
+      "position": [
+        10.789,
+        568.09
+      ],
+      "size": [
+        227.576,
+        406.292
+      ],
+      "sort_y": 568.09,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-120",
+      "variant": 0,
+      "position": [
+        6498.569,
+        589.663
+      ],
+      "size": [
+        106.739,
+        190.562
+      ],
+      "sort_y": 589.663,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-039",
+      "variant": 1,
+      "position": [
+        154.642,
+        636.404
+      ],
+      "size": [
+        273.897,
+        488.989
+      ],
+      "sort_y": 636.404,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-117",
+      "variant": 1,
+      "position": [
+        5441.248,
+        740.674
+      ],
+      "size": [
+        134.934,
+        240.899
+      ],
+      "sort_y": 740.674,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-040",
+      "variant": 0,
+      "position": [
+        35.963,
+        755.056
+      ],
+      "size": [
+        227.576,
+        406.292
+      ],
+      "sort_y": 755.056,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-121",
+      "variant": 1,
+      "position": [
+        6664.0,
+        916.854
+      ],
+      "size": [
+        114.795,
+        204.944
+      ],
+      "sort_y": 916.854,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-115",
+      "variant": 1,
+      "position": [
+        4793.908,
+        1118.202
+      ],
+      "size": [
+        155.074,
+        276.854
+      ],
+      "sort_y": 1118.202,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-119",
+      "variant": 1,
+      "position": [
+        6174.899,
+        1186.517
+      ],
+      "size": [
+        120.837,
+        215.73
+      ],
+      "sort_y": 1186.517,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-122",
+      "variant": 0,
+      "position": [
+        6782.679,
+        1305.169
+      ],
+      "size": [
+        102.711,
+        183.371
+      ],
+      "sort_y": 1305.169,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-043",
+      "variant": 1,
+      "position": [
+        258.936,
+        1502.921
+      ],
+      "size": [
+        203.408,
+        363.146
+      ],
+      "sort_y": 1502.921,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-123",
+      "variant": 1,
+      "position": [
+        6261.211,
+        1556.854
+      ],
+      "size": [
+        124.865,
+        222.921
+      ],
+      "sort_y": 1556.854,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-041",
+      "variant": 1,
+      "position": [
+        14.385,
+        1571.236
+      ],
+      "size": [
+        249.729,
+        445.843
+      ],
+      "sort_y": 1571.236,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-044",
+      "variant": 0,
+      "position": [
+        424.367,
+        1571.236
+      ],
+      "size": [
+        249.729,
+        445.843
+      ],
+      "sort_y": 1571.236,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-046",
+      "variant": 0,
+      "position": [
+        147.45,
+        1610.787
+      ],
+      "size": [
+        203.408,
+        363.146
+      ],
+      "sort_y": 1610.787,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-042",
+      "variant": 0,
+      "position": [
+        176.22,
+        1639.551
+      ],
+      "size": [
+        157.088,
+        280.449
+      ],
+      "sort_y": 1639.551,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-047",
+      "variant": 1,
+      "position": [
+        338.055,
+        1679.101
+      ],
+      "size": [
+        249.729,
+        445.843
+      ],
+      "sort_y": 1679.101,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-045",
+      "variant": 1,
+      "position": [
+        53.945,
+        1747.416
+      ],
+      "size": [
+        296.05,
+        528.539
+      ],
+      "sort_y": 1747.416,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-048",
+      "variant": 0,
+      "position": [
+        535.853,
+        1747.416
+      ],
+      "size": [
+        296.05,
+        528.539
+      ],
+      "sort_y": 1747.416,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-050",
+      "variant": 0,
+      "position": [
+        107.89,
+        1786.966
+      ],
+      "size": [
+        197.367,
+        352.36
+      ],
+      "sort_y": 1786.966,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-051",
+      "variant": 1,
+      "position": [
+        284.11,
+        1855.281
+      ],
+      "size": [
+        243.687,
+        435.056
+      ],
+      "sort_y": 1855.281,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-049",
+      "variant": 1,
+      "position": [
+        35.963,
+        1923.596
+      ],
+      "size": [
+        151.046,
+        269.663
+      ],
+      "sort_y": 1923.596,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-052",
+      "variant": 0,
+      "position": [
+        438.752,
+        1923.596
+      ],
+      "size": [
+        151.046,
+        269.663
+      ],
+      "sort_y": 1923.596,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-054",
+      "variant": 0,
+      "position": [
+        215.78,
+        2229.213
+      ],
+      "size": [
+        255.771,
+        456.629
+      ],
+      "sort_y": 2229.213,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-057",
+      "variant": 1,
+      "position": [
+        816.367,
+        2229.213
+      ],
+      "size": [
+        255.771,
+        456.629
+      ],
+      "sort_y": 2229.213,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-055",
+      "variant": 1,
+      "position": [
+        420.771,
+        2297.528
+      ],
+      "size": [
+        302.092,
+        539.326
+      ],
+      "sort_y": 2297.528,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-053",
+      "variant": 1,
+      "position": [
+        -7.193,
+        2365.843
+      ],
+      "size": [
+        209.45,
+        373.933
+      ],
+      "sort_y": 2365.843,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-056",
+      "variant": 0,
+      "position": [
+        640.147,
+        2365.843
+      ],
+      "size": [
+        209.45,
+        373.933
+      ],
+      "sort_y": 2365.843,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-058",
+      "variant": 0,
+      "position": [
+        -25.174,
+        2369.438
+      ],
+      "size": [
+        213.478,
+        381.124
+      ],
+      "sort_y": 2369.438,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-061",
+      "variant": 1,
+      "position": [
+        496.294,
+        2369.438
+      ],
+      "size": [
+        213.478,
+        381.124
+      ],
+      "sort_y": 2369.438,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-064",
+      "variant": 0,
+      "position": [
+        1176.0,
+        2369.438
+      ],
+      "size": [
+        213.478,
+        381.124
+      ],
+      "sort_y": 2369.438,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-059",
+      "variant": 1,
+      "position": [
+        147.45,
+        2437.753
+      ],
+      "size": [
+        259.799,
+        463.82
+      ],
+      "sort_y": 2437.753,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-062",
+      "variant": 0,
+      "position": [
+        697.688,
+        2437.753
+      ],
+      "size": [
+        259.799,
+        463.82
+      ],
+      "sort_y": 2437.753,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-060",
+      "variant": 0,
+      "position": [
+        352.44,
+        2506.067
+      ],
+      "size": [
+        167.157,
+        298.427
+      ],
+      "sort_y": 2506.067,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-063",
+      "variant": 1,
+      "position": [
+        1039.339,
+        2506.067
+      ],
+      "size": [
+        167.157,
+        298.427
+      ],
+      "sort_y": 2506.067,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-065",
+      "variant": 1,
+      "position": [
+        14.385,
+        2585.169
+      ],
+      "size": [
+        249.729,
+        445.843
+      ],
+      "sort_y": 2585.169,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-068",
+      "variant": 0,
+      "position": [
+        550.239,
+        2585.169
+      ],
+      "size": [
+        249.729,
+        445.843
+      ],
+      "sort_y": 2585.169,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-071",
+      "variant": 1,
+      "position": [
+        1118.459,
+        2585.169
+      ],
+      "size": [
+        249.729,
+        445.843
+      ],
+      "sort_y": 2585.169,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-074",
+      "variant": 0,
+      "position": [
+        1798.165,
+        2585.169
+      ],
+      "size": [
+        249.729,
+        445.843
+      ],
+      "sort_y": 2585.169,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-077",
+      "variant": 1,
+      "position": [
+        2387.963,
+        2585.169
+      ],
+      "size": [
+        249.729,
+        445.843
+      ],
+      "sort_y": 2585.169,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-066",
+      "variant": 0,
+      "position": [
+        212.183,
+        2653.483
+      ],
+      "size": [
+        296.05,
+        528.539
+      ],
+      "sort_y": 2653.483,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-069",
+      "variant": 1,
+      "position": [
+        762.422,
+        2653.483
+      ],
+      "size": [
+        296.05,
+        528.539
+      ],
+      "sort_y": 2653.483,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-072",
+      "variant": 0,
+      "position": [
+        1377.394,
+        2653.483
+      ],
+      "size": [
+        296.05,
+        528.539
+      ],
+      "sort_y": 2653.483,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-075",
+      "variant": 1,
+      "position": [
+        2024.734,
+        2653.483
+      ],
+      "size": [
+        296.05,
+        528.539
+      ],
+      "sort_y": 2653.483,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-067",
+      "variant": 1,
+      "position": [
+        431.56,
+        2721.798
+      ],
+      "size": [
+        203.408,
+        363.146
+      ],
+      "sort_y": 2721.798,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-070",
+      "variant": 0,
+      "position": [
+        988.991,
+        2721.798
+      ],
+      "size": [
+        203.408,
+        363.146
+      ],
+      "sort_y": 2721.798,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-073",
+      "variant": 1,
+      "position": [
+        1672.294,
+        2721.798
+      ],
+      "size": [
+        203.408,
+        363.146
+      ],
+      "sort_y": 2721.798,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-076",
+      "variant": 0,
+      "position": [
+        2222.532,
+        2721.798
+      ],
+      "size": [
+        203.408,
+        363.146
+      ],
+      "sort_y": 2721.798,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-080",
+      "variant": 0,
+      "position": [
+        262.532,
+        2750.562
+      ],
+      "size": [
+        221.534,
+        395.506
+      ],
+      "sort_y": 2750.562,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-083",
+      "variant": 1,
+      "position": [
+        852.33,
+        2750.562
+      ],
+      "size": [
+        221.534,
+        395.506
+      ],
+      "sort_y": 2750.562,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-086",
+      "variant": 0,
+      "position": [
+        1416.954,
+        2750.562
+      ],
+      "size": [
+        221.534,
+        395.506
+      ],
+      "sort_y": 2750.562,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-089",
+      "variant": 1,
+      "position": [
+        1956.404,
+        2750.562
+      ],
+      "size": [
+        221.534,
+        395.506
+      ],
+      "sort_y": 2750.562,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-092",
+      "variant": 0,
+      "position": [
+        2470.679,
+        2750.562
+      ],
+      "size": [
+        221.534,
+        395.506
+      ],
+      "sort_y": 2750.562,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-078",
+      "variant": 0,
+      "position": [
+        -3.596,
+        2818.876
+      ],
+      "size": [
+        267.855,
+        478.202
+      ],
+      "sort_y": 2818.876,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-081",
+      "variant": 1,
+      "position": [
+        453.138,
+        2818.876
+      ],
+      "size": [
+        267.855,
+        478.202
+      ],
+      "sort_y": 2818.876,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-084",
+      "variant": 0,
+      "position": [
+        981.798,
+        2818.876
+      ],
+      "size": [
+        267.855,
+        478.202
+      ],
+      "sort_y": 2818.876,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-087",
+      "variant": 1,
+      "position": [
+        1550.018,
+        2818.876
+      ],
+      "size": [
+        267.855,
+        478.202
+      ],
+      "sort_y": 2818.876,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-090",
+      "variant": 0,
+      "position": [
+        2064.294,
+        2818.876
+      ],
+      "size": [
+        267.855,
+        478.202
+      ],
+      "sort_y": 2818.876,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-109",
+      "variant": 1,
+      "position": [
+        3643.083,
+        2840.449
+      ],
+      "size": [
+        163.13,
+        291.236
+      ],
+      "sort_y": 2840.449,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-079",
+      "variant": 1,
+      "position": [
+        158.239,
+        2887.191
+      ],
+      "size": [
+        175.213,
+        312.809
+      ],
+      "sort_y": 2887.191,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-082",
+      "variant": 0,
+      "position": [
+        643.743,
+        2887.191
+      ],
+      "size": [
+        175.213,
+        312.809
+      ],
+      "sort_y": 2887.191,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-085",
+      "variant": 1,
+      "position": [
+        1197.578,
+        2887.191
+      ],
+      "size": [
+        175.213,
+        312.809
+      ],
+      "sort_y": 2887.191,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-088",
+      "variant": 0,
+      "position": [
+        1762.202,
+        2887.191
+      ],
+      "size": [
+        175.213,
+        312.809
+      ],
+      "sort_y": 2887.191,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-091",
+      "variant": 1,
+      "position": [
+        2269.284,
+        2887.191
+      ],
+      "size": [
+        175.213,
+        312.809
+      ],
+      "sort_y": 2887.191,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-107",
+      "variant": 1,
+      "position": [
+        3362.569,
+        2908.764
+      ],
+      "size": [
+        70.488,
+        125.843
+      ],
+      "sort_y": 2908.764,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-110",
+      "variant": 0,
+      "position": [
+        3844.477,
+        2908.764
+      ],
+      "size": [
+        70.488,
+        125.843
+      ],
+      "sort_y": 2908.764,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-095",
+      "variant": 1,
+      "position": [
+        352.44,
+        2912.36
+      ],
+      "size": [
+        231.604,
+        413.483
+      ],
+      "sort_y": 2912.36,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-098",
+      "variant": 0,
+      "position": [
+        902.679,
+        2912.36
+      ],
+      "size": [
+        231.604,
+        413.483
+      ],
+      "sort_y": 2912.36,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-101",
+      "variant": 1,
+      "position": [
+        1467.303,
+        2912.36
+      ],
+      "size": [
+        231.604,
+        413.483
+      ],
+      "sort_y": 2912.36,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-104",
+      "variant": 0,
+      "position": [
+        2103.853,
+        2912.36
+      ],
+      "size": [
+        231.604,
+        413.483
+      ],
+      "sort_y": 2912.36,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-108",
+      "variant": 0,
+      "position": [
+        3452.477,
+        2977.079
+      ],
+      "size": [
+        116.809,
+        208.539
+      ],
+      "sort_y": 2977.079,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-111",
+      "variant": 1,
+      "position": [
+        4020.697,
+        2977.079
+      ],
+      "size": [
+        116.809,
+        208.539
+      ],
+      "sort_y": 2977.079,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-093",
+      "variant": 1,
+      "position": [
+        35.963,
+        2980.674
+      ],
+      "size": [
+        277.924,
+        496.18
+      ],
+      "sort_y": 2980.674,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-096",
+      "variant": 0,
+      "position": [
+        561.028,
+        2980.674
+      ],
+      "size": [
+        277.924,
+        496.18
+      ],
+      "sort_y": 2980.674,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-099",
+      "variant": 1,
+      "position": [
+        1118.459,
+        2980.674
+      ],
+      "size": [
+        277.924,
+        496.18
+      ],
+      "sort_y": 2980.674,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-102",
+      "variant": 0,
+      "position": [
+        1675.89,
+        2980.674
+      ],
+      "size": [
+        277.924,
+        496.18
+      ],
+      "sort_y": 2980.674,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-105",
+      "variant": 1,
+      "position": [
+        2229.725,
+        2980.674
+      ],
+      "size": [
+        277.924,
+        496.18
+      ],
+      "sort_y": 2980.674,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-094",
+      "variant": 0,
+      "position": [
+        233.761,
+        3048.989
+      ],
+      "size": [
+        185.283,
+        330.787
+      ],
+      "sort_y": 3048.989,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-097",
+      "variant": 1,
+      "position": [
+        776.807,
+        3048.989
+      ],
+      "size": [
+        185.283,
+        330.787
+      ],
+      "sort_y": 3048.989,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-100",
+      "variant": 0,
+      "position": [
+        1330.642,
+        3048.989
+      ],
+      "size": [
+        185.283,
+        330.787
+      ],
+      "sort_y": 3048.989,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-103",
+      "variant": 1,
+      "position": [
+        1888.073,
+        3048.989
+      ],
+      "size": [
+        185.283,
+        330.787
+      ],
+      "sort_y": 3048.989,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    },
+    {
+      "id": "pine-106",
+      "variant": 0,
+      "position": [
+        2438.312,
+        3048.989
+      ],
+      "size": [
+        185.283,
+        330.787
+      ],
+      "sort_y": 3048.989,
+      "layer": "props",
+      "occlusionClass": "tall",
+      "collision_source": "既有关卡forest权威格，未按PNG矩形新增碰撞"
+    }
+  ],
+  "placement_reference": "source/user-reference.png",
+  "note": "树木独立对象；参考图轮廓手工编排，不宣称逐棵逐像素复制"
+}

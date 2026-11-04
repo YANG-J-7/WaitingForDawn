@@ -169,5 +169,6 @@ func _on_engaged_enemy_died(_enemy: EnemyActor) -> void:
 func _draw() -> void:
 	if definition != null and current_health > 0:
 		var health_ratio: float = float(current_health) / float(definition.maximum_health)
-		draw_rect(Rect2(-13.0, -62.0, 26.0, 3.0), Color("2b1d25"))
-		draw_rect(Rect2(-13.0, -62.0, 26.0 * health_ratio, 3.0), Color("7ecf75"))
+		var head_y: float = -preload("res://src/gameplay/art/world_art_scale.gd").height_for("guard",25.0)-7.0
+		draw_rect(Rect2(-13.0, head_y, 26.0, 3.0), Color("2b1d25"))
+		draw_rect(Rect2(-13.0, head_y, 26.0 * health_ratio, 3.0), Color("7ecf75"))

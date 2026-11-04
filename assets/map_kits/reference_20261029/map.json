@@ -1,0 +1,454 @@
+{
+  "version": 1,
+  "world_size": [
+    7056,
+    2880
+  ],
+  "reference_size": [
+    1962,
+    801
+  ],
+  "foundation": "terrain.png",
+  "foundation_prompt": "source/foundation.prompt.txt",
+  "gameplay_geometry": "assets/levels/level_001/*.json",
+  "patches": [
+    {
+      "id": "mountain-west",
+      "file": "mountain-west.png",
+      "world_rect": [
+        3488.440366972477,
+        0.0,
+        1438.532110091743,
+        988.7640449438202
+      ],
+      "native_size": [
+        1512,
+        1040
+      ],
+      "source": "assets/map_kits/reference_20261029/source/mountain-west.png",
+      "prompt": "source/region-redraw.prompt.txt"
+    },
+    {
+      "id": "mountain-north",
+      "file": "mountain-north.png",
+      "world_rect": [
+        4675.229357798165,
+        0.0,
+        1438.532110091743,
+        988.7640449438202
+      ],
+      "native_size": [
+        1512,
+        1040
+      ],
+      "source": "assets/map_kits/reference_20261029/source/mountain-north.png",
+      "prompt": "source/region-redraw.prompt.txt"
+    },
+    {
+      "id": "mountain-east",
+      "file": "mountain-east.png",
+      "world_rect": [
+        5862.018348623853,
+        0.0,
+        1193.9816513761468,
+        988.7640449438202
+      ],
+      "native_size": [
+        1378,
+        1141
+      ],
+      "source": "assets/map_kits/reference_20261029/source/mountain-east.png",
+      "prompt": "source/region-redraw.prompt.txt"
+    },
+    {
+      "id": "mountain-southeast",
+      "file": "mountain-southeast.png",
+      "world_rect": [
+        4747.155963302752,
+        791.0112359550562,
+        1438.532110091743,
+        988.7640449438202
+      ],
+      "native_size": [
+        1512,
+        1040
+      ],
+      "source": "assets/map_kits/reference_20261029/source/mountain-southeast.png",
+      "prompt": "source/region-redraw.prompt.txt"
+    },
+    {
+      "id": "peninsula",
+      "file": "peninsula.png",
+      "world_rect": [
+        5897.981651376147,
+        826.9662921348314,
+        1158.0183486238532,
+        1078.6516853932585
+      ],
+      "native_size": [
+        1299,
+        1211
+      ],
+      "source": "assets/map_kits/reference_20261029/source/peninsula.png",
+      "prompt": "source/region-redraw.prompt.txt"
+    },
+    {
+      "id": "shore-middle",
+      "file": "shore-middle.png",
+      "world_rect": [
+        4423.48623853211,
+        1510.112359550562,
+        1438.532110091743,
+        988.7640449438202
+      ],
+      "native_size": [
+        1512,
+        1040
+      ],
+      "source": "assets/map_kits/reference_20261029/source/shore-middle.png",
+      "prompt": "source/shore-middle.prompt.txt"
+    },
+    {
+      "id": "shore-south",
+      "file": "shore-south.png",
+      "world_rect": [
+        3776.146788990826,
+        2157.303370786517,
+        1618.348623853211,
+        722.6966292134831
+      ],
+      "native_size": [
+        1877,
+        838
+      ],
+      "source": "assets/map_kits/reference_20261029/source/shore-south.png",
+      "prompt": "source/region-redraw.prompt.txt"
+    },
+    {
+      "id": "cliff-detail",
+      "file": "cliff-detail.png",
+      "world_rect": [
+        3740.183486238532,
+        395.5056179775281,
+        1654.3119266055046,
+        1078.6516853932585
+      ],
+      "native_size": [
+        1551,
+        1014
+      ],
+      "source": "assets/map_kits/reference_20261029/source/cliff-detail.png",
+      "prompt": "source/cliff-detail.prompt.txt"
+    }
+  ],
+  "grass_world_size": [
+    156,
+    156
+  ],
+  "water_world_size": [
+    192,
+    128
+  ],
+  "missing_regions": [],
+  "files": {
+    "cliff-detail.png": {
+      "size": [
+        1551,
+        1014
+      ],
+      "sha256": "45b626d3497368d21b079e42baa7d09299effa44a817de2d236c1f6fd1025af2"
+    },
+    "grass-detail-low.png": {
+      "size": [
+        1254,
+        1254
+      ],
+      "sha256": "7b147b8930de455cf210e4c83ae6cfa97a47fb1d70930a6204e6fca89f4bceb3"
+    },
+    "grass-detail.png": {
+      "size": [
+        1254,
+        1254
+      ],
+      "sha256": "0657c97bc39239b1073b017b6cc240dd1bc553673d651e485d73f5f59658299c"
+    },
+    "mountain-east.png": {
+      "size": [
+        1378,
+        1141
+      ],
+      "sha256": "941ed6c4ebc1449a68b52b00fbba71ece6824f1c30823fd4142c7d378e5bb044"
+    },
+    "mountain-north.png": {
+      "size": [
+        1512,
+        1040
+      ],
+      "sha256": "fc11b28343fac8284dc9eb028d2b3557fa872f1957b7cfd9898fb0af768391e9"
+    },
+    "mountain-southeast.png": {
+      "size": [
+        1512,
+        1040
+      ],
+      "sha256": "7c66e1891b643781559d92566c3028ccca396e5b31b353ce06a0a8d22a03c2ca"
+    },
+    "mountain-west.png": {
+      "size": [
+        1512,
+        1040
+      ],
+      "sha256": "3b2cfbbe3f63c86749fba2b156679a931c26c6b2671bc48a9aa8f8c9b389c02f"
+    },
+    "peninsula.png": {
+      "size": [
+        1299,
+        1211
+      ],
+      "sha256": "f6ea1c31863a2d1188e75cc04b9ade68c7dd8a367cbd3a65aeb3fd1a2a3961b8"
+    },
+    "region-mask.png": {
+      "size": [
+        1962,
+        801
+      ],
+      "sha256": "dc8211d308f10e4886942696ef96b3f9fb851092d6764047babab6063b413d9f"
+    },
+    "shore-middle.png": {
+      "size": [
+        1512,
+        1040
+      ],
+      "sha256": "8272e6b8d504b20269ee82df0ec730b8f103559f2d79bca72320f8e33dc370da"
+    },
+    "shore-south.png": {
+      "size": [
+        1877,
+        838
+      ],
+      "sha256": "1fb87e0680aab3aa82265b6cf46d15e2a8a9f80ab2dad0dd939de4d16af3c6a7"
+    },
+    "terrain-low.png": {
+      "size": [
+        1962,
+        801
+      ],
+      "sha256": "57b064bc6ff5ca5164796cbeee2223285949b63d92a0f081592bbad1b1565152"
+    },
+    "terrain.png": {
+      "size": [
+        1960,
+        800
+      ],
+      "sha256": "f0077e32a64ee278662febbdafa5fa58aaf797bd626090edc9d2b63329850af1"
+    },
+    "water-detail-low.png": {
+      "size": [
+        1536,
+        1024
+      ],
+      "sha256": "015397ec3b619499cd896a8b2bcfd013ed6c7ae51c149a52905ce68f516b7905"
+    },
+    "water-detail.png": {
+      "size": [
+        1536,
+        1024
+      ],
+      "sha256": "e3bbbdef2973fe6b045861821074d687be2cd515ab28000c4a60ac494e9fac64"
+    }
+  },
+  "generation_source": "builtin_imagegen",
+  "derived_control_files": {
+    "region-mask.png": "2026-11-02美术区域遮罩，不是生成美术或玩法碰撞",
+    "terrain-low.png": "foundation低频底色，不提供新增结构细节"
+  },
+  "source_files": {
+    "cliff-detail-reference.png": {
+      "size": [
+        460,
+        300
+      ],
+      "sha256": "6a11c2ce40bcb2745e6077d7f945ebbf9c75cdcc9ab0f1a44e55be445d2f7916"
+    },
+    "cliff-detail.png": {
+      "size": [
+        1551,
+        1014
+      ],
+      "sha256": "31b6183e89dfd64133ed95902a0b457ecf057c70a5dca8c6264b327dd1a9ae88"
+    },
+    "foundation.png": {
+      "size": [
+        1964,
+        801
+      ],
+      "sha256": "cb5f14e88619df7d1a55c31f75b896b15cf63990a19558e072eaa051866872bb"
+    },
+    "grass-detail.png": {
+      "size": [
+        1254,
+        1254
+      ],
+      "sha256": "5d35f7a70489d6e42a2e994a628f7771b2d0366961b6bd328dabe2dd4481e109"
+    },
+    "grass-from-generated.png": {
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "44468a9c6058bc3698f704641c4295dcf1fb15f03fdcd0f31244e6f53ccbd659"
+    },
+    "grass-reference.png": {
+      "size": [
+        240,
+        160
+      ],
+      "sha256": "10266fbefb6c0b10a823f7191685d6a9387c9319aac8f44d07d5ae0a70ec784b"
+    },
+    "mountain-east-reference.png": {
+      "size": [
+        332,
+        275
+      ],
+      "sha256": "9177f47de36d182f741dfa921144d26527c587b3efb5d4651e61c7d4ed13286e"
+    },
+    "mountain-east.png": {
+      "size": [
+        1378,
+        1141
+      ],
+      "sha256": "da6ba2ea7a4b6dc7cc4edef767c6c60e1fffb2d19a62b5bd071284af1590d6ec"
+    },
+    "mountain-north-reference.png": {
+      "size": [
+        400,
+        275
+      ],
+      "sha256": "4db6ccc115d7a141ce032e0b3b34a232a6effe3eaafe1c2a99a49ccc29c97616"
+    },
+    "mountain-north.png": {
+      "size": [
+        1512,
+        1040
+      ],
+      "sha256": "0c0244e5f82ff2f2e9816977746fdd5454e4580e68b74b32e825338323a2c535"
+    },
+    "mountain-southeast-reference.png": {
+      "size": [
+        400,
+        275
+      ],
+      "sha256": "6323ae360b9a3d450e0f3655531a9e1d666bee857e691cb357f234510f90d899"
+    },
+    "mountain-southeast.png": {
+      "size": [
+        1512,
+        1040
+      ],
+      "sha256": "14ac7707490485feaa74065e59762405cdd4c7057458fd50d26e745a29616bf8"
+    },
+    "mountain-southwest-reference.png": {
+      "size": [
+        400,
+        275
+      ],
+      "sha256": "f1226c76d0a7b658ea9ebb8dc2d7603df6c7920608baf271e7666f337263230e"
+    },
+    "mountain-west-reference.png": {
+      "size": [
+        400,
+        275
+      ],
+      "sha256": "7cd3bbf05e058875db8b4d0aaf3de051d50aedee7952e131aa55a1ec7b58040b"
+    },
+    "mountain-west.png": {
+      "size": [
+        1512,
+        1040
+      ],
+      "sha256": "f9a5fd0eb61e7c96974c53f8aa661e0e704e267ab63549bfa20f51bf8c17a3f9"
+    },
+    "peninsula-reference.png": {
+      "size": [
+        322,
+        300
+      ],
+      "sha256": "37764b464f645c93387ea9e3f605e5ffe5c2e92a6064277ab546a9277b6d83b8"
+    },
+    "peninsula.png": {
+      "size": [
+        1299,
+        1211
+      ],
+      "sha256": "122d3b98beda00bf9a4342c1259621bf45a09ce1850d8551a989a1f20e6029e7"
+    },
+    "rock-from-generated.png": {
+      "size": [
+        512,
+        512
+      ],
+      "sha256": "ee6848d635ebfbf1fbad65322b8b8b7b59e7e71a5d3280067073a688db834c04"
+    },
+    "shore-east-reference.png": {
+      "size": [
+        402,
+        300
+      ],
+      "sha256": "e1998be9c25651c6171019698e2e9a5f0ab5f3e6dbc73e96306c0f7dcf15618d"
+    },
+    "shore-middle-reference.png": {
+      "size": [
+        400,
+        275
+      ],
+      "sha256": "a203dccd945ccff14d70c2c487f8e924849c0e7873784385bf73aca9c148f563"
+    },
+    "shore-middle.png": {
+      "size": [
+        1512,
+        1040
+      ],
+      "sha256": "a0d8551a5532461d4ac92e20e892e5fb005a800a23f208298f4e91e60e1d6d9a"
+    },
+    "shore-south-reference.png": {
+      "size": [
+        450,
+        201
+      ],
+      "sha256": "dc4f15ae859e49c1d3858233c4a2eec85fac6538c7fae170c4fafff3850c1e73"
+    },
+    "shore-south.png": {
+      "size": [
+        1877,
+        838
+      ],
+      "sha256": "4854b5a5477ec2ca413c86e69de1ae8553442195e88536d10bf4513cbed5d07b"
+    },
+    "user-reference.png": {
+      "size": [
+        1962,
+        801
+      ],
+      "sha256": "9a8f0cb364666cfa3388eb1a56f633342abec331d5c8d15ee736bc4d475cb1ba"
+    },
+    "water-detail.png": {
+      "size": [
+        1536,
+        1024
+      ],
+      "sha256": "b329ec1433663267e6a82d0a03aba6cf05716d028dca92a070b85c77cc808c11"
+    },
+    "water-reference.png": {
+      "size": [
+        240,
+        160
+      ],
+      "sha256": "b81b681f471dd747cc445e5bbec99cf927a600b7741eb42ba5ab9766c8aeca16"
+    }
+  },
+  "retained_geometry_note": "玩法数据沿用独立36格；美术重绘不代表逐像素碰撞已重新人工验收",
+  "covered_alternatives": {
+    "mountain-southwest": "cliff-detail与相邻山片覆盖",
+    "shore-east": "peninsula/shore-middle与独立水面材质覆盖"
+  }
+}
