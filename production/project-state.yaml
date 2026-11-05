@@ -2,5 +2,5 @@ version: 1
 stage: production
 engine: godot-4.7-development-validation
 updated: 2026-11-05
-current_goal: "Story-035可读性修订候选待实景复核；按用户要求撤回1.4/1.35试调，最大缩放/近景恢复0.45，建设0.36、布防0.24保持。恢复后地图59项、四画幅镜头GL65及结构/差异检查通过；全量1689项及阴影专项为此前基线，本轮未重复。下一步在原视距复核手感与贴地强度，原地图/导航/性能/长局待办保持。"
+current_goal: "Story-035建筑和单位影修订已接入。建筑去除重复接触影和固定椭圆，单位改用单一道更深的贴脚短影。全量42组1689项、逐对象GL60项、四画幅GL62项及结构/差异检查通过。下一步复核新投影观感，再推进精细遮挡和局部光源扩展。"
 active_story: "production/stories/story-035-global-world-lighting.md"

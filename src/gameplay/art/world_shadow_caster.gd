@@ -6,6 +6,8 @@ var anchor: Node2D
 var strength: float = 1.0
 var length_scale: float = 1.0
 var contact_strength: float = 1.0
+## 非零时在光线的横向轴上调整轮廓宽度，投影以地面锚点为原点。
+var directional_projection_width: float = 0.0
 static var contact_profiles: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://src/data/ground_contacts.json"))
 var _contact_cache: Array[Rect2] = []
 var _contact_transform := Transform2D()
@@ -53,12 +55,13 @@ func ground_contacts() -> Array[Rect2]:
 		result.append(Rect2(center-size*0.5,size))
 	return result
 var system: Node2D
-var legacy_shadow: CanvasItem
+var legacy_shadows: Array[CanvasItem] = []
 var _cached_points := PackedVector2Array()
 var _last_transform := Transform2D()
 var _last_foot := Vector2(INF,INF)
 var _last_direction := Vector2(INF,INF)
 var _last_length: float = -1.0
+var _last_projection_width: float = -1.0
 var _last_rect := Rect2()
 var _cached_uvs := PackedVector2Array()
 var _last_region := Rect2()
@@ -85,7 +88,8 @@ func _register() -> void:
 		if candidate.scope != null and candidate.scope.is_ancestor_of(self) and source.get_canvas() == candidate.get_canvas() and source.get_viewport() == candidate.get_viewport():
 			system = candidate
 			system.register_caster(self)
-			if is_instance_valid(legacy_shadow): system.register_legacy_shadow(legacy_shadow)
+			for shadow in legacy_shadows:
+				if is_instance_valid(shadow): system.register_legacy_shadow(shadow)
 			return
 
 func _exit_tree() -> void:
@@ -95,17 +99,23 @@ func projected_points(direction: Vector2, length_ratio: float) -> PackedVector2A
 	var rect := source.get_rect()
 	var foot := anchor.global_position
 	var transform := source.global_transform
-	if _cached_points.size() == 4 and transform == _last_transform and foot == _last_foot and direction == _last_direction and length_ratio == _last_length and rect == _last_rect:
+	if _cached_points.size() == 4 and transform == _last_transform and foot == _last_foot and direction == _last_direction and length_ratio == _last_length and rect == _last_rect and directional_projection_width == _last_projection_width:
 		return _cached_points
 	_last_transform = transform
 	_last_foot = foot
 	_last_direction = direction
 	_last_length = length_ratio
+	_last_projection_width = directional_projection_width
 	_last_rect = rect
 	_cached_points = PackedVector2Array()
+	var across := Vector2(direction.y,-direction.x).normalized()*directional_projection_width
 	for corner in [rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y)]:
 		var world: Vector2 = source.to_global(corner)
 		var height := maxf(0.0, foot.y - world.y)
+		if not across.is_zero_approx():
+			# 轮廓在地面上沿主光方向展开，根部保持在锚点。
+			_cached_points.append(foot + across*(world.x-foot.x) + direction*height*length_ratio)
+			continue
 		# 脚点不漂移；保留少量纵深，防止宽矮物件的影子退化成一条线。
 		_cached_points.append(Vector2(world.x, foot.y + (world.y-foot.y)*0.12) + direction*height*length_ratio)
 	return _cached_points

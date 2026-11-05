@@ -3,9 +3,11 @@ extends Node
 var main: Node2D
 var status: Label
 var mode: int = 1
+var terrain_lamp: WorldLightEmitter
+var terrain_lamp_button: Button
 
 func _ready() -> void:
-	get_window().title = "Waiting for Dawn · 接触影与短投影修订版 · F6切换原图/夜间/黎明 · M全图 Home回城"
+	get_window().title = "Waiting for Dawn · 地形受光预览 · F6切换原图/夜间/黎明 · M全图 Home回城"
 	main = preload("res://src/main/main.tscn").instantiate()
 	add_child(main)
 	main._on_start_pressed()
@@ -44,12 +46,27 @@ func _ready() -> void:
 		button.text = ["原画面对比","夜间光影","黎明光影"][index]
 		button.pressed.connect(_set_mode.bind(index))
 		panel.add_child(button)
+	terrain_lamp = WorldLightEmitter.new()
+	terrain_lamp.radius = 240.0
+	terrain_lamp.base_energy = 0.65
+	terrain_lamp.flicker_amount = 0.0
+	terrain_lamp.hide()
+	main.add_child(terrain_lamp)
+	terrain_lamp_button = Button.new()
+	terrain_lamp_button.text = "地形试灯"
+	terrain_lamp_button.toggle_mode = true
+	panel.add_child(terrain_lamp_button)
 	status = Label.new()
 	panel.add_child(status)
 	_set_mode(1)
 	await get_tree().process_frame
 	main._update_map_view_rect()
 	main.map_camera.set_view_level(&"detail")
+
+func _process(_delta: float) -> void:
+	if terrain_lamp_button == null: return
+	terrain_lamp.visible = terrain_lamp_button.button_pressed and mode != 0 and main.map_view_rect().has_point(get_viewport().get_mouse_position())
+	if terrain_lamp.visible: terrain_lamp.global_position = main.get_global_mouse_position()
 
 func _set_mode(value: int) -> void:
 	mode = value

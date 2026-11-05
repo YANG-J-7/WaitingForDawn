@@ -64,12 +64,12 @@ func _ready() -> void:
 	window_material.shader = WINDOW_SHADER
 	body.material = window_material
 	var caster = preload("res://src/gameplay/art/world_shadow_caster.gd").attach(body,self)
-	# 大建筑单独控制投影包络，避免加深全局影子后把整片院前压成黑毯。
-	caster.strength = 0.72
+	# 大建筑控制投影包络，暗部集中在背光侧地面。
+	caster.strength = 0.90
 	caster.length_scale = 0.76
-	# 主城已经有独立墙脚接触带，避免再叠一层通用椭圆。
+	caster.directional_projection_width = 0.78
 	caster.contact_strength = 0.0
-	caster.legacy_shadow = cast
+	caster.legacy_shadows.assign([cast,contact])
 	for kind in ["flag", "flame", "smoke"]:
 		var frames: Array[Texture2D] = []
 		for index in range(4):

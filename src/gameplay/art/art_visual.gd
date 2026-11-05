@@ -11,7 +11,14 @@ var elapsed: float = 0.0
 var phase_offset: float = 0.0
 
 func _ready() -> void:
-	preload("res://src/gameplay/art/world_shadow_caster.gd").attach(self, get_parent() as Node2D)
+	var caster := WorldShadowCaster.attach(self, get_parent() as Node2D) as WorldShadowCaster
+	for sibling in get_parent().get_children():
+		if sibling is BuildingGrounding:
+			# 通过地基组件识别建筑，建造与重建走同一规则。
+			caster.contact_strength = 0.0
+			caster.directional_projection_width = 0.78
+			caster.strength = 1.25
+			break
 
 
 func configure(asset_name: String, display_size: Vector2, kind: StringName = &"still") -> void:

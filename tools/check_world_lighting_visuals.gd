@@ -1,6 +1,6 @@
 extends Node
 ## 真实GL验证：原画面/夜间/黎明、局部灯照明、HUD隔离、多画幅与受控压力。
-const OUT := "res://tests/reports/images/world-lighting-readable-2026-11-05/"
+const OUT := "res://tests/reports/images/building-unit-shadow-2026-11-05/"
 var failures := 0
 var metrics := {}
 var view: SubViewport
@@ -38,6 +38,14 @@ func _ready() -> void:
 	main.map_camera.set_view_level(&"detail")
 	var system = main.world_lighting
 	system.profile = system.profile.duplicate()
+	if "--forest-only" in OS.get_cmdline_user_args():
+		await check_forest_shadows()
+		get_tree().quit(failures)
+		return
+	await check_terrain_response()
+	if "--terrain-only" in OS.get_cmdline_user_args():
+		get_tree().quit(failures)
+		return
 	for dimensions in [Vector2i(1280,720),Vector2i(1024,768),Vector2i(2560,1080),Vector2i(3840,2160)]:
 		view.size = dimensions
 		view.size_2d_override = Vector2i(1024,768) if dimensions.x == 1024 else (Vector2i(1280,540) if dimensions.x == 2560 else Vector2i(960,540))
@@ -127,6 +135,96 @@ func _ready() -> void:
 	view.queue_free()
 	await get_tree().process_frame
 	get_tree().quit(failures)
+
+func check_forest_shadows() -> void:
+	var forest := main.get_node("BorderForest")
+	var baseline := "--forest-baseline" in OS.get_cmdline_user_args()
+	if baseline:
+		# 用旧投影参数在同一镜头复现修订前画面。
+		for pine in forest.get_children():
+			var old_caster: WorldShadowCaster = pine.get_node("WorldShadowCaster")
+			old_caster.contact_strength = 1.0
+			old_caster.directional_projection_width = 0.0
+			old_caster.strength = 1.0
+	var tree: Sprite2D = forest.get_node("pine-057")
+	var caster: WorldShadowCaster = tree.get_node("WorldShadowCaster")
+	main.map_camera.focus_world(tree.global_position+Vector2(65,-85))
+	var normal := await shot("forest-before" if baseline else "forest-shadow")
+	var strength := caster.strength
+	var contact_strength := caster.contact_strength
+	caster.contact_strength = 0.0
+	var cast_only := await frame()
+	var foot := Vector2i(main.map_camera.get_canvas_transform()*tree.global_position*Vector2(view.size)/Vector2(view.size_2d_override))
+	var foot_strip := Rect2i(foot-Vector2i(35,4),Vector2i(70,12))
+	var strip_changes := count_changes(normal,cast_only,foot_strip)
+	check(strip_changes == 0,"树根区无额外横向接触影，隔离差异采样%d"%strip_changes)
+	caster.strength = 0.0
+	var without_cast := await shot("forest-before-without-sample-cast" if baseline else "forest-without-sample-cast")
+	var darkened := 0
+	for y in range(foot.y,foot.y+145):
+		for x in range(foot.x+8,foot.x+170):
+			var base := without_cast.get_pixel(x,y).v
+			var drop := base-cast_only.get_pixel(x,y).v
+			if drop > 0.025 and drop/maxf(base,0.01) >= 0.28: darkened += 1
+	check(darkened >= 300,"树冠方向投影保留至少300个可辨暗部像素，实际%d"%darkened)
+	var root_difference := max_difference(without_cast,cast_only,Rect2i(foot-Vector2i(5,1),Vector2i(11,5)))
+	check(root_difference > 0.025,"方向投影贴近树根%s，暗化%.3f"%[foot,root_difference])
+	caster.strength = strength
+	caster.contact_strength = contact_strength
+	view.size = Vector2i(3840,2160)
+	await frame()
+	await shot("forest-before-4k" if baseline else "forest-shadow-4k")
+
+func check_terrain_response() -> void:
+	var tile_layer: TileMapLayer = main.terrain_grid_layer.tile_layer
+	var receiver := tile_layer.material
+	var grid: GridMapModel = main.grid_map_model
+	var lamp := WorldLightEmitter.new()
+	lamp.radius = 240.0
+	lamp.base_energy = 0.65
+	lamp.flicker_amount = 0.0
+	lamp.hide()
+	main.add_child(lamp)
+	# 三类样点都取地图内连续区域，避免混入边缘羽化和主城灯火。
+	for sample in [[&"grass", Vector2(3520,1450), 0.9,1.1], [&"cliff",Vector2(5040,850),0.58,0.85], [&"water",Vector2(5810,2170),0.24,0.52]]:
+		var point := Vector2.INF
+		for cell in grid.cells_of_type(sample[0]):
+			var center := grid.cell_center(cell)
+			if center.distance_squared_to(sample[1]) >= point.distance_squared_to(sample[1]): continue
+			var interior := true
+			for offset in [Vector2i(-1,-1),Vector2i(1,-1),Vector2i(-1,1),Vector2i(1,1)]:
+				interior = interior and grid.cell_data(cell+offset).get("terrain_type") == sample[0]
+			if interior: point = center
+		check(point.is_finite(),"找到%s连续地形样点"%sample[0])
+		if not point.is_finite(): continue
+		main.map_camera.focus_world(point)
+		lamp.global_position = point
+		var screen: Vector2 = main.map_camera.get_canvas_transform()*point*Vector2(view.size)/Vector2(view.size_2d_override)
+		var patch := Rect2i(Vector2i(screen)-Vector2i(6,6),Vector2i(12,12))
+		tile_layer.material = null
+		lamp.hide()
+		var native_unlit := await frame()
+		lamp.show()
+		var native_lit := await frame()
+		tile_layer.material = receiver
+		var lit := await shot("surface-%s-lit"%sample[0])
+		lamp.hide()
+		var unlit := await shot("surface-%s-unlit"%sample[0])
+		check(max_difference(native_unlit,unlit,patch) <= 1.0/255.0,"%s关闭试灯时保留原地表像素"%sample[0])
+		var native_gain := mean_light_gain(native_unlit,native_lit,patch)
+		var gain := mean_light_gain(unlit,lit,patch)
+		var relative := gain/maxf(native_gain,0.0001)
+		check(native_gain > 2.0/255.0 and relative >= sample[2] and relative <= sample[3],"%s实景局部受光相对原生灯为%.2f，原生平均RGB增量%.3f"%[sample[0],relative,native_gain])
+	lamp.queue_free()
+	await get_tree().process_frame
+
+func mean_light_gain(unlit: Image,lit: Image,patch: Rect2i) -> float:
+	var gain := 0.0
+	for y in range(patch.position.y,patch.end.y):
+		for x in range(patch.position.x,patch.end.x):
+			var difference := lit.get_pixel(x,y)-unlit.get_pixel(x,y)
+			gain += difference.r+difference.g+difference.b
+	return gain/(3.0*float(patch.get_area()))
 
 func frame() -> Image:
 	await get_tree().process_frame

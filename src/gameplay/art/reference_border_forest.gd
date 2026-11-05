@@ -18,5 +18,9 @@ func configure(_runtime: RefCounted) -> void:
 		tree.offset = Vector2(0,-tree.texture.get_height()*.5)
 		tree.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		add_child(tree)
-		preload("res://src/gameplay/art/world_shadow_caster.gd").attach(tree)
+		var caster := WorldShadowCaster.attach(tree) as WorldShadowCaster
+		# 树根由同一道轮廓影接住，移除按宽树冠尺寸生成的横向接触影。
+		caster.contact_strength = 0.0
+		caster.directional_projection_width = 0.50
+		caster.strength = 1.20
 		tree_count += 1

@@ -1,6 +1,6 @@
 extends Node
 ## 逐个关闭投影取差图，验证实际农民/野狼/守卫在底座和草地上的可见性。
-const OUT := "res://tests/reports/images/world-lighting-zoom-1.4-2026-11-05/"
+const OUT := "res://tests/reports/images/building-unit-shadow-2026-11-05/"
 var failures := 0
 var view: SubViewport
 var main: Node2D
@@ -57,13 +57,20 @@ func _ready() -> void:
 		for child in sample.unit.get_children():
 			if child is ArtVisual: art = child
 		var caster = art.get_node("WorldShadowCaster")
+		var strength: float = caster.strength
 		check(caster.system == main.world_lighting,"%s实际单位已注册投影"%sample.id)
 		caster.strength = 0.0
 		var without := await frame()
-		caster.strength = 1.0
+		caster.strength = strength
 		var with_shadow := await frame()
-		var foot_contacts: Array[Rect2] = caster.ground_contacts()
-		check(foot_contacts.size() >= 2,"%s按各自鞋底或爪底生成接触影"%sample.id)
+		var contact_strength: float = caster.contact_strength
+		caster.contact_strength = 0.0
+		var only_cast := await frame()
+		var shadow_area := Rect2i(380,190,550,360)
+		check(not has_difference(with_shadow,only_cast,shadow_area),"%s没有额外叠加的独立黑影"%sample.id)
+		caster.contact_strength = contact_strength
+		var foot_contacts := visible_contact_edges(caster)
+		check(foot_contacts.size() >= 2,"%s具备鞋底或背光底缘检查点"%sample.id)
 		for contact in foot_contacts:
 			# 从素材原始鞋底出发检查，不能用已偏移的影子中心替代鞋底。
 			var sole := contact.get_center()-Vector2(0,contact.size.y*0.22)
@@ -75,7 +82,7 @@ func _ready() -> void:
 					if point.x<0 or point.x>=1280 or point.y<0 or point.y>=720: continue
 					var difference := without.get_pixelv(point)-with_shadow.get_pixelv(point)
 					if difference.r+difference.g+difference.b>0.018: joined = true
-			check(joined,"%s脚底下方3像素内有相连接触影"%sample.id)
+			check(joined,"%s脚底或背光底缘下方3像素内连接投影"%sample.id)
 		var dark_pixels := 0
 		var peak := 0.0
 		for y in range(80,560):
@@ -95,7 +102,7 @@ func _ready() -> void:
 		ground.hide()
 		caster.strength = 0.0
 		var no_floor_without := await frame()
-		caster.strength = 1.0
+		caster.strength = strength
 		var no_floor_with := await frame()
 		var expected := 0
 		var kept := 0
@@ -116,7 +123,7 @@ func _ready() -> void:
 		main.map_camera.focus_world(sample.unit.global_position)
 		caster.strength = 0.0
 		without = await frame()
-		caster.strength = 1.0
+		caster.strength = strength
 		with_shadow = await frame()
 		var changed := 0
 		for y in range(80,560,2):
@@ -130,7 +137,7 @@ func _ready() -> void:
 			main.map_camera.set_view_level(level)
 			caster.strength = 0.0
 			without = await frame()
-			caster.strength = 1.0
+			caster.strength = strength
 			with_shadow = await frame()
 			var screen_transform: Transform2D = Transform2D.IDENTITY.scaled(Vector2(1280.0/960.0,720.0/540.0))*main.map_camera.get_canvas_transform()*art.global_transform
 			var screen_bounds: Rect2 = screen_transform*art.get_rect()
@@ -149,7 +156,7 @@ func _ready() -> void:
 			var minimum := 0.18 if caster.is_grounded_actor() else 0.04
 			check(ratio >= minimum,"%s %s倍率下显著暗化面积达到实体框%.0f%%（实际%.1f%%）"%[sample.id,level,minimum*100.0,ratio*100.0])
 			var connected := true
-			for contact in caster.ground_contacts():
+			for contact in visible_contact_edges(caster):
 				var sole: Vector2 = contact.get_center()-Vector2(0,contact.size.y*0.22)
 				var screen: Vector2 = main.map_camera.get_canvas_transform()*sole*Vector2(1280.0/960.0,720.0/540.0)
 				var touching := 0
@@ -160,7 +167,7 @@ func _ready() -> void:
 						var delta := without.get_pixelv(pixel)-with_shadow.get_pixelv(pixel)
 						if delta.r+delta.g+delta.b > 0.018: touching += 1
 				connected = connected and touching >= 2
-			check(connected,"%s %s倍率下所有鞋底/基座同时贴合投影"%[sample.id,level])
+			check(connected,"%s %s倍率下鞋底或背光底缘贴合投影"%[sample.id,level])
 			if caster.is_grounded_actor(): check(ratio <= 0.65,"%s %s单位短影不扩成大块黑色包络"%[sample.id,level])
 			with_shadow.save_png(OUT+sample.id+"-"+str(level)+".png")
 			mask.save_png(OUT+sample.id+"-"+str(level)+"-mask.png")
@@ -172,6 +179,21 @@ func _ready() -> void:
 	var file := FileAccess.open(OUT+"unit-metrics.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(metrics,"\t"))
 	get_tree().quit(failures)
+
+func visible_contact_edges(caster: WorldShadowCaster) -> Array[Rect2]:
+	var contacts := caster.ground_contacts()
+	if caster.is_grounded_actor(): return contacts
+	# 单向投影从背光底缘伸出，迎光侧不再要求有一圈额外黑影。
+	var direction: Vector2 = main.world_lighting.profile.shadow_direction.normalized()
+	return contacts.filter(func(contact: Rect2) -> bool:
+		return (contact.get_center()-caster.anchor.global_position).dot(direction) >= -4.0
+	)
+
+func has_difference(a: Image,b: Image,area: Rect2i) -> bool:
+	for y in range(area.position.y,area.end.y,2):
+		for x in range(area.position.x,area.end.x,2):
+			if a.get_pixel(x,y) != b.get_pixel(x,y): return true
+	return false
 
 func frame() -> Image:
 	await get_tree().process_frame

@@ -173,8 +173,8 @@ func _actor_shadow_rect(caster: Node,contacts: Array[Rect2],direction: Vector2) 
 	var source: Sprite2D = caster.source
 	var body_size := source.get_rect().size*Vector2(source.global_transform.x.length(),source.global_transform.y.length())
 	var reach: float = body_size.y*0.30*caster.length_scale
-	var center := bounds.get_center()+direction*reach*0.7
-	var size := Vector2(maxf(body_size.x*1.05,bounds.size.x+reach),maxf(body_size.y*0.38,bounds.size.y+reach*0.65))
+	var center := bounds.get_center()+direction*reach*0.42
+	var size := Vector2(maxf(body_size.x*1.05,bounds.size.x+reach),maxf(body_size.y*0.40,bounds.size.y+reach*0.85))
 	return Rect2(center-size*0.5,size)
 
 func _draw_ground_shadows(layer: Node2D) -> void:
@@ -187,15 +187,17 @@ func _draw_ground_shadows(layer: Node2D) -> void:
 		if caster == null or not is_instance_valid(caster.source): continue
 		var source: Sprite2D = caster.source
 		if source.texture == null or not source.is_visible_in_tree(): continue
+		if caster.contact_strength <= 0.0 and not caster.is_grounded_actor(): continue
 		var contacts: Array[Rect2] = caster.ground_contacts()
 		if contacts.is_empty(): continue
 		var tint: Color = profile.shadow_color
 		if caster.is_grounded_actor():
-			# 合并足迹形成可辨识的短投影，各脚仍有独立接触核心，保留前后脚透视。
+			# 让一道短影同时覆盖各脚接触范围，减少独立暗块叠加。
 			var footprint := _actor_shadow_rect(caster,contacts,direction)
 			if not footprint.intersects(view): continue
 			tint.a = profile.actor_shadow_opacity*caster.strength*source.modulate.a*lerpf(1.0,0.8,dawn_blend)
 			layer.draw_texture_rect(contact_texture,footprint,false,tint)
+			continue
 		if caster.contact_strength <= 0.0: continue
 		tint.a = profile.contact_opacity*caster.strength*caster.contact_strength*source.modulate.a
 		for contact in contacts:

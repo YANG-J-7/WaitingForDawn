@@ -11,6 +11,8 @@ extends Resource
 @export var terrain_tiles: PackedScene
 @export var show_resource_forests: bool = true
 @export var lighting_profile: Resource = preload("res://src/gameplay/art/world_lighting_profile.gd").new()
+## 可选的全图受光遮罩，红色为岩壁、绿色为水域，空缺时从关卡地形格生成。
+@export var terrain_light_mask: Texture2D
 @export var source_size := Vector2(1672,941)
 @export var source_world_size := Vector2(4608,2592)
 @export var source_world_origin := Vector2(2448,288)

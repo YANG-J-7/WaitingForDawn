@@ -64,7 +64,7 @@ func _ready() -> void:
 			main.map_camera.focus_world(Vector2(5100,1200))
 			shot=await frame(view)
 			check(shot.save_png(OUT+"%dx%d-medium-%.2f.png"%[resolution.x,resolution.y,zoom_level])==OK,"保存中远景反馈复现")
-		check(main.terrain_grid_layer.tile_layer.material==null,"原图直接绘制，无额外草地材质")
+		check(main.terrain_grid_layer.parts.size()==1 and main.terrain_grid_layer.detail_patches.is_empty(),"原图仍为单一地表层，无额外草地覆盖")
 		main.map_camera.zoom_at(100.0,main.map_view_rect().get_center())
 		check(is_equal_approx(main.map_camera.zoom.x,.45),"真实滚轮最大视野与用户截图校准")
 	# 全图扫描，避免仅主城附近正常却遗漏边界残影。
