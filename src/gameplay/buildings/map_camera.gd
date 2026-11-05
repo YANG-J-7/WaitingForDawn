@@ -4,7 +4,7 @@ const Layout = preload("res://src/gameplay/buildings/map_layout.gd")
 const MOUSE_DRAG_THRESHOLD: float = 6.0
 @export var default_zoom: float = 1.0 / 3.0
 @export var minimum_zoom: float = 1.0 / 3.0
-## 按用户截图中小地图视野框约30%图宽校准：960/(7056×0.30)≈0.45。
+## 用户指定最大放大倍率为0.45，近景档与上限保持一致。
 @export var maximum_zoom: float = 0.45
 @export var defense_zoom: float = 0.24
 @export var build_zoom: float = 0.36

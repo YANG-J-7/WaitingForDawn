@@ -10,6 +10,9 @@ var animation_kind: StringName = &"still"
 var elapsed: float = 0.0
 var phase_offset: float = 0.0
 
+func _ready() -> void:
+	preload("res://src/gameplay/art/world_shadow_caster.gd").attach(self, get_parent() as Node2D)
+
 
 func configure(asset_name: String, display_size: Vector2, kind: StringName = &"still") -> void:
 	configure_path(ROOT + asset_name + ".png", display_size, kind, asset_name)
@@ -72,10 +75,11 @@ func _process(delta: float) -> void:
 		&"sway":
 			rotation = wave * 0.025
 		&"walk":
-			position.y = sin(elapsed * 10.0 + phase_offset) * 1.5
+			# 脚点保持落地，只保留绕脚点的轻微摆动。
+			position.y = 0.0
 			rotation = sin(elapsed * 5.0 + phase_offset) * 0.035
 		&"wolf":
-			position.y = sin(elapsed * 12.0 + phase_offset) * 1.2
+			position.y = 0.0
 			scale = base_scale * Vector2(1.0 + wave * 0.025, 1.0 - wave * 0.025)
 		&"fire":
 			modulate = Color(1.0, 0.93 + 0.07 * wave, 0.78 + 0.18 * wave, 1.0)

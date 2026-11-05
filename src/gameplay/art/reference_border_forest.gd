@@ -18,4 +18,5 @@ func configure(_runtime: RefCounted) -> void:
 		tree.offset = Vector2(0,-tree.texture.get_height()*.5)
 		tree.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		add_child(tree)
+		preload("res://src/gameplay/art/world_shadow_caster.gd").attach(tree)
 		tree_count += 1

@@ -23,6 +23,7 @@ var animation_time := 0.0
 var animation_frame := 0
 var frame_sets: Dictionary = {}
 var window_material: ShaderMaterial
+var local_lights: Array[PointLight2D] = []
 
 
 func _ready() -> void:
@@ -62,6 +63,13 @@ func _ready() -> void:
 	window_material = ShaderMaterial.new()
 	window_material.shader = WINDOW_SHADER
 	body.material = window_material
+	var caster = preload("res://src/gameplay/art/world_shadow_caster.gd").attach(body,self)
+	# 大建筑单独控制投影包络，避免加深全局影子后把整片院前压成黑毯。
+	caster.strength = 0.72
+	caster.length_scale = 0.76
+	# 主城已经有独立墙脚接触带，避免再叠一层通用椭圆。
+	caster.contact_strength = 0.0
+	caster.legacy_shadow = cast
 	for kind in ["flag", "flame", "smoke"]:
 		var frames: Array[Texture2D] = []
 		for index in range(4):
@@ -71,6 +79,11 @@ func _ready() -> void:
 	flag.name = "Flag"
 	fire_left = _effect("flame", data.anchors.fire_left, Vector2(128, 232), 0.085)
 	fire_right = _effect("flame", data.anchors.fire_right, Vector2(128, 232), 0.085)
+	for flame in [fire_left,fire_right]:
+		var light := preload("res://src/gameplay/art/world_light_emitter.gd").new()
+		light.position = flame.position + Vector2(128,232)*flame.scale
+		add_child(light)
+		local_lights.append(light)
 	smoke = _effect("smoke", data.anchors.smoke, Vector2(128, 232), 0.40)
 	smoke_next = _effect("smoke", data.anchors.smoke, Vector2(128, 232), 0.40)
 	smoke.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
@@ -153,6 +166,7 @@ func _on_health_changed(current: int, _maximum: int) -> void:
 	var alive := current > 0
 	for effect in [flag, fire_left, fire_right, smoke, smoke_next]:
 		effect.visible = alive
+	for light in local_lights: light.visible = alive
 
 
 func _exit_tree() -> void:

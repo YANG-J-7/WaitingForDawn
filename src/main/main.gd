@@ -21,6 +21,7 @@ var grid_map_model: RefCounted = GridMapModelScript.new()
 var grid_pathfinder: RefCounted = GridPathfinderScript.new(grid_map_model)
 var terrain_grid_layer: Node2D
 var hud_reference: Node
+var world_lighting: Node2D
 
 const COLOR_NIGHT := Color("101827")
 const COLOR_GRID := Color("1b2b3d")
@@ -137,6 +138,13 @@ func _ready() -> void:
 	terrain_grid_layer.configure(grid_map_model, map_runtime)
 	add_child(terrain_grid_layer)
 	move_child(terrain_grid_layer, 0)
+	world_lighting = preload("res://src/gameplay/art/world_lighting.gd").new()
+	world_lighting.name = "WorldLighting"
+	world_lighting.scope = self
+	if level_definition.lighting_profile != null:
+		world_lighting.profile = level_definition.lighting_profile
+	# 地表、地面贴花、全局投影与主体分别排序，单位影子不能被院前地面盖住。
+	add_child(world_lighting)
 	# 路面和石阶属于新地形美术；这里只保留路网层节点，不叠旧图道路。
 	var mountain_roads := Node2D.new()
 	mountain_roads.name = "MountainRoadLayer"
