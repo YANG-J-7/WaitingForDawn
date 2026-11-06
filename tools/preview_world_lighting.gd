@@ -5,15 +5,17 @@ var status: Label
 var mode: int = 1
 var terrain_lamp: WorldLightEmitter
 var terrain_lamp_button: Button
+var time_slider: HSlider
 
 func _ready() -> void:
-	get_window().title = "Waiting for Dawn · 地形受光预览 · F6切换原图/夜间/黎明 · M全图 Home回城"
+	get_window().title = "Waiting for Dawn · 地图无阴影预览 · F6切换光照 · M全图 Home回城"
 	main = preload("res://src/main/main.tscn").instantiate()
 	add_child(main)
 	main._on_start_pressed()
 	main.opening_draft.set_countdown_paused(true)
 	for index in [0,1,3,4]: main.card_buttons[index].pressed.emit()
 	main.ready_button.pressed.emit()
+	main.notice_panel.hide()
 	main.set_process(false)
 	main.wave_controller.set_process(false)
 	main.farmer_manager.set_process(false)
@@ -24,7 +26,7 @@ func _ready() -> void:
 	for unit in get_tree().get_nodes_in_group(&"map_units"):
 		unit.set_process(false)
 		unit.set_physics_process(false)
-	# 仅预览的真实单位样本，冻结AI且不接入战斗/经济，便于比较三类单位的影子。
+	# 冻结预览样本，便于观察地图与实体在同一光照下的画面。
 	for entry in [
 		[preload("res://src/gameplay/defenses/barracks_guard.gd"),Vector2(-360,230)],
 		[preload("res://src/gameplay/enemies/enemy.gd"),Vector2(360,230)],
@@ -58,10 +60,20 @@ func _ready() -> void:
 	panel.add_child(terrain_lamp_button)
 	status = Label.new()
 	panel.add_child(status)
+	time_slider = HSlider.new()
+	time_slider.position = Vector2(12,82)
+	time_slider.size = Vector2(280,18)
+	time_slider.max_value = RunState.CAMPAIGN_DURATION_SECONDS
+	time_slider.step = 1.0
+	time_slider.tooltip_text = "拖动预览整局光源移动"
+	time_slider.value_changed.connect(_preview_time)
+	overlay.add_child(time_slider)
 	_set_mode(1)
 	await get_tree().process_frame
 	main._update_map_view_rect()
 	main.map_camera.set_view_level(&"detail")
+	var sample_tree := main.get_node_or_null("BorderForest/pine-037") as Sprite2D
+	if sample_tree != null: main.map_camera.focus_world(sample_tree.global_position+Vector2(0,-110))
 
 func _process(_delta: float) -> void:
 	if terrain_lamp_button == null: return
@@ -70,10 +82,15 @@ func _process(_delta: float) -> void:
 
 func _set_mode(value: int) -> void:
 	mode = value
-	main.world_lighting.preview_dawn = 1.0 if mode == 2 else 0.0
-	main.world_lighting._on_campaign_time_changed(3600)
 	main.world_lighting.set_lighting_enabled(mode != 0)
-	status.text = "当前：" + ["原画面","夜间","黎明"][mode] + " · F6切换 · 滚轮缩放 / 拖动地图"
+	time_slider.set_value_no_signal(RunState.CAMPAIGN_DURATION_SECONDS if mode == 2 else 0.0)
+	_preview_time(time_slider.value)
+
+func _preview_time(elapsed: float) -> void:
+	var remaining := RunState.CAMPAIGN_DURATION_SECONDS-elapsed
+	main.world_lighting._on_campaign_time_changed(remaining)
+	main._on_campaign_time_changed(remaining)
+	status.text = "%s · 已过 %02d:%02d / 60:00" % ["原画面" if mode == 0 else "移动光源",floori(elapsed/60.0),int(elapsed)%60]
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F6:

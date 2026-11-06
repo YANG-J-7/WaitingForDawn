@@ -1,6 +1,6 @@
 extends Node
 ## 逐个关闭投影取差图，验证实际农民/野狼/守卫在底座和草地上的可见性。
-const OUT := "res://tests/reports/images/building-unit-shadow-2026-11-05/"
+const OUT := "res://tests/reports/images/moving-light-2026-11-06/"
 var failures := 0
 var view: SubViewport
 var main: Node2D
@@ -16,6 +16,10 @@ func _ready() -> void:
 	add_child(view)
 	main = preload("res://src/main/main.tscn").instantiate()
 	view.add_child(main)
+	# 此工具单独复核实体投影，正式地图仍使用仅环境投影配置。
+	main.world_lighting.profile = main.world_lighting.profile.duplicate()
+	main.world_lighting.profile.shadows_enabled = true
+	main.world_lighting.profile.entity_shadows_enabled = true
 	main._on_start_pressed()
 	main.opening_draft.set_countdown_paused(true)
 	for index in [0,1,3,4]: main.card_buttons[index].pressed.emit()
@@ -184,7 +188,7 @@ func visible_contact_edges(caster: WorldShadowCaster) -> Array[Rect2]:
 	var contacts := caster.ground_contacts()
 	if caster.is_grounded_actor(): return contacts
 	# 单向投影从背光底缘伸出，迎光侧不再要求有一圈额外黑影。
-	var direction: Vector2 = main.world_lighting.profile.shadow_direction.normalized()
+	var direction: Vector2 = main.world_lighting.shadow_direction_at(caster.anchor.global_position)
 	return contacts.filter(func(contact: Rect2) -> bool:
 		return (contact.get_center()-caster.anchor.global_position).dot(direction) >= -4.0
 	)

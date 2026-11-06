@@ -6,6 +6,7 @@ var anchor: Node2D
 var strength: float = 1.0
 var length_scale: float = 1.0
 var contact_strength: float = 1.0
+var environment_caster := false
 ## 非零时在光线的横向轴上调整轮廓宽度，投影以地面锚点为原点。
 var directional_projection_width: float = 0.0
 static var contact_profiles: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://src/data/ground_contacts.json"))

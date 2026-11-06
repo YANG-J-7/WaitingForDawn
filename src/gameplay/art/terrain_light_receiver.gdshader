@@ -6,6 +6,10 @@ uniform vec3 surface_response = vec3(1.0, 0.72, 0.38);
 uniform vec2 uv_axis_x;
 uniform vec2 uv_axis_y;
 uniform vec2 uv_origin;
+uniform vec2 surface_world_size = vec2(1.0);
+uniform vec2 shadow_light_uv;
+uniform float terrain_shadow_opacity = 0.0;
+uniform float terrain_shadow_reach = 96.0;
 varying vec2 surface_uv;
 varying vec2 surface_weights;
 
@@ -16,6 +20,18 @@ void vertex() {
 
 void fragment() {
 	surface_weights = texture(surface_mask, surface_uv).rg;
+	if (terrain_shadow_opacity > 0.0 && surface_weights.r < 0.85) {
+		// 只取朝向光源的一侧，岩壁的背光暗部随光源转移。
+		vec2 to_light = (shadow_light_uv-surface_uv)*surface_world_size;
+		to_light.y = min(to_light.y,-surface_world_size.y*0.18);
+		vec2 step_uv = normalize(to_light)*terrain_shadow_reach/surface_world_size;
+		float near_rock = texture(surface_mask,surface_uv+step_uv*0.25).r;
+		float middle_rock = texture(surface_mask,surface_uv+step_uv*0.55).r;
+		float far_rock = texture(surface_mask,surface_uv+step_uv).r;
+		float blocker = max(near_rock,max(middle_rock*0.72,far_rock*0.42));
+		float receiver = (1.0-smoothstep(0.15,0.85,surface_weights.r))*mix(1.0,0.35,surface_weights.g);
+		COLOR.rgb *= 1.0-terrain_shadow_opacity*receiver*smoothstep(0.15,0.85,blocker);
+	}
 }
 
 void light() {

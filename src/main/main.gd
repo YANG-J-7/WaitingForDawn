@@ -141,6 +141,8 @@ func _ready() -> void:
 	world_lighting = preload("res://src/gameplay/art/world_lighting.gd").new()
 	world_lighting.name = "WorldLighting"
 	world_lighting.scope = self
+	world_lighting.world_bounds = map_runtime.bounds
+	world_lighting.terrain_receiver = terrain_grid_layer
 	if level_definition.lighting_profile != null:
 		world_lighting.profile = level_definition.lighting_profile
 	# 地表、地面贴花、全局投影与主体分别排序，单位影子不能被院前地面盖住。

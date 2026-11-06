@@ -38,6 +38,7 @@ func _configure_terrain_lighting(grid: RefCounted, context: RefCounted) -> void:
 	_surface_material = ShaderMaterial.new()
 	_surface_material.shader = TERRAIN_LIGHT_SHADER
 	_surface_material.set_shader_parameter(&"surface_mask",mask)
+	_surface_material.set_shader_parameter(&"surface_world_size",_surface_bounds.size)
 	var profile: Resource = context.definition.lighting_profile
 	if profile != null:
 		_surface_material.set_shader_parameter(&"surface_response",profile.terrain_local_response.clamp(Vector3.ZERO,Vector3(2,2,2)))
@@ -54,6 +55,12 @@ func _update_surface_transform() -> void:
 	_surface_material.set_shader_parameter(&"uv_axis_x",inverse.x/_surface_bounds.size)
 	_surface_material.set_shader_parameter(&"uv_axis_y",inverse.y/_surface_bounds.size)
 	_surface_material.set_shader_parameter(&"uv_origin",(inverse.origin-_surface_bounds.position)/_surface_bounds.size)
+
+func update_terrain_shadow(light_world: Vector2, opacity: float, reach: float) -> void:
+	if _surface_material == null: return
+	_surface_material.set_shader_parameter(&"shadow_light_uv",(to_local(light_world)-_surface_bounds.position)/_surface_bounds.size)
+	_surface_material.set_shader_parameter(&"terrain_shadow_opacity",opacity)
+	_surface_material.set_shader_parameter(&"terrain_shadow_reach",reach)
 
 func _draw() -> void:
 	# 总览余量只用新素材连续延伸，不拉长旧图边缘。

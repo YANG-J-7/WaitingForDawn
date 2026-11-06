@@ -45,12 +45,14 @@ func _ready() -> void:
 	ground_base.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	var cast := _sprite(CAST_TEXTURE, grounding)
 	cast.name = "CastShadow"
+	cast.hide()
 	var cast_rect := _shadow_rect(data, false)
 	cast.position = cast_rect.position
 	cast.scale = cast_rect.size / CAST_TEXTURE.get_size()
 	cast.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	var contact := _sprite(CONTACT_TEXTURE, grounding)
 	contact.name = "ContactShadow"
+	contact.hide()
 	var contact_rect := _shadow_rect(data, true)
 	contact.position = contact_rect.position
 	contact.scale = contact_rect.size / CONTACT_TEXTURE.get_size()

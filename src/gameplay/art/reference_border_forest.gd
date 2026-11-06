@@ -19,8 +19,9 @@ func configure(_runtime: RefCounted) -> void:
 		tree.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		add_child(tree)
 		var caster := WorldShadowCaster.attach(tree) as WorldShadowCaster
-		# 树根由同一道轮廓影接住，移除按宽树冠尺寸生成的横向接触影。
+		# 树根与树冠共用一道轮廓影，宽度系数只作用于远离树根的部分。
 		caster.contact_strength = 0.0
+		caster.environment_caster = true
 		caster.directional_projection_width = 0.50
-		caster.strength = 1.20
+		caster.length_scale = 0.72
 		tree_count += 1

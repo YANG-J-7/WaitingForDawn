@@ -9,7 +9,7 @@ var system: Node2D
 var budget_allowed := true
 static var shared_texture: GradientTexture2D
 
-func _ready() -> void:
+static func light_texture() -> GradientTexture2D:
 	if shared_texture == null:
 		shared_texture = GradientTexture2D.new()
 		shared_texture.width = 256
@@ -21,7 +21,10 @@ func _ready() -> void:
 		gradient.offsets = PackedFloat32Array([0.0,0.18,0.55,1.0])
 		gradient.colors = PackedColorArray([Color.WHITE,Color(1,1,1,0.76),Color(1,1,1,0.24),Color(1,1,1,0)])
 		shared_texture.gradient = gradient
-	texture = shared_texture
+	return shared_texture
+
+func _ready() -> void:
+	texture = light_texture()
 	texture_scale = radius*2.0/256.0
 	color = Color(1.0,0.63,0.29)
 	shadow_enabled = false
