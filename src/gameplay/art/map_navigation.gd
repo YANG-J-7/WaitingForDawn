@@ -5,6 +5,7 @@ const MAP_RECT := Rect2(6, 6, 160, 160.0 * 2880.0 / 7056.0)
 var main: Node2D
 var preview: SubViewport
 var preview_texture: Texture2D
+var include_suppressed_sites := false
 
 func configure(owner_main: Node2D) -> void:
 	main = owner_main
@@ -56,7 +57,7 @@ func _draw() -> void:
 	draw_style_box(_panel_style(),Rect2(Vector2.ZERO,size))
 	if preview_texture != null: draw_texture_rect(preview_texture,MAP_RECT,false)
 	for site in main.resource_sites:
-		if site.get("visual_suppressed"): continue
+		if not include_suppressed_sites and site.get("visual_suppressed"): continue
 		var point: Vector2 = MAP_RECT.position + site.position / main.map_runtime.bounds.size * MAP_RECT.size
 		if site.site_type == &"forest":
 			draw_colored_polygon(PackedVector2Array([point+Vector2(0,-3),point+Vector2(-3,3),point+Vector2(3,3)]),Color("b9d693"))

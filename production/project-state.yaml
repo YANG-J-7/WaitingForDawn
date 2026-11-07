@@ -1,6 +1,6 @@
 version: 1
 stage: production
 engine: godot-4.7-development-validation
-updated: 2026-11-06
-current_goal: "Story-035按反馈关闭地图全部运行时阴影，保留环境调色、60分钟移动主光和局部灯。全量1698项、四画幅GL62项通过。下一步复核新版无阴影地图。"
-active_story: "production/stories/story-035-global-world-lighting.md"
+updated: 2026-11-07
+current_goal: "Story-039首次构图已移至关卡加载，寻路 165 项与 60 分钟回放通过。50 条运输路径批量约 23 ms，继续处理批量预算并复核整关体验。"
+active_story: "production/stories/story-039-moonlake-3d-level.md"

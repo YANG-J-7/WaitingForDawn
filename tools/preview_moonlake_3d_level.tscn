@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://src/main/main.tscn" id="1"]
+[ext_resource type="Script" path="res://tools/preview_moonlake_3d_level.gd" id="2"]
+
+[node name="MoonlakeLevel3D" instance=ExtResource("1")]
+script = ExtResource("2")

@@ -1,6 +1,8 @@
 class_name GridMapModel
 extends RefCounted
 
+signal navigation_cells_changed(cells: Array[Vector2i])
+
 const Definition = preload("res://src/gameplay/grid/map_definition.gd")
 const CELL_SIZE: float = Definition.CELL_SIZE
 const GRID_SIZE := Definition.GRID_SIZE
@@ -21,11 +23,31 @@ func set_navigation_cell(cell: Vector2i, level: int, stair: int = -1, ends: Arra
 	for end in ends:
 		levels.append(int(end))
 	_navigation[cell] = {"level": level, "stair": stair, "ends": levels}
-	revision += 1
+	_mark_navigation_changed([cell])
 
 
 func navigation_data(cell: Vector2i) -> Dictionary:
 	return _navigation.get(cell, BASE_NAVIGATION)
+
+func navigation_overrides() -> Array:
+	return _navigation.keys()
+
+
+func navigation_weights() -> PackedFloat64Array:
+	var weights := PackedFloat64Array()
+	weights.resize(_cells.size())
+	for index in range(_cells.size()):
+		var data: Dictionary = _cells[index]
+		if data.walkable:
+			weights[index] = maxf(1.0, float(data.movement_cost))
+	for cell: Vector2i in _static_occupants:
+		weights[_index(cell)] = 0.0
+	return weights
+
+
+func _mark_navigation_changed(cells: Array[Vector2i]) -> void:
+	revision += 1
+	navigation_cells_changed.emit(cells)
 
 
 func can_step(from: Vector2i, to: Vector2i) -> bool:
@@ -107,7 +129,7 @@ func interaction_clear(from: Vector2, target: Vector2) -> bool:
 	var steps := maxi(1,ceili(from.distance_to(target)/(CELL_SIZE*0.25)))
 	for index in range(steps+1):
 		var cell := world_to_cell(from.lerp(target,float(index)/steps))
-		if not is_inside(cell) or cell_data(cell).terrain_type in [&"cliff",&"water",&"forest",&"boundary"]:
+		if not is_inside(cell) or _cells[_index(cell)].terrain_type in [&"cliff",&"water",&"forest",&"boundary"]:
 			return false
 	return true
 
@@ -137,12 +159,14 @@ func set_terrain_rect(
 	buildable: bool,
 	movement_cost: float
 ) -> void:
+	var changed: Array[Vector2i] = []
 	for y in range(grid_size.y):
 		for x in range(grid_size.x):
 			var cell := Vector2i(x, y)
 			if world_rect.has_point(cell_center(cell)):
 				_cells[_index(cell)] = _make_cell(terrain_type, walkable, buildable, movement_cost)
-	revision += 1
+				changed.append(cell)
+	_mark_navigation_changed(changed)
 
 
 func set_terrain_cells(
@@ -153,16 +177,16 @@ func set_terrain_cells(
 	movement_cost: float,
 	elevation: int = 0
 ) -> void:
-	var changed := false
+	var changed: Array[Vector2i] = []
 	for cell in cells:
 		if not is_inside(cell):
 			continue
 		var data := _make_cell(terrain_type, walkable, buildable, movement_cost)
 		data.elevation = elevation
 		_cells[_index(cell)] = data
-		changed = true
-	if changed:
-		revision += 1
+		changed.append(cell)
+	if not changed.is_empty():
+		_mark_navigation_changed(changed)
 
 
 func cells_of_type(terrain_type: StringName) -> Array[Vector2i]:
@@ -199,7 +223,7 @@ func register_resource_site(
 		data.movement_cost = INF
 		data.resource_site_id = site_id
 		_cells[_index(cell)] = data
-	revision += 1
+	_mark_navigation_changed(cells)
 
 
 func resource_site_center(site_id: StringName) -> Vector2:
@@ -253,29 +277,32 @@ func occupy(
 	_occupant_cells[occupant_id] = cells
 	for cell in cells:
 		_static_occupants[cell] = occupant_id
-	revision += 1
+	_mark_navigation_changed(cells)
 	return true
 
 
 func release(occupant_id: StringName) -> void:
 	if not _occupant_cells.has(occupant_id):
 		return
-	for cell: Vector2i in _occupant_cells[occupant_id]:
+	var cells: Array[Vector2i] = _occupant_cells[occupant_id]
+	for cell in cells:
 		if _static_occupants.get(cell, &"") == occupant_id:
 			_static_occupants.erase(cell)
 	_occupant_cells.erase(occupant_id)
-	revision += 1
+	_mark_navigation_changed(cells)
 
 
 func clear_occupancy() -> void:
+	var changed: Array[Vector2i] = []
+	changed.assign(_static_occupants.keys())
 	_static_occupants.clear()
 	_occupant_cells.clear()
-	revision += 1
+	_mark_navigation_changed(changed)
 
 
 func copy_without_occupants_at(positions: Array[Vector2]) -> RefCounted:
 	# 只供封路时判断破障方向；实际移动始终读取原网格。
-	var result := GridMapModel.new()
+	var result := GridMapModel.new(Vector2i.ZERO)
 	result.grid_size = grid_size
 	result._cells = _cells.duplicate(true)
 	result._navigation = _navigation.duplicate(true)

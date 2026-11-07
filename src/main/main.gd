@@ -175,7 +175,7 @@ func _ready() -> void:
 	wave_economy.additional_towers = additional_towers
 	wave_economy.additional_barracks = additional_barracks
 	wave_controller.additional_barracks = additional_barracks
-	map_camera = MapCameraScript.new()
+	map_camera = _create_map_camera()
 	map_camera.name = "MapCamera"
 	map_camera.configure(map_runtime)
 	add_child(map_camera)
@@ -192,6 +192,8 @@ func _ready() -> void:
 	placement_overlay.z_index = 100
 	add_child(placement_overlay)
 	_load_resource_sites()
+	# 资源点与主城都登记后，在进入对局前准备寻路图。
+	grid_pathfinder.prepare_graph()
 	var navigation := preload("res://src/gameplay/art/map_navigation.gd").new()
 	navigation.name = "MapNavigation"
 	$HUD.add_child(navigation)
@@ -284,6 +286,10 @@ func _ready() -> void:
 	_refresh_all_labels()
 	_refresh_world_targets()
 	queue_redraw()
+
+
+func _create_map_camera() -> Camera2D:
+	return MapCameraScript.new()
 
 
 func _load_resource_sites() -> void:
@@ -453,7 +459,7 @@ func _position_building_worker_panel() -> void:
 	var target: Node2D = wave_economy.job_target(selected_job_id) as Node2D
 	if target == null or not is_instance_valid(target):
 		return
-	var screen_point: Vector2 = map_camera.get_canvas_transform() * target.global_position
+	var screen_point: Vector2 = map_camera.world_to_screen(target.global_position)
 	var viewport_size: Vector2 = get_viewport_rect().size
 	var panel_size: Vector2 = building_worker_panel.get_combined_minimum_size()
 	panel_size.x = maxf(panel_size.x, 240.0)

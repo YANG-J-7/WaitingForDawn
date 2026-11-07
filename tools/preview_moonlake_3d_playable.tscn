@@ -1,0 +1,114 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://tools/preview_moonlake_3d_playable.gd" id="1"]
+[ext_resource type="PackedScene" path="res://prototypes/moonlake_3d_graybox/moonlake_3d_graybox.tscn" id="2"]
+[ext_resource type="Script" path="res://src/gameplay/cards/map_drop_surface.gd" id="3"]
+[ext_resource type="Script" path="res://tools/moonlake_3d_sample_minimap.gd" id="4"]
+[ext_resource type="Script" path="res://src/gameplay/cards/run_card_inventory.gd" id="5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 6.0
+bg_color = Color(0.035, 0.058, 0.082, 0.94)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[node name="Moonlake3DPlayable" type="Node3D"]
+script = ExtResource("1")
+
+[node name="Graybox" parent="." instance=ExtResource("2")]
+
+[node name="Inventory" type="Node" parent="."]
+script = ExtResource("5")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="MapDropSurface" type="Control" parent="HUD"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("3")
+accepted_card_ids = PackedStringArray("wall", "house", "farm", "lumber_camp")
+
+[node name="Controls" type="PanelContainer" parent="HUD"]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -200.0
+offset_top = 14.0
+offset_right = -16.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Rows" type="VBoxContainer" parent="HUD/Controls"]
+
+[node name="Resources" type="Label" parent="HUD/Controls/Rows"]
+theme_override_colors/font_color = Color(0.95, 0.86, 0.66, 1)
+theme_override_font_sizes/font_size = 15
+
+[node name="RoundTrip" type="Button" parent="HUD/Controls/Rows"]
+text = "S6 往返演示"
+
+[node name="RouteStatus" type="Label" parent="HUD/Controls/Rows"]
+custom_minimum_size = Vector2(0, 32)
+theme_override_colors/font_color = Color(0.63, 0.86, 0.88, 1)
+theme_override_font_sizes/font_size = 13
+text = "农民待命"
+autowrap_mode = 2
+
+[node name="HandPanel" type="PanelContainer" parent="HUD"]
+offset_left = 16.0
+offset_top = 118.0
+offset_right = 174.0
+offset_bottom = 528.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Hand" type="VBoxContainer" parent="HUD/HandPanel"]
+theme_override_constants/separation = 4
+
+[node name="StatusPanel" type="PanelContainer" parent="HUD"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -242.0
+offset_top = -40.0
+offset_right = 242.0
+offset_bottom = -12.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Status" type="Label" parent="HUD/StatusPanel"]
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.72, 0.94, 0.93, 1)
+theme_override_font_sizes/font_size = 15
+text = "拖动卡牌建造 · 绿框可建 · 红框为无效落点"
+horizontal_alignment = 1
+
+[node name="MinimapPanel" type="PanelContainer" parent="HUD"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -159.0
+offset_top = -156.0
+offset_right = -16.0
+offset_bottom = -14.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Rows" type="VBoxContainer" parent="HUD/MinimapPanel"]
+
+[node name="Title" type="Label" parent="HUD/MinimapPanel/Rows"]
+theme_override_font_sizes/font_size = 13
+text = "样区小地图 · 点击定位"
+horizontal_alignment = 1
+
+[node name="Minimap" type="Control" parent="HUD/MinimapPanel/Rows"]
+custom_minimum_size = Vector2(0, 108)
+mouse_default_cursor_shape = 2
+script = ExtResource("4")

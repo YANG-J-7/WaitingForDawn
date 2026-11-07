@@ -144,6 +144,9 @@ func focus_world(point: Vector2) -> void:
 func screen_to_world(point: Vector2) -> Vector2:
 	return get_canvas_transform().affine_inverse() * point
 
+func world_to_screen(point: Vector2) -> Vector2:
+	return get_canvas_transform() * point
+
 func zoom_at(factor: float, point: Vector2) -> void:
 	_stop_transition()
 	if overview:
