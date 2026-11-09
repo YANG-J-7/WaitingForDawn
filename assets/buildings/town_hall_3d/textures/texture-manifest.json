@@ -1,0 +1,62 @@
+{
+  "stone_bluegrey": {
+    "albedo": "assets/buildings/town_hall_3d/textures/stone_bluegrey_albedo.png",
+    "normal": "assets/buildings/town_hall_3d/textures/stone_bluegrey_normal.png",
+    "roughness": "assets/buildings/town_hall_3d/textures/stone_bluegrey_roughness.png"
+  },
+  "stone_moonedges": {
+    "albedo": "assets/buildings/town_hall_3d/textures/stone_moonedges_albedo.png",
+    "normal": "assets/buildings/town_hall_3d/textures/stone_moonedges_normal.png",
+    "roughness": "assets/buildings/town_hall_3d/textures/stone_moonedges_roughness.png"
+  },
+  "stone_deepmortar": {
+    "albedo": "assets/buildings/town_hall_3d/textures/stone_deepmortar_albedo.png",
+    "normal": "assets/buildings/town_hall_3d/textures/stone_deepmortar_normal.png",
+    "roughness": "assets/buildings/town_hall_3d/textures/stone_deepmortar_roughness.png"
+  },
+  "plaster_warmgrey": {
+    "albedo": "assets/buildings/town_hall_3d/textures/plaster_warmgrey_albedo.png",
+    "normal": "assets/buildings/town_hall_3d/textures/plaster_warmgrey_normal.png",
+    "roughness": "assets/buildings/town_hall_3d/textures/plaster_warmgrey_roughness.png"
+  },
+  "timber_dark": {
+    "albedo": "assets/buildings/town_hall_3d/textures/timber_dark_albedo.png",
+    "normal": "assets/buildings/town_hall_3d/textures/timber_dark_normal.png",
+    "roughness": "assets/buildings/town_hall_3d/textures/timber_dark_roughness.png"
+  },
+  "wood_warm": {
+    "albedo": "assets/buildings/town_hall_3d/textures/wood_warm_albedo.png",
+    "normal": "assets/buildings/town_hall_3d/textures/wood_warm_normal.png",
+    "roughness": "assets/buildings/town_hall_3d/textures/wood_warm_roughness.png"
+  },
+  "roof_red": {
+    "albedo": "assets/buildings/town_hall_3d/textures/roof_red_albedo.png",
+    "normal": "assets/buildings/town_hall_3d/textures/roof_red_normal.png",
+    "roughness": "assets/buildings/town_hall_3d/textures/roof_red_roughness.png"
+  },
+  "roof_terracotta": {
+    "albedo": "assets/buildings/town_hall_3d/textures/roof_terracotta_albedo.png",
+    "normal": "assets/buildings/town_hall_3d/textures/roof_terracotta_normal.png",
+    "roughness": "assets/buildings/town_hall_3d/textures/roof_terracotta_roughness.png"
+  },
+  "roof_shadow": {
+    "albedo": "assets/buildings/town_hall_3d/textures/roof_shadow_albedo.png",
+    "normal": "assets/buildings/town_hall_3d/textures/roof_shadow_normal.png",
+    "roughness": "assets/buildings/town_hall_3d/textures/roof_shadow_roughness.png"
+  },
+  "courtyard_earth": {
+    "albedo": "assets/buildings/town_hall_3d/textures/courtyard_earth_albedo.png",
+    "normal": "assets/buildings/town_hall_3d/textures/courtyard_earth_normal.png",
+    "roughness": "assets/buildings/town_hall_3d/textures/courtyard_earth_roughness.png"
+  },
+  "grass_cold": {
+    "albedo": "assets/buildings/town_hall_3d/textures/grass_cold_albedo.png",
+    "normal": "assets/buildings/town_hall_3d/textures/grass_cold_normal.png",
+    "roughness": "assets/buildings/town_hall_3d/textures/grass_cold_roughness.png"
+  },
+  "environment_ground": {
+    "albedo": "assets/buildings/town_hall_3d/textures/environment_ground_albedo.png",
+    "normal": "assets/buildings/town_hall_3d/textures/environment_ground_normal.png",
+    "roughness": "assets/buildings/town_hall_3d/textures/environment_ground_roughness.png"
+  }
+}

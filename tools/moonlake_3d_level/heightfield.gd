@@ -1,7 +1,8 @@
 extends RefCounted
 ## 只从关卡编译数据和权威格推导表现高度。
 
-const LEVEL_HEIGHT := 3.2
+const LEVEL_HEIGHT := 5.6
+const S6_HEIGHT_RATIOS := [0.0, 0.5, 0.5, 0.5, 0.8125, 1.0]
 const WATER_HEIGHT := -0.36
 const BASE_HEIGHT := -0.9
 const COLORS := {
@@ -131,8 +132,7 @@ func _stair_height(id: int, point: Vector2, levels: Vector2) -> float:
 			nearest_distance = distance
 			var offset := a.distance_to(nearest)
 			if id == 6:
-				const S6_HEIGHTS := [0.0, 1.6, 1.6, 1.6, 2.6, LEVEL_HEIGHT]
-				closest_height = lerpf(S6_HEIGHTS[i], S6_HEIGHTS[i + 1], offset / segment_length)
+				closest_height = lerpf(S6_HEIGHT_RATIOS[i], S6_HEIGHT_RATIOS[i + 1], offset / segment_length) * LEVEL_HEIGHT
 			else:
 				closest_height = lerpf(levels.x, levels.y, (walked + offset) / length) * LEVEL_HEIGHT
 		walked += segment_length

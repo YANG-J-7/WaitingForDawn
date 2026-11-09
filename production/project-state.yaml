@@ -1,6 +1,6 @@
 version: 1
 stage: production
 engine: godot-4.7-development-validation
-updated: 2026-11-07
-current_goal: "Story-039首次构图已移至关卡加载，寻路 165 项与 60 分钟回放通过。50 条运输路径批量约 23 ms，继续处理批量预算并复核整关体验。"
+updated: 2026-11-09
+current_goal: "Story-039月湖山谷 P3 主城纹理、地面、灯光及模型接入已完成，待用户复核游戏内比例与夜景；继续针叶树密林遮挡、性能和整关人工验收。"
 active_story: "production/stories/story-039-moonlake-3d-level.md"

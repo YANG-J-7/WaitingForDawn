@@ -25,9 +25,11 @@ func configure(owner_game: Node2D) -> void:
 	field.configure(game.map_runtime, game.grid_map_model)
 	add_child(terrain)
 	terrain.configure(field)
+	terrain.terrain_material.set_shader_parameter("town_center", game.map_runtime.city_position / field.cell_size)
 	add_child(entities)
 	entities.game = game
 	entities.field = field
+	entities.grove_mesh = terrain.forest.multimesh.mesh
 	add_child(camera)
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 	camera.far = 400.0
@@ -37,7 +39,8 @@ func configure(owner_game: Node2D) -> void:
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	world_environment.environment = environment
 	add_child(world_environment)
-	direction.shadow_enabled = false
+	direction.shadow_enabled = true
+	direction.directional_shadow_max_distance = 185.0
 	add_child(direction)
 	for offset in [Vector2(-73.0, 28.0), Vector2(73.0, 28.0)]:
 		var light := OmniLight3D.new()
