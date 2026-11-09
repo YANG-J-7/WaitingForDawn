@@ -28,16 +28,16 @@ powershell -ExecutionPolicy Bypass -File .\tools\check_project.ps1
 
 | 项目 | 当前状态 |
 |---|---|
-| 最后更新 | 2026-11-07 |
+| 最后更新 | 2026-11-09 |
 | 开发阶段 | 制作阶段（Production），月湖山谷 P3 整关 3D 运行候选，2D 关卡为正式入口 |
-| 当前分支 | `master` |
-| 接力基线提交 | `bc4ae25`（本地及跟踪分支一致，P0～P3 为工作区改动） |
-| 当前电脑工作副本 | `D:\MyProject\waiting-for-dawn` |
-| 远程仓库 | `origin` → `https://gitee.com/yangget/waiting-for-dawn.git` |
+| 当前分支 | `main`（跟踪 `origin/main`） |
+| 接力基线提交 | `a14d7f5`（GitHub `main`，包含月湖山谷 P0～P3 与寻路优化） |
+| 当前电脑工作副本 | `D:\项目文档\Waiting for Dawn` |
+| 远程仓库 | `origin` → `https://github.com/YANG-J-7/WaitingForDawn.git` |
 | 引擎 | Godot 4.7 Standard，GDScript，GL Compatibility |
 | 主场景 | `res://src/main/main.tscn` |
 | 目标平台 | Steam 单机；暂以 Windows 键鼠验证，其他操作系统与平台服务待定；微信专属计划停止排期 |
-| 自动化基线 | 2026-11-07 寻路 165 项、P3 无头 78 项、3D GL 77 项、2D GL 17 项，60 分钟回放胜利及重开通过，P2/P1/P0 无头 33/36/433 项。2026-11-06 的 2D 全量 42 组 1698 项为历史基线。 |
+| 自动化基线 | 2026-11-09 同步后，网格与寻路、山区资源路线、60 分钟局制共 5 组 158 项通过，正式场景与 P3 预览通过无头启动检查。2026-11-07 的 P3 无头 78 项、3D GL 77 项、2D GL 17 项、60 分钟回放及重开为历史证据。 |
 
 提交哈希只是接力参考。若本文档之后已有新提交，应以 `git log -5 --oneline --decorate` 和远程分支为准，并在本次开发结束时更新本表。
 
@@ -972,8 +972,8 @@ HUD常驻显示黎明倒计时并提供全局暂停；暂停冻结场景树和�
 2. 克隆并进入项目：
 
 ```powershell
-git clone https://gitee.com/yangget/waiting-for-dawn.git
-Set-Location '.\waiting-for-dawn'
+git clone https://github.com/YANG-J-7/WaitingForDawn.git
+Set-Location '.\WaitingForDawn'
 git status -sb
 ```
 
@@ -996,7 +996,7 @@ git diff --check
 
 定点测试可加 `-Filter 'test_settlement*'`。2026-10-27本机引擎实路径为 `D:\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe`，不要在其他电脑上直接照抄路径。
 
-本次改动尚未提交/推送；切换电脑前需要自行保存提交并同步到远程。仅复制进度文档不能代替同步代码、新测试及其 `.uid` 文件。
+`tests/` 由 Git 忽略，换电脑时需单独保留测试脚本、场景及对应 `.uid` 文件。
 
 ## 本版快速体验
 
@@ -1012,6 +1012,7 @@ git diff --check
 
 | 日期 | 内容 | 验证 |
 |---|---|---|
+| 2026-11-09 | 将 `origin` 切换到 GitHub，本地分支改为 `main` 并快进至 `a14d7f5`，同步月湖山谷 3D 候选及寻路优化。Story-039 下一步继续降低批量寻路峰值并人工复核整关。 | Godot 4.7 导入、正式场景与 P3 预览无头启动、5 组 158 项断言、项目结构及差异检查通过。50 条批量路径的 23.436 ms 为上次测量，整关人工验收待办。 |
 | 2026-11-07 | Story-039 寻路首帧优化。关卡加载预热，单次构图生成无向边，按变更格更新局部连接，共享目标外围格。 | 专项 165 项、P3 无头 78 项、3D GL 77 项、2D GL 17 项和 60:00 回放通过。50 条路径逐点一致。开局首条未缓存 0.713 ms，50 条批量 23.436 ms。 |
 | 2026-11-07 | Story-039 交付 7056×2880 整关 3D 候选。按 28 块迁移地表，接入 124 株树、原 HUD、正交镜头、落点和原对局。 | P3 无头 78 项、三窗口 GL 各 77 项、2D GL 17 项通过，60:00 回放胜利后重开通过。1080p/4K 帧间 P95 最慢 2.448 ms，首次寻路 861.289 ms，50 次热路径 53.195 ms。人工体验和性能收口待办。 |
 | 2026-11-07 | Story-038 交付 P2 独立光影样区，接入草岩材质、独立湖面、针叶林、局部火盆、时间轴、双主光及三档阴影。 | P2 无头 33 项、GL 51 项、玩法 GL 61 项，P1 无头 36 项和 P0 无头 433 项回归通过。实测 1080p/4K 帧时间及首次寻路，已目检同镜头对照与 4K 林缘；正式入口、结构与差异检查通过。 |
