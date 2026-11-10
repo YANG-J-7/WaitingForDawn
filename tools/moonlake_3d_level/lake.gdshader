@@ -8,13 +8,19 @@ uniform float motion_time = 0.0;
 uniform float detail_strength = 1.0;
 
 varying vec2 lake_position;
+varying float exterior;
 
 void vertex() {
 	lake_position = VERTEX.xz;
+	exterior = 1.0 - COLOR.r;
 }
 
 void fragment() {
 	vec2 p = lake_position;
+	float outside = length(p - clamp(p, vec2(0.0), grid_size));
+	if (exterior > 0.5 && outside <= 0.0) {
+		discard;
+	}
 	vec2 ripple_shift = vec2(sin(p.y * 2.55), cos(p.x * 1.86 + p.y * 0.52)) * 0.13;
 	float coast = (texture(coast_distance, (p + ripple_shift) / grid_size).r - 0.5) * coast_range;
 	// 水面向逻辑水域内收，露出的窄带仍按水域处理。
@@ -35,6 +41,9 @@ void fragment() {
 	water += (texture_wave - 0.40) * vec3(0.15, 0.25, 0.30);
 	water += smoothstep(0.64, 1.0, swell) * vec3(0.013, 0.028, 0.038) * detail_strength;
 	ALBEDO = mix(water, vec3(0.36, 0.53, 0.54), foam * 0.54);
+	if (exterior > 0.5) {
+		ALBEDO = mix(ALBEDO, vec3(0.012, 0.022, 0.035), smoothstep(1.0, 39.0, outside));
+	}
 	NORMAL = normalize(mat3(VIEW_MATRIX) * vec3(swell * 0.035 * detail_strength, 1.0, lapping * 0.027 * detail_strength));
 	ROUGHNESS = mix(0.54, 0.73, shallow);
 	SPECULAR = 0.34;

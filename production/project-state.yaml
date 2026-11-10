@@ -1,6 +1,6 @@
 version: 1
 stage: production
 engine: godot-4.7-development-validation
-updated: 2026-11-09
-current_goal: "Story-039月湖山谷 P3 主城纹理、地面、灯光及模型接入已完成，待用户复核游戏内比例与夜景；继续针叶树密林遮挡、性能和整关人工验收。"
+updated: 2026-11-10
+current_goal: "Story-039 的 P3 已接入 V5 旋转镜头、1.5 近景和湖林雾带收边原型。下一步按宽幅差异叠图对齐整图灰盒，并制作 S6 与相邻湖湾样区。"
 active_story: "production/stories/story-039-moonlake-3d-level.md"

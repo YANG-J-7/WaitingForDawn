@@ -2,6 +2,8 @@ extends Node3D
 
 const Field = preload("res://tools/moonlake_3d_level/heightfield.gd")
 const Landforms = preload("res://tools/moonlake_3d_level/landforms.gd")
+const Grass = preload("res://tools/moonlake_3d_level/grass.gd")
+const Border = preload("res://tools/moonlake_3d_level/border.gd")
 const GROUND = preload("res://tools/moonlake_3d_level/ground.gdshader")
 const LAKE = preload("res://tools/moonlake_3d_level/lake.gdshader")
 const FOLIAGE = preload("res://tools/moonlake_3d_art/foliage.gdshader")
@@ -19,10 +21,12 @@ var lake_material := ShaderMaterial.new()
 var tree_material := ShaderMaterial.new()
 var overview_texture: ImageTexture
 var forest: MultiMeshInstance3D
+var grass := Grass.new()
+var border := Border.new()
 var chunk_count := 0
 
 
-func configure(source: Field) -> void:
+func configure(source: Field, grid: GridMapModel, town_center: Vector2) -> void:
 	field = source
 	terrain_material.shader = GROUND
 	lake_material.shader = LAKE
@@ -30,12 +34,19 @@ func configure(source: Field) -> void:
 	terrain_material.set_shader_parameter("grass_texture", GRASS_TEXTURE)
 	terrain_material.set_shader_parameter("rock_texture", ROCK_TEXTURE)
 	terrain_material.set_shader_parameter("soil_texture", SOIL_TEXTURE)
+	terrain_material.set_shader_parameter("town_center", town_center)
 	lake_material.set_shader_parameter("water_texture", WATER_TEXTURE)
 	_build_surface_masks()
 	_build_chunks()
 	_build_lake()
 	_build_forest()
+	border.name = "ScenicBorder"
+	add_child(border)
+	border.configure(field, forest.multimesh.mesh, terrain_material, lake_material)
 	_build_rock_outcrops()
+	grass.name = "WindGrass"
+	add_child(grass)
+	grass.configure(field, grid, town_center, CHUNK_SIZE)
 
 
 func _build_chunks() -> void:
@@ -94,6 +105,9 @@ func _build_surface_masks() -> void:
 	var coast_texture := ImageTexture.create_from_image(coast)
 	terrain_material.set_shader_parameter("surface_weights", ImageTexture.create_from_image(weights))
 	terrain_material.set_shader_parameter("grid_size", Vector2(field.size))
+	terrain_material.set_shader_parameter("coast_distance", coast_texture)
+	terrain_material.set_shader_parameter("coast_range", Landforms.COAST_RANGE)
+	tree_material.set_shader_parameter("edge_grid_size", Vector2(field.size))
 	lake_material.set_shader_parameter("coast_distance", coast_texture)
 	lake_material.set_shader_parameter("coast_range", Landforms.COAST_RANGE)
 	lake_material.set_shader_parameter("grid_size", Vector2(field.size))

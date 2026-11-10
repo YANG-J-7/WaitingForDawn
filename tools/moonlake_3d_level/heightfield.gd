@@ -5,6 +5,7 @@ const LEVEL_HEIGHT := 5.6
 const S6_HEIGHT_RATIOS := [0.0, 0.5, 0.5, 0.5, 0.8125, 1.0]
 const WATER_HEIGHT := -0.36
 const BASE_HEIGHT := -0.9
+const RAY_EPS := 0.00001
 const COLORS := {
 	"grass": Color("#739371"), "mountain_grass": Color("#648777"),
 	"forest": Color("#49685b"), "boundary": Color("#465967"),
@@ -86,6 +87,75 @@ func kind(cell: Vector2i) -> String:
 func surface_position(world: Vector2) -> Vector3:
 	var local := world / cell_size
 	return Vector3(local.x, maxf(BASE_HEIGHT, height(Vector2i(floori(local.x), floori(local.y)))), local.y)
+
+
+func camera_height(world: Vector2) -> float:
+	# 镜头平滑跨过格边，拾取和单位脚点仍使用精确的地形高度。
+	var sample := (world / cell_size - Vector2.ONE * 0.5).clamp(Vector2.ZERO, Vector2(size - Vector2i.ONE))
+	var first := Vector2i(sample.floor())
+	var last := (first + Vector2i.ONE).min(size - Vector2i.ONE)
+	var fraction := sample - Vector2(first)
+	var near := lerpf(height(first), height(Vector2i(last.x, first.y)), fraction.x)
+	var far := lerpf(height(Vector2i(first.x, last.y)), height(last), fraction.x)
+	return lerpf(near, far, fraction.y)
+
+
+func pick_ray(origin: Vector3, direction: Vector3) -> Dictionary:
+	if direction.y >= -RAY_EPS:
+		return {}
+	var start := Vector2(origin.x, origin.z)
+	var ray := Vector2(direction.x, direction.z)
+	var step := Vector2i(signf(ray.x), signf(ray.y))
+	var entry := 0.0
+	var limit := INF
+	# 先裁到关卡范围，再按射线与格边交点的顺序走格。
+	for axis in range(2):
+		if absf(ray[axis]) <= RAY_EPS:
+			if start[axis] < 0.0 or start[axis] >= size[axis]:
+				return {}
+			step[axis] = 0
+			continue
+		var first := -start[axis] / ray[axis]
+		var last := (size[axis] - start[axis]) / ray[axis]
+		entry = maxf(entry, minf(first, last))
+		limit = minf(limit, maxf(first, last))
+	if limit <= entry:
+		return {}
+	# Vector2 的浮点舍入会把边界入射点算回地图外，先向内采样再夹到合法索引。
+	var at_entry := start + ray * minf(entry + 0.0002, (entry + limit) * 0.5)
+	var cell := Vector2i(floori(at_entry.x), floori(at_entry.y)).clamp(Vector2i.ZERO, size - Vector2i.ONE)
+	var previous_height := BASE_HEIGHT
+	while inside(cell) and entry < limit:
+		var cross_x := _next_crossing(start.x, ray.x, cell.x, step.x)
+		var cross_z := _next_crossing(start.y, ray.y, cell.y, step.y)
+		var exit := minf(limit, minf(cross_x, cross_z))
+		var altitude := height(cell)
+		var entry_y := origin.y + direction.y * entry
+		if entry_y < altitude - RAY_EPS and entry_y >= previous_height - RAY_EPS:
+			return _ray_hit(start + ray * entry, cell, false)
+		var top := (altitude - origin.y) / direction.y
+		if top >= entry - RAY_EPS and top <= exit + RAY_EPS:
+			return _ray_hit(start + ray * top, cell, true)
+		# 同时经过角点时跨到对角格，避免拾取只有一个角接触的格。
+		if cross_x <= exit + RAY_EPS:
+			cell.x += step.x
+		if cross_z <= exit + RAY_EPS:
+			cell.y += step.y
+		entry = exit
+		previous_height = altitude
+	return {}
+
+
+func _next_crossing(origin: float, direction: float, cell: int, step: int) -> float:
+	if step == 0:
+		return INF
+	return (cell + int(step > 0) - origin) / direction
+
+
+func _ray_hit(point: Vector2, cell: Vector2i, top: bool) -> Dictionary:
+	var inset := Vector2.ONE * RAY_EPS
+	var inside_cell := point.clamp(Vector2(cell) + inset, Vector2(cell + Vector2i.ONE) - inset)
+	return {"world": inside_cell * cell_size, "cell": cell, "top": top}
 
 
 func _spread_plateaus(seeds: Array[Vector2i]) -> void:

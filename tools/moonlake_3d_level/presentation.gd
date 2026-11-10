@@ -24,8 +24,7 @@ func configure(owner_game: Node2D) -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	field.configure(game.map_runtime, game.grid_map_model)
 	add_child(terrain)
-	terrain.configure(field)
-	terrain.terrain_material.set_shader_parameter("town_center", game.map_runtime.city_position / field.cell_size)
+	terrain.configure(field, game.grid_map_model, game.map_runtime.city_position / field.cell_size)
 	add_child(entities)
 	entities.game = game
 	entities.field = field
@@ -68,6 +67,8 @@ func advance(delta: float) -> void:
 	motion_seconds += delta
 	terrain.lake_material.set_shader_parameter("motion_time", motion_seconds)
 	terrain.tree_material.set_shader_parameter("motion_time", motion_seconds)
+	if RunState.phase != RunState.Phase.RUN_WON and RunState.phase != RunState.Phase.RUN_LOST:
+		terrain.grass.material.set_shader_parameter("motion_time", motion_seconds)
 	for i in range(city_lights.size()):
 		city_lights[i].visible = RunState.city_health > 0
 		city_lights[i].light_energy = 1.05 + sin(motion_seconds * 6.0 + float(i) * 1.8) * 0.12
@@ -78,6 +79,7 @@ func advance(delta: float) -> void:
 func _update_lighting(remaining: float) -> void:
 	if remaining >= RunState.CAMPAIGN_DURATION_SECONDS:
 		motion_seconds = 0.0
+		terrain.grass.material.set_shader_parameter("motion_time", motion_seconds)
 	var dawn := smoothstep(0.0, 1.0, clampf(1.0 - remaining / 300.0, 0.0, 1.0))
 	var progress := 1.0 - remaining / RunState.CAMPAIGN_DURATION_SECONDS
 	environment.ambient_light_color = Color("#a7bfe0").lerp(Color("#f4d4b2"), dawn)
@@ -89,7 +91,7 @@ func _update_lighting(remaining: float) -> void:
 
 
 func sync_camera() -> void:
-	var view: Camera2D = game.map_camera
+	var view: View = game.map_camera
 	var viewport_size := get_viewport().get_visible_rect().size
 	var play: Rect2 = view.screen_view_rect()
 	var key := [view.position, view.zoom.x, view.overview, viewport_size, play]
@@ -97,9 +99,10 @@ func sync_camera() -> void:
 		return
 	camera_key = key
 	terrain.lake_material.set_shader_parameter("detail_strength", 0.0 if view.overview else 1.0)
+	terrain.grass.visible = not view.overview and view.zoom.x >= 0.29
+	terrain.border.visible = not view.overview
 	var focus := field.surface_position(view.position)
-	if view.overview:
-		focus.y = 0.0
+	focus.y = 0.0 if view.overview else field.camera_height(view.position)
 	camera.position = focus + (Vector3(0, 80, 0) if view.overview else View.TILT)
 	camera.look_at(focus, Vector3.FORWARD if view.overview else Vector3.UP)
 	var pixels_per_unit := view.zoom.x * field.cell_size
@@ -117,34 +120,7 @@ func pick_surface(screen: Vector2) -> Dictionary:
 	if not game.map_camera.screen_view_rect().has_point(screen):
 		return {}
 	sync_camera()
-	var origin := camera.project_ray_origin(screen)
-	var ray := camera.project_ray_normal(screen)
-	# 固定无偏航的正交镜头只穿过同一列。按可见面顺序走格，先遇到的竖面拦截后面的可建地面。
-	var x := floori(origin.x)
-	if x < 0 or x >= field.size.x:
-		return {}
-	if absf(ray.z) < 0.00001:
-		var cell := Vector2i(x, floori(origin.z))
-		return _hit(origin.x, origin.z, cell, true) if field.inside(cell) else {}
-	var entry := maxf(0.0, (float(field.size.y) - origin.z) / ray.z)
-	var row := mini(field.size.y - 1, floori(origin.z + ray.z * entry - 0.00001))
-	for z in range(row, -1, -1):
-		var cell := Vector2i(x, z)
-		var exit := (float(z) - origin.z) / ray.z
-		var altitude := field.height(cell)
-		var at_top := (altitude - origin.y) / ray.y
-		if at_top >= entry - 0.00001 and at_top <= exit + 0.00001:
-			return _hit(origin.x, origin.z + ray.z * at_top, cell, true)
-		var entering_y := origin.y + ray.y * entry
-		if entering_y < altitude and entering_y >= field.height(cell + Vector2i.DOWN):
-			return _hit(origin.x, origin.z + ray.z * entry, cell, false)
-		entry = exit
-	return {}
-
-
-func _hit(x: float, z: float, cell: Vector2i, top: bool) -> Dictionary:
-	var inside_cell := Vector2(x, clampf(z, float(cell.y) + 0.00001, float(cell.y + 1) - 0.00001))
-	return {"world": inside_cell * field.cell_size, "cell": cell, "top": top}
+	return field.pick_ray(camera.project_ray_origin(screen), camera.project_ray_normal(screen))
 
 
 func flat_footprint(center: Vector2, footprint: Vector2i) -> bool:

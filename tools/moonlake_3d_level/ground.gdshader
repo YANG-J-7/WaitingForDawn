@@ -4,8 +4,11 @@ uniform sampler2D grass_texture : source_color, filter_linear_mipmap_anisotropic
 uniform sampler2D rock_texture : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D soil_texture : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D surface_weights : filter_linear, repeat_disable;
+uniform sampler2D coast_distance : filter_linear, repeat_disable;
+uniform float coast_range;
 uniform vec2 grid_size;
 uniform vec2 town_center;
+uniform bool exterior = false;
 
 varying vec3 world_position;
 varying vec3 world_normal;
@@ -15,7 +18,7 @@ varying vec2 cliff_profile;
 void vertex() {
 	world_position = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	world_normal = normalize(MODEL_NORMAL_MATRIX * NORMAL);
-	rock_face = COLOR.r;
+	rock_face = exterior ? 0.0 : COLOR.r;
 	cliff_profile = UV;
 }
 
@@ -34,6 +37,14 @@ float grain(vec2 p) {
 
 void fragment() {
 	vec2 point = world_position.xz;
+	float outside = length(point - clamp(point, vec2(0.0), grid_size));
+	if (exterior) {
+		vec2 ripple_shift = vec2(sin(point.y * 2.55), cos(point.x * 1.86 + point.y * 0.52)) * 0.13;
+		float waterline = (texture(coast_distance, (point + ripple_shift) / grid_size).r - 0.5) * coast_range;
+		if (outside <= 0.0 || waterline >= 0.29) {
+			discard;
+		}
+	}
 	vec2 drift = vec2(sin(point.y * 0.92 + sin(point.x * 1.3)), cos(point.x * 0.82 - point.y * 1.9));
 	vec3 weights = texture(surface_weights, (point + drift * 0.24) / grid_size).rgb;
 	float broad = grain(point * 0.15) * 2.0 - 1.0;
@@ -71,6 +82,10 @@ void fragment() {
 	rock *= mix(1.0, relief, cliff_profile.y);
 	float exposed = max(smoothstep(0.22, 0.80, weights.r), step(0.01, rock_face));
 	ALBEDO = mix(turf, rock, exposed) * mix(1.0, 0.82 + 0.18 * rock_face, step(0.01, rock_face));
+	if (exterior) {
+		float mist = smoothstep(0.0, 17.0, outside);
+		ALBEDO = mix(ALBEDO, vec3(0.012, 0.022, 0.035), mist);
+	}
 	ROUGHNESS = mix(0.94, 0.75, exposed);
 	SPECULAR = 0.23;
 }
