@@ -9,6 +9,7 @@ uniform float coast_range;
 uniform vec2 grid_size;
 uniform vec2 town_center;
 uniform bool exterior = false;
+uniform bool scenic_terrace = false;
 
 varying vec3 world_position;
 varying vec3 world_normal;
@@ -47,6 +48,9 @@ void fragment() {
 	}
 	vec2 drift = vec2(sin(point.y * 0.92 + sin(point.x * 1.3)), cos(point.x * 0.82 - point.y * 1.9));
 	vec3 weights = texture(surface_weights, (point + drift * 0.24) / grid_size).rgb;
+	if (scenic_terrace) {
+		weights = vec3(0.0);
+	}
 	float broad = grain(point * 0.15) * 2.0 - 1.0;
 	float patch = grain(point * 0.46 + vec2(31.3, -10.7));
 	vec3 blades = texture(grass_texture, (point + drift * 0.19) / vec2(12.0, 9.0)).rgb;

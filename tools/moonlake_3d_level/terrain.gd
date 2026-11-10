@@ -4,6 +4,7 @@ const Field = preload("res://tools/moonlake_3d_level/heightfield.gd")
 const Landforms = preload("res://tools/moonlake_3d_level/landforms.gd")
 const Grass = preload("res://tools/moonlake_3d_level/grass.gd")
 const Border = preload("res://tools/moonlake_3d_level/border.gd")
+const Layout = preload("res://tools/moonlake_3d_level/v5_layout.gd")
 const GROUND = preload("res://tools/moonlake_3d_level/ground.gdshader")
 const LAKE = preload("res://tools/moonlake_3d_level/lake.gdshader")
 const FOLIAGE = preload("res://tools/moonlake_3d_art/foliage.gdshader")
@@ -120,20 +121,25 @@ func _build_forest() -> void:
 	model.free()
 	# 保留 Blender 网格的顶点色，继续使用关卡统一的树梢风动。
 	pine.surface_set_material(0, tree_material)
-	var batch := MultiMesh.new()
-	batch.transform_format = MultiMesh.TRANSFORM_3D
-	batch.mesh = pine
-	batch.instance_count = data.trees.size()
+	var transforms: Array[Transform3D] = []
 	for i in range(data.trees.size()):
 		var entry: Dictionary = data.trees[i]
 		var world := Vector2(entry.position[0], entry.position[1])
+		var width := float(entry.size[0]) / field.cell_size
+		var height := float(entry.size[1]) / field.cell_size
+		if Layout.clears_tree(world / field.cell_size, width, height):
+			continue
 		var root := field.surface_position(world)
 		if not field.inside(Vector2i(floori(root.x), floori(root.z))):
 			root.y = 0.0
-		var tall := float(entry.size[1]) / (field.cell_size * 3.08)
-		var wide := float(entry.size[0]) / (field.cell_size * 1.56)
-		var basis := Basis(Vector3.UP, float(i) * 2.39).scaled(Vector3(wide, tall, wide))
-		batch.set_instance_transform(i, Transform3D(basis, root))
+		var basis := Basis(Vector3.UP, float(i) * 2.39).scaled(Vector3(width / 1.56, height / 3.08, width / 1.56))
+		transforms.append(Transform3D(basis, root))
+	var batch := MultiMesh.new()
+	batch.transform_format = MultiMesh.TRANSFORM_3D
+	batch.mesh = pine
+	batch.instance_count = transforms.size()
+	for index in range(transforms.size()):
+		batch.set_instance_transform(index, transforms[index])
 	forest = MultiMeshInstance3D.new()
 	forest.multimesh = batch
 	add_child(forest)

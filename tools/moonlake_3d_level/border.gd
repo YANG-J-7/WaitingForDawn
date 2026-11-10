@@ -2,6 +2,7 @@ extends Node3D
 ## 地图外的湖林背景，与拾取和玩法网格分离。
 
 const Field = preload("res://tools/moonlake_3d_level/heightfield.gd")
+const Layout = preload("res://tools/moonlake_3d_level/v5_layout.gd")
 const REACH := 128.0
 const VIEW_MARGIN := 26.0
 
@@ -18,6 +19,10 @@ func configure(field: Field, pine: Mesh, ground_material: ShaderMaterial, lake_m
 	ground.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(ground)
 	_add_water(field, lake_material)
+	var ridge := Node3D.new()
+	ridge.name = "V5BackRidge"
+	add_child(ridge)
+	Layout.add_ridge(ridge, ground_material)
 	_add_forest(field, pine)
 
 
@@ -45,6 +50,8 @@ func _add_forest(field: Field, pine: Mesh) -> void:
 	var transforms: Array[Transform3D] = []
 	var random := RandomNumberGenerator.new()
 	random.seed = 20261110
+	var lower := PackedVector2Array(Layout.LOWER_RIDGE)
+	var upper := PackedVector2Array(Layout.UPPER_RIDGE)
 	for side in range(4):
 		var along_x := side < 2
 		var length := field.size.x if along_x else field.size.y
@@ -59,7 +66,10 @@ func _add_forest(field: Field, pine: Mesh) -> void:
 					continue
 				var scale := random.randf_range(0.8, 1.4) * (1.0 - band * 0.12)
 				var basis := Basis(Vector3.UP, random.randf() * TAU).scaled(Vector3.ONE * scale)
-				transforms.append(Transform3D(basis, Vector3(point.x, 0.0, point.y)))
+				if Layout.clears_tree(point, 1.56 * scale, 3.08 * scale):
+					continue
+				var elevation := Layout.ridge_height(point, lower, upper)
+				transforms.append(Transform3D(basis, Vector3(point.x, elevation, point.y)))
 	var batch := MultiMesh.new()
 	batch.transform_format = MultiMesh.TRANSFORM_3D
 	batch.mesh = pine
