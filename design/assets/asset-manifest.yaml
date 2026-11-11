@@ -1,16 +1,6 @@
 version: 1
-updated: 2026-11-09
+updated: 2026-11-11
 assets:
-  - id: ENV-MOONLAKE-PINE-3D-V1
-    name: 月湖山谷三维针叶树
-    category: environment
-    file: assets/map_kits/moonlit_v3/models/moonlake_pine.glb
-    source: assets/map_kits/moonlit_v3/models/source/moonlake_pine.blend
-    status: candidate
-    integrated: true
-    generator: Blender 5.2.3 LTS，通过 MCP 建模
-    review_status: 供 P3 整关候选使用，密林近景遮挡和性能待复核
-    validation: 单表面 1290 三角面，树根原点，冠幅 1.56，树高 3.08；Godot GL 导入、树根贴地和资源占用验证通过
   - id: ASSET-0015
     name: 7056×2880参考图地形与冷蓝针叶密林
     category: environment
@@ -330,32 +320,3 @@ assets:
     metadata: assets/buildings/town_hall_v2/ground-base/manifest.json
     review_status: 用户确认设计方向；运行最终观感待复核
     validation: 独立生成/单图去底及确定性透明边缘检查；4组185项相关回归、三视口GL104项通过；含红框左后侧连续草缘验证
-  - id: ASSET-MOONLAKE-WIND-GRASS-V1
-    name: 月湖山谷风动草簇
-    specification: design/assets/specs/moonlake-wind-grass-v1.md
-    file: assets/map_kits/moonlit_v3/grass/tufts.png
-    source: assets/map_kits/moonlit_v3/grass/source/raw-sheet.png
-    dimensions: [256, 256]
-    frame_dimensions: [128, 128]
-    variants: 4
-    format: RGBA8
-    status: candidate
-    integrated: true
-    integrated_date: 2026-11-10
-    generated: 2026-11-10
-    generator: 内置图像生成与 generate2dsprite 去底对齐
-    prompt: assets/map_kits/moonlit_v3/grass/prompt-used.txt
-    review_status: P3 建设近景已目检，待用户视觉复核
-    validation: 四格严格QC、P3真实GL 11项、4组197项相关回归、24帧风动采样
-  - id: BLD-TOWN-HALL-3D-V1
-    name: 主城风格化三维模型
-    file: assets/buildings/town_hall_3d/town_hall.glb
-    dimensions: [6.1372, 5.6433, 6.6784]
-    format: GLB + Blend + PNG预览 + 36张PBR纹理
-    status: candidate
-    integrated: true
-    integrated_date: 2026-11-09
-    generated: 2026-11-09
-    generator: Blender 5.2.3 官方 MCP 程序化建模与确定性纹理生成
-    review_status: 已目检独立渲染和P3实景；仅接入P3候选，游戏内最终比例与夜景观感待用户复核
-    validation: 12个网格部件、18种材质；36张贴图已打包，回读UV完整且无动画/相机/预览灯；P3 GL专项16项、P3与正式2D无头启动通过

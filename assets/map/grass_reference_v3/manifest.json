@@ -1,0 +1,22 @@
+{
+  "date": "2026-11-11",
+  "status": "candidate",
+  "generator": "内置image_gen",
+  "scope": "静态草地贴图与独立预览，未迁移正式第一关",
+  "native_size": [
+    1254,
+    1254
+  ],
+  "reference": "reference.png",
+  "prompt": "grass.prompt.txt",
+  "file": "grass.png",
+  "animation": false,
+  "processing": "原稿不改色、不量化、不插值放大；拼铺预览仅将原图精确重复四次",
+  "mean_rgb": [
+    13.615902159342099,
+    59.41982847869274,
+    68.30909383433936
+  ],
+  "sha256": "c758e5d96b87ff668989069aa0e58915fa319b23db98e3fc3a2b4bee547038d9",
+  "edge_policy": "生成原稿自然平铺候选，非强制像素闭边"
+}

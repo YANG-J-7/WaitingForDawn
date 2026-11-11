@@ -1,6 +1,6 @@
 version: 1
 stage: production
 engine: godot-4.7-development-validation
-updated: 2026-11-10
-current_goal: "Story-039 的 P3 已接入 V5 后山双层景观灰盒并清出左下林缘空位。下一步根据固定机位差异复核主城构图，制作 S6 与相邻湖湾样区。"
-active_story: "production/stories/story-039-moonlake-3d-level.md"
+updated: 2026-11-11
+current_goal: "按用户最新草地截图制作静态贴图，移除独立预览草地动画，先验证草叶造型、疏密、青绿和黄绿配色及拼铺效果，再评估正式地图迁移。"
+active_story: "production/stories/story-033-modular-level-map.md"
