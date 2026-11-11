@@ -1,0 +1,394 @@
+{
+  "date": "2026-11-11",
+  "automated_checks": 67,
+  "pair_count": 16,
+  "pixel_exact_seamless": false,
+  "max_edge_channel_delta_8bit": 1,
+  "preview_policy": "实际交付贴图直接拼接，不额外混合接边；缩略图仅供审阅，不作为交付纹理",
+  "pairs": [
+    {
+      "from": "grass",
+      "to": "grass",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6422,
+        1.3885,
+        0.9931
+      ],
+      "vertical_band_mean_delta": [
+        2.2478,
+        3.6761,
+        0.9916
+      ]
+    },
+    {
+      "from": "grass",
+      "to": "small-stones",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6424,
+        1.3853,
+        0.9939
+      ],
+      "vertical_band_mean_delta": [
+        2.2397,
+        3.6697,
+        0.9845
+      ]
+    },
+    {
+      "from": "grass",
+      "to": "boulders",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6414,
+        1.3786,
+        1.0036
+      ],
+      "vertical_band_mean_delta": [
+        2.2413,
+        3.6778,
+        0.9964
+      ]
+    },
+    {
+      "from": "grass",
+      "to": "wildflowers",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6424,
+        1.3825,
+        0.997
+      ],
+      "vertical_band_mean_delta": [
+        2.2407,
+        3.6739,
+        0.9898
+      ]
+    },
+    {
+      "from": "small-stones",
+      "to": "grass",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6332,
+        1.3811,
+        0.9995
+      ],
+      "vertical_band_mean_delta": [
+        2.2471,
+        3.6696,
+        0.9916
+      ]
+    },
+    {
+      "from": "small-stones",
+      "to": "small-stones",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6334,
+        1.3779,
+        1.0004
+      ],
+      "vertical_band_mean_delta": [
+        2.2391,
+        3.6632,
+        0.9845
+      ]
+    },
+    {
+      "from": "small-stones",
+      "to": "boulders",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6325,
+        1.3712,
+        1.0101
+      ],
+      "vertical_band_mean_delta": [
+        2.2406,
+        3.6713,
+        0.9963
+      ]
+    },
+    {
+      "from": "small-stones",
+      "to": "wildflowers",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6335,
+        1.3751,
+        1.0035
+      ],
+      "vertical_band_mean_delta": [
+        2.24,
+        3.6673,
+        0.9898
+      ]
+    },
+    {
+      "from": "boulders",
+      "to": "grass",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.635,
+        1.3891,
+        0.9884
+      ],
+      "vertical_band_mean_delta": [
+        2.2456,
+        3.6625,
+        0.98
+      ]
+    },
+    {
+      "from": "boulders",
+      "to": "small-stones",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6352,
+        1.3859,
+        0.9893
+      ],
+      "vertical_band_mean_delta": [
+        2.2375,
+        3.6562,
+        0.9729
+      ]
+    },
+    {
+      "from": "boulders",
+      "to": "boulders",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6342,
+        1.3792,
+        0.999
+      ],
+      "vertical_band_mean_delta": [
+        2.2391,
+        3.6643,
+        0.9847
+      ]
+    },
+    {
+      "from": "boulders",
+      "to": "wildflowers",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6352,
+        1.3831,
+        0.9924
+      ],
+      "vertical_band_mean_delta": [
+        2.2384,
+        3.6603,
+        0.9782
+      ]
+    },
+    {
+      "from": "wildflowers",
+      "to": "grass",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6345,
+        1.3856,
+        0.9945
+      ],
+      "vertical_band_mean_delta": [
+        2.2461,
+        3.6657,
+        0.9857
+      ]
+    },
+    {
+      "from": "wildflowers",
+      "to": "small-stones",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6347,
+        1.3824,
+        0.9954
+      ],
+      "vertical_band_mean_delta": [
+        2.2381,
+        3.6593,
+        0.9786
+      ]
+    },
+    {
+      "from": "wildflowers",
+      "to": "boulders",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6338,
+        1.3757,
+        1.0051
+      ],
+      "vertical_band_mean_delta": [
+        2.2396,
+        3.6674,
+        0.9905
+      ]
+    },
+    {
+      "from": "wildflowers",
+      "to": "wildflowers",
+      "horizontal_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "vertical_edge_rgb_mae": [
+        0.0,
+        0.0,
+        0.0008
+      ],
+      "horizontal_band_mean_delta": [
+        1.6347,
+        1.3796,
+        0.9985
+      ],
+      "vertical_band_mean_delta": [
+        2.239,
+        3.6634,
+        0.9839
+      ]
+    }
+  ]
+}

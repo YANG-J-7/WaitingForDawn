@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-11",
+  "status": "candidate",
+  "generator": "built-in-image_gen",
+  "base_approved": "ASSET-0016",
+  "scope": "静态素材与拼铺审阅，正式地图未迁移",
+  "animation": false,
+  "native_size": [
+    1254,
+    1254
+  ],
+  "processing": "内置图像生成原稿保持；Godot静态材质使用共同底草偏移采样与边缘过渡装配四款交付PNG",
+  "assembly": "res://tools/assemble_grass_variant_tiles.gd",
+  "assembly_shader": "res://tools/assemble_grass_variant_tiles.gdshader",
+  "edge_policy": "四款共同周期边缘；16有向组合水平和垂直端点每通道最大差不超过1/255",
+  "assets": [
+    {
+      "id": "grass",
+      "file": "grass.png",
+      "sha256": "6d8eda42d2ac462686993e01168fb229cb66b85f5d54e95b3fa0eadeaaca0e44",
+      "source": "assets/map/grass_reference_v3/grass.png",
+      "source_sha256": "c758e5d96b87ff668989069aa0e58915fa319b23db98e3fc3a2b4bee547038d9",
+      "prompt": "../grass_reference_v3/grass.prompt.txt"
+    },
+    {
+      "id": "small-stones",
+      "file": "small-stones.png",
+      "sha256": "44f6da8c3406d9e4501dbc7d1dd3d54a3d1aef5bd0e61de092f1d8aae835f9e3",
+      "source": "assets/map/grass_variants_v1/source/small-stones.png",
+      "source_sha256": "7ab0dc6cf16702de0d7736c5d6ccdb53c2dc71d4f68e456eb99d624d7838e5f0",
+      "prompt": "source/small-stones.prompt.txt"
+    },
+    {
+      "id": "boulders",
+      "file": "boulders.png",
+      "sha256": "fac65be4179be4d0d5558ccc845167fc3338b730ced09816600b6f9c0708a51c",
+      "source": "assets/map/grass_variants_v1/source/boulders.png",
+      "source_sha256": "30f17e84d6f9c350b0d46b719b6f8bcb93971805394e881440071245d7055175",
+      "prompt": "source/boulders.prompt.txt"
+    },
+    {
+      "id": "wildflowers",
+      "file": "wildflowers.png",
+      "sha256": "65ae605c70a676a39b3f2db2111d4d435824437e6a923ff1bb808d9c9167a3fc",
+      "source": "assets/map/grass_variants_v1/source/wildflowers.png",
+      "source_sha256": "b629407ee0ddb59f19f1abc83bbb609233f4535f944c74762382584c0e57cbf3",
+      "prompt": "source/wildflowers.prompt.txt"
+    }
+  ]
+}

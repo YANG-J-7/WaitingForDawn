@@ -2,5 +2,5 @@ version: 1
 stage: production
 engine: godot-4.7-development-validation
 updated: 2026-11-11
-current_goal: "按用户最新草地截图制作静态贴图，移除独立预览草地动画，先验证草叶造型、疏密、青绿和黄绿配色及拼铺效果，再评估正式地图迁移。"
+current_goal: "三款连续露土泥地及18张512×512固定3×2切片候选已交付，101项检查与真实GL装配通过；复核泥土形态、草叶密度和拼接观感，正式地图迁移待后续。"
 active_story: "production/stories/story-033-modular-level-map.md"

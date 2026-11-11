@@ -1,0 +1,27 @@
+{
+	"crop_origin": [
+		0,
+		0
+	],
+	"grass_native_density": 1.0,
+	"grass_source_crop": [
+		371,
+		371,
+		512,
+		512
+	],
+	"grid": [
+		3,
+		2
+	],
+	"region_size": [
+		1536,
+		1024
+	],
+	"resized": false,
+	"source_size": [
+		1536,
+		1024
+	],
+	"tile_size": 512
+}

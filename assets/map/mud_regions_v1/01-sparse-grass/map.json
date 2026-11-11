@@ -1,0 +1,226 @@
+{
+  "schema": "waiting-for-dawn.mud-region.v1",
+  "id": "01-sparse-grass",
+  "name": "薄草斑驳泥地",
+  "status": "candidate",
+  "columns": 3,
+  "rows": 2,
+  "tile_pixels": 512,
+  "size_pixels": [
+    1536,
+    1024
+  ],
+  "placement": "固定3×2，按编号从左到右、从上到下",
+  "allowed_rotation": 0,
+  "independent_random_tile": false,
+  "animation": false,
+  "terrain_visual_only": true,
+  "collision_rules": null,
+  "grass_companion": "grass-companion.png",
+  "tiles": [
+    {
+      "number": 1,
+      "file": "tile-01.png",
+      "column": 0,
+      "row": 0,
+      "source_rect": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "sha256": "b308e42c65d9a1ca9e539c36ba480304d7500efcf10020e4a138913c376fc1ec"
+    },
+    {
+      "number": 2,
+      "file": "tile-02.png",
+      "column": 1,
+      "row": 0,
+      "source_rect": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "sha256": "d1026af6dbb4fc30cfd22f414f88e2cc8ade2c5743342cf4386129e1ef7cd274"
+    },
+    {
+      "number": 3,
+      "file": "tile-03.png",
+      "column": 2,
+      "row": 0,
+      "source_rect": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "sha256": "70b782adc40a430511cf49ed060d7e9bedd6c55e8c63d618597d7e1a563892b2"
+    },
+    {
+      "number": 4,
+      "file": "tile-04.png",
+      "column": 0,
+      "row": 1,
+      "source_rect": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "sha256": "0a260014fc07d1e53e818994190821dd72a2590d748f7f162b91085de2a8a05a"
+    },
+    {
+      "number": 5,
+      "file": "tile-05.png",
+      "column": 1,
+      "row": 1,
+      "source_rect": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "sha256": "defd716d19445062595c1f85244e6b916a98622325bf29dc3f8c0f3d2d74d45b"
+    },
+    {
+      "number": 6,
+      "file": "tile-06.png",
+      "column": 2,
+      "row": 1,
+      "source_rect": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "sha256": "5897023ec4fe7b78f21e6f8837bea311fdb7430af207030b1be377ad9aa94592"
+    }
+  ],
+  "source": "../source/01-sparse-grass.png",
+  "prompt": "../source/01-sparse-grass.prompt.txt",
+  "source_sha256": "97e5376c528b5d6fd22c68ef60d05026ebaf618cd455279a0068236c47a6b17c",
+  "assembly": {
+    "crop_origin": [
+      0,
+      0
+    ],
+    "grass_native_density": 1.0,
+    "grass_source_crop": [
+      371,
+      371,
+      512,
+      512
+    ],
+    "grid": [
+      3,
+      2
+    ],
+    "region_size": [
+      1536,
+      1024
+    ],
+    "resized": false,
+    "source_size": [
+      1536,
+      1024
+    ],
+    "tile_size": 512
+  },
+  "internal_edges": [
+    {
+      "axis": "x",
+      "column": 1,
+      "row": 0,
+      "reassembly_difference": 0
+    },
+    {
+      "axis": "x",
+      "column": 2,
+      "row": 0,
+      "reassembly_difference": 0
+    },
+    {
+      "axis": "x",
+      "column": 1,
+      "row": 1,
+      "reassembly_difference": 0
+    },
+    {
+      "axis": "x",
+      "column": 2,
+      "row": 1,
+      "reassembly_difference": 0
+    },
+    {
+      "axis": "y",
+      "column": 0,
+      "row": 1,
+      "reassembly_difference": 0
+    },
+    {
+      "axis": "y",
+      "column": 1,
+      "row": 1,
+      "reassembly_difference": 0
+    },
+    {
+      "axis": "y",
+      "column": 2,
+      "row": 1,
+      "reassembly_difference": 0
+    }
+  ],
+  "outer_edges": [
+    {
+      "edge": "top",
+      "index": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "edge": "bottom",
+      "index": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "edge": "top",
+      "index": 1,
+      "max_channel_delta": 0
+    },
+    {
+      "edge": "bottom",
+      "index": 1,
+      "max_channel_delta": 1
+    },
+    {
+      "edge": "top",
+      "index": 2,
+      "max_channel_delta": 0
+    },
+    {
+      "edge": "bottom",
+      "index": 2,
+      "max_channel_delta": 1
+    },
+    {
+      "edge": "left",
+      "index": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "edge": "right",
+      "index": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "edge": "left",
+      "index": 1,
+      "max_channel_delta": 0
+    },
+    {
+      "edge": "right",
+      "index": 1,
+      "max_channel_delta": 0
+    }
+  ]
+}

@@ -1,6 +1,61 @@
 version: 1
 updated: 2026-11-11
 assets:
+  - id: ASSET-0018
+    name: 三款六图块连续露土泥地
+    category: environment
+    specification: design/assets/specs/mud-regions-3x6-v1.md
+    target_path: assets/map/mud_regions_v1/
+    status: candidate
+    scope_approved: true
+    integrated: false
+    generated: true
+    production_completion: partial
+    file: assets/map/mud_regions_v1/01-sparse-grass/assembled.png
+    dimensions: [1536, 1024]
+    tile_dimensions: [512, 512]
+    region_count: 3
+    tile_count: 18
+    generator: built-in-image_gen
+    prompt: assets/map/mud_regions_v1/source/
+    metadata: assets/map/mud_regions_v1/manifest.json
+    review_status: 三款母图和18张固定3×2切片已交付候选，待泥土形态、草叶密度和最终观感复核
+    validation: 真实GL装配及101项检查通过；21处内部切线无装配差异，30段外边每通道差不超过1/255，布局及草地包围拼接已目检
+  - id: ASSET-0017
+    name: 草地小碎石、大石头、野草与花三款装饰贴图
+    category: environment
+    specification: design/assets/specs/grass-dressing-variants-v1.md
+    target_path: assets/map/grass_variants_v1/
+    status: candidate
+    scope_approved: true
+    integrated: false
+    generated: true
+    production_completion: partial
+    file: assets/map/grass_variants_v1/boulders.png
+    dimensions: [1254, 1254]
+    generator: built-in-image_gen
+    prompt: assets/map/grass_variants_v1/source/
+    metadata: assets/map/grass_variants_v1/manifest.json
+    review_status: 三款装饰与匹配纯草地已交付候选，待用户最终观感复核，未迁移正式关卡
+    validation: 真实GL共同边缘装配及67项检查通过，16种有向组合的32组接边每通道差不超过1/255；已目检混排与四角交点
+  - id: ASSET-0016
+    name: 参考截图静态短草贴图
+    category: environment
+    specification: design/assets/specs/grass-reference-static-v3.md
+    target_path: assets/map/grass_reference_v3/
+    status: candidate
+    scope_approved: true
+    integrated: true
+    integration_scope: 独立网格草地预览；正式第一关未迁移
+    generated: true
+    production_completion: partial
+    file: assets/map/grass_reference_v3/grass.png
+    dimensions: [1254, 1254]
+    generator: built-in-image_gen
+    prompt: assets/map/grass_reference_v3/grass.prompt.txt
+    metadata: assets/map/grass_reference_v3/manifest.json
+    review_status: 静态候选，待草叶造型与颜色反馈；未宣称严格无缝
+    validation: 无界面21项与旧入口GL28项通过，连续30帧及旧动画按键0像素变化，已目检近景与2×2拼铺
   - id: ASSET-0015
     name: 7056×2880参考图地形与冷蓝针叶密林
     category: environment

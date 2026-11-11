@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-11",
+  "status": "candidate",
+  "generator": "built-in-image_gen",
+  "intent": "三款，每款六张固定相邻图块构成3×2连续露土区域",
+  "region_count": 3,
+  "tile_count": 18,
+  "source_native_size": [
+    [
+      1536,
+      1024
+    ],
+    [
+      1536,
+      1024
+    ],
+    [
+      1536,
+      1024
+    ]
+  ],
+  "image_generation_requested_size": [
+    3072,
+    2048
+  ],
+  "upscaled": false,
+  "base_grass": "../grass_variants_v1/grass.png",
+  "animation": false,
+  "scope": "素材与拼接审阅，未迁移F6场景或正式第一关",
+  "validation_checks": 101,
+  "internal_edge_count": 21,
+  "outer_edge_count": 30,
+  "processing": "Godot仅装配整片外围草地，内部不改；Pillow精确裁切、重组校验、审阅图和元数据",
+  "regions": [
+    {
+      "id": "01-sparse-grass",
+      "name": "薄草斑驳泥地",
+      "map": "01-sparse-grass/map.json"
+    },
+    {
+      "id": "02-stony-earth",
+      "name": "碎石硬泥地",
+      "map": "02-stony-earth/map.json"
+    },
+    {
+      "id": "03-damp-earth",
+      "name": "深色湿润泥地",
+      "map": "03-damp-earth/map.json"
+    }
+  ]
+}

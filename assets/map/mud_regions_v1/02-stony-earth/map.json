@@ -1,0 +1,226 @@
+{
+  "schema": "waiting-for-dawn.mud-region.v1",
+  "id": "02-stony-earth",
+  "name": "碎石硬泥地",
+  "status": "candidate",
+  "columns": 3,
+  "rows": 2,
+  "tile_pixels": 512,
+  "size_pixels": [
+    1536,
+    1024
+  ],
+  "placement": "固定3×2，按编号从左到右、从上到下",
+  "allowed_rotation": 0,
+  "independent_random_tile": false,
+  "animation": false,
+  "terrain_visual_only": true,
+  "collision_rules": null,
+  "grass_companion": "grass-companion.png",
+  "tiles": [
+    {
+      "number": 1,
+      "file": "tile-01.png",
+      "column": 0,
+      "row": 0,
+      "source_rect": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "sha256": "ee024386785cd141b2cc004103c260120f9104afcf1948671013c324b272dc33"
+    },
+    {
+      "number": 2,
+      "file": "tile-02.png",
+      "column": 1,
+      "row": 0,
+      "source_rect": [
+        512,
+        0,
+        512,
+        512
+      ],
+      "sha256": "b31739d31e3a3806a8fe9eb7819f0754f8ee1e89a2b17431c0ee772f47640ed0"
+    },
+    {
+      "number": 3,
+      "file": "tile-03.png",
+      "column": 2,
+      "row": 0,
+      "source_rect": [
+        1024,
+        0,
+        512,
+        512
+      ],
+      "sha256": "62a059b735823e7d17a1dba89240abd9c349ab24146fcbb7a92420cd9ae98789"
+    },
+    {
+      "number": 4,
+      "file": "tile-04.png",
+      "column": 0,
+      "row": 1,
+      "source_rect": [
+        0,
+        512,
+        512,
+        512
+      ],
+      "sha256": "66ebd5ab4f606a72ae026f12cc64ed4c38b65791f6322e0960883c7dd896398e"
+    },
+    {
+      "number": 5,
+      "file": "tile-05.png",
+      "column": 1,
+      "row": 1,
+      "source_rect": [
+        512,
+        512,
+        512,
+        512
+      ],
+      "sha256": "ba618260947052d3bf71063d7ee48cf2a412684b2fe7e87b7e3d20707864772e"
+    },
+    {
+      "number": 6,
+      "file": "tile-06.png",
+      "column": 2,
+      "row": 1,
+      "source_rect": [
+        1024,
+        512,
+        512,
+        512
+      ],
+      "sha256": "5d06f474a2a954b95cc02dcd96aec9c40a967a97b76996359dea70508c4c916f"
+    }
+  ],
+  "source": "../source/02-stony-earth.png",
+  "prompt": "../source/02-stony-earth.prompt.txt",
+  "source_sha256": "1e599ceba8566241d8e9d8338ed4652ddd991a6c636147b8c83ca099390668e1",
+  "assembly": {
+    "crop_origin": [
+      0,
+      0
+    ],
+    "grass_native_density": 1.0,
+    "grass_source_crop": [
+      371,
+      371,
+      512,
+      512
+    ],
+    "grid": [
+      3,
+      2
+    ],
+    "region_size": [
+      1536,
+      1024
+    ],
+    "resized": false,
+    "source_size": [
+      1536,
+      1024
+    ],
+    "tile_size": 512
+  },
+  "internal_edges": [
+    {
+      "axis": "x",
+      "column": 1,
+      "row": 0,
+      "reassembly_difference": 0
+    },
+    {
+      "axis": "x",
+      "column": 2,
+      "row": 0,
+      "reassembly_difference": 0
+    },
+    {
+      "axis": "x",
+      "column": 1,
+      "row": 1,
+      "reassembly_difference": 0
+    },
+    {
+      "axis": "x",
+      "column": 2,
+      "row": 1,
+      "reassembly_difference": 0
+    },
+    {
+      "axis": "y",
+      "column": 0,
+      "row": 1,
+      "reassembly_difference": 0
+    },
+    {
+      "axis": "y",
+      "column": 1,
+      "row": 1,
+      "reassembly_difference": 0
+    },
+    {
+      "axis": "y",
+      "column": 2,
+      "row": 1,
+      "reassembly_difference": 0
+    }
+  ],
+  "outer_edges": [
+    {
+      "edge": "top",
+      "index": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "edge": "bottom",
+      "index": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "edge": "top",
+      "index": 1,
+      "max_channel_delta": 0
+    },
+    {
+      "edge": "bottom",
+      "index": 1,
+      "max_channel_delta": 1
+    },
+    {
+      "edge": "top",
+      "index": 2,
+      "max_channel_delta": 0
+    },
+    {
+      "edge": "bottom",
+      "index": 2,
+      "max_channel_delta": 1
+    },
+    {
+      "edge": "left",
+      "index": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "edge": "right",
+      "index": 0,
+      "max_channel_delta": 0
+    },
+    {
+      "edge": "left",
+      "index": 1,
+      "max_channel_delta": 0
+    },
+    {
+      "edge": "right",
+      "index": 1,
+      "max_channel_delta": 0
+    }
+  ]
+}
