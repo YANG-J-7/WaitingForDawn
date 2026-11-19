@@ -1,0 +1,92 @@
+{
+  "id": "ASSET-0020",
+  "date": "2026-11-12",
+  "status": "candidate",
+  "integrated": false,
+  "generator": "built-in-image_gen",
+  "transparent_background": true,
+  "animation": false,
+  "reference": "references/boulder-grass-reference.png",
+  "processing": "原生PNG直接复制，保留生成alpha；未缩放、去底或重绘",
+  "assets": [
+    {
+      "id": "01-broad-boulder",
+      "name": "宽厚岩块",
+      "file": "01-broad-boulder.png",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "format": "RGBA",
+      "visible_bbox_alpha_gt_16": [
+        83,
+        244,
+        1170,
+        1033
+      ],
+      "transparent_pixels": 943469,
+      "opaque_pixels": 919,
+      "near_opaque_pixels": 612352,
+      "partial_alpha_pixels": 628128,
+      "sha256": "959fae3ad3eb4bc989d6a177cc8c75217ed79683e167f8b7b7797768b8aa7d89",
+      "prompt": "01-broad-boulder.prompt.txt",
+      "suggested_foot_pixel": [
+        626,
+        1032
+      ]
+    },
+    {
+      "id": "02-upright-cracked",
+      "name": "竖向裂岩",
+      "file": "02-upright-cracked.png",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "format": "RGBA",
+      "visible_bbox_alpha_gt_16": [
+        275,
+        160,
+        962,
+        1137
+      ],
+      "transparent_pixels": 1077979,
+      "opaque_pixels": 785,
+      "near_opaque_pixels": 477143,
+      "partial_alpha_pixels": 493752,
+      "sha256": "c29281a43b50b295f24ef6c5b3bb962576a5c52cbe7f6f032bb8bc5747e4117e",
+      "prompt": "02-upright-cracked.prompt.txt",
+      "suggested_foot_pixel": [
+        618,
+        1136
+      ]
+    },
+    {
+      "id": "03-low-layered",
+      "name": "低矮层岩",
+      "file": "03-low-layered.png",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "format": "RGBA",
+      "visible_bbox_alpha_gt_16": [
+        78,
+        375,
+        1180,
+        957
+      ],
+      "transparent_pixels": 1103396,
+      "opaque_pixels": 948,
+      "near_opaque_pixels": 451971,
+      "partial_alpha_pixels": 468172,
+      "sha256": "75874e11f74e3e8ef80c343489e83e3cc498321d1c427e62a44030113c2dd950",
+      "prompt": "03-low-layered.prompt.txt",
+      "suggested_foot_pixel": [
+        629,
+        956
+      ]
+    }
+  ],
+  "validation": "三张PNG解码、RGBA、透明／近不透明像素、边缘alpha不超过1/255、可见主体至少32像素留白、提示词存在检查通过"
+}

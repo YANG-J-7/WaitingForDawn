@@ -22,7 +22,8 @@ func _ready() -> void:
 
 
 func configure(asset_name: String, display_size: Vector2, kind: StringName = &"still") -> void:
-	configure_path(ROOT + asset_name + ".png", display_size, kind, asset_name)
+	var path := "res://assets/map/grass_variants_v1/grass.png" if asset_name == "terrain_grass" else ROOT + asset_name + ".png"
+	configure_path(path, display_size, kind, asset_name)
 
 func configure_world(asset_name: String, display_size: Vector2, kind: StringName = &"still") -> void:
 	var factor: float = preload("res://src/gameplay/art/world_art_scale.gd").factor_for(asset_name)

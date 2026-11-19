@@ -1,0 +1,208 @@
+{
+  "id": "ASSET-0021",
+  "status": "candidate",
+  "generator": "built-in-image_gen",
+  "raw_size": [
+    1774,
+    887
+  ],
+  "grid": [
+    2,
+    3
+  ],
+  "cell_size": [
+    512,
+    256
+  ],
+  "anchor": [
+    256,
+    190
+  ],
+  "frames": [
+    {
+      "frame": 0,
+      "source_cell": [
+        0,
+        0,
+        887,
+        295
+      ],
+      "reviewed_root": [
+        443,
+        241
+      ],
+      "translation": [
+        0,
+        51
+      ],
+      "output_root": [
+        256,
+        190
+      ],
+      "scale": 0.5772266065388951,
+      "bbox": [
+        128,
+        169,
+        373,
+        201
+      ]
+    },
+    {
+      "frame": 1,
+      "source_cell": [
+        887,
+        0,
+        887,
+        295
+      ],
+      "reviewed_root": [
+        443,
+        241
+      ],
+      "translation": [
+        0,
+        51
+      ],
+      "output_root": [
+        256,
+        190
+      ],
+      "scale": 0.5772266065388951,
+      "bbox": [
+        128,
+        166,
+        376,
+        201
+      ]
+    },
+    {
+      "frame": 2,
+      "source_cell": [
+        0,
+        295,
+        887,
+        295
+      ],
+      "reviewed_root": [
+        443,
+        225
+      ],
+      "translation": [
+        0,
+        60
+      ],
+      "output_root": [
+        256,
+        190
+      ],
+      "scale": 0.5772266065388951,
+      "bbox": [
+        128,
+        131,
+        378,
+        204
+      ]
+    },
+    {
+      "frame": 3,
+      "source_cell": [
+        887,
+        295,
+        887,
+        295
+      ],
+      "reviewed_root": [
+        443,
+        225
+      ],
+      "translation": [
+        0,
+        60
+      ],
+      "output_root": [
+        256,
+        190
+      ],
+      "scale": 0.5772266065388951,
+      "bbox": [
+        128,
+        134,
+        387,
+        204
+      ]
+    },
+    {
+      "frame": 4,
+      "source_cell": [
+        0,
+        590,
+        887,
+        295
+      ],
+      "reviewed_root": [
+        443,
+        207
+      ],
+      "translation": [
+        0,
+        71
+      ],
+      "output_root": [
+        256,
+        190
+      ],
+      "scale": 0.5772266065388951,
+      "bbox": [
+        126,
+        145,
+        385,
+        206
+      ]
+    },
+    {
+      "frame": 5,
+      "source_cell": [
+        887,
+        590,
+        887,
+        295
+      ],
+      "reviewed_root": [
+        443,
+        207
+      ],
+      "translation": [
+        0,
+        71
+      ],
+      "output_root": [
+        256,
+        190
+      ],
+      "scale": 0.5772266065388951,
+      "bbox": [
+        128,
+        165,
+        377,
+        206
+      ]
+    }
+  ],
+  "source": "C:/Users/y1971/.codex/generated_images/01a1cb03-ab11-75d3-b200-54fba06d9712/exec-8bd9e216-ee7d-4a25-ad2e-6ac84e52a282.png",
+  "raw_sha256": "5991c03e0d99ba0c2e03a89604158fef5d2c0b54103290056d79d41f02c732f3",
+  "reference_sha256": "59dea16511f9557d92e82ebdb6391b85d75dd36d42d152af31954f57fe49d124",
+  "说明": "六阶段源图统一缩放，以人工复核的水花根点平移到共享锚点；不做逐帧bbox放大。GIF为关键帧审阅，运行时连续交叉淡入。",
+  "runtime_playback": {
+    "fps": 60,
+    "contract": "playback-60fps.json",
+    "active_frame_counts": [
+      135,
+      162,
+      126
+    ],
+    "原画关键帧": 6,
+    "说明": "六关键帧预乘B样条过渡，运行连续时间，导出60fps",
+    "interpolation": "cubic-bspline-premultiplied",
+    "runtime_clock": "continuous"
+  }
+}

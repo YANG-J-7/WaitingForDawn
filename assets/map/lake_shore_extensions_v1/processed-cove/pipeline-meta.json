@@ -1,0 +1,129 @@
+{
+  "target": "asset",
+  "mode": "single",
+  "prompt": "",
+  "role": "",
+  "input": "assets\\map\\lake_shore_extensions_v1\\cove-shore-raw.png",
+  "threshold": 100,
+  "edge_threshold": 150,
+  "duration": 200,
+  "rows": 1,
+  "cols": 1,
+  "cell_size": 1774,
+  "fit_scale": 0.98,
+  "trim_border": 0,
+  "edge_clean_depth": 3,
+  "align": "center",
+  "shared_scale": false,
+  "scale_strategy": "preserve",
+  "component_mode": "all",
+  "component_padding": 0,
+  "min_component_area": 1,
+  "edge_touch_margin": 0,
+  "frame_labels": [
+    "single-1"
+  ],
+  "frames": [
+    {
+      "grid": [
+        0,
+        0
+      ],
+      "source_box": [
+        0,
+        0,
+        1774,
+        887
+      ],
+      "component_mode": "all",
+      "component_count": 119,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        21,
+        320,
+        1754,
+        641
+      ],
+      "source_frame_size": [
+        1774,
+        887
+      ],
+      "is_empty": false,
+      "subject_area": 394502,
+      "body_core_area": 220347,
+      "body_area_fraction": 0.1400328431852297,
+      "anchor_source": [
+        887.5,
+        480.5
+      ],
+      "source_edge_touch": false,
+      "output_edge_touch": false,
+      "edge_touch": false,
+      "output_size": [
+        1698,
+        315
+      ],
+      "preserved_subject_size": [
+        1698,
+        315
+      ],
+      "paste_position": [
+        38,
+        730
+      ],
+      "unclamped_paste_position": [
+        38,
+        730
+      ],
+      "paste_clamped": false,
+      "aligned_bbox": [
+        38,
+        730,
+        1736,
+        1045
+      ],
+      "scale_adjustment": 1.0,
+      "source_to_output_scale": 0.98,
+      "bbox_scale_applied": false,
+      "scale_changed": false,
+      "anchor_target": [
+        887.0,
+        887.0
+      ],
+      "scale_strategy": "preserve",
+      "shared_center_x": 887.0,
+      "shared_feet_y": 887.0
+    }
+  ],
+  "edge_touch_frames": [],
+  "source_edge_touch_frames": [],
+  "output_edge_touch_frames": [],
+  "empty_frames": [],
+  "paste_clamped_frames": [],
+  "qc_summary": {
+    "frame_count": 1,
+    "valid_frame_count": 1,
+    "empty_count": 0,
+    "edge_touch_count": 0,
+    "paste_clamped_count": 0,
+    "body_scale_mean": 0.37420962465606056,
+    "output_subject_height_mean": 315.0,
+    "body_scale_cv": 0.0,
+    "anchor_x_std": 0.0,
+    "anchor_y_std": 0.0,
+    "anchor_y_mean": 0.5417136414881624
+  },
+  "output_origin": [
+    887.0,
+    887.0
+  ],
+  "qc_config": {
+    "strict_qc": true,
+    "reject_edge_touch": false,
+    "allow_source_edge_touch": false,
+    "max_body_scale_cv": null,
+    "max_anchor_y_std": null,
+    "max_profile_scale_drift": null
+  }
+}

@@ -1,4 +1,5 @@
 """导出已有生成素材的草簇历史样片；昆虫方案已取消，不再叠合。"""
+raise SystemExit("旧草地概念预览已清理，本历史导出器停用；当前素材见 assets/map/grass_reference_v3/。")
 from pathlib import Path
 import json, hashlib
 from PIL import Image, ImageSequence

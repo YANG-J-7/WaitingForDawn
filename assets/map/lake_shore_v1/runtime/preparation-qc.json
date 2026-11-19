@@ -1,0 +1,10 @@
+{
+  "water_edge_exact": true,
+  "water_periodic_size": [
+    1254,
+    1254
+  ],
+  "foam_pixel_count": 3326,
+  "input_sha256": "59dea16511f9557d92e82ebdb6391b85d75dd36d42d152af31954f57fe49d124",
+  "说明": "水面48像素对称闭边；水花从已有原画接触线提取，非新生成序列帧。"
+}

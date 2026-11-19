@@ -2,9 +2,9 @@ class_name TerrainGridLayer
 extends Node2D
 
 const CELL_SIZE: float = 36.0
-const GRASS_ATLAS: Texture2D = preload("res://assets/tilesets/moonlit_grass_detail_v3/moonlit_grass_atlas.png")
-const GRASS_VARIANT_COUNT: int = 4
-const GRASS_VARIANT_LOOKUP: Array[int] = [0, 0, 0, 0, 1, 2, 3, 3]
+const GRASS_ATLAS: Texture2D = preload("res://assets/map/grass_variants_v1/grass.png")
+const GRASS_VARIANT_COUNT: int = 1
+const GRASS_VARIANT_LOOKUP: Array[int] = [0]
 const RELIEF_SHADER: Shader = preload("res://src/gameplay/art/grass_relief.gdshader")
 const RELIEF_SOURCE: Texture2D = preload("res://assets/map/moonlit_terrain_detail.png")
 # 沿左侧平原外缘划定清理范围，上下延伸到地图边界，避开崖壁和湖岸。

@@ -8,6 +8,12 @@ extends Resource
 @export var cell_size: int = 36
 @export var city_position := Vector2(4176,1908)
 @export var assembly: PackedScene
+## 制图时关闭对局实体与模拟，其他关卡仍可使用原玩法。
+@export var environment_only: bool = false
+## 纯视觉地表摆放，与通行、建造和资源点规则分离。
+@export_file("*.json") var surface_layout_path: String
+## 仅调整景观与镜头余量，顺序为左、上、右、下；不扩大可玩网格。
+@export var visual_margins := Vector4.ZERO
 @export var terrain_tiles: PackedScene
 @export var show_resource_forests: bool = true
 @export var lighting_profile: Resource = preload("res://src/gameplay/art/world_lighting_profile.gd").new()

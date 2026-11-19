@@ -1,4 +1,5 @@
 """将已生成的细草原稿处理为高清细节与地图色域遮罩，不绘制新草叶。"""
+raise SystemExit("旧草地原稿已按用户要求删除，本历史构建器停用；当前素材见 assets/map/grass_variants_v1/。")
 from pathlib import Path
 import hashlib
 import json

@@ -26,7 +26,15 @@
   "upscaled": false,
   "base_grass": "../grass_variants_v1/grass.png",
   "animation": false,
-  "scope": "素材与拼接审阅，未迁移F6场景或正式第一关",
+  "scope": "已用于正式第一关和小地图地表；独立F6样区保持",
+  "integration": {
+    "date": "2026-11-11",
+    "level": "res://src/levels/level_001.tres",
+    "layout": "res://assets/levels/level_001/surface-layout.json",
+    "region_instances": 10,
+    "sprite_pieces": 60,
+    "terrain_visual_only": true
+  },
   "validation_checks": 101,
   "internal_edge_count": 21,
   "outer_edge_count": 30,

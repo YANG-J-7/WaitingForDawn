@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "sites": [
+    {"id":"convex_rock","name":"凸岩","anchor":[905,752],"size":[400,240],"water_floor":714.0,"cycle":4.0,"active_duration":2.25,"phase_offset":0.0,"intensity":1.0},
+    {"id":"quiet_bay","name":"小湾","anchor":[1390,498],"size":[320,190],"water_floor":454.0,"cycle":6.0,"active_duration":2.7,"phase_offset":1.7,"intensity":0.7},
+    {"id":"gravel_bank","name":"碎石岸","anchor":[235,622],"size":[280,170],"water_floor":590.0,"cycle":4.0,"active_duration":2.1,"phase_offset":2.6,"intensity":0.8}
+  ]
+}

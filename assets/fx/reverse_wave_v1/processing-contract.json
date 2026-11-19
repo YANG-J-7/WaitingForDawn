@@ -1,0 +1,18 @@
+{
+  "frames": 8,
+  "grid": [
+    4,
+    2
+  ],
+  "cell_size": [
+    384,
+    384
+  ],
+  "contact_uv": [
+    0.26,
+    0.7
+  ],
+  "scale": "原格统一缩放，不逐帧重新居中",
+  "raw_sha256": "e2d5456b3b7a48acc1f144af97ea6b1e654662cdbcd038aa6986c2895f8af46a",
+  "output_edge_touch": false
+}

@@ -40,7 +40,7 @@ func _ready() -> void:
 	for comparison_zoom in [1.0, 1.6]:
 		main.map_camera.zoom = Vector2.ONE * comparison_zoom
 		main.map_camera.force_update_scroll()
-		grass_layer.grass_atlas = preload("res://assets/tilesets/moonlit_grass_v2/moonlit_grass_atlas.png")
+		grass_layer.grass_atlas = preload("res://assets/map/grass_variants_v1/grass.png")
 		grass_layer.queue_redraw()
 		await capture("grass-density-before-%.1fx" % comparison_zoom)
 		grass_layer.grass_atlas = detail_atlas
@@ -83,7 +83,7 @@ func _ready() -> void:
 	camera.force_update_scroll()
 	var detail_reference := await capture("grass-detail-reference-1.6x")
 	var new_atlas: Texture2D = terrain.grass_atlas
-	terrain.grass_atlas = preload("res://assets/tilesets/moonlit_grass_v2/moonlit_grass_atlas.png")
+	terrain.grass_atlas = preload("res://assets/map/grass_variants_v1/grass.png")
 	terrain.queue_redraw()
 	var coarse_reference := await capture("grass-coarse-reference-1.6x")
 	verify_grass_detail(coarse_reference, detail_reference)

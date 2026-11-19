@@ -77,7 +77,7 @@ func toggle_overview(animated: bool = false) -> void:
 	_move_view(return_position if has_return_view else city_position,return_zoom if has_return_view else build_zoom,animated)
 
 func configure(context: RefCounted) -> void:
-	map_bounds = context.bounds
+	map_bounds = context.visual_bounds
 	city_position = context.city_position
 
 func screen_view_rect() -> Rect2:

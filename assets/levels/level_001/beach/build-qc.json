@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-17",
+  "patches": 1,
+  "disabled_splashes": [
+    "cove_4",
+    "cove_9",
+    "cove_12",
+    "cove_18",
+    "cove_22",
+    "cove_27",
+    "cove_31"
+  ],
+  "input_sha256": {
+    "assets/map/beach_v1/sand.png": "5dfc4789ea1031009714dceae30bb1aebd32c3195d38d67f0d8571df38e578cc",
+    "assets/map/beach_v1/foam.png": "54cdbb574d033999e2ee4c11e4cabfbb26739e86f782ce3e1eeeb782b5445b41",
+    "assets/levels/level_001/mountain/contact/lake-module.json": "13ed99e2329d7d54c8750c45c3dc9cf52a307492752b42a53c5575527dd6dcc0"
+  }
+}

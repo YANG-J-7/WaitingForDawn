@@ -1,0 +1,42 @@
+{
+  "id": "ASSET-0023",
+  "date": "2026-11-13",
+  "status": "candidate",
+  "integrated": true,
+  "generator": "built-in-image_gen",
+  "runtime_scene": "res://src/main/main.tscn",
+  "native_sources": {
+    "upper": [
+      1207,
+      1303
+    ],
+    "lower": [
+      1774,
+      887
+    ]
+  },
+  "runtime_overlay_size": [
+    3556,
+    2880
+  ],
+  "world_size": [
+    7056,
+    2880
+  ],
+  "source_paths": {
+    "upper": "C:/Users/y1971/.codex/generated_images/01a1cb03-ab11-75d3-b200-54fba06d9712/exec-b3cec941-4477-473a-86d0-abcb0af30c48.png",
+    "lower": "C:/Users/y1971/.codex/generated_images/01a1cb03-ab11-75d3-b200-54fba06d9712/exec-d054e3aa-0034-483f-8a7a-bcbb1569148f.png"
+  },
+  "prompts": [
+    "upper-shore-prompt.txt",
+    "lower-shore-prompt.txt"
+  ],
+  "说明": "三款水平岸段作为形态/材质参考，新增定向适配生成图；运行覆盖图为关卡装配尺寸，不是原生3556×2880生成。",
+  "output_hashes": {
+    "shore-overlay.png": "d07b10de65216c57ffe9c6d402652b3fbded411494f9880e85f5b5a8a1a75222",
+    "shore-water-only.png": "4ae6bdfad1e3f44ef4090aff3d0a0459d546d42c47bf68b9ca3b869825fdded3",
+    "water-control.png": "2425776075ccbd049f2f1c7de3694565a1994191a4f6e947b6e89026908866e5",
+    "layout.json": "712badf5914b7bbddcf135ec8bbfae29f35df8da8a154ea822da70573c7ccef8",
+    "module.json": "b5bad11d1b55f7e743bd20891e171b95217dde4e761b0426b4b5c5b3946de5e1"
+  }
+}

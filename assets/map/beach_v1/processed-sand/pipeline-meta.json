@@ -1,0 +1,129 @@
+{
+  "target": "asset",
+  "mode": "single",
+  "prompt": "",
+  "role": "",
+  "input": "assets\\map\\beach_v1\\sand-raw.png",
+  "threshold": 100,
+  "edge_threshold": 150,
+  "duration": 200,
+  "rows": 1,
+  "cols": 1,
+  "cell_size": 1800,
+  "fit_scale": 0.94,
+  "trim_border": 0,
+  "edge_clean_depth": 3,
+  "align": "center",
+  "shared_scale": false,
+  "scale_strategy": "preserve",
+  "component_mode": "all",
+  "component_padding": 0,
+  "min_component_area": 1,
+  "edge_touch_margin": 0,
+  "frame_labels": [
+    "single-1"
+  ],
+  "frames": [
+    {
+      "grid": [
+        0,
+        0
+      ],
+      "source_box": [
+        0,
+        0,
+        1774,
+        887
+      ],
+      "component_mode": "all",
+      "component_count": 8,
+      "selected_component_area": null,
+      "selected_component_bbox": null,
+      "crop_bbox": [
+        26,
+        250,
+        1748,
+        666
+      ],
+      "source_frame_size": [
+        1774,
+        887
+      ],
+      "is_empty": false,
+      "subject_area": 635268,
+      "body_core_area": 326856,
+      "body_area_fraction": 0.20772043636696413,
+      "anchor_source": [
+        887.0,
+        458.0
+      ],
+      "source_edge_touch": false,
+      "output_edge_touch": false,
+      "edge_touch": false,
+      "output_size": [
+        1642,
+        397
+      ],
+      "preserved_subject_size": [
+        1642,
+        397
+      ],
+      "paste_position": [
+        79,
+        702
+      ],
+      "unclamped_paste_position": [
+        79,
+        702
+      ],
+      "paste_clamped": false,
+      "aligned_bbox": [
+        79,
+        702,
+        1721,
+        1099
+      ],
+      "scale_adjustment": 1.0,
+      "source_to_output_scale": 0.9537767756482526,
+      "bbox_scale_applied": false,
+      "scale_changed": false,
+      "anchor_target": [
+        900.0,
+        900.0
+      ],
+      "scale_strategy": "preserve",
+      "shared_center_x": 900.0,
+      "shared_feet_y": 900.0
+    }
+  ],
+  "edge_touch_frames": [],
+  "source_edge_touch_frames": [],
+  "output_edge_touch_frames": [],
+  "empty_frames": [],
+  "paste_clamped_frames": [],
+  "qc_summary": {
+    "frame_count": 1,
+    "valid_frame_count": 1,
+    "empty_count": 0,
+    "edge_touch_count": 0,
+    "paste_clamped_count": 0,
+    "body_scale_mean": 0.4557635750769955,
+    "output_subject_height_mean": 397.0,
+    "body_scale_cv": 0.0,
+    "anchor_x_std": 0.0,
+    "anchor_y_std": 0.0,
+    "anchor_y_mean": 0.5163472378804961
+  },
+  "output_origin": [
+    900.0,
+    900.0
+  ],
+  "qc_config": {
+    "strict_qc": true,
+    "reject_edge_touch": false,
+    "allow_source_edge_touch": false,
+    "max_body_scale_cv": null,
+    "max_anchor_y_std": null,
+    "max_profile_scale_drift": null
+  }
+}

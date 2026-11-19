@@ -4,6 +4,7 @@ extends RefCounted
 const DEFAULT_LEVEL := "res://src/levels/level_001.tres"
 var definition: Resource
 var bounds := Rect2()
+var visual_bounds := Rect2()
 var grid_size := Vector2i.ZERO
 var city_position := Vector2.ZERO
 var modules: Array[Dictionary] = []
@@ -25,6 +26,8 @@ static func from_assembly(source: Resource, scene: Node2D) -> LevelMapRuntime:
 	var result := LevelMapRuntime.new()
 	result.definition = source
 	result.bounds = Rect2(Vector2.ZERO,Vector2(source.world_size))
+	var margins: Vector4 = source.visual_margins
+	result.visual_bounds = result.bounds.grow_individual(margins.x,margins.y,margins.z,margins.w)
 	result.grid_size = source.world_size / source.cell_size
 	result.city_position = source.city_position
 	result.compiled = {"worldSize":[float(source.world_size.x),float(source.world_size.y)], "gridSize":[float(result.grid_size.x),float(result.grid_size.y)], "cellSize":source.cell_size, "city":[source.city_position.x,source.city_position.y], "resourceSites":[], "cells":{}, "spawns":[]}

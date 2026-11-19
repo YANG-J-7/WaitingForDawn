@@ -1,0 +1,27 @@
+{
+  "water_cells": 2741,
+  "shore_size": [
+    3556,
+    2880
+  ],
+  "upper_native_size": [
+    1207,
+    1303
+  ],
+  "lower_native_size": [
+    1774,
+    887
+  ],
+  "splash_sites": 10,
+  "join": [
+    6438,
+    1504
+  ],
+  "input_hashes": {
+    "assets\\levels\\level_001\\lake\\upper-shore-raw.png": "e84faabc2c693ae57f4da0d4067324246ade40d87c5c06ee4f778f2a85c5d0a5",
+    "assets\\levels\\level_001\\lake\\lower-shore-raw.png": "4001c3d93c76381812b60b5deeab4ec7edd60817eb4d515b7d40025c3c4ef316",
+    "assets\\map\\lake_shore_extensions_v1\\gentle-shore.png": "887e01b6f7f85dbed025fb9f26843e69c5c060bfbf0c572c2d39cebe059e1ce8",
+    "assets\\map\\lake_shore_extensions_v1\\original-connector-shore.png": "9bd6a2e67a86209f6ea3034e5269d454cdd5810c7c6317dcfd3f396cf0610de7",
+    "assets\\map\\lake_shore_extensions_v1\\cove-shore.png": "60aa431373c677c1691eaf4f24538dfd2c56d7283f04942e77137aef228f3da2"
+  }
+}

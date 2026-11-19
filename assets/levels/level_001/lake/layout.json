@@ -1,0 +1,188 @@
+{
+  "version": 2,
+  "world_size": [
+    7056,
+    2880
+  ],
+  "shore_origin": [
+    3500,
+    0
+  ],
+  "shore_size": [
+    3556,
+    2880
+  ],
+  "period": 12.0,
+  "fps": 60,
+  "splash_sites": [
+    {
+      "id": "cove_4",
+      "anchor": [
+        6031.6933483652765,
+        1733.6054114994363
+      ],
+      "size": [
+        270,
+        180
+      ],
+      "cycle": 4.0,
+      "active_duration": 2.25,
+      "phase_offset": 0.0,
+      "intensity": 0.85
+    },
+    {
+      "id": "cove_9",
+      "anchor": [
+        5141.027876486843,
+        1814.1847706773947
+      ],
+      "size": [
+        220,
+        150
+      ],
+      "cycle": 6.0,
+      "active_duration": 2.7,
+      "phase_offset": 1.37,
+      "intensity": 0.6
+    },
+    {
+      "id": "cove_12",
+      "anchor": [
+        4911.450918433069,
+        1935.496275225355
+      ],
+      "size": [
+        220,
+        150
+      ],
+      "cycle": 4.0,
+      "active_duration": 2.1,
+      "phase_offset": 2.74,
+      "intensity": 0.7
+    },
+    {
+      "id": "cove_18",
+      "anchor": [
+        5673.822592837506,
+        2302.58560902372
+      ],
+      "size": [
+        270,
+        180
+      ],
+      "cycle": 4.0,
+      "active_duration": 2.25,
+      "phase_offset": 0.11,
+      "intensity": 0.85
+    },
+    {
+      "id": "cove_22",
+      "anchor": [
+        4980.384926917589,
+        2415.166092696326
+      ],
+      "size": [
+        220,
+        150
+      ],
+      "cycle": 6.0,
+      "active_duration": 2.7,
+      "phase_offset": 1.48,
+      "intensity": 0.6
+    },
+    {
+      "id": "cove_27",
+      "anchor": [
+        4453.794262359499,
+        2606.7722450330903
+      ],
+      "size": [
+        220,
+        150
+      ],
+      "cycle": 4.0,
+      "active_duration": 2.1,
+      "phase_offset": 2.85,
+      "intensity": 0.7
+    },
+    {
+      "id": "cove_31",
+      "anchor": [
+        4146.771349350074,
+        2650.8069525096003
+      ],
+      "size": [
+        270,
+        180
+      ],
+      "cycle": 4.0,
+      "active_duration": 2.25,
+      "phase_offset": 0.22,
+      "intensity": 0.85
+    },
+    {
+      "id": "upper_0",
+      "anchor": [
+        6442.5,
+        320
+      ],
+      "size": [
+        220,
+        150
+      ],
+      "cycle": 6.0,
+      "active_duration": 2.7,
+      "phase_offset": 1.59,
+      "intensity": 0.6
+    },
+    {
+      "id": "upper_1",
+      "anchor": [
+        6818.25,
+        720
+      ],
+      "size": [
+        220,
+        150
+      ],
+      "cycle": 4.0,
+      "active_duration": 2.1,
+      "phase_offset": 2.96,
+      "intensity": 0.7
+    },
+    {
+      "id": "upper_2",
+      "anchor": [
+        6788.5,
+        1400
+      ],
+      "size": [
+        270,
+        180
+      ],
+      "cycle": 4.0,
+      "active_duration": 2.25,
+      "phase_offset": 0.33,
+      "intensity": 0.85
+    }
+  ],
+  "source_modules": [
+    "gentle",
+    "original-connector",
+    "cove"
+  ],
+  "adaptation": "三岸段作为形态/材质参考，经内置生图定向适配；不是旋转水平原画或将概念图直接裁为最终素材。",
+  "lower_world_rect": [
+    3776,
+    1438,
+    3280,
+    1640
+  ],
+  "upper_world_rect": [
+    5323,
+    0,
+    1733,
+    1870
+  ],
+  "说明": "静态岸石原画固定。水域多边形同时用于表现遮罩和36格地形编译。"
+}

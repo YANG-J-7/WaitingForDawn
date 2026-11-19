@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-14",
+  "native_size": [
+    1774,
+    887
+  ],
+  "crop_box": [
+    33,
+    44,
+    1753,
+    867
+  ],
+  "output_size": [
+    1720,
+    823
+  ],
+  "reference_sha256": "f80f90d9ec94257bcb7482452bdf8d5580e3da4fe2888cf88659b00657e57fdc",
+  "sha256": {
+    "raw-sheet.png": "a76ddc394a2fe9bfab0974a6550f00bc2d8d6759613a41460659f4458f851ff1",
+    "mountain-transparent.png": "2248a9e98402c185153c43ede0a1fe5ca3bd9c18ded24df324d533be1b14aa42",
+    "prompt-used.txt": "a8ce41125cabb2e51bb4b7252d301c7f60a1c2d184b6371a54187edec9b02faa"
+  }
+}

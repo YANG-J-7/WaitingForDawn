@@ -3,7 +3,7 @@ extends Node2D
 const Runtime = preload("res://src/gameplay/map/level_map_runtime.gd")
 const PART = preload("res://src/gameplay/art/modular_surface_part.gd")
 const SHADER = preload("res://src/gameplay/art/modular_terrain.gdshader")
-const GRASS = preload("res://assets/map/grass_hd_v1/detail.png")
+const GRASS = preload("res://assets/map/grass_variants_v1/grass.png")
 var runtime: RefCounted
 var grid_model: RefCounted
 var cell_size := 36.0
@@ -29,7 +29,7 @@ func configure(grid: RefCounted, context: RefCounted = null) -> void:
 		var shader_material := ShaderMaterial.new()
 		shader_material.shader = SHADER
 		shader_material.set_shader_parameter("grass_detail",GRASS)
-		shader_material.set_shader_parameter("meadow_detail",load("res://assets/map_kits/moonlit_v3/meadow.png"))
+		shader_material.set_shader_parameter("meadow_detail",GRASS)
 		for pair in [["rock_detail","rock"],["water_detail","water"],["soil_detail","soil"]]:
 			var path := "res://assets/map_kits/moonlit_v2/materials/%s.png" % pair[1]
 			if ResourceLoader.exists(path): shader_material.set_shader_parameter(pair[0],load(path))

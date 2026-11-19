@@ -1,6 +1,11 @@
 version: 1
 stage: production
 engine: godot-4.7-development-validation
-updated: 2026-11-11
-current_goal: "三款连续露土泥地及18张512×512固定3×2切片候选已交付，101项检查与真实GL装配通过；复核泥土形态、草叶密度和拼接观感，正式地图迁移待后续。"
+updated: 2026-11-17
+shore_cleanup_task: "2026-11-17用户改为全岸沙滩，旧岩岸原画留档，运行层退出显示。"
+beach_asset_task: "山脚沙带水侧扩展100世界单位，陆缘固定、南端平滑接回；取证露沙增加约73%，69项相关验证通过。"
+water_effects_task: "2026-11-17按最新红框反馈停用山脚四处反卷浪，原素材留档，普通拍岸浪线保持。"
+current_goal: "最新红框已直接实施上方108草地/沙滩及右侧216湖面，下方不扩；197项相关检查通过，下一步F5复核余量与衔接，Story-033开放。"
 active_story: "production/stories/story-033-modular-level-map.md"
+asset_cleanup: "2026-11-13已保存本会话87个草地／石头／泥地文件及110MiB整包，删除141个旧草地文件；GL93项与预览入口、哈希／ZIP、导入及结构检查通过。记录见design/assets/grass-cleanup-20261113.md。"
+recent_asset_delivery: "2026-11-12 ASSET-0020三款独立透明石头已交付原生1254方形RGBA、提示词与ZIP，透明度／留白校验通过；待复核造型，未恢复正式地图大石头。"

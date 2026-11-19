@@ -5,7 +5,7 @@ const MapCameraScript = preload("res://src/gameplay/buildings/map_camera.gd")
 const GridMapModelScript = preload("res://src/gameplay/grid/grid_map_model.gd")
 const GridPathfinderScript = preload("res://src/gameplay/grid/grid_pathfinder.gd")
 const TerrainMapDataScript = preload("res://src/gameplay/grid/terrain_map_data.gd")
-const TerrainGridLayerScript = preload("res://src/gameplay/art/reference_map_layer.gd")
+const TerrainGridLayerScript = preload("res://src/gameplay/art/grass_map_layer.gd")
 const MapDefinitionScript = preload("res://src/gameplay/grid/map_definition.gd")
 const MountainRoadLayerScript = preload("res://src/gameplay/art/mountain_road_layer.gd")
 const TownHallVisualScript = preload("res://src/gameplay/art/town_hall_visual.gd")
@@ -152,11 +152,6 @@ func _ready() -> void:
 	mountain_roads.name = "MountainRoadLayer"
 	add_child(mountain_roads)
 	move_child(mountain_roads, 1)
-	var border_forest := preload("res://src/gameplay/art/reference_border_forest.gd").new()
-	border_forest.name = "BorderForest"
-	border_forest.configure(map_runtime)
-	add_child(border_forest)
-	move_child(border_forest, 2)
 	wave_controller.city_target_position = map_runtime.city_position
 	wave_controller.playable_bounds = map_runtime.bounds
 	wave_controller.spawn_points.assign(map_runtime.spawn_points)
@@ -179,10 +174,11 @@ func _ready() -> void:
 	map_camera.name = "MapCamera"
 	map_camera.configure(map_runtime)
 	add_child(map_camera)
-	var city_art := TownHallVisualScript.new() as Node2D
-	city_art.name = "TownHallVisual"
-	city_art.position = wave_controller.city_target_position
-	add_child(city_art)
+	if not level_definition.environment_only:
+		var city_art := TownHallVisualScript.new() as Node2D
+		city_art.name = "TownHallVisual"
+		city_art.position = wave_controller.city_target_position
+		add_child(city_art)
 	map_camera.surface = map_drop_surface
 	map_drop_surface.screen_to_world = map_camera.screen_to_world
 	map_drop_surface.gui_input.connect(map_camera.handle_map_input)
@@ -285,6 +281,8 @@ func _ready() -> void:
 	RunState.reset_to_boot()
 	_refresh_all_labels()
 	_refresh_world_targets()
+	if level_definition.environment_only:
+		_configure_environment_only()
 	queue_redraw()
 
 
@@ -325,12 +323,15 @@ func _initialize_grid_map() -> void:
 	grid_map_model = GridMapModelScript.new(map_runtime.grid_size)
 	grid_pathfinder = GridPathfinderScript.new(grid_map_model)
 	TerrainMapDataScript.apply_to(grid_map_model, map_runtime)
-	grid_map_model.occupy(&"city", map_runtime.city_position, MapLayout.CITY_FOOTPRINT)
+	if not level_definition.environment_only:
+		grid_map_model.occupy(&"city", map_runtime.city_position, MapLayout.CITY_FOOTPRINT)
 
 
 func _process(delta: float) -> void:
 	_update_map_view_rect()
 	queue_redraw()
+	if level_definition.environment_only:
+		return
 	RunState.advance_campaign_time(delta)
 	if hand_bar.visible:
 		_refresh_hand_scroll_buttons()
@@ -521,6 +522,8 @@ func _update_map_view_rect() -> void:
 
 
 func _on_start_pressed() -> void:
+	if level_definition.environment_only:
+		return
 	if RunState.phase != RunState.Phase.BOOT:
 		return
 	RunState.begin_new_run()
@@ -543,6 +546,8 @@ func _on_start_pressed() -> void:
 
 func _on_reset_pressed() -> void:
 	get_tree().paused = false
+	if terrain_grid_layer.lake!=null:
+		terrain_grid_layer.lake.reset()
 	campaign_pause_button.text = "暂停"
 	map_camera.reset_view()
 	wave_controller.reset_wave()
@@ -553,7 +558,8 @@ func _on_reset_pressed() -> void:
 	wave_economy.reset(settlement_builder)
 	farmer_manager.reset()
 	grid_map_model.clear_occupancy()
-	grid_map_model.occupy(&"city", map_runtime.city_position, MapLayout.CITY_FOOTPRINT)
+	if not level_definition.environment_only:
+		grid_map_model.occupy(&"city", map_runtime.city_position, MapLayout.CITY_FOOTPRINT)
 	for tower in additional_towers:
 		tower.free()
 	additional_towers.clear()
@@ -591,6 +597,9 @@ func _on_reset_pressed() -> void:
 	zero_purchase_warning_shown = false
 	for slot_button in settlement_slot_buttons:
 		slot_button.visible = false
+
+	if level_definition.environment_only:
+		_configure_environment_only()
 
 
 func _on_state_changed(_phase: int) -> void:
@@ -651,7 +660,7 @@ func _on_threat_stage_changed(stage_index: int) -> void:
 
 
 func _on_campaign_pause_pressed() -> void:
-	if RunState.phase not in [RunState.Phase.WAVE_COMBAT, RunState.Phase.WAVE_RESULT]:
+	if not level_definition.environment_only and RunState.phase not in [RunState.Phase.WAVE_COMBAT, RunState.Phase.WAVE_RESULT]:
 		return
 	get_tree().paused = not get_tree().paused
 	campaign_pause_button.text = "继续" if get_tree().paused else "暂停"
@@ -692,6 +701,8 @@ func _on_wave_cleared(wave_index: int) -> void:
 
 
 func _on_ready_pressed() -> void:
+	if level_definition.environment_only:
+		return
 	if battle_shop.active:
 		_close_battle_shop()
 		return
@@ -1247,13 +1258,16 @@ func _on_resources_changed(
 	train_farmer_button.visible = RunState.phase not in [RunState.Phase.BOOT, RunState.Phase.RUN_LOST, RunState.Phase.RUN_WON]
 	train_farmer_button.text = "招募"
 	train_farmer_button.tooltip_text = "生产一名农民，占1人口；当前%d/%d。民屋可增加2人口容量。" % [current_population, population_capacity]
-	farmer_manager.sync_population(current_population)
+	if not level_definition.environment_only:
+		farmer_manager.sync_population(current_population)
 	wave_economy.refresh_population_totals()
 	if battle_shop.active:
 		_on_battle_shop_offers_changed()
 
 
 func _on_train_farmer_pressed() -> void:
+	if level_definition.environment_only:
+		return
 	if RunState.phase in [RunState.Phase.BOOT, RunState.Phase.RUN_LOST, RunState.Phase.RUN_WON]:
 		return
 	if RunEconomy.current_population >= RunEconomy.population_capacity:
@@ -1933,3 +1947,29 @@ func _is_map_buildable(point: Vector2, radius: float = 0.0) -> bool:
 	for delta in [Vector2.ZERO,Vector2(radius,0),Vector2(-radius,0),Vector2(0,radius),Vector2(0,-radius)]:
 		if map_runtime.is_water_point(point+delta): return false
 	return true
+
+
+func _configure_environment_only() -> void:
+	# 制图关卡不进入对局；禁止生成而非仅隐藏农民或敌人。
+	wave_controller.reset_wave()
+	farmer_manager.reset()
+	wave_controller.process_mode = Node.PROCESS_MODE_DISABLED
+	farmer_manager.process_mode = Node.PROCESS_MODE_DISABLED
+	wave_economy.process_mode = Node.PROCESS_MODE_DISABLED
+	opening_draft.process_mode = Node.PROCESS_MODE_DISABLED
+	interwave_draft.process_mode = Node.PROCESS_MODE_DISABLED
+	barracks.process_mode = Node.PROCESS_MODE_DISABLED
+	grid_map_model.release(&"city")
+	for panel in [bottom_panel, day_setup_panel, hand_bar, failure_panel, build_failure_panel, notice_panel, building_worker_panel]:
+		panel.hide()
+	train_farmer_button.hide()
+	hud_reference.right_status.get_node("CitySection").hide()
+	hud_reference.right_status.get_node("ThreatSection").hide()
+	battle_shop_button.hide()
+	start_button.disabled = true
+	ready_button.disabled = true
+	map_drop_surface.show()
+	notice_seconds = 0.0
+	status_label.text = "环境制图：生产与野怪进攻已暂停"
+	_update_map_view_rect()
+	map_camera.show_full_map()

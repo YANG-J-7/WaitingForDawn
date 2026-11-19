@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "sites": [
+    {"id":"ReverseWave1","source_image":1,"anchor":[6353,1469],"size":[210,160],"angle":0,"phase":0.0,"description":"中央伸出凸岩，向右侧水面反卷"},
+    {"id":"ReverseWave2","source_image":2,"anchor":[6640,1286],"size":[250,180],"angle":24,"phase":1.1,"description":"石梯下岩台，向右下侧水面回弹"},
+    {"id":"ReverseWave3","source_image":3,"anchor":[6970,708],"size":[130,145],"angle":-8,"phase":2.2,"description":"东侧尖角岩脚，向右侧回卷，收窄范围以留在地图水域"},
+    {"id":"ReverseWave4","source_image":4,"anchor":[6374,1336],"size":[270,150],"angle":18,"phase":3.0,"description":"连续崖壁脚下，沿岸展开并向右下回卷"}
+  ]
+}

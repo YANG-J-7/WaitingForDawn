@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-14",
+  "native_size": [
+    1774,
+    887
+  ],
+  "crop_box": [
+    42,
+    75,
+    1740,
+    814
+  ],
+  "source_reference": "../raw-sheet.png",
+  "sha256": {
+    "raw-sheet.png": "e0c84918c5c80026ef99bd1ceb3a5bb7c3f20a581a52b62e5393f5bf7f4cdb16",
+    "mountain-transparent.png": "35c9581de4cdb78cb953e6e9c56f14ac5381a736710a6fd4cc335c1a11e2cc3c",
+    "prompt-used.txt": "9df8aff57cf73c4ef8722f93e6bffb622796afeebdb7cafd50c45b15e3dec79b"
+  }
+}

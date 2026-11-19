@@ -3,7 +3,15 @@
   "status": "candidate",
   "generator": "built-in-image_gen",
   "base_approved": "ASSET-0016",
-  "scope": "静态素材与拼铺审阅，正式地图未迁移",
+  "scope": "已用于正式第一关和小地图地表；最终观感继续复核",
+  "integration": {
+    "date": "2026-11-11",
+    "level": "res://src/levels/level_001.tres",
+    "layout": "res://assets/levels/level_001/surface-layout.json",
+    "decoration_instances": 57,
+    "removed_from_level": ["boulders"],
+    "terrain_visual_only": true
+  },
   "animation": false,
   "native_size": [
     1254,

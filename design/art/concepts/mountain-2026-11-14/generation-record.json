@@ -1,0 +1,25 @@
+{
+  "日期": "2026-11-14",
+  "状态": "首版视觉候选，未接入游戏",
+  "生成方式": "内置image_gen；本地脚本仅去品红与裁切",
+  "原生尺寸": [
+    1774,
+    887
+  ],
+  "透明裁切框": [
+    51,
+    56,
+    1723,
+    833
+  ],
+  "输出尺寸": [
+    1672,
+    777
+  ],
+  "文件SHA256": {
+    "raw-sheet.png": "9f74f83f495a274d331eac2e275ef75b483799da280e8246cd4571e71a5ec2c4",
+    "reference.png": "f80f90d9ec94257bcb7482452bdf8d5580e3da4fe2888cf88659b00657e57fdc",
+    "mountain-transparent.png": "0f391945d88ecb137799cf72ad073cce13cb3f15249db7bc5177729aa9399836",
+    "prompt-used.txt": "4816fd17fb7c3a5e11e525dcc14803d831593acf5e8e1dcdafd89d48a871a814"
+  }
+}

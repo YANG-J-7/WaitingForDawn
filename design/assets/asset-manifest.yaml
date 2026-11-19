@@ -1,6 +1,186 @@
 version: 1
-updated: 2026-11-11
+updated: 2026-11-17
 assets:
+  - id: ASSET-0027
+    name: 四处岩岸反向回卷浪
+    category: fx
+    specification: assets/fx/reverse_wave_v1/README.md
+    file: assets/fx/reverse_wave_v1/sheet-transparent.png
+    native_source_dimensions: [1774, 887]
+    dimensions: [1536, 768]
+    frame_dimensions: [384, 384]
+    frames: 8
+    status: candidate
+    integrated: false
+    generated: true
+    generated_date: 2026-11-17
+    generator: built-in-image_gen
+    prompt: assets/fx/reverse_wave_v1/prompt-used.txt
+    metadata: assets/fx/reverse_wave_v1/processing-contract.json
+    runtime_layout: assets/fx/reverse_wave_v1/contact-sites.json
+    review_status: 2026-11-17按用户最新红框反馈退出运行，原画与四处布点留档
+    validation: 新回浪GL21与沙滩28/湖泊13/山体17/山湖9共88项通过；四处自身60fps唯一画面/可见/固定根点、暂停重开回环，48帧视频解码通过
+  - id: ASSET-0026
+    name: 临山撞岩六阶段水花
+    category: fx
+    specification: assets/fx/rock_splash_v2/README.md
+    file: assets/fx/rock_splash_v2/sheet-transparent.png
+    native_source_dimensions: [1774, 887]
+    dimensions: [1152, 768]
+    frame_dimensions: [384, 384]
+    frames: 6
+    status: candidate
+    integrated: false
+    generated: true
+    generated_date: 2026-11-17
+    generator: built-in-image_gen
+    prompt: assets/fx/rock_splash_v2/prompt-used.txt
+    metadata: assets/fx/rock_splash_v2/contact-sites.json
+    review_status: 历史素材留档，正式四处回浪已由ASSET-0027替代
+    validation: 六原画严格QC通过；运行验证见素材README
+  - id: ASSET-0025
+    name: 独立草沙衔接沙滩与连续浪花
+    category: environment
+    specification: design/assets/specs/beach-v1.md
+    target_path: assets/map/beach_v1/
+    file: assets/map/beach_v1/beach-overlay.png
+    status: candidate
+    integrated: true
+    runtime_scene: src/main/main.tscn
+    runtime_layout: assets/levels/level_001/beach/layout.json
+    generated: true
+    generated_date: 2026-11-16
+    generator: built-in-image_gen
+    native_source_dimensions: [1774, 887]
+    dimensions: [1070, 325]
+    runtime_preview: tools/preview_beach.tscn
+    metadata: assets/map/beach_v1/manifest.json
+    prompts: [assets/map/beach_v1/sand-prompt.txt, assets/map/beach_v1/foam-prompt.txt]
+    validation: 两原稿QC/水平接边、10项GL草沙衔接/独立泡沫/暂停循环、60fps视频通过
+    review_status: 用户已授权全岸沙滩，249项相关检查通过；旧岩岸留档并退出显示，山体主体保持，全岸沙宽/节奏待复核
+  - id: ASSET-0024
+    name: 第一关设计图东北连续山体
+    category: environment
+    specification: assets/levels/level_001/mountain/README.md
+    file: assets/levels/level_001/mountain/mountain.png
+    native_source_dimensions: [1774, 887]
+    world_origin: [3528, -108]
+    world_scale: 2.0
+    status: candidate
+    integrated: true
+    runtime_scene: src/main/main.tscn
+    generated: true
+    generated_date: 2026-11-14
+    generator: built-in-image_gen
+    prompt: design/art/concepts/mountain-2026-11-14/design-matched-01/prompt-used.txt
+    metadata: assets/levels/level_001/mountain/build-qc.json
+    review_status: 用户认可原画并授权接入；运行布局已目检，最终游戏观感待复核
+    validation: 251项相关验证、四画幅与近景、结构及差异检查通过；高度场/逐层建造与自然走位未验
+  - id: ASSET-0023
+    name: 第一关设计图湖岸定向适配
+    category: environment
+    specification: assets/levels/level_001/lake/README.md
+    target_path: assets/levels/level_001/lake/
+    file: assets/levels/level_001/lake/shore-overlay.png
+    status: candidate
+    integrated: true
+    runtime_scene: src/main/main.tscn
+    generated: true
+    generated_date: 2026-11-13
+    native_source_dimensions: [[1207, 1303], [1774, 887]]
+    assembled_dimensions: [3556, 2880]
+    generator: built-in-image_gen
+    prompts:
+      - assets/levels/level_001/lake/upper-shore-prompt.txt
+      - assets/levels/level_001/lake/lower-shore-prompt.txt
+    metadata: assets/levels/level_001/lake/manifest.json
+    review_status: 正式第一关与小地图已接入，布局/两湾/凸岬已目检，最终观感待复核
+    validation: 217项相关回归、60fps/720帧/12秒视频及四画幅通过，见湖岸接入记录
+  - id: ASSET-0022
+    name: 两款连贯湖岸与旧岸连接适配版
+    category: terrain
+    specification: design/assets/specs/lake-shore-extensions-v1.md
+    target_path: assets/map/lake_shore_extensions_v1/
+    files:
+      - assets/map/lake_shore_extensions_v1/gentle-shore.png
+      - assets/map/lake_shore_extensions_v1/cove-shore.png
+    compatibility_adapter: assets/map/lake_shore_extensions_v1/original-connector-shore.png
+    status: candidate
+    integrated: false
+    generated: true
+    generated_date: 2026-11-13
+    dimensions: [1678, 488]
+    native_source_dimensions: [1774, 887]
+    count: 2
+    generator: built-in-image_gen
+    prompts:
+      - assets/map/lake_shore_extensions_v1/gentle-shore-prompt.txt
+      - assets/map/lake_shore_extensions_v1/cove-shore-prompt.txt
+    metadata: assets/map/lake_shore_extensions_v1/manifest.json
+    review_status: 双新岸与三岸拼接已目检；最终造型和接入待验
+    validation: 两原稿严格QC、三款9种有向接边RGBA差0、透明边界与ZIP通过；未接入运行场景
+    derivative_usage: 作为ASSET-0023定向湖岸的形态与材质参考；水平连接PNG未直接铺进正式关卡
+  - id: ASSET-0021
+    name: 独立六阶段拍岸水花与三处样点
+    category: fx
+    specification: design/assets/specs/shore-splash-v1.md
+    target_path: assets/fx/shore_splash_v1/
+    file: assets/fx/shore_splash_v1/splash-atlas.png
+    status: candidate
+    integrated: true
+    runtime_scene: src/main/main.tscn
+    runtime_preview: tools/preview_lake_shore.tscn
+    generated: true
+    generated_date: 2026-11-13
+    dimensions: [1024, 768]
+    frame_dimensions: [512, 256]
+    frames: 6
+    playback_fps: 60
+    playback_interpolation: cubic-bspline-premultiplied
+    runtime_clock: continuous
+    playback_contract: assets/fx/shore_splash_v1/playback-60fps.json
+    interpolated_clip_frames: [135, 162, 126]
+    generator: built-in-image_gen
+    prompt: assets/fx/shore_splash_v1/prompt-used.txt
+    metadata: assets/fx/shore_splash_v1/manifest.json
+    review_status: 已接正式第一关十处水花，60Hz、暂停/复位与石岸遮罩通过；最终贴合与节奏待复核
+    validation: 六帧严格QC、共享尺度/根点与透明边界通过；真实GL及视频证据见Story-033
+  - id: ASSET-0020
+    name: 三款独立透明石头
+    category: prop
+    specification: design/assets/specs/rocks-transparent-v1.md
+    target_path: assets/props/rocks_transparent_v1/
+    status: candidate
+    integrated: false
+    generated: true
+    generated_date: 2026-11-12
+    dimensions: [1254, 1254]
+    format: RGBA8
+    count: 3
+    generator: built-in-image_gen
+    prompt: assets/props/rocks_transparent_v1/
+    metadata: assets/props/rocks_transparent_v1/manifest.json
+    review_status: 宽厚岩块、竖向裂岩、低矮层岩，待用户视觉复核
+    validation: PNG、alpha、主体留白、哈希及ZIP通过；原生alpha保留，未接入游戏
+  - id: ASSET-0019
+    name: 深宝蓝湖水与独立岩岸首批候选
+    category: environment
+    specification: design/assets/specs/lake-shore-v1.md
+    target_path: assets/map/lake_shore_v1/
+    status: candidate
+    scope_approved: true
+    integrated: false
+    generated: true
+    production_completion: partial
+    file: assets/map/lake_shore_v1/shore-transparent.png
+    dimensions: [1724, 477]
+    generator: built-in-image_gen
+    prompt: assets/map/lake_shore_v1/shore-prompt.txt
+    metadata: assets/map/lake_shore_v1/manifest.json
+    review_status: 已有独立分层动态样区，待草岸过渡、动画节奏及最终观感复核；正式地图未接入
+    validation: 原稿PNG/QC通过；运行版周期闭边、GL13项通过，分块与回环差异≤1/255；飞溅、全关接入/4K/性能待验
+    runtime_preview: tools/preview_lake_shore.tscn
+    runtime_usage: 周期闭边水面正式接入第一关；原岸段为ASSET-0023的参考，整套旧岸库未直接迁入
   - id: ASSET-0018
     name: 三款六图块连续露土泥地
     category: environment

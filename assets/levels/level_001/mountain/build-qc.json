@@ -1,0 +1,14 @@
+{
+  "native_size": [
+    1774,
+    887
+  ],
+  "mountain_cells": 2609,
+  "cliff_cells": 1187,
+  "route_cells": 311,
+  "stairs": 9,
+  "water_overlap_cells": 0,
+  "source_sha256": "2bc9e98b5fe031fa12e4fa1dec0dfc526cfedbfbac7fef08c598d93ccd09a76e",
+  "output_sha256": "77d2e292a5fe6a756ddb931213639c1f7511b45af23bdc3bcd9e9cf0b5f16dba",
+  "说明": "9段石梯共用高度标签0，岩面和离路禁行隔离平台；非连续高度场，后续需细化逐层建造约束。"
+}

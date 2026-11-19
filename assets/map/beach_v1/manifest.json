@@ -1,0 +1,87 @@
+{
+  "id": "ASSET-0025",
+  "date": "2026-11-16",
+  "status": "candidate",
+  "integrated": true,
+  "generator": "built-in-image_gen",
+  "source_dimensions": [
+    1774,
+    887
+  ],
+  "sand_dimensions": [
+    1646,
+    500
+  ],
+  "foam_dimensions": [
+    1646,
+    210
+  ],
+  "world_tile_width": 1070,
+  "sand_world_rect": [
+    0,
+    180,
+    1070,
+    325
+  ],
+  "grass": "res://assets/map/grass_variants_v1/grass.png",
+  "grass_world_period": 360,
+  "grass_shader": "res://src/gameplay/art/grass_map.gdshader",
+  "land_fade_world_pixels": 48,
+  "edge_mask": "复用原草叶纹理静态扰动渐隐边界，避免宽灰雾带",
+  "period_seconds": 12,
+  "wave_period_seconds": 4,
+  "video_fps": 60,
+  "说明": "沙滩不含另一套草地；陆侧alpha归零，露出同坐标现有地表。浪花由生成纹理连续推进/退回，不逐关键帧换图。",
+  "source_paths": {
+    "sand": "C:/Users/y1971/.codex/generated_images/01a1cb03-ab11-75d3-b200-54fba06d9712/exec-ac2fb07d-edba-406f-9cdc-b9fe13fed9a9.png",
+    "foam": "C:/Users/y1971/.codex/generated_images/01a1cb03-ab11-75d3-b200-54fba06d9712/exec-270a005f-2b5a-4f71-9982-32356fc26efd.png"
+  },
+  "checks": {
+    "horizontal_edges_exact": true,
+    "top_bottom_clear": true,
+    "strict_source_qc": true,
+    "grass_gl_edge_max_channel_difference": 1,
+    "runtime_gl_checks_passed": 10,
+    "video_minimum_frame_difference": 0.17422453703703702,
+    "video_wrap_difference": 0.1810908564814815
+  },
+  "sha256": {
+    "sand-raw.png": "a4fb607f70bea2c5f47c6f7c3c9b0e6fa4a05db6328e919be7bd2dd7f778089a",
+    "foam-raw.png": "3e98faf3f17e95cd6ced3d243d5e1e3a8bb204163ed77e2d9f37cfdc5287912c",
+    "sand.png": "5dfc4789ea1031009714dceae30bb1aebd32c3195d38d67f0d8571df38e578cc",
+    "foam.png": "54cdbb574d033999e2ee4c11e4cabfbb26739e86f782ce3e1eeeb782b5445b41",
+    "grass-contact.png": "0142b9456357b188884a4191695684b29a1c97002af56f873fde2b892b9e99db",
+    "sand-prompt.txt": "944624f57703917018ac81583a2395a22391a6cb99f1f4507e6f68a285b1362d",
+    "foam-prompt.txt": "b3656588491b96b0901d2f8e4238f4523a4d4c6288139159168ce1f1e4639fed",
+    "beach-overlay.png": "accff70f09c8e909a5b51da4ff1b6e6847b684da4d7a7b93908e14678cee80f4",
+    "beach-grass-composite.png": "270c404197d8c5952b51803b2384d45eccc7ca3821e35f0e691876f724fc5238",
+    "preview.png": "41ed90056d52299a21c7dfeff13f316f917442742bd0ed5f981878afbc472e99"
+  },
+  "exports": {
+    "overlay": "beach-overlay.png",
+    "overlay_dimensions": [
+      1070,
+      325
+    ],
+    "overlay_offset": [
+      0,
+      180
+    ],
+    "static_composite": "beach-grass-composite.png",
+    "static_composite_dimensions": [
+      1070,
+      720
+    ],
+    "static_composite_world_origin": [
+      0,
+      0
+    ],
+    "video_frames": 720,
+    "video_seconds": 12.0,
+    "video_fps": 60,
+    "说明": "透明沙滩为同尺寸GL导出后去预乘，按offset放置在原底草上；静态合成草图仅适配world_origin相位，任意位置优先使用世界坐标材质。"
+  },
+  "runtime_scene": "res://src/main/main.tscn",
+  "runtime_layout": "res://assets/levels/level_001/beach/layout.json",
+  "integration_date": "2026-11-17"
+}

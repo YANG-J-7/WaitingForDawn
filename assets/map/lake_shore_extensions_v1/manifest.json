@@ -1,0 +1,122 @@
+{
+  "id": "ASSET-0022",
+  "date": "2026-11-13",
+  "status": "candidate",
+  "integrated": false,
+  "generator": "built-in-image_gen",
+  "variants": {
+    "gentle": {
+      "raw_size": [
+        1774,
+        887
+      ],
+      "isolated_size": [
+        1740,
+        326
+      ],
+      "isolated_crop": [
+        18,
+        343,
+        1758,
+        669
+      ],
+      "raw_sha256": "1caaa08e194ccb2424c7f50a0c4163165df682d6a9fe10c13cbc192dfc4a67c5",
+      "prompt": "gentle-shore-prompt.txt",
+      "output_size": [
+        1678,
+        488
+      ],
+      "output_sha256": "887e01b6f7f85dbed025fb9f26843e69c5c060bfbf0c572c2d39cebe059e1ce8"
+    },
+    "cove": {
+      "raw_size": [
+        1774,
+        887
+      ],
+      "isolated_size": [
+        1741,
+        315
+      ],
+      "isolated_crop": [
+        18,
+        328,
+        1759,
+        643
+      ],
+      "raw_sha256": "e4ad351c443ceff2bf16bcf60f45fcda8c728dada399087bdf99c12376690630",
+      "prompt": "cove-shore-prompt.txt",
+      "output_size": [
+        1678,
+        488
+      ],
+      "output_sha256": "60aa431373c677c1691eaf4f24538dfd2c56d7283f04942e77137aef228f3da2"
+    },
+    "original-connector": {
+      "output_size": [
+        1678,
+        488
+      ],
+      "output_sha256": "9bd6a2e67a86209f6ea3034e5269d454cdd5810c7c6317dcfd3f396cf0610de7"
+    }
+  },
+  "crop": [
+    48,
+    240,
+    1726,
+    728
+  ],
+  "port": {
+    "axis": "horizontal",
+    "step_pixels": 1678,
+    "canvas": [
+      1678,
+      488
+    ],
+    "rotation_allowed": false,
+    "source": "gentle-shore-clean.png",
+    "left_source_rect": [
+      280,
+      240,
+      224,
+      488
+    ],
+    "right_source_rect": [
+      56,
+      240,
+      225,
+      488
+    ],
+    "fixed_outer_columns": 64,
+    "feather_pixels": 4,
+    "grass_fade_pixels": 60,
+    "water_fade_pixels": 45,
+    "method": "最小色差路径窄拼接；首末列均来自生成原图x=280，外缘alpha渐隐"
+  },
+  "source_paths": {
+    "gentle": "C:\\Users\\y1971\\.codex\\generated_images\\01a1cb03-ab11-75d3-b200-54fba06d9712\\exec-45e4ce53-ada8-45b7-b749-6d7805a8037d.png",
+    "cove": "C:\\Users\\y1971\\.codex\\generated_images\\01a1cb03-ab11-75d3-b200-54fba06d9712\\exec-94bdcf3f-18a2-4178-abda-ca17197d3e36.png"
+  },
+  "reference_sha256": "b9772964d5b5e88cd91699d11d715581cca92df20f9672d09d0f5942ba119a4b",
+  "references": {
+    "map_style_sha256": "f80f90d9ec94257bcb7482452bdf8d5580e3da4fe2888cf88659b00657e57fdc",
+    "existing_clean_sha256": "5bc5dae3207b4a3ea470447d9b41f30cce2da88ceb8bc9f6d88618b9147d2e25",
+    "cove_edit_target_sha256": "1caaa08e194ccb2424c7f50a0c4163165df682d6a9fe10c13cbc192dfc4a67c5"
+  },
+  "checks": {
+    "strict_raw_qc": true,
+    "transparent_top_bottom": true,
+    "no_visible_magenta": true,
+    "directed_pair_max_rgba_difference": {
+      "gentle->gentle": 0,
+      "gentle->cove": 0,
+      "gentle->original-connector": 0,
+      "cove->gentle": 0,
+      "cove->cove": 0,
+      "cove->original-connector": 0,
+      "original-connector->gentle": 0,
+      "original-connector->cove": 0,
+      "original-connector->original-connector": 0
+    }
+  },
+  "limitations": "仅横向同向连接；原岸段须用另存original-connector-shore.png适配版，不能直接接旧尖端。未提供闭合湖泊转角、动态遮罩或新水花布点；未迁入正式地图。"
+}

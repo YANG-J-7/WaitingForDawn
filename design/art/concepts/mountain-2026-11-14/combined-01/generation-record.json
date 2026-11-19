@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-14",
+  "native_size": [
+    2172,
+    724
+  ],
+  "crop_box": [
+    33,
+    63,
+    2150,
+    684
+  ],
+  "output_size": [
+    2117,
+    621
+  ],
+  "references": {
+    "design\\art\\concepts\\mountain-2026-11-14\\raw-sheet.png": "9f74f83f495a274d331eac2e275ef75b483799da280e8246cd4571e71a5ec2c4",
+    "design\\art\\concepts\\mountain-2026-11-14\\variant-02\\raw-sheet.png": "e0c84918c5c80026ef99bd1ceb3a5bb7c3f20a581a52b62e5393f5bf7f4cdb16"
+  },
+  "sha256": {
+    "raw-sheet.png": "22b40c9552bb26479ff562a430d1b1ef0c269c73feed15425dc766d003069f7a",
+    "mountain-connected-transparent.png": "e6bbd8a1511cc34a5eaf1ebeab3f6a1c9ec79c80069284c5f377b83e1bc086f0",
+    "prompt-used.txt": "acd7b40207a301538451da5d006e25a0650fded84410f9908d6cab9511c604cf"
+  }
+}

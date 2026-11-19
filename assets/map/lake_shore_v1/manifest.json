@@ -1,0 +1,68 @@
+{
+  "id": "ASSET-0019",
+  "日期": "2026-11-12",
+  "status": "candidate",
+  "integrated": false,
+  "generator": "built-in-image_gen",
+  "说明": "两份独立素材及一张参考生成的组合效果图；组合图不是引擎截图或确定性装配证据。",
+  "原生尺寸": {
+    "water": [
+      1254,
+      1254
+    ],
+    "shore_raw": [
+      1774,
+      887
+    ],
+    "preview": [
+      1774,
+      887
+    ]
+  },
+  "湖岸交付尺寸": [
+    1724,
+    477
+  ],
+  "湖岸裁切框": [
+    25,
+    244,
+    1749,
+    721
+  ],
+  "品红残边清理像素数": 6319,
+  "water_qc": {
+    "left_right_rgb_mean_absolute_difference": 4.1919,
+    "top_bottom_rgb_mean_absolute_difference": 4.9803,
+    "strict_seamless_verified": false,
+    "说明": "生成原稿自然拼铺候选；未做周期闭边，不将拼铺预览视为严格无缝证明。"
+  },
+  "来源": {
+    "water": "C:/Users/y1971/.codex/generated_images/01a1cb03-ab11-75d3-b200-54fba06d9712/exec-b376b89f-fc40-4846-b168-3560d91f313e.png",
+    "shore": "C:/Users/y1971/.codex/generated_images/01a1cb03-ab11-75d3-b200-54fba06d9712/exec-d0717717-795a-49b0-94f7-b07b9109304a.png",
+    "preview": "C:/Users/y1971/.codex/generated_images/01a1cb03-ab11-75d3-b200-54fba06d9712/exec-508525ce-c12b-40b7-92a7-9dba2b9b417f.png"
+  },
+  "checks": {
+    "png_decode": true,
+    "repeat_crops_exact": true,
+    "shore_alpha_range": [
+      0,
+      255
+    ],
+    "shore_border_clear": true,
+    "no_visible_magenta": true,
+    "processor_strict_qc": true
+  },
+  "待验": "最终观感、岸段连接、与现有草地真实拼接、严格水面无缝、Godot导入和通行数据均待后续。",
+  "sha256": {
+    "water-raw.png": "2f032a151b022083fb2ccb7e42f509e89acb672aec462a9f590f47e213a624a2",
+    "shore-raw.png": "b9772964d5b5e88cd91699d11d715581cca92df20f9672d09d0f5942ba119a4b",
+    "water.png": "2abc9e652d2f4ed155b9479132ba8ee641f1ed2d2a4e7af513ee59c2f955bf88",
+    "shore-transparent.png": "59dea16511f9557d92e82ebdb6391b85d75dd36d42d152af31954f57fe49d124",
+    "combination-preview.png": "ba9a0f864404be6413dde243ac23ce2d88cbd9c01ed5ef07ff72c545e6393425",
+    "reference.png": "f80f90d9ec94257bcb7482452bdf8d5580e3da4fe2888cf88659b00657e57fdc",
+    "water-prompt.txt": "b7ec9b65c2a80039e0054b0587e5fe85da4c8eaa2f1483cc9e7641366d7ebb2c",
+    "shore-prompt.txt": "9392f8bcc6032e2ccacab5475aea8acfa20e95302466701236220a5b995bb198",
+    "preview-prompt.txt": "c5a9aa22b6399e16c1d8db3819e40410b902d3584bb60195057c7d6d32fd266e"
+  },
+  "草地参考sha256": "6d8eda42d2ac462686993e01168fb229cb66b85f5d54e95b3fa0eadeaaca0e44"
+}

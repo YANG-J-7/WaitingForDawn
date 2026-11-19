@@ -1,0 +1,1061 @@
+{
+  "date": "2026-11-13",
+  "preserve": [
+    {
+      "sha256": "c758e5d96b87ff668989069aa0e58915fa319b23db98e3fc3a2b4bee547038d9",
+      "path": "assets/map/grass_reference_v3/grass.png"
+    },
+    {
+      "sha256": "813bdda16c18c51c88347b01dd8c9c884e9ef08f0918dd10052cb555bbd58f3c",
+      "path": "assets/map/grass_reference_v3/grass.prompt.txt"
+    },
+    {
+      "sha256": "0ade60ad5dc8f55fe9b3c52ddf400b1ddd78a251d248ce102a0cd4dd509d9ed1",
+      "path": "assets/map/grass_reference_v3/manifest.json"
+    },
+    {
+      "sha256": "1fe376f3a2749e7eb1b568f01bd537bac705b7e84d4ad822343e699c0d6dffdb",
+      "path": "assets/map/grass_reference_v3/reference.png"
+    },
+    {
+      "sha256": "a5b6cd5f1166d81dbb217b1a93d73d06e1cff98b043a5e824115e3e4d896b06e",
+      "path": "assets/map/grass_reference_v3/tiling-preview.png"
+    },
+    {
+      "sha256": "fac65be4179be4d0d5558ccc845167fc3338b730ced09816600b6f9c0708a51c",
+      "path": "assets/map/grass_variants_v1/boulders.png"
+    },
+    {
+      "sha256": "0542ff70297ae2d36368d499df9d59ed98fc6b2f6c0371294b8b4f445ae73898",
+      "path": "assets/map/grass_variants_v1/contact-sheet.png"
+    },
+    {
+      "sha256": "6357a01af4f2643928ff9e7f8a62d46f0b6d4ed1a67d2f5c53df0744a349a84d",
+      "path": "assets/map/grass_variants_v1/four-corner-native.png"
+    },
+    {
+      "sha256": "6d8eda42d2ac462686993e01168fb229cb66b85f5d54e95b3fa0eadeaaca0e44",
+      "path": "assets/map/grass_variants_v1/grass.png"
+    },
+    {
+      "sha256": "3817f086afd04f71a164ef16608f047166a64f43b5d84f3f9dda0534b9d560e8",
+      "path": "assets/map/grass_variants_v1/manifest.json"
+    },
+    {
+      "sha256": "786e11b623085b1a937b38b2f3eb476a87116e3e1dd31f3570de45f92370098c",
+      "path": "assets/map/grass_variants_v1/mixed-tiling-full.png"
+    },
+    {
+      "sha256": "d4c8f791add8de689c67b382d200b3c824c094ab9b9d03f5be977c4f8b2c883d",
+      "path": "assets/map/grass_variants_v1/mixed-tiling-preview.png"
+    },
+    {
+      "sha256": "d4ddca7e1f1efccec18dc84a387ee4ba37209d49dea3f833bbd23b2ada07f081",
+      "path": "assets/map/grass_variants_v1/README.md"
+    },
+    {
+      "sha256": "44f6da8c3406d9e4501dbc7d1dd3d54a3d1aef5bd0e61de092f1d8aae835f9e3",
+      "path": "assets/map/grass_variants_v1/small-stones.png"
+    },
+    {
+      "sha256": "6ee3dd60a98a73143a4c3acb9353903dfbe0b4d2bf8c281c5f85bd8cd14b2096",
+      "path": "assets/map/grass_variants_v1/validation.json"
+    },
+    {
+      "sha256": "65ae605c70a676a39b3f2db2111d4d435824437e6a923ff1bb808d9c9167a3fc",
+      "path": "assets/map/grass_variants_v1/wildflowers.png"
+    },
+    {
+      "sha256": "40a27d3f1be1b631a7212b00218f87387e119e5342a4b68c0347bb39b25500c8",
+      "path": "assets/map/grass_variants_v1/references/boulders.png"
+    },
+    {
+      "sha256": "5f6c474e8a5dbd39a1354aab663d3c828565759a2db25eedff5ae93d6ce8306c",
+      "path": "assets/map/grass_variants_v1/references/small-stones.png"
+    },
+    {
+      "sha256": "3d0e1e6b67de02471dab1b4f4521c3daacc6bf6bcab73fac7d3ff59acf041000",
+      "path": "assets/map/grass_variants_v1/references/wildflowers.png"
+    },
+    {
+      "sha256": "30f17e84d6f9c350b0d46b719b6f8bcb93971805394e881440071245d7055175",
+      "path": "assets/map/grass_variants_v1/source/boulders.png"
+    },
+    {
+      "sha256": "913a62be997f5fd7c45d764085f3d35522bd034bda57b2a90d0fae12a4c3b49b",
+      "path": "assets/map/grass_variants_v1/source/boulders.prompt.txt"
+    },
+    {
+      "sha256": "7ab0dc6cf16702de0d7736c5d6ccdb53c2dc71d4f68e456eb99d624d7838e5f0",
+      "path": "assets/map/grass_variants_v1/source/small-stones.png"
+    },
+    {
+      "sha256": "d26ed98b44d5c406e06b41d5ec00a2a5706d729d5d5023007c0b813e2a3ebb1b",
+      "path": "assets/map/grass_variants_v1/source/small-stones.prompt.txt"
+    },
+    {
+      "sha256": "b629407ee0ddb59f19f1abc83bbb609233f4535f944c74762382584c0e57cbf3",
+      "path": "assets/map/grass_variants_v1/source/wildflowers.png"
+    },
+    {
+      "sha256": "873b7bf71b8d08c42d8eb280c376b5ddd933857f314b68f328fdbd61da9f2a53",
+      "path": "assets/map/grass_variants_v1/source/wildflowers.prompt.txt"
+    },
+    {
+      "sha256": "d4c443908ea20cc09eaaa8af6336f9721700242c0ab267c3d7bf1686d83b0166",
+      "path": "assets/map/mud_regions_v1/contact-sheet.png"
+    },
+    {
+      "sha256": "13225e43a01a5d8c9de9fd7e83e90a93aa03eab9f3bac08e19a39cac494a3e2e",
+      "path": "assets/map/mud_regions_v1/manifest.json"
+    },
+    {
+      "sha256": "9ef912f894c5052b33027cd875c2f5f6cff86a63affb889b6cba8ae0620e30ab",
+      "path": "assets/map/mud_regions_v1/README.md"
+    },
+    {
+      "sha256": "4d11438a18f2f992152f63283a64a09476c3c8a8bdf7c1e367a8eb5a7551db1b",
+      "path": "assets/map/mud_regions_v1/tiles-18-overview.png"
+    },
+    {
+      "sha256": "94bda5e58f91a107d80544bbc4d8174aa75e601eb96bcd05e2203109cdb2a2e1",
+      "path": "assets/map/mud_regions_v1/01-sparse-grass/assembled.png"
+    },
+    {
+      "sha256": "f94249214ffa2516158e5bd803b79690a82f434a0574c5125a4701477ad02b8a",
+      "path": "assets/map/mud_regions_v1/01-sparse-grass/assembly.json"
+    },
+    {
+      "sha256": "eb7d07c14d45346fc906aea2b0afa0ec8d1369a64f59d3b54b763f7d4a5956b6",
+      "path": "assets/map/mud_regions_v1/01-sparse-grass/grass-companion.png"
+    },
+    {
+      "sha256": "36bf714de7a136b85648a1e449f7b6138069aa52ded1fccc09e3d405abe5fcf5",
+      "path": "assets/map/mud_regions_v1/01-sparse-grass/layout-guide.png"
+    },
+    {
+      "sha256": "bf9e4815cfcb7022dc95c8f70eaffbbffc4459f010d4f5698c99814f2d265ee4",
+      "path": "assets/map/mud_regions_v1/01-sparse-grass/map.json"
+    },
+    {
+      "sha256": "8d88704aa44d76384fe23a0fa2693c93157d1facc913a8c9d84ea3af372b9841",
+      "path": "assets/map/mud_regions_v1/01-sparse-grass/reassembled.png"
+    },
+    {
+      "sha256": "7304fa7875c978ebf3461fb6b1325e5181d3a4ee4d8584b4d211d4d15b5f8f1c",
+      "path": "assets/map/mud_regions_v1/01-sparse-grass/region-preview.png"
+    },
+    {
+      "sha256": "fa20c66477f484d7325bd51eb0d757608a4902cedc589faf55b00220c276628d",
+      "path": "assets/map/mud_regions_v1/01-sparse-grass/surrounded-preview.png"
+    },
+    {
+      "sha256": "b308e42c65d9a1ca9e539c36ba480304d7500efcf10020e4a138913c376fc1ec",
+      "path": "assets/map/mud_regions_v1/01-sparse-grass/tile-01.png"
+    },
+    {
+      "sha256": "d1026af6dbb4fc30cfd22f414f88e2cc8ade2c5743342cf4386129e1ef7cd274",
+      "path": "assets/map/mud_regions_v1/01-sparse-grass/tile-02.png"
+    },
+    {
+      "sha256": "70b782adc40a430511cf49ed060d7e9bedd6c55e8c63d618597d7e1a563892b2",
+      "path": "assets/map/mud_regions_v1/01-sparse-grass/tile-03.png"
+    },
+    {
+      "sha256": "0a260014fc07d1e53e818994190821dd72a2590d748f7f162b91085de2a8a05a",
+      "path": "assets/map/mud_regions_v1/01-sparse-grass/tile-04.png"
+    },
+    {
+      "sha256": "defd716d19445062595c1f85244e6b916a98622325bf29dc3f8c0f3d2d74d45b",
+      "path": "assets/map/mud_regions_v1/01-sparse-grass/tile-05.png"
+    },
+    {
+      "sha256": "5897023ec4fe7b78f21e6f8837bea311fdb7430af207030b1be377ad9aa94592",
+      "path": "assets/map/mud_regions_v1/01-sparse-grass/tile-06.png"
+    },
+    {
+      "sha256": "3343c4377caeacd46a8972947b64f81857137fd8772f073c032f0366618c553b",
+      "path": "assets/map/mud_regions_v1/02-stony-earth/assembled.png"
+    },
+    {
+      "sha256": "f94249214ffa2516158e5bd803b79690a82f434a0574c5125a4701477ad02b8a",
+      "path": "assets/map/mud_regions_v1/02-stony-earth/assembly.json"
+    },
+    {
+      "sha256": "eb7d07c14d45346fc906aea2b0afa0ec8d1369a64f59d3b54b763f7d4a5956b6",
+      "path": "assets/map/mud_regions_v1/02-stony-earth/grass-companion.png"
+    },
+    {
+      "sha256": "ee508706e97c71da567f2e2144dc97043fb70aeb0d50251f25b3b77694eb1575",
+      "path": "assets/map/mud_regions_v1/02-stony-earth/layout-guide.png"
+    },
+    {
+      "sha256": "66707a4a6c96884952836daf8cf46166048cb3ed28e4ed8efe30594675185091",
+      "path": "assets/map/mud_regions_v1/02-stony-earth/map.json"
+    },
+    {
+      "sha256": "2930cafb2cd80cf210f5cd8b9cc3c73e61bee84856bf507cfd5998afcc83735e",
+      "path": "assets/map/mud_regions_v1/02-stony-earth/reassembled.png"
+    },
+    {
+      "sha256": "3f7267f9cefe83032a101885fa7b9b47940d64c8e2d8c7d8806be99305571021",
+      "path": "assets/map/mud_regions_v1/02-stony-earth/region-preview.png"
+    },
+    {
+      "sha256": "929cba12fa95a7b877d25bc0bd0c31f6783fa1b1b031d996c76b06c36e19892c",
+      "path": "assets/map/mud_regions_v1/02-stony-earth/surrounded-preview.png"
+    },
+    {
+      "sha256": "ee024386785cd141b2cc004103c260120f9104afcf1948671013c324b272dc33",
+      "path": "assets/map/mud_regions_v1/02-stony-earth/tile-01.png"
+    },
+    {
+      "sha256": "b31739d31e3a3806a8fe9eb7819f0754f8ee1e89a2b17431c0ee772f47640ed0",
+      "path": "assets/map/mud_regions_v1/02-stony-earth/tile-02.png"
+    },
+    {
+      "sha256": "62a059b735823e7d17a1dba89240abd9c349ab24146fcbb7a92420cd9ae98789",
+      "path": "assets/map/mud_regions_v1/02-stony-earth/tile-03.png"
+    },
+    {
+      "sha256": "66ebd5ab4f606a72ae026f12cc64ed4c38b65791f6322e0960883c7dd896398e",
+      "path": "assets/map/mud_regions_v1/02-stony-earth/tile-04.png"
+    },
+    {
+      "sha256": "ba618260947052d3bf71063d7ee48cf2a412684b2fe7e87b7e3d20707864772e",
+      "path": "assets/map/mud_regions_v1/02-stony-earth/tile-05.png"
+    },
+    {
+      "sha256": "5d06f474a2a954b95cc02dcd96aec9c40a967a97b76996359dea70508c4c916f",
+      "path": "assets/map/mud_regions_v1/02-stony-earth/tile-06.png"
+    },
+    {
+      "sha256": "4bcf3890125eb64762c68b52180390474fb18cea86605a5f7f80564062947f95",
+      "path": "assets/map/mud_regions_v1/03-damp-earth/assembled.png"
+    },
+    {
+      "sha256": "f94249214ffa2516158e5bd803b79690a82f434a0574c5125a4701477ad02b8a",
+      "path": "assets/map/mud_regions_v1/03-damp-earth/assembly.json"
+    },
+    {
+      "sha256": "eb7d07c14d45346fc906aea2b0afa0ec8d1369a64f59d3b54b763f7d4a5956b6",
+      "path": "assets/map/mud_regions_v1/03-damp-earth/grass-companion.png"
+    },
+    {
+      "sha256": "22727d8d70af2bd4696a658b8b8ec2532f777dae179efcd01e3d6ffc064eeede",
+      "path": "assets/map/mud_regions_v1/03-damp-earth/layout-guide.png"
+    },
+    {
+      "sha256": "b19e774cab093e2663ae15c2e35d2fdcb40c6d0575a03b1b3c054e4856fe9fa0",
+      "path": "assets/map/mud_regions_v1/03-damp-earth/map.json"
+    },
+    {
+      "sha256": "10953c4e2a18b2c81be5cea5cacb251a0e961191f6283a38d07426485fd3dc1c",
+      "path": "assets/map/mud_regions_v1/03-damp-earth/reassembled.png"
+    },
+    {
+      "sha256": "1c14458dc06e9e28238674b59a2ebc8deb50ecbde714d6f2f084d9f41a9d369f",
+      "path": "assets/map/mud_regions_v1/03-damp-earth/region-preview.png"
+    },
+    {
+      "sha256": "d024b9ad5bcd311cd27de6135c601371763de51481dcbd9e9fb4e621609372f1",
+      "path": "assets/map/mud_regions_v1/03-damp-earth/surrounded-preview.png"
+    },
+    {
+      "sha256": "a9ddbe6194411c36a3b58913fecc1e7a35a783949fcaf524fda3c22654200ddf",
+      "path": "assets/map/mud_regions_v1/03-damp-earth/tile-01.png"
+    },
+    {
+      "sha256": "274e859e6b0360c2d0cfaea5b19453c73e0332d0274d9dbbc86dea81b275c64c",
+      "path": "assets/map/mud_regions_v1/03-damp-earth/tile-02.png"
+    },
+    {
+      "sha256": "3e9ef3b852a16598a67330756143817ae35834afcefe37f74929ca87b3810457",
+      "path": "assets/map/mud_regions_v1/03-damp-earth/tile-03.png"
+    },
+    {
+      "sha256": "d16d2e39fcbd894d0812daf2e3977e7b1f370973a9a163d6dd5d5c4b7615bc1c",
+      "path": "assets/map/mud_regions_v1/03-damp-earth/tile-04.png"
+    },
+    {
+      "sha256": "29ed39362ec72d813a147c9ee97a44786d262b19d1394dc6b9b21f9338100c2d",
+      "path": "assets/map/mud_regions_v1/03-damp-earth/tile-05.png"
+    },
+    {
+      "sha256": "ef47ef966f78d9061df088ee7cfccf85f39f0232316cf15c1beaa678a250647c",
+      "path": "assets/map/mud_regions_v1/03-damp-earth/tile-06.png"
+    },
+    {
+      "sha256": "203bba7cadd421b8f95af2f67efbe626ede653383f6ec05fa8f6993c3624058b",
+      "path": "assets/map/mud_regions_v1/references/mud-user-reference.png"
+    },
+    {
+      "sha256": "97e5376c528b5d6fd22c68ef60d05026ebaf618cd455279a0068236c47a6b17c",
+      "path": "assets/map/mud_regions_v1/source/01-sparse-grass.png"
+    },
+    {
+      "sha256": "0f8182c8093f4603bae99505baddc8ac7f51501d5d524d95a9db7a32c9108ada",
+      "path": "assets/map/mud_regions_v1/source/01-sparse-grass.prompt.txt"
+    },
+    {
+      "sha256": "1e599ceba8566241d8e9d8338ed4652ddd991a6c636147b8c83ca099390668e1",
+      "path": "assets/map/mud_regions_v1/source/02-stony-earth.png"
+    },
+    {
+      "sha256": "1d4702c1de47e7d852e88e817f5dbd14d5a1f4faa9ea8e152c299064d068dd45",
+      "path": "assets/map/mud_regions_v1/source/02-stony-earth.prompt.txt"
+    },
+    {
+      "sha256": "8ba0d33c87ab9acc2794d07c626752ab67ac763c79167504b9de13a71ee30636",
+      "path": "assets/map/mud_regions_v1/source/03-damp-earth.png"
+    },
+    {
+      "sha256": "e35c528c5c34469fd4050844287b4c3156fd446a615205c0bc7566137b9ee7e8",
+      "path": "assets/map/mud_regions_v1/source/03-damp-earth.prompt.txt"
+    },
+    {
+      "sha256": "959fae3ad3eb4bc989d6a177cc8c75217ed79683e167f8b7b7797768b8aa7d89",
+      "path": "assets/props/rocks_transparent_v1/01-broad-boulder.png"
+    },
+    {
+      "sha256": "9d9dea0ddd605838898034f269222913f63529ed5f04069db4d488933062278e",
+      "path": "assets/props/rocks_transparent_v1/01-broad-boulder.prompt.txt"
+    },
+    {
+      "sha256": "c29281a43b50b295f24ef6c5b3bb962576a5c52cbe7f6f032bb8bc5747e4117e",
+      "path": "assets/props/rocks_transparent_v1/02-upright-cracked.png"
+    },
+    {
+      "sha256": "6e26f2c49f1accda635d180f9ec6f90154ab273fb7fae6707455a91dac3e8270",
+      "path": "assets/props/rocks_transparent_v1/02-upright-cracked.prompt.txt"
+    },
+    {
+      "sha256": "75874e11f74e3e8ef80c343489e83e3cc498321d1c427e62a44030113c2dd950",
+      "path": "assets/props/rocks_transparent_v1/03-low-layered.png"
+    },
+    {
+      "sha256": "9986d816301e9e919e0a7f0d8cf75b3c7ce1e24f082141e2336c514dc16ec09b",
+      "path": "assets/props/rocks_transparent_v1/03-low-layered.prompt.txt"
+    },
+    {
+      "sha256": "b0715b1c905efa11bc1d55e65aaa28ed28c78b6391d2b14e3ef643dd7f84a8f8",
+      "path": "assets/props/rocks_transparent_v1/manifest.json"
+    },
+    {
+      "sha256": "109873ba06ebcd60c91fc2dd342331ed38338cb57f5f070d36d37d6f8a7874db",
+      "path": "assets/props/rocks_transparent_v1/README.md"
+    },
+    {
+      "sha256": "5226f60c12b3722b349c5ce1ee6fb0d67c7530c93f402ff912ab6b6c44fe60be",
+      "path": "assets/props/rocks_transparent_v1/references/boulder-grass-reference.png"
+    }
+  ],
+  "scope": "只清理旧独立草地、草甸、原稿和配套预览；当前会话素材、整幅地图与其他素材保留",
+  "deleted": [
+    {
+      "bytes": 2201553,
+      "path": "assets/art_candidates/night_set_v1/terrain_grass.png",
+      "sha256": "6706e5817b508206eff67c34a313e0c53594774e7c8b3b84e7b4e53fc6c243fb"
+    },
+    {
+      "bytes": 978,
+      "path": "assets/art_candidates/night_set_v1/terrain_grass.png.import",
+      "sha256": "03a042e1341e4a5e6d57405c206cc7071b607701a967e81201fc3c1b76bc89b4"
+    },
+    {
+      "bytes": 3942990,
+      "path": "assets/map_kits/moonlit_v3/meadow.png",
+      "sha256": "429ea8f585c888a72006c5980328f9911f09b96bc311c239977b0c224a33c271"
+    },
+    {
+      "bytes": 948,
+      "path": "assets/map_kits/moonlit_v3/meadow.png.import",
+      "sha256": "7879823f2f8c52ca10c0910b3b75dd07347ce31486352d4f86e2edce1ddafd6c"
+    },
+    {
+      "bytes": 3850312,
+      "path": "assets/map_kits/moonlit_v3/source/meadow.png",
+      "sha256": "222fe9e38b014b4bbd30196920d786905bfb4275978352d556436af785434281"
+    },
+    {
+      "bytes": 955,
+      "path": "assets/map_kits/moonlit_v3/source/meadow.png.import",
+      "sha256": "164e47f0f639b611e3a307c85f922be68f76f61b5badf602b7199897b0f66a1b"
+    },
+    {
+      "bytes": 906,
+      "path": "assets/map_kits/moonlit_v3/source/meadow.prompt.txt",
+      "sha256": "e05bc6d6bdbbebea28875797cabf4a151a5fe6c82d81dbbe54b476593cec1d0a"
+    },
+    {
+      "bytes": 405223,
+      "path": "assets/map_kits/reference_20261029/grass-detail-low.png",
+      "sha256": "7b147b8930de455cf210e4c83ae6cfa97a47fb1d70930a6204e6fca89f4bceb3"
+    },
+    {
+      "bytes": 985,
+      "path": "assets/map_kits/reference_20261029/grass-detail-low.png.import",
+      "sha256": "32ade4b17fd3496d10ed9c4a24c3fbd4c163acfd33c8e3c4b74a3c4ab558ac5a"
+    },
+    {
+      "bytes": 3463982,
+      "path": "assets/map_kits/reference_20261029/grass-detail.png",
+      "sha256": "0657c97bc39239b1073b017b6cc240dd1bc553673d651e485d73f5f59658299c"
+    },
+    {
+      "bytes": 973,
+      "path": "assets/map_kits/reference_20261029/grass-detail.png.import",
+      "sha256": "f50784a72cbca5f164edef5d3954d5fa974d672d385d2241259a20b5aa9e6250"
+    },
+    {
+      "bytes": 3810130,
+      "path": "assets/map_kits/reference_20261029/source/grass-detail.png",
+      "sha256": "5d35f7a70489d6e42a2e994a628f7771b2d0366961b6bd328dabe2dd4481e109"
+    },
+    {
+      "bytes": 982,
+      "path": "assets/map_kits/reference_20261029/source/grass-detail.png.import",
+      "sha256": "06146008baf53863dcb5b8bede06ceda8bbf2bc9a3e91704c82529a579f849ac"
+    },
+    {
+      "bytes": 807,
+      "path": "assets/map_kits/reference_20261029/source/grass-detail.prompt.txt",
+      "sha256": "ff7e009684bf761333f2b03c3071b8e9a08854420541b6bf666884a1c0d865d2"
+    },
+    {
+      "bytes": 604013,
+      "path": "assets/map_kits/reference_20261029/source/grass-from-generated.png",
+      "sha256": "44468a9c6058bc3698f704641c4295dcf1fb15f03fdcd0f31244e6f53ccbd659"
+    },
+    {
+      "bytes": 1006,
+      "path": "assets/map_kits/reference_20261029/source/grass-from-generated.png.import",
+      "sha256": "9971f10f81a67409f11cb4a59cbf36f0d343ab854911d264d9a24ec7baf67d87"
+    },
+    {
+      "bytes": 69320,
+      "path": "assets/map_kits/reference_20261029/source/grass-reference.png",
+      "sha256": "10266fbefb6c0b10a823f7191685d6a9387c9319aac8f44d07d5ae0a70ec784b"
+    },
+    {
+      "bytes": 991,
+      "path": "assets/map_kits/reference_20261029/source/grass-reference.png.import",
+      "sha256": "3219afd8fcb5d0165cbc1da7c0d313fef87d6882ac0961b8dbf72d52470d9380"
+    },
+    {
+      "bytes": 4072527,
+      "path": "assets/map/dawn_wide_v3/grass-material-v2-source.png",
+      "sha256": "b6731237edc7da90edf33d4ace233405bc39ca2efe15d08e2830d2a1c27418d6"
+    },
+    {
+      "bytes": 1000,
+      "path": "assets/map/dawn_wide_v3/grass-material-v2-source.png.import",
+      "sha256": "eb1b9aa1b825606247f40b269a7cda2930d745bcd4a183f0735809c068128c20"
+    },
+    {
+      "bytes": 983,
+      "path": "assets/map/dawn_wide_v3/grass-material-v2-source.prompt.txt",
+      "sha256": "7e9c8204b28ccea48dc5e7cf34d8a97ad520d66671737a9527f8c4cd286fc02e"
+    },
+    {
+      "bytes": 3330644,
+      "path": "assets/map/dawn_wide_v3/grass-material-v2.png",
+      "sha256": "0582f228396feebeca39661184c48c57f52504daebaf01fbdc4bf8a7bbd7f291"
+    },
+    {
+      "bytes": 978,
+      "path": "assets/map/dawn_wide_v3/grass-material-v2.png.import",
+      "sha256": "c83ccbeaac5f5327e5bac1a218cb121cbcf3f1817afc6a80136ad1416de20364"
+    },
+    {
+      "bytes": 4286809,
+      "path": "assets/map/dawn_wide_v3/grass-material-v3-source.png",
+      "sha256": "bd5e6f7c8eb5ffb7e0bbe569d2322d15d468a16ba50a0d1e0ef491172bdfafe5"
+    },
+    {
+      "bytes": 999,
+      "path": "assets/map/dawn_wide_v3/grass-material-v3-source.png.import",
+      "sha256": "5ed939b5b44e3f89bd4993ae2e1ab0d979062462aec1a5c6bf5c82e2b3eed548"
+    },
+    {
+      "bytes": 745,
+      "path": "assets/map/dawn_wide_v3/grass-material-v3-source.prompt.txt",
+      "sha256": "8935a7fa2cb2fca4fde4c9754b3fd22ac3a4920fd9f6db0005fa85d50f8b6239"
+    },
+    {
+      "bytes": 3387888,
+      "path": "assets/map/dawn_wide_v3/grass-material-v3.png",
+      "sha256": "f2f170dd7cfef886b300a58b4a437ef031b9ad340513210c184e580bd89c9efd"
+    },
+    {
+      "bytes": 979,
+      "path": "assets/map/dawn_wide_v3/grass-material-v3.png.import",
+      "sha256": "9b34cbc391e84e1549ec798f280eac27484cd0e3451035229572bb1de8f42144"
+    },
+    {
+      "bytes": 3855253,
+      "path": "assets/map/dawn_wide_v3/grass-repair-source.png",
+      "sha256": "eb582aed760813801c902bfc1c09425296f0601809c1a0a2c24acb9ef18446b1"
+    },
+    {
+      "bytes": 985,
+      "path": "assets/map/dawn_wide_v3/grass-repair-source.png.import",
+      "sha256": "bb171213dc190447183e2096ff7d049c97e03e14dc3e38734665a869b7811f55"
+    },
+    {
+      "bytes": 901,
+      "path": "assets/map/dawn_wide_v3/grass-repair-source.prompt.txt",
+      "sha256": "1159542f106d81265950b2bcce162b1a042f6362f08a16966cf98f33017fb37d"
+    },
+    {
+      "bytes": 2448117,
+      "path": "assets/map/dawn_wide_v3/references/grass-join-v2.png",
+      "sha256": "13159c3ac25cc8654e60ce2977bb582f4e368aef1ddb2250a3e6e5fb9639debf"
+    },
+    {
+      "bytes": 978,
+      "path": "assets/map/dawn_wide_v3/references/grass-join-v2.png.import",
+      "sha256": "0bf52e441b28438a8ecde87c6e23655e1a7df450dad8f01a1119fab676cf960a"
+    },
+    {
+      "bytes": 828669,
+      "path": "assets/map/dawn_wide_v3/references/grass-material-v2.png",
+      "sha256": "c33e6d9001c6b70da2553de9d562da8359a9ed6f33c11881da7c6396c8cc1026"
+    },
+    {
+      "bytes": 990,
+      "path": "assets/map/dawn_wide_v3/references/grass-material-v2.png.import",
+      "sha256": "2619235f6bf61bf75e85f91dcd22012c2057c25a444931962dbc20587b5214cb"
+    },
+    {
+      "bytes": 1011045,
+      "path": "assets/map/dawn_wide_v3/references/grass-material-v3.png",
+      "sha256": "87efc5620158fa16d779ac3e06f45f646c8d77051000807e8261eeb7dd725ade"
+    },
+    {
+      "bytes": 990,
+      "path": "assets/map/dawn_wide_v3/references/grass-material-v3.png.import",
+      "sha256": "ca5f7ffe4b080a2a3369dc7c5bf830799a4614782926607679f22c7726bd8978"
+    },
+    {
+      "bytes": 4932203,
+      "path": "assets/map/dawn_wide_v3/references/grass-seam-reference.png",
+      "sha256": "3895d260b8b86d8f25c0e09f2870df25c1fb62469f11a028d73510797fc9f8de"
+    },
+    {
+      "bytes": 999,
+      "path": "assets/map/dawn_wide_v3/references/grass-seam-reference.png.import",
+      "sha256": "a6f4a5ab9b30b2cc086ade21103a738993afbb7ca00360f5c0f8140cfe4b0bc5"
+    },
+    {
+      "bytes": 3427675,
+      "path": "assets/map/grass_hd_v1/detail.png",
+      "sha256": "27ed05a75e5bf2995b334d36d59599b832e8efa7e92fc80986fee0c1aed3ae61"
+    },
+    {
+      "bytes": 944,
+      "path": "assets/map/grass_hd_v1/detail.png.import",
+      "sha256": "f73fb700d5e0062f63dd23e40bd78b11bc260a52e270705b49f81cb756e63ed7"
+    },
+    {
+      "bytes": 536011,
+      "path": "assets/map/grass_hd_v1/macro-mask.png",
+      "sha256": "cfbcebb540b9bb78e755737fd73aa57f79e6de0c86b29dc3ada3cd456e2582d1"
+    },
+    {
+      "bytes": 958,
+      "path": "assets/map/grass_hd_v1/macro-mask.png.import",
+      "sha256": "73ec5520ae826bfd224ff976b9b6b159c02b6ae18c4b9a574194ecb39ee7ded2"
+    },
+    {
+      "bytes": 1267,
+      "path": "assets/map/grass_hd_v1/material-record.json",
+      "sha256": "82d113fb00d9020f071f4dabb0d0d8bdca188e81f9e014d0a5e8281df8fef02b"
+    },
+    {
+      "bytes": 649986,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/grass-1.png",
+      "sha256": "baa6eebe0be60c4506be056d00072ae7b067a9190b494a9b98b16226c081638e"
+    },
+    {
+      "bytes": 965,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/grass-1.png.import",
+      "sha256": "0ee108b12d3e6ec715977de91aebf60ed0122efea355672a325e3d3221f2606d"
+    },
+    {
+      "bytes": 650410,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/grass-2.png",
+      "sha256": "90d12ae7aed0b499c49e9b2b5b186f6426e95e6aba4bb81e70b490f129ad5edb"
+    },
+    {
+      "bytes": 965,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/grass-2.png.import",
+      "sha256": "acf8abf2980e9f56047e2f238a3b3b573de2da54cf32c868621ee788ddd2636d"
+    },
+    {
+      "bytes": 645187,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/grass-3.png",
+      "sha256": "64d3a08b35dab0c7ca6acdd0fa1f134fc28e9e25235f9dc8c42f9f09557951ca"
+    },
+    {
+      "bytes": 965,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/grass-3.png.import",
+      "sha256": "6c8f25f9d0ddd7255aa1523c5e1c48485a8fd9fbc7f8bf7b11a49acecc321afb"
+    },
+    {
+      "bytes": 646970,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/grass-4.png",
+      "sha256": "33ed0f50b11ab30e86df4b8401000f0c1fdcf72a9ed434d3182a3a938834ad21"
+    },
+    {
+      "bytes": 964,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/grass-4.png.import",
+      "sha256": "e78369eb7f8f085834a4bdf188121c76ff4704fdf086c3f5ccd850e8c2c87749"
+    },
+    {
+      "bytes": 2588899,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/moonlit_grass_atlas.png",
+      "sha256": "cdabada46be773ae7917d354d3604ca9ec781dba8494853de914142a1c049355"
+    },
+    {
+      "bytes": 1001,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/moonlit_grass_atlas.png.import",
+      "sha256": "9ccfe72750e7615e28028bdff758a923238895c7690a3c57faf3c9daf8fe77b4"
+    },
+    {
+      "bytes": 483122,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/moonlit_grass_preview.png",
+      "sha256": "797bbcfa0d077f1ff8ccb9446d1106a326c3628b612265b0f78d5130c6bd5ccf"
+    },
+    {
+      "bytes": 1007,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/moonlit_grass_preview.png.import",
+      "sha256": "3c06fdf93721d0ba376cef56c10cd40b6637975b8bc0dd11f52018bd1502c057"
+    },
+    {
+      "bytes": 3076594,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/moonlit_grass_refined_source.png",
+      "sha256": "448307be6a1923ccb182fde7f1b84d802ffb389ceed56a3c68466ebfdf9801bd"
+    },
+    {
+      "bytes": 1028,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/moonlit_grass_refined_source.png.import",
+      "sha256": "cb53ba60cb134605598b962cfab6f551e4eae014dba69c22053429569f9a68d7"
+    },
+    {
+      "bytes": 1839,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/moonlit_grass_refined_source.prompt.txt",
+      "sha256": "8479577df6652ae785de8b873425a4a9f1bacf5409b6a9f26d3799d67d020ac4"
+    },
+    {
+      "bytes": 2894193,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/moonlit_grass_source.png",
+      "sha256": "2b48bc2e581567218d94d9f2fa6292212df0ef586b2822e1effb5f78b2834568"
+    },
+    {
+      "bytes": 1004,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/moonlit_grass_source.png.import",
+      "sha256": "e2e216e2906e9d301fad6b32399c46ce5ec078f2065c1c268349f9142fe0cc63"
+    },
+    {
+      "bytes": 2181,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/moonlit_grass_source.prompt.txt",
+      "sha256": "3292cd5e446b5bdb33f5172a5a358c2f7a639a7a62e94f95d1c912e7d2984c40"
+    },
+    {
+      "bytes": 3244,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/README.md",
+      "sha256": "a234b2834e96cffa32ac171d99c1739348ad2a4d7e9fe5fef4cb9e543b474169"
+    },
+    {
+      "bytes": 1614,
+      "path": "assets/tilesets/moonlit_grass_detail_v3/terrain-bundle.json",
+      "sha256": "8faf53d7629ecaa860ffd8f3646b45f8029c46e2e209793814c53ff507bcd2f8"
+    },
+    {
+      "bytes": 2230,
+      "path": "assets/tilesets/moonlit_grass_v1/grass-1.png",
+      "sha256": "9d8b735d1248336f2ee8d4d718af6d9750f615a378678ad743e88bac8dc777e0"
+    },
+    {
+      "bytes": 958,
+      "path": "assets/tilesets/moonlit_grass_v1/grass-1.png.import",
+      "sha256": "e907621fe8980eac8bcc3512c393518b2ba5011f9808bb01f819f6ebbef7cafd"
+    },
+    {
+      "bytes": 2443,
+      "path": "assets/tilesets/moonlit_grass_v1/grass-2.png",
+      "sha256": "53968051d66caf6d768f365af9879ea40a1fb6acc76d2cef4fce6b4367aff021"
+    },
+    {
+      "bytes": 957,
+      "path": "assets/tilesets/moonlit_grass_v1/grass-2.png.import",
+      "sha256": "20eaca7c1d49b7ab2d542c91b11af63a0716ddf5abbcdbfc451d2fee2ba3f93a"
+    },
+    {
+      "bytes": 2414,
+      "path": "assets/tilesets/moonlit_grass_v1/grass-3.png",
+      "sha256": "9db480e85113de2ae322d647004973d32e161863dbf43f71a410a96096f6d9e1"
+    },
+    {
+      "bytes": 958,
+      "path": "assets/tilesets/moonlit_grass_v1/grass-3.png.import",
+      "sha256": "f3ee81a61b3bc6c279a0d8efc2682c24e52d9f0be445dc524a204ef30bfb5854"
+    },
+    {
+      "bytes": 2213,
+      "path": "assets/tilesets/moonlit_grass_v1/grass-4.png",
+      "sha256": "9d30f74a10fcaf24dd2694c4523a15d23f6f7e9b17fa36c1e42674c0e8b97229"
+    },
+    {
+      "bytes": 958,
+      "path": "assets/tilesets/moonlit_grass_v1/grass-4.png.import",
+      "sha256": "9bdd70d2fecd3335fd3edb0482d8289c94cf821b92963f08521ab0c0fafc1c83"
+    },
+    {
+      "bytes": 8979,
+      "path": "assets/tilesets/moonlit_grass_v1/moonlit_grass_atlas.png",
+      "sha256": "aaee6a0316235a31e130798765db08d46245867bce40fbeefa16ef8c9c9ab595"
+    },
+    {
+      "bytes": 994,
+      "path": "assets/tilesets/moonlit_grass_v1/moonlit_grass_atlas.png.import",
+      "sha256": "6c6d0a7d8e951727f02c351b366ad148633ca1824c12f1766747186e31265b7b"
+    },
+    {
+      "bytes": 101040,
+      "path": "assets/tilesets/moonlit_grass_v1/moonlit_grass_preview.png",
+      "sha256": "638b43355d6e9a554869b0c7fc6bc335b902a16937747fde8240fa9519e0fe58"
+    },
+    {
+      "bytes": 1000,
+      "path": "assets/tilesets/moonlit_grass_v1/moonlit_grass_preview.png.import",
+      "sha256": "e4d2bc114c72dd2cc73fe9e57298075e6f43a974a36ed242782533ad790e51bc"
+    },
+    {
+      "bytes": 2292200,
+      "path": "assets/tilesets/moonlit_grass_v1/moonlit_grass_source_v2.png",
+      "sha256": "97a73a29829a0e74b116af81b85c33e940b66b42adaf726ec9d61731b7335388"
+    },
+    {
+      "bytes": 1006,
+      "path": "assets/tilesets/moonlit_grass_v1/moonlit_grass_source_v2.png.import",
+      "sha256": "8f24f0099bc40fea0c01337a826295364e9055c8016d0b13efc50715d6447512"
+    },
+    {
+      "bytes": 1665,
+      "path": "assets/tilesets/moonlit_grass_v1/moonlit_grass_source_v2.prompt.txt",
+      "sha256": "80ae91144f0a41b3efbf950adab7844505f06cc38d1f0598afa70594cf84e904"
+    },
+    {
+      "bytes": 1606,
+      "path": "assets/tilesets/moonlit_grass_v1/terrain-bundle.json",
+      "sha256": "93db07c1b0a93f5fdc7a33311cbe0f0b7b3ab9504049f158c774e74aa8ae5e9f"
+    },
+    {
+      "bytes": 1502,
+      "path": "assets/tilesets/moonlit_grass_v2/grass-1.png",
+      "sha256": "df03df72300985911406916d69c812651e2f545c8233a42a8def6bc95ffc9b9d"
+    },
+    {
+      "bytes": 958,
+      "path": "assets/tilesets/moonlit_grass_v2/grass-1.png.import",
+      "sha256": "1b88ec7d914ab8398f9b0d584774865b1ed2386bef89648aa57c39a9299270d4"
+    },
+    {
+      "bytes": 1584,
+      "path": "assets/tilesets/moonlit_grass_v2/grass-2.png",
+      "sha256": "0700da00fa15990d9d3991541947f52274c999950c8e62b99b35ffce85afec9e"
+    },
+    {
+      "bytes": 957,
+      "path": "assets/tilesets/moonlit_grass_v2/grass-2.png.import",
+      "sha256": "87963408cea1cd3ca98f1857c1f4c866606c3945a96a29f0052f89ca33780d6c"
+    },
+    {
+      "bytes": 1415,
+      "path": "assets/tilesets/moonlit_grass_v2/grass-3.png",
+      "sha256": "a21cb19f69187c24033e264cfcb6af2dee9fe82e911b83de0d54ce88cadae157"
+    },
+    {
+      "bytes": 958,
+      "path": "assets/tilesets/moonlit_grass_v2/grass-3.png.import",
+      "sha256": "dfb6b23a935bb45c5701a686198b3c8813f1225565fcb44bc4c990ba213feaf7"
+    },
+    {
+      "bytes": 1560,
+      "path": "assets/tilesets/moonlit_grass_v2/grass-4.png",
+      "sha256": "12cc0bb4100b5f634e682911b077243465549254bc3463dd3174c9a6f87e9a88"
+    },
+    {
+      "bytes": 958,
+      "path": "assets/tilesets/moonlit_grass_v2/grass-4.png.import",
+      "sha256": "2c7eba333cd8d07e51798dc977aa4eeb4e2122bf5c6759389da65f6e813ae335"
+    },
+    {
+      "bytes": 5266,
+      "path": "assets/tilesets/moonlit_grass_v2/moonlit_grass_atlas.png",
+      "sha256": "2ecbb2b63ced1e1127c4de8d5895c8879ad646dee3de6d18948d29e2908ff729"
+    },
+    {
+      "bytes": 994,
+      "path": "assets/tilesets/moonlit_grass_v2/moonlit_grass_atlas.png.import",
+      "sha256": "7bd6126c42e7b65c1a51eb4acf967bcc2b9d8acd9c35545839a734843542aa40"
+    },
+    {
+      "bytes": 1123519,
+      "path": "assets/tilesets/moonlit_grass_v2/moonlit_grass_draft.png",
+      "sha256": "bcd36894a70fbd1cdce16daf6557d5bd42fb07466b493d6add1a96cb5e0f8db7"
+    },
+    {
+      "bytes": 993,
+      "path": "assets/tilesets/moonlit_grass_v2/moonlit_grass_draft.png.import",
+      "sha256": "9aa90273aba2e13e19d6158f8e8c19bde8f48b3ef08a7759ff61cadf6f347af2"
+    },
+    {
+      "bytes": 2265,
+      "path": "assets/tilesets/moonlit_grass_v2/moonlit_grass_draft.prompt.txt",
+      "sha256": "ae992c2ff4187b6ec9b01c08b80366ccc4926b7b0f788f0247d11388329ad105"
+    },
+    {
+      "bytes": 55097,
+      "path": "assets/tilesets/moonlit_grass_v2/moonlit_grass_preview.png",
+      "sha256": "5860f024b2226e7cd6857b2fc10fa6a43cf962c06a2d1bda406e613fd3337011"
+    },
+    {
+      "bytes": 999,
+      "path": "assets/tilesets/moonlit_grass_v2/moonlit_grass_preview.png.import",
+      "sha256": "d6ff2ddbcacef9be54d3578d79ce6b17c657330b94ef669e2bac1af2cf956b4d"
+    },
+    {
+      "bytes": 1174748,
+      "path": "assets/tilesets/moonlit_grass_v2/moonlit_grass_source.png",
+      "sha256": "05594a379c6650abe479e239b2bf7d62c36b95c001f66215d156e0c4fdc9e59c"
+    },
+    {
+      "bytes": 997,
+      "path": "assets/tilesets/moonlit_grass_v2/moonlit_grass_source.png.import",
+      "sha256": "1ddd161eabcdbfadbca95ef9f6279c7643681886f9c7931cc12a2e006bdf0358"
+    },
+    {
+      "bytes": 1683,
+      "path": "assets/tilesets/moonlit_grass_v2/moonlit_grass_source.prompt.txt",
+      "sha256": "222e1cd68726570d131f33f55def446ec344ead3392d59494181c4476371abf5"
+    },
+    {
+      "bytes": 3371,
+      "path": "assets/tilesets/moonlit_grass_v2/README.md",
+      "sha256": "eb79735d27eaec425a5df6f84f265bf699fa5653c728cb6715e5de1edb8666b9"
+    },
+    {
+      "bytes": 1600,
+      "path": "assets/tilesets/moonlit_grass_v2/terrain-bundle.json",
+      "sha256": "f507075c87031e3ad398c8912dfc2a54f8f3a05f4853dd6cf578fb5372f2f242"
+    },
+    {
+      "bytes": 3288,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/artifact-checks.json",
+      "sha256": "fc6df8ee090ecf71a78341c73027fbc2fca6a83154b333f9263de61e78751ade"
+    },
+    {
+      "bytes": 1373181,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/detail-max-zoom-1280.png",
+      "sha256": "3d371c823ec7a853352f2fe1c60ba439a04455ff568eab12dcd56611163d4589"
+    },
+    {
+      "bytes": 1010,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/detail-max-zoom-1280.png.import",
+      "sha256": "93a38bb2621deda752eaf869eff6f86f541dc6b37322efcab6c3a5930cea3202"
+    },
+    {
+      "bytes": 3885560,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/detail-native.png",
+      "sha256": "b7084ee4b106673533fe754900aef93e74ebed780e953bdcbeb585c9d6311bd8"
+    },
+    {
+      "bytes": 989,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/detail-native.png.import",
+      "sha256": "ae858ff6f203f710e9cd319a64ff401395df1f90d5caa0556f70754637f523cc"
+    },
+    {
+      "bytes": 1643,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/detail-prompt.txt",
+      "sha256": "6f532e51b8e273137bd081314bf5f12291cc468937349da456d231ba96a4b26a"
+    },
+    {
+      "bytes": 5737,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/generation-record.json",
+      "sha256": "2360ad060e464c50e05c2a50290a12a80e36cf91503c6bb2669251438960b15c"
+    },
+    {
+      "bytes": 2096,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/overall-prompt.txt",
+      "sha256": "1d824a2ebe2b75517529aa8018fdc7a791c11465bb66687ffc5250168c4a9049"
+    },
+    {
+      "bytes": 3670231,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/overall-v1.png",
+      "sha256": "8f9cf1273beb61e35d4b672965a1ef98405cb7bcfd2f9b0e48956d6516542611"
+    },
+    {
+      "bytes": 980,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/overall-v1.png.import",
+      "sha256": "42b8e9611e670e9d05015aa8fe05bc67c086e419f913724325b24f20bb4cb375"
+    },
+    {
+      "bytes": 1344,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/overall-v2-prompt.txt",
+      "sha256": "bb678a9931e83ecce578d63968cdafdb1115f44551b8266b539fe7542163592b"
+    },
+    {
+      "bytes": 3298393,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/overall-v2.png",
+      "sha256": "55cf3ef8d72d84e53fddf8dd9ef898138d3eff1a640f28da3cbcac436a0bb4ac"
+    },
+    {
+      "bytes": 980,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/overall-v2.png.import",
+      "sha256": "c692ba61853ee6f25bab65e4c792e9466d0ea1d83a9a4536e6aeffb130d198aa"
+    },
+    {
+      "bytes": 1686,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/README.md",
+      "sha256": "cc68462a18b4d1f8114b53939357bd99c7454dd6a5e08857bd9ba580b9fdab15"
+    },
+    {
+      "bytes": 7107234,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/scene-motion-preview.gif",
+      "sha256": "06ec3f1d15053de8a3e4a328bc56eee34f0963bd7b9aadf674664587ef5d81fa"
+    },
+    {
+      "bytes": 1224056,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/scene-motion-still.png",
+      "sha256": "e0b5aeee3a70da7d7441e44c89b49650c18126f4ffdb9ddee6aab1678fe98bf7"
+    },
+    {
+      "bytes": 1004,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/scene-motion-still.png.import",
+      "sha256": "bbcc99a386c85b8b3c64a0963ad450b1a891b8b90b7acd8e8391f6c33112112d"
+    },
+    {
+      "bytes": 1370,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind-prompt.txt",
+      "sha256": "2cecf79882e2b6bfdb9ef76155be2374af61c9c6e4533b5c1743ee113fdffc26"
+    },
+    {
+      "bytes": 96014,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/animation.gif",
+      "sha256": "346bde673aff3d42de193748374a1e683a13f3de06f910c5d2009607a3cd2b32"
+    },
+    {
+      "bytes": 1687168,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/generated-source.png",
+      "sha256": "00feb3055eae806945b8c9b4286100c9d8a2a923fb20fb6bf617e5f37b3d95bd"
+    },
+    {
+      "bytes": 1003,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/generated-source.png.import",
+      "sha256": "e88e8188b068625f30262e23419549474f3f8d3a52841d3ce5a8916082eec9c0"
+    },
+    {
+      "bytes": 63241,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/idle-1.png",
+      "sha256": "d02cb7264e8fc9058621ba45f0b1c573d167491181dcadf53a1010ff1a25ea85"
+    },
+    {
+      "bytes": 973,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/idle-1.png.import",
+      "sha256": "f2229aeb3670335e852cb2b5a40bf58d859f15591f784763967ebe8eb7f9ecc1"
+    },
+    {
+      "bytes": 65318,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/idle-2.png",
+      "sha256": "88bc78ed8c65d30147057f9b12ce50ba3cfcde5d2e0fd40e5e3c0b4997760e8e"
+    },
+    {
+      "bytes": 973,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/idle-2.png.import",
+      "sha256": "7e1fbb778c15a3cf59725b887b0f6ff38586b224816108e5ce0dca47dc2641cf"
+    },
+    {
+      "bytes": 66802,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/idle-3.png",
+      "sha256": "5234b852734136368daa1fe770ff5a92f0d340ce03f6dea5be75a447f3335061"
+    },
+    {
+      "bytes": 973,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/idle-3.png.import",
+      "sha256": "fbd1f1e05ca0734932983a92986cb529aff0d1f696c1d21e9005335e5482d64b"
+    },
+    {
+      "bytes": 64267,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/idle-4.png",
+      "sha256": "1553db60dd8b270b0fafa5c58463918b4cac32d377a7518228d87a832484f928"
+    },
+    {
+      "bytes": 973,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/idle-4.png.import",
+      "sha256": "9b2c2a5c8a6d9211aa86de66ded3e2170add2c28ff90895a7796a5bcd7f7c372"
+    },
+    {
+      "bytes": 67794,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/idle-5.png",
+      "sha256": "c717b62f13f9ebcadc285157fb06e32fd6a2742d415e35689c5ce961fdeeb8a4"
+    },
+    {
+      "bytes": 972,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/idle-5.png.import",
+      "sha256": "895d8604de4d8e5c486ad494ba71a5a8b0b90020db7bf3c9f47f9d7f1f272eee"
+    },
+    {
+      "bytes": 63042,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/idle-6.png",
+      "sha256": "568e6151be21dc624cf78d8e58e98656e86c679637b4168313812f7f94a8f074"
+    },
+    {
+      "bytes": 973,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/idle-6.png.import",
+      "sha256": "481a972211cc1a1c909cd977b21b8d4ed7b2108653af6832e5c92a926e75c749"
+    },
+    {
+      "bytes": 10620,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/pipeline-meta.json",
+      "sha256": "7b881066bf529b0cfa968ed0725c986a90ab5a6d2398fa4e498d0da160f7431b"
+    },
+    {
+      "bytes": 1372,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/prompt-used.txt",
+      "sha256": "5121cfa250cfd949ce836cabd9ff55a58a50055792bc1d71ec82eb5aa241971c"
+    },
+    {
+      "bytes": 641498,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/raw-sheet-clean.png",
+      "sha256": "c969f80612522ab5fde46ca6680b5edaaee1d85ab54c40f6f10b283bb476c5c0"
+    },
+    {
+      "bytes": 1000,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/raw-sheet-clean.png.import",
+      "sha256": "55fcc71b5bc79e9faa606ef15b7e8f47cf1e31fbbe765dc61e49ce39c86cb52f"
+    },
+    {
+      "bytes": 1708922,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/raw-sheet.png",
+      "sha256": "1c8bddd71f0cb77153768ae5161e2edb5b129813a2ef9c493103eebcb773e8ff"
+    },
+    {
+      "bytes": 981,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/raw-sheet.png.import",
+      "sha256": "3f3d5e981300d6fb3a97c92b373c12fbd8ef2b6a365f0d86f99a8f2ba60437cb"
+    },
+    {
+      "bytes": 385763,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/sheet-transparent.png",
+      "sha256": "370052341ce31d18d2805cac8d0298c38ff55e4c7b59eed1f51913faea751f30"
+    },
+    {
+      "bytes": 1006,
+      "path": "design/art/concepts/grass-redesign-2026-10-26/wind/sheet-transparent.png.import",
+      "sha256": "64c7d39d52f6a5a63e324c1c3a27dafad45198899e587c770331fd9c7ce0edae"
+    }
+  ]
+}
