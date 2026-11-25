@@ -6,6 +6,8 @@ const CELL_SIZE: int = 128
 const DAWN_TRANSITION_SECONDS: float = 300.0
 const CAPSULE_SIZE := Vector2(142.0, 32.0)
 const DRAW_RECT := Rect2(0, -4, 142, 40)
+const RING_CENTER := Vector2(20.0, 18.25)
+const RING_RADIUS := 17.0
 
 func visual_rect() -> Rect2:
 	# 圆弧线条可能比胶囊底边多伸出四分之一像素，视口预留完整范围。
@@ -83,7 +85,7 @@ func _draw() -> void:
 	draw_style_box(inner, capsule.grow(-4.0))
 	_draw_progress_arc()
 	var source := Rect2((current_frame % 4) * CELL_SIZE, (current_frame / 4) * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-	var target := Rect2(3.0, 0.0, 32.0, 32.0)
+	var target := Rect2(RING_CENTER - Vector2(16.0, 16.0), Vector2(32.0, 32.0))
 	# 固定公共画布与统一缩放；相邻帧淡入衔接，保持小尺寸轮廓稳定。
 	draw_texture_rect_region(SHEET, target, source, Color(1, 1, 1, 1.0 - blend))
 	if blend > 0.0:
@@ -92,15 +94,13 @@ func _draw() -> void:
 
 
 func _draw_progress_arc() -> void:
-	var center := Vector2(20.0, 16.0)
-	var radius: float = 19.0
-	# 从左侧往下延伸；参考图42:18附近可见约70度绿黄弧。
+	# 从左侧往下延伸，归零时首尾相接。
 	var start: float = deg_to_rad(180.0)
-	var sweep: float = lerpf(deg_to_rad(12.0), deg_to_rad(246.0), progress)
+	var sweep: float = lerpf(deg_to_rad(12.0), TAU, progress)
 	var segments: int = maxi(8, int(sweep * 14.0))
 	for i in range(segments):
 		var fraction: float = float(i) / float(segments)
 		var a: float = start - sweep * fraction
 		var b: float = start - sweep * float(i + 1) / float(segments)
 		var color: Color = Color("67c49a").lerp(Color("f8dc72"), fraction)
-		draw_line(center + Vector2(cos(a), sin(a)) * radius, center + Vector2(cos(b), sin(b)) * radius, color, 2.5, true)
+		draw_line(RING_CENTER + Vector2.from_angle(a) * RING_RADIUS, RING_CENTER + Vector2.from_angle(b) * RING_RADIUS, color, 2.5, true)

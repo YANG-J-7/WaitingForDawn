@@ -141,7 +141,7 @@ func _ready() -> void:
 	world_lighting = preload("res://src/gameplay/art/world_lighting.gd").new()
 	world_lighting.name = "WorldLighting"
 	world_lighting.scope = self
-	world_lighting.world_bounds = map_runtime.bounds
+	world_lighting.world_bounds = map_runtime.visual_bounds
 	world_lighting.terrain_receiver = terrain_grid_layer
 	if level_definition.lighting_profile != null:
 		world_lighting.profile = level_definition.lighting_profile
@@ -518,7 +518,9 @@ func _update_map_view_rect() -> void:
 	map_drop_surface.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
 	map_drop_surface.position = rect.position
 	map_drop_surface.size = rect.size
-	map_camera.set_play_rect(rect)
+	# 地图可显示在时钟伸出的区域背后，交互范围仍避开时钟。
+	var visual_top := maxf(0.0, top_bar.get_global_rect().end.y)
+	map_camera.set_play_rect(Rect2(0.0, visual_top, rect.size.x, maxf(1.0, rect.end.y - visual_top)))
 
 
 func _on_start_pressed() -> void:

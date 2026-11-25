@@ -1,7 +1,19 @@
-[gd_resource type="Resource" script_class="LevelDefinition" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="LevelDefinition" load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://src/gameplay/map/level_definition.gd" id="1"]
 [ext_resource type="PackedScene" path="res://src/levels/level_001.tscn" id="2"]
+[ext_resource type="Script" path="res://src/gameplay/art/world_lighting_profile.gd" id="3"]
+
+[sub_resource type="Resource" id="Resource_map_lighting"]
+script = ExtResource("3")
+night_ambient = Color(1, 1, 1, 1)
+dawn_ambient = Color(1, 1, 1, 1)
+night_sky_color = Color(0.58, 0.78, 1, 1)
+dawn_sky_color = Color(1, 0.84, 0.64, 1)
+night_sky_energy = 0.48
+dawn_sky_energy = 0.43
+moon_span = 1.6
+layered_dawn = true
 
 [resource]
 script = ExtResource("1")
@@ -9,6 +21,7 @@ revision = 7
 environment_only = true
 display_name = "山地、湖岸与草地环境样区"
 surface_layout_path = "res://assets/levels/level_001/surface-layout.json"
-visual_margins = Vector4(0, 108, 216, 0)
+visual_margins = Vector4(0, 108, 432, 0)
 assembly = ExtResource("2")
 show_resource_forests = false
+lighting_profile = SubResource("Resource_map_lighting")

@@ -1,7 +1,6 @@
 shader_type canvas_item;
-render_mode unshaded;
 
-// 素材已有夜景配色，保持原图颜色，避免全局夜色再次压暗偏蓝。
+// 第一关以中性环境光保留素材夜色，地表接收移动主光。
 // 同密度偏移原图以打散大地图周期；高权重保留草叶，少量交界平滑过渡。
 uniform sampler2D grass_texture : source_color, filter_linear_mipmap, repeat_enable;
 uniform vec2 detail_world_size = vec2(360.0);

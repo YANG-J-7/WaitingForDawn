@@ -1,27 +1,38 @@
 {
   "schema": "waiting-for-dawn.surface-layout.v1",
-  "revision": 2,
+  "revision": 5,
   "reference": "res://design/levels/generated-surface/reference.png",
   "placement": "归一化世界坐标；装饰为中心，泥地区域为左上角。中央开阔，边缘较密。",
   "texels_per_world": 3.4833333333333334,
+  "grass_texture": "res://assets/levels/level_001/grass_palette/grass.png",
+  "forest_layout": "res://assets/levels/level_001/forest/layout.json",
+  "forest_lighting": true,
   "decorations": {
     "small_stones": {
-      "texture": "res://assets/map/grass_variants_v1/small-stones.png",
+      "texture": "res://assets/levels/level_001/grass_palette/small-stones.png",
       "positions": [[0.055,0.16],[0.135,0.11],[0.21,0.19],[0.302,0.078],[0.405,0.12],[0.491,0.086],[0.557,0.22],[0.635,0.17],[0.721,0.12],[0.809,0.22],[0.883,0.17],[0.937,0.33],[0.902,0.49],[0.839,0.585],[0.754,0.64],[0.676,0.75],[0.576,0.85],[0.451,0.878],[0.349,0.83],[0.249,0.866],[0.16,0.766],[0.079,0.69],[0.046,0.45],[0.212,0.40],[0.387,0.553],[0.529,0.652],[0.666,0.407],[0.438,0.292]]
     },
     "wildflowers": {
-      "texture": "res://assets/map/grass_variants_v1/wildflowers.png",
+      "texture": "res://assets/levels/level_001/grass_palette/wildflowers.png",
       "positions": [[0.043,0.112],[0.112,0.169],[0.172,0.099],[0.254,0.083],[0.35,0.106],[0.441,0.08],[0.529,0.121],[0.594,0.21],[0.673,0.125],[0.756,0.195],[0.857,0.108],[0.925,0.21],[0.951,0.568],[0.881,0.637],[0.818,0.791],[0.718,0.871],[0.641,0.91],[0.555,0.895],[0.473,0.932],[0.388,0.887],[0.27,0.93],[0.189,0.857],[0.113,0.752],[0.054,0.832],[0.062,0.377],[0.119,0.496],[0.228,0.656],[0.587,0.535],[0.707,0.517]]
     }
   },
+  "mud_atlases": {
+    "res://assets/map/mud_regions_v1/01-sparse-grass/map.json": "res://assets/levels/level_001/grass_palette/sparse-grass.png",
+    "res://assets/map/mud_regions_v1/02-stony-earth/map.json": "res://assets/levels/level_001/grass_palette/stony-earth.png",
+    "res://assets/map/mud_regions_v1/03-damp-earth/map.json": "res://assets/levels/level_001/grass_palette/damp-earth.png"
+  },
+  "mud_soil_warmth": {
+    "res://assets/map/mud_regions_v1/01-sparse-grass/map.json": 1.0,
+    "res://assets/map/mud_regions_v1/02-stony-earth/map.json": 1.0,
+    "res://assets/map/mud_regions_v1/03-damp-earth/map.json": 0.8
+  },
   "mud_regions": [
     {"id":"SparseWest","map":"res://assets/map/mud_regions_v1/01-sparse-grass/map.json","position":[0.17,0.27]},
-    {"id":"SparseCenter","map":"res://assets/map/mud_regions_v1/01-sparse-grass/map.json","position":[0.367,0.477]},
     {"id":"SparseNorth","map":"res://assets/map/mud_regions_v1/01-sparse-grass/map.json","position":[0.483,0.22]},
     {"id":"SparseSouth","map":"res://assets/map/mud_regions_v1/01-sparse-grass/map.json","position":[0.398,0.736]},
     {"id":"StonyNorth","map":"res://assets/map/mud_regions_v1/02-stony-earth/map.json","position":[0.615,0.08]},
     {"id":"StonyEast","map":"res://assets/map/mud_regions_v1/02-stony-earth/map.json","position":[0.791,0.332]},
-    {"id":"StonyFoothill","map":"res://assets/map/mud_regions_v1/02-stony-earth/map.json","position":[0.64,0.34]},
     {"id":"DampEdgeNorth","map":"res://assets/map/mud_regions_v1/03-damp-earth/map.json","position":[0.757,0.541]},
     {"id":"DampEdgeSouth","map":"res://assets/map/mud_regions_v1/03-damp-earth/map.json","position":[0.666,0.69]},
     {"id":"DampSouth","map":"res://assets/map/mud_regions_v1/03-damp-earth/map.json","position":[0.554,0.815]}

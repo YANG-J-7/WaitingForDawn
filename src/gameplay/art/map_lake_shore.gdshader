@@ -1,5 +1,4 @@
 shader_type canvas_item;
-render_mode unshaded;
 uniform sampler2D water_only : filter_linear, repeat_disable;
 uniform sampler2D ripple_texture : source_color, filter_linear, repeat_enable;
 uniform vec2 shore_origin=vec2(3500.0,0.0);

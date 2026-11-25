@@ -1,6 +1,7 @@
 {
   "version": 1,
   "texture": "res://assets/levels/level_001/mountain/mountain.png",
+  "dawn_arrival_mask": "res://assets/levels/level_001/mountain/dawn-arrival.png",
   "source_size": [
     1774,
     887

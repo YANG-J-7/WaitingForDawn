@@ -33,6 +33,7 @@ func configure(context: RefCounted,overview: bool) -> void:
 	water_material.set_shader_parameter("water_texture",WATER)
 	water_material.set_shader_parameter("water_control",control_texture)
 	water_material.set_shader_parameter("world_size",context.bounds.size)
+	water_material.set_shader_parameter("dawn_east", bounds.end.x)
 	if bounds != context.bounds and not beach_layout.is_empty():
 		var patch: Dictionary = beach_layout.patches[0]
 		var field: Array = patch.rect
@@ -113,3 +114,11 @@ func apply_time() -> void:
 func reset() -> void:
 	elapsed=0.0
 	apply_time()
+
+func set_dawn_progress(progress: float) -> void:
+	if overview_only or water_material == null:
+		return
+	water_material.set_shader_parameter("dawn_progress", progress)
+	if beach != null:
+		for beach_material: ShaderMaterial in beach.materials:
+			beach_material.set_shader_parameter("dawn_progress", progress)

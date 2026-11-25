@@ -1,5 +1,4 @@
 shader_type canvas_item;
-render_mode unshaded;
 #include "res://src/gameplay/art/rock_contact.gdshaderinc"
 uniform vec2 atlas_grid=vec2(2.0,3.0);
 uniform float frame_count=6.0;

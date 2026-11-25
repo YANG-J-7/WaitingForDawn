@@ -1,5 +1,4 @@
 shader_type canvas_item;
-render_mode unshaded;
 #include "res://src/gameplay/art/rock_contact.gdshaderinc"
 uniform sampler2D coast_field : filter_linear, repeat_disable;
 uniform sampler2D sand_texture : source_color, filter_linear_mipmap, repeat_enable;
@@ -15,6 +14,7 @@ uniform vec2 world_size=vec2(7056.0,2880.0);
 uniform float elapsed=0.0;
 uniform bool animated=true;
 uniform bool foam_enabled=true;
+uniform float dawn_progress=0.0;
 uniform vec2 render_min=vec2(0.0);
 uniform vec2 render_max=vec2(7056.0,2880.0);
 varying vec2 world_pos;
@@ -54,6 +54,8 @@ void fragment(){
     float pulse=animated?.5+.5*sin(elapsed*1.5707963268):.5;
     float wet=smoothstep(330.0-15.0*pulse,430.0-15.0*pulse,across);
     sand.rgb*=mix(vec3(.72,.79,.85),vec3(.37,.57,.69),wet*.8);
+    float dawn = smoothstep(0.62, 0.98, dawn_progress) * smoothstep(0.65, 0.96, world_pos.x / render_max.x);
+    sand.rgb += sand.rgb * vec3(0.47, 0.25, 0.03) * dawn;
     sand.a*=land*sea*step(180.0,land_across)*step(uv.y,1.0);
     vec4 a=front(texture_u*1070.0,across,0.0);
     vec4 b=front(texture_u*1070.0,across,.5);

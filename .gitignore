@@ -13,6 +13,10 @@ __pycache__/
 !assets/map/grass_variants_v1/boulders.png.import
 !assets/map/grass_variants_v1/wildflowers.png.import
 !assets/map/mud_regions_v1/*/reassembled.png.import
+!assets/levels/level_001/grass_palette/*.png.import
+!assets/levels/level_001/forest/*.png.import
+!assets/levels/level_001/mountain/dawn-arrival.png.import
+!assets/props/rocks_transparent_v1/0*.png.import
 
 # Export output and local credentials
 build/

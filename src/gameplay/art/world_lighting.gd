@@ -8,8 +8,10 @@ var scope: Node
 var world_bounds := Rect2()
 var terrain_receiver: Node2D
 var sky_light: PointLight2D
+var sun_light: PointLight2D
 var ambient: CanvasModulate
 var lighting_enabled := true
+var dawn_progress := 0.0
 var dawn_blend: float = 0.0
 var preview_dawn: float = -1.0
 var casters: Array[WeakRef] = []
@@ -73,12 +75,11 @@ func _ready() -> void:
 	ambient.name = "Ambient"
 	add_child(ambient)
 	if world_bounds.has_area():
-		sky_light = PointLight2D.new()
-		sky_light.name = "SkyLight"
-		sky_light.texture = WorldLightEmitter.light_texture()
-		# 沿地图北缘移动，照明范围按地图大小适配。
-		sky_light.texture_scale = maxf(world_bounds.size.x,world_bounds.size.y)/sky_light.texture.get_width()
-		add_child(sky_light)
+		sky_light = _add_sky_light("SkyLight", profile.moon_span)
+		if profile.layered_dawn:
+			sun_light = _add_sky_light("SunLight", 1.2)
+			var east := Vector2(world_bounds.end.x, world_bounds.position.y + world_bounds.size.y * 0.28)
+			sun_light.global_position = (scope as Node2D).to_global(east) if scope is Node2D else east
 	var shadow_material := ShaderMaterial.new()
 	shadow_material.shader = SHADOW_SHADER
 	material = shadow_material
@@ -91,6 +92,14 @@ func _ready() -> void:
 	add_child(contact_layer)
 	RunState.campaign_time_changed.connect(_on_campaign_time_changed)
 	_on_campaign_time_changed(RunState.campaign_remaining_seconds())
+
+func _add_sky_light(light_name: String, span: float) -> PointLight2D:
+	var light := PointLight2D.new()
+	light.name = light_name
+	light.texture = WorldLightEmitter.light_texture()
+	light.texture_scale = maxf(world_bounds.size.x, world_bounds.size.y) * span / light.texture.get_width()
+	add_child(light)
+	return light
 
 func register_caster(caster: Node) -> void:
 	for ref in casters:
@@ -127,7 +136,11 @@ func set_lighting_enabled(value: bool) -> void:
 	if is_instance_valid(contact_layer): contact_layer.queue_redraw()
 
 func _on_campaign_time_changed(remaining: float) -> void:
-	dawn_blend = smoothstep(0.0,1.0,clampf(1.0-remaining/maxf(1.0,profile.dawn_duration),0.0,1.0)) if preview_dawn < 0.0 else preview_dawn
+	dawn_progress = clampf(1.0 - remaining / maxf(1.0, profile.dawn_duration), 0.0, 1.0)
+	dawn_blend = smoothstep(0.0, 1.0, dawn_progress)
+	if preview_dawn >= 0.0:
+		dawn_progress = preview_dawn
+		dawn_blend = preview_dawn
 	if is_instance_valid(sky_light):
 		var progress := clampf(1.0-remaining/RunState.CAMPAIGN_DURATION_SECONDS,0.0,1.0)
 		var position_on_map := world_bounds.position+Vector2(world_bounds.size.x*progress,0.0)
@@ -138,13 +151,27 @@ func _on_campaign_time_changed(remaining: float) -> void:
 
 func _apply_ambient() -> void:
 	if is_instance_valid(ambient): ambient.color = profile.night_ambient.lerp(profile.dawn_ambient,dawn_blend) if lighting_enabled else Color.WHITE
-	if is_instance_valid(sky_light):
+	if not is_instance_valid(sky_light):
+		return
+	if is_instance_valid(sun_light):
+		# 山脊先通过局部遮罩见光，泛照延后，保留破晓时的冷暖层次。
+		sky_light.color = profile.night_sky_color
+		sky_light.energy = profile.night_sky_energy * (1.0 - dawn_blend)
+		sky_light.enabled = lighting_enabled and sky_light.energy > 0.0
+		sun_light.color = profile.dawn_sky_color
+		sun_light.energy = profile.dawn_sky_energy * smoothstep(0.58, 1.0, dawn_progress)
+		sun_light.enabled = lighting_enabled and sun_light.energy > 0.0
+		if is_instance_valid(terrain_receiver) and terrain_receiver.has_method(&"update_dawn"):
+			terrain_receiver.update_dawn(dawn_progress if lighting_enabled else 0.0)
+	else:
 		sky_light.enabled = lighting_enabled
 		sky_light.color = profile.night_sky_color.lerp(profile.dawn_sky_color,dawn_blend)
 		sky_light.energy = lerpf(profile.night_sky_energy,profile.dawn_sky_energy,dawn_blend)
-		if is_instance_valid(terrain_receiver):
-			var terrain_opacity: float = profile.terrain_shadow_opacity*lerpf(1.0,0.65,dawn_blend) if lighting_enabled and profile.shadows_enabled else 0.0
-			terrain_receiver.update_terrain_shadow(sky_light.global_position,terrain_opacity,profile.terrain_shadow_reach)
+	if is_instance_valid(terrain_receiver):
+		var terrain_opacity: float = profile.terrain_shadow_opacity*lerpf(1.0,0.65,dawn_blend) if lighting_enabled and profile.shadows_enabled else 0.0
+		terrain_receiver.update_terrain_shadow(sky_light.global_position,terrain_opacity,profile.terrain_shadow_reach)
+		if terrain_receiver.has_method(&"update_forest_lighting"):
+			terrain_receiver.update_forest_lighting(self)
 
 func shadow_direction_at(point: Vector2) -> Vector2:
 	if not is_instance_valid(sky_light): return profile.shadow_direction.normalized()

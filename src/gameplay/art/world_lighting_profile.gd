@@ -8,6 +8,10 @@ extends Resource
 @export var dawn_sky_color := Color(1.0, 0.82, 0.53)
 @export_range(0.0, 1.0) var night_sky_energy: float = 0.22
 @export_range(0.0, 1.0) var dawn_sky_energy: float = 0.32
+## 月光照射直径与地图长边的比值。
+@export_range(1.0, 2.5) var moon_span: float = 1.0
+## 配套关卡可从东缘引入独立晨光，并通知山体和湖岸逐步受光。
+@export var layered_dawn := false
 ## 默认关闭地图上的所有投影和接触影，专项工具可单独启用。
 @export var shadows_enabled := false
 ## 只在总开关启用时控制单位与建筑影。
