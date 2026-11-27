@@ -4,6 +4,8 @@
 > 更新：2026-09-17
 > GDD：`design/gdd/sixty-minute-campaign-system.md`、`design/gdd/kill-gold-card-shop-fusion-system.md`
 
+2026-11-26：正式第一关的战役时钟在主城落位后10秒启动，详见 [Story-036](story-036-place-town-hall-opening.md)。下文的免费选四是本 Story 原始灰盒验收入口。
+
 ## 目标
 
 把现有“清完第10波即胜利”的灰盒局制迁移为60分钟连续守城：开局免费选四确认后开始计算有效游戏时间，主城存活至60:00即胜利；主城在同一结算帧被摧毁时优先判负。

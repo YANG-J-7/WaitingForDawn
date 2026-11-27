@@ -2,6 +2,7 @@ class_name FarmerAgent
 extends Node2D
 
 const ArtVisualScript = preload("res://src/gameplay/art/art_visual.gd")
+const SettlementArt = preload("res://src/gameplay/art/farmer_visual.gd")
 const GridPathFollowerScript = preload("res://src/gameplay/grid/grid_path_follower.gd")
 
 signal delivery_completed(resource_id: StringName, amount: int)
@@ -31,6 +32,8 @@ var carried_resource: StringName = &""
 var state: WorkState = WorkState.IDLE
 var gather_elapsed: float = 0.0
 var path_follower: RefCounted = GridPathFollowerScript.new()
+var settlement_lighting: WorldLighting
+var settlement_art: Sprite2D
 var _needs_spawn_position := true
 
 
@@ -41,6 +44,8 @@ func set_pathfinder(value: RefCounted) -> void:
 
 func _ready() -> void:
 	add_to_group(&"map_units")
+	if settlement_lighting != null:
+		return
 	var art := ArtVisualScript.new() as ArtVisual
 	art.show_behind_parent = true
 	add_child(art)
@@ -56,6 +61,16 @@ func configure(index: int, home_position: Vector2) -> void:
 	_resolve_spawn_position()
 	state = WorkState.IDLE
 	path_follower.invalidate()
+	if settlement_lighting != null:
+		if settlement_art == null:
+			settlement_art = SettlementArt.new()
+			settlement_art.name = "FarmerVisual"
+			settlement_art.show_behind_parent = true
+		# 创始五人的顺序交错。后续招募继续按同一序列分配外观。
+		var variant := &"female" if posmod(index, 5) in [1, 3] else &"male"
+		settlement_art.configure(variant, settlement_lighting)
+		if not settlement_art.is_inside_tree():
+			add_child(settlement_art)
 	queue_redraw()
 
 
@@ -110,6 +125,7 @@ func advance(delta: float) -> void:
 		return
 	if delta <= 0.0 or current_health <= 0:
 		return
+	var previous_position := global_position
 	match state:
 		WorkState.IDLE:
 			_move_toward_grid(_idle_position(), 18.0, delta)
@@ -142,6 +158,8 @@ func advance(delta: float) -> void:
 		WorkState.WORKING:
 			if not _workplace_is_valid():
 				clear_job()
+	if is_instance_valid(settlement_art):
+		settlement_art.advance_pose(global_position - previous_position, delta)
 	queue_redraw()
 
 
@@ -161,6 +179,10 @@ func _workplace_is_valid() -> bool:
 func _idle_position() -> Vector2:
 	var angle: float = float(farmer_index % 8) / 8.0 * TAU
 	var ring: float = 108.0 + float(farmer_index / 8) * 18.0
+	if settlement_lighting != null and farmer_index >= 0 and farmer_index < 5:
+		# 首批五人站在守夜厅前沿，避免两翼的农民被门廊和屋顶挡住。
+		angle = lerpf(PI * 0.10, PI * 0.90, float(farmer_index) / 4.0)
+		ring = 142.0
 	var preferred := city_position + Vector2.from_angle(angle) * ring
 	if path_follower.pathfinder != null:
 		return path_follower.pathfinder.spawn_position(preferred,city_position,maxf(216.0,ring+36.0))
@@ -175,6 +197,8 @@ func _resolve_spawn_position() -> void:
 func _draw() -> void:
 	var job_label: String = str({&"lumber_camp": "木", &"farm": "农", &"gold_mine": "金", &"stone_mine": "石", &"iron_mine": "铁", &"arrow_tower": "箭", &"barracks": "兵"}.get(StringName(String(job_id).get_slice("#", 0)), "闲"))
 	var head_y: float = -preload("res://src/gameplay/art/world_art_scale.gd").height_for("villager",18.0)-6.0
+	if is_instance_valid(settlement_art):
+		head_y = -SettlementArt.HEIGHT - 7.0
 	draw_string(ThemeDB.fallback_font, Vector2(-24, head_y), "%d·%s" % [farmer_index + 1, job_label], HORIZONTAL_ALIGNMENT_CENTER, 48.0, 10, Color.WHITE)
 	if carried_amount > 0:
 		var resource_label: String = str({&"wood": "木", &"food": "食", &"gold": "金", &"stone": "石", &"iron": "铁"}.get(carried_resource, "货"))

@@ -17,9 +17,9 @@ layered_dawn = true
 
 [resource]
 script = ExtResource("1")
-revision = 7
-environment_only = true
-display_name = "山地、湖岸与草地环境样区"
+revision = 8
+place_city_at_start = true
+display_name = "月湖山谷"
 surface_layout_path = "res://assets/levels/level_001/surface-layout.json"
 visual_margins = Vector4(0, 108, 432, 0)
 assembly = ExtResource("2")

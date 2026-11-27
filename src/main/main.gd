@@ -9,6 +9,11 @@ const TerrainGridLayerScript = preload("res://src/gameplay/art/grass_map_layer.g
 const MapDefinitionScript = preload("res://src/gameplay/grid/map_definition.gd")
 const MountainRoadLayerScript = preload("res://src/gameplay/art/mountain_road_layer.gd")
 const TownHallVisualScript = preload("res://src/gameplay/art/town_hall_visual.gd")
+const WatchHallVisualScript = preload("res://src/gameplay/art/watch_hall_visual.gd")
+const TOWN_HALL_CARD = preload("res://src/data/cards/town_hall.tres")
+const OPENING_PREPARATION_SECONDS := 10.0
+const OPENING_FREE_CHOICES := 3
+const CITY_ACCESS_RADIUS := 96.0
 const OverlayScript = preload("res://src/gameplay/buildings/placement_overlay.gd")
 const ArtVisualScript = preload("res://src/gameplay/art/art_visual.gd")
 @export var level_definition: Resource = preload("res://src/levels/level_001.tres")
@@ -22,6 +27,9 @@ var grid_pathfinder: RefCounted = GridPathfinderScript.new(grid_map_model)
 var terrain_grid_layer: Node2D
 var hud_reference: Node
 var world_lighting: Node2D
+var city_placed := false
+var opening_seconds_remaining := 0.0
+var opening_hint: Label
 
 const COLOR_NIGHT := Color("101827")
 const COLOR_GRID := Color("1b2b3d")
@@ -152,18 +160,15 @@ func _ready() -> void:
 	mountain_roads.name = "MountainRoadLayer"
 	add_child(mountain_roads)
 	move_child(mountain_roads, 1)
-	wave_controller.city_target_position = map_runtime.city_position
 	wave_controller.playable_bounds = map_runtime.bounds
 	wave_controller.spawn_points.assign(map_runtime.spawn_points)
 	settlement_builder.build_bounds = map_runtime.bounds
-	# 历史固定格接口保留，但落点跟随新主城，不能沿用已成为树林的旧坐标。
-	settlement_builder.slot_positions.assign([map_runtime.city_position+Vector2(-252,36),map_runtime.city_position+Vector2(-252,216),map_runtime.city_position+Vector2(216,180)])
-	arrow_tower.position = map_runtime.city_position+Vector2(-252,-72)
-	barracks.position = map_runtime.city_position+Vector2(216,0)
 	settlement_builder.set_grid_map_model(grid_map_model)
 	wall_manager.build_bounds = map_runtime.bounds
 	barracks.build_bounds = map_runtime.bounds
 	farmer_manager.economy = wave_economy
+	if level_definition.place_city_at_start:
+		farmer_manager.settlement_lighting = world_lighting
 	farmer_manager.set_pathfinder(grid_pathfinder)
 	wave_controller.set_pathfinder(grid_pathfinder)
 	barracks.set_pathfinder(grid_pathfinder)
@@ -174,7 +179,8 @@ func _ready() -> void:
 	map_camera.name = "MapCamera"
 	map_camera.configure(map_runtime)
 	add_child(map_camera)
-	if not level_definition.environment_only:
+	_set_city_position(map_runtime.city_position)
+	if city_placed:
 		var city_art := TownHallVisualScript.new() as Node2D
 		city_art.name = "TownHallVisual"
 		city_art.position = wave_controller.city_target_position
@@ -267,6 +273,8 @@ func _ready() -> void:
 	hud_reference = preload("res://src/gameplay/art/hud_reference.gd").new()
 	add_child(hud_reference)
 	hud_reference.install(self)
+	if level_definition.place_city_at_start and not level_definition.environment_only:
+		_install_opening_hint()
 	var boundary := preload("res://src/gameplay/art/map_boundary_layer.gd").new()
 	boundary.name = "MapBoundaryLayer"
 	boundary.main = self
@@ -323,7 +331,8 @@ func _initialize_grid_map() -> void:
 	grid_map_model = GridMapModelScript.new(map_runtime.grid_size)
 	grid_pathfinder = GridPathfinderScript.new(grid_map_model)
 	TerrainMapDataScript.apply_to(grid_map_model, map_runtime)
-	if not level_definition.environment_only:
+	city_placed = not level_definition.environment_only and not level_definition.place_city_at_start
+	if city_placed:
 		grid_map_model.occupy(&"city", map_runtime.city_position, MapLayout.CITY_FOOTPRINT)
 
 
@@ -333,6 +342,7 @@ func _process(delta: float) -> void:
 	if level_definition.environment_only:
 		return
 	RunState.advance_campaign_time(delta)
+	_advance_opening_preparation(delta)
 	if hand_bar.visible:
 		_refresh_hand_scroll_buttons()
 	if building_worker_panel.visible:
@@ -364,7 +374,7 @@ func _on_map_surface_gui_input(event: InputEvent) -> void:
 		return
 	if battle_shop.active:
 		return
-	if RunState.phase not in [RunState.Phase.WAVE_COMBAT, RunState.Phase.WAVE_RESULT]:
+	if not city_placed or (not _card_play_allowed() and RunState.phase != RunState.Phase.WAVE_RESULT):
 		return
 	var local_point := Vector2.INF
 	if event is InputEventMouseButton:
@@ -530,6 +540,15 @@ func _on_start_pressed() -> void:
 		return
 	RunState.begin_new_run()
 	RunEconomy.begin_run()
+	if level_definition.place_city_at_start:
+		bottom_panel.hide()
+		hand_bar.show()
+		map_drop_surface.show()
+		_update_map_view_rect()
+		map_camera.show_full_map()
+		run_card_inventory.add_card(TOWN_HALL_CARD, 0)
+		_update_opening_hint()
+		return
 	farmer_manager.begin_run(RunEconomy.current_population)
 	opening_draft.begin()
 	_configure_opening_setup_panel()
@@ -551,6 +570,14 @@ func _on_reset_pressed() -> void:
 	if terrain_grid_layer.lake!=null:
 		terrain_grid_layer.lake.reset()
 	campaign_pause_button.text = "暂停"
+	if level_definition.place_city_at_start:
+		city_placed = false
+		opening_seconds_remaining = 0.0
+		var city_art := get_node_or_null("TownHallVisual")
+		if city_art != null:
+			city_art.free()
+		_set_city_position(map_runtime.city_position)
+		_update_opening_hint()
 	map_camera.reset_view()
 	wave_controller.reset_wave()
 	opening_draft.reset()
@@ -560,7 +587,7 @@ func _on_reset_pressed() -> void:
 	wave_economy.reset(settlement_builder)
 	farmer_manager.reset()
 	grid_map_model.clear_occupancy()
-	if not level_definition.environment_only:
+	if city_placed:
 		grid_map_model.occupy(&"city", map_runtime.city_position, MapLayout.CITY_FOOTPRINT)
 	for tower in additional_towers:
 		tower.free()
@@ -576,8 +603,8 @@ func _on_reset_pressed() -> void:
 	_reset_barracks()
 	_reset_settlement_slots()
 	RunState.reset_to_boot()
-	status_label.text = "已重置灰盒状态。"
-	start_button.text = "开始灰盒对局"
+	status_label.text = "开始后，从手牌安放主城。" if level_definition.place_city_at_start else "已重置灰盒状态。"
+	start_button.text = "开始对局" if level_definition.place_city_at_start else "开始灰盒对局"
 	start_button.disabled = false
 	failure_panel.visible = false
 	build_failure_panel.visible = false
@@ -590,7 +617,6 @@ func _on_reset_pressed() -> void:
 	barracks_slot_button.visible = false
 	map_drop_surface.visible = false
 	battle_shop_button.visible = false
-	battle_shop_button.text = "金\n商店"
 	_close_building_worker_panel()
 	train_farmer_button.visible = false
 	notice_seconds = 0.0
@@ -604,9 +630,44 @@ func _on_reset_pressed() -> void:
 		_configure_environment_only()
 
 
+func _install_opening_hint() -> void:
+	start_button.text = "开始对局"
+	status_label.text = "开始后，从手牌安放主城。"
+	opening_hint = Label.new()
+	opening_hint.name = "OpeningHint"
+	opening_hint.position = Vector2(12, 46)
+	opening_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	opening_hint.add_theme_stylebox_override("normal", _ui_style(COLOR_UI_NIGHT, COLOR_UI_GOLD, 1, 5))
+	opening_hint.add_theme_color_override("font_color", COLOR_UI_GOLD_BRIGHT)
+	opening_hint.add_theme_font_size_override("font_size", 15)
+	opening_hint.hide()
+	$HUD.add_child(opening_hint)
+
+
+func _update_opening_hint() -> void:
+	if opening_hint == null:
+		return
+	opening_hint.visible = RunState.phase == RunState.Phase.DAY_SETUP and not city_placed
+	opening_hint.text = "从手牌拖动主城到可通行空地"
+
+
+func _advance_opening_preparation(delta: float) -> void:
+	if opening_seconds_remaining <= 0.0 or delta <= 0.0 or get_tree().paused:
+		return
+	opening_seconds_remaining = maxf(0.0, opening_seconds_remaining - delta)
+	_set_clock_text(opening_seconds_remaining)
+	if is_zero_approx(opening_seconds_remaining):
+		opening_seconds_remaining = 0.0
+		_start_first_wave()
+
+
 func _on_state_changed(_phase: int) -> void:
 	phase_value.text = RunState.phase_name()
-	train_farmer_button.visible = RunState.phase in [RunState.Phase.DAY_SETUP, RunState.Phase.WAVE_COMBAT, RunState.Phase.WAVE_RESULT]
+	train_farmer_button.visible = city_placed and RunState.phase in [RunState.Phase.DAY_SETUP, RunState.Phase.WAVE_COMBAT, RunState.Phase.WAVE_RESULT]
+	_update_opening_hint()
+	if RunState.phase != RunState.Phase.DAY_SETUP:
+		hud_reference.day_night_clock.set_preparing(false)
+		_on_campaign_time_changed(RunState.campaign_remaining_seconds())
 	if RunState.phase in [RunState.Phase.RUN_LOST, RunState.Phase.RUN_WON]:
 		day_setup_panel.visible = false
 		build_failure_panel.visible = false
@@ -618,7 +679,6 @@ func _on_state_changed(_phase: int) -> void:
 		barracks_slot_button.visible = false
 		map_drop_surface.visible = false
 		battle_shop_button.visible = false
-		battle_shop_button.text = "金\n商店"
 		_close_building_worker_panel()
 		battle_shop.close()
 		for slot_button in settlement_slot_buttons:
@@ -648,21 +708,29 @@ func _on_wave_changed(wave_index: int) -> void:
 
 
 func _on_campaign_time_changed(remaining_seconds: float) -> void:
-	var total_seconds: int = int(ceil(remaining_seconds))
+	_set_clock_text(remaining_seconds)
+
+
+func _set_clock_text(seconds: float) -> void:
+	var total_seconds := ceili(seconds)
 	campaign_time_value.text = "%02d:%02d" % [total_seconds / 60, total_seconds % 60]
 
 
 func _on_threat_stage_changed(stage_index: int) -> void:
-	if RunState.phase == RunState.Phase.BOOT:
+	if RunState.phase == RunState.Phase.BOOT or (level_definition.place_city_at_start and RunState.phase == RunState.Phase.DAY_SETUP):
 		return
 	battle_shop.begin_stage(stage_index)
 	if battle_shop.active:
 		_on_battle_shop_offers_changed()
-	_show_notice("威胁阶段%d开始：战斗商店已补满，刷新费用重置。" % stage_index)
+	if battle_shop.opening_choices_remaining > 0:
+		_show_notice("威胁阶段%d开始，仍可领取剩余的开局免费建筑。" % stage_index)
+	else:
+		_show_notice("威胁阶段%d开始：战斗商店已补满，刷新费用重置。" % stage_index)
 
 
 func _on_campaign_pause_pressed() -> void:
-	if not level_definition.environment_only and RunState.phase not in [RunState.Phase.WAVE_COMBAT, RunState.Phase.WAVE_RESULT]:
+	var preparing: bool = level_definition.place_city_at_start and city_placed and RunState.phase == RunState.Phase.DAY_SETUP
+	if not level_definition.environment_only and not preparing and RunState.phase not in [RunState.Phase.WAVE_COMBAT, RunState.Phase.WAVE_RESULT]:
 		return
 	get_tree().paused = not get_tree().paused
 	campaign_pause_button.text = "继续" if get_tree().paused else "暂停"
@@ -707,6 +775,8 @@ func _on_ready_pressed() -> void:
 		return
 	if battle_shop.active:
 		_close_battle_shop()
+		return
+	if level_definition.place_city_at_start:
 		return
 	if interwave_draft.active:
 		if (
@@ -810,6 +880,9 @@ func _on_map_card_dropped(card_index: int, map_position: Vector2) -> void:
 	if card == null:
 		return
 	match card.card_id:
+		&"town_hall":
+			_try_place_town_hall(card_index, map_position)
+			return
 		&"wall":
 			_try_place_wall_card(card_index, map_position)
 		&"arrow_tower":
@@ -820,6 +893,65 @@ func _on_map_card_dropped(card_index: int, map_position: Vector2) -> void:
 			if card.category in ["resource", "population"]:
 				_try_place_map_building_card(card_index, map_position)
 	_show_notice(setup_hint_label.text)
+
+
+func _try_place_town_hall(card_index: int, map_position: Vector2) -> bool:
+	if not level_definition.place_city_at_start or city_placed or RunState.phase != RunState.Phase.DAY_SETUP:
+		return false
+	if run_card_inventory.card_for(card_index) != TOWN_HALL_CARD:
+		return false
+	var preview := placement_preview(TOWN_HALL_CARD, map_position)
+	var target: Vector2 = preview.position
+	if not preview.valid or not grid_map_model.occupy(&"city", target, MapLayout.CITY_FOOTPRINT):
+		_show_notice("主城需要 4×4 可建空地，请避开水域、岩壁和资源点。")
+		return false
+	for spawn in wave_controller.spawn_points:
+		var entrance: Vector2 = grid_pathfinder.spawn_position(spawn)
+		if entrance == Vector2.INF or grid_pathfinder.find_path(entrance, target, CITY_ACCESS_RADIUS).is_empty():
+			grid_map_model.release(&"city")
+			_show_notice("这里无法接通进城路线，请选择与平原或山路连通的空地。")
+			return false
+	city_placed = true
+	_set_city_position(target)
+	var city_art := WatchHallVisualScript.new()
+	city_art.name = "TownHallVisual"
+	city_art.position = target
+	city_art.lighting = world_lighting as WorldLighting
+	add_child(city_art)
+	farmer_manager.begin_run(RunEconomy.current_population)
+	train_farmer_button.show()
+	run_card_inventory.consume(card_index)
+	map_camera.reset_view()
+	opening_seconds_remaining = OPENING_PREPARATION_SECONDS
+	hud_reference.day_night_clock.set_preparing(true)
+	_set_clock_text(opening_seconds_remaining)
+	_update_opening_hint()
+	notice_seconds = 0.0
+	notice_panel.hide()
+	battle_shop.begin_opening(_opening_shop_cards(), OPENING_FREE_CHOICES)
+	_on_battle_shop_button_pressed()
+	return true
+
+
+func _set_city_position(target: Vector2) -> void:
+	wave_controller.city_target_position = target
+	map_camera.city_position = target
+	farmer_manager.city_position = target
+	settlement_builder.slot_positions.assign([target + Vector2(-252, 36), target + Vector2(-252, 216), target + Vector2(216, 180)])
+	arrow_tower.position = target + Vector2(-252, -72)
+	barracks.position = target + Vector2(216, 0)
+
+
+func _opening_shop_cards() -> Array[OpeningCardDefinition]:
+	var cards: Array[OpeningCardDefinition] = []
+	for card in battle_shop.card_pool:
+		if card.required_resource_site.is_empty() or resource_sites.any(
+			func(site: ResourceSite) -> bool: return site.site_type == card.required_resource_site
+		):
+			cards.append(card)
+		if cards.size() == card_buttons.size():
+			break
+	return cards
 
 
 func _on_barracks_slot_pressed() -> void:
@@ -1020,6 +1152,10 @@ func _on_setup_finished(selected_indices: Array[int]) -> void:
 	battle_shop_button.visible = true
 	for slot_button in settlement_slot_buttons:
 		slot_button.visible = false
+	_start_first_wave()
+
+
+func _start_first_wave() -> void:
 	wave_economy.prepare_wave(settlement_builder, arrow_tower, barracks)
 	if not wave_controller.start_wave(1):
 		status_label.text = "第1波数据无效，无法开始。"
@@ -1027,7 +1163,9 @@ func _on_setup_finished(selected_indices: Array[int]) -> void:
 		return
 	RunState.start_current_wave()
 	battle_shop.begin_stage(RunState.threat_stage)
-	status_label.text = "第1波：4只野狼正在进攻主城。"
+	if battle_shop.active:
+		hud_reference.shop_subtitle.text = "战斗继续进行"
+	status_label.text = "第1波：%d只野狼正在进攻主城。" % wave_controller.active_enemy_count
 	start_button.text = "战斗进行中"
 	start_button.disabled = true
 
@@ -1257,10 +1395,10 @@ func _on_resources_changed(
 	iron_value.text = "铁 %d" % RunEconomy.amount(&"iron")
 	gold_value.text = "金 %d" % RunEconomy.amount(&"gold")
 	population_value.text = "人口 %d/%d" % [current_population, population_capacity]
-	train_farmer_button.visible = RunState.phase not in [RunState.Phase.BOOT, RunState.Phase.RUN_LOST, RunState.Phase.RUN_WON]
+	train_farmer_button.visible = city_placed and RunState.phase not in [RunState.Phase.BOOT, RunState.Phase.RUN_LOST, RunState.Phase.RUN_WON]
 	train_farmer_button.text = "招募"
 	train_farmer_button.tooltip_text = "生产一名农民，占1人口；当前%d/%d。民屋可增加2人口容量。" % [current_population, population_capacity]
-	if not level_definition.environment_only:
+	if city_placed:
 		farmer_manager.sync_population(current_population)
 	wave_economy.refresh_population_totals()
 	if battle_shop.active:
@@ -1268,7 +1406,7 @@ func _on_resources_changed(
 
 
 func _on_train_farmer_pressed() -> void:
-	if level_definition.environment_only:
+	if level_definition.environment_only or not city_placed:
 		return
 	if RunState.phase in [RunState.Phase.BOOT, RunState.Phase.RUN_LOST, RunState.Phase.RUN_WON]:
 		return
@@ -1443,7 +1581,9 @@ func active_barracks() -> Array[Barracks]:
 
 
 func building_footprints(include_defenses: bool = true) -> Array[Dictionary]:
-	var result: Array[Dictionary] = [{"position": wave_controller.city_target_position, "radius": MapLayout.CITY_RADIUS}]
+	var result: Array[Dictionary] = []
+	if city_placed:
+		result.append({"position": wave_controller.city_target_position, "radius": MapLayout.CITY_RADIUS})
 	if include_defenses:
 		for tower in active_towers():
 			result.append({"position": tower.global_position, "radius": MapLayout.TOWER_RADIUS})
@@ -1477,8 +1617,18 @@ func _free_placement_obstacles(include_defenses: bool = true, reserve_resource_s
 
 func placement_preview(card: OpeningCardDefinition, point: Vector2) -> Dictionary:
 	var footprint: Vector2i = MapLayout.footprint_for_card(card.card_id)
+	if not point.is_finite():
+		return {"position": Vector2.ZERO, "radius": 0.0, "footprint": footprint, "valid": false}
 	point = grid_map_model.snap_footprint_center(point, footprint)
 	var radius: float = card.footprint_radius
+	if card.card_id == &"town_hall":
+		var city_valid: bool = (
+			not city_placed and RunState.phase == RunState.Phase.DAY_SETUP
+			and grid_map_model.can_place(point, footprint)
+			and grid_map_model.has_work_access(point, footprint, CITY_ACCESS_RADIUS)
+			and _is_map_buildable(point, radius)
+		)
+		return {"position": point, "radius": radius, "footprint": footprint, "valid": city_valid}
 	if card.card_id == &"arrow_tower":
 		radius = MapLayout.TOWER_RADIUS
 	elif card.card_id == &"barracks":
@@ -1606,7 +1756,8 @@ func _on_auto_assign_pressed() -> void:
 
 
 func _on_battle_shop_button_pressed() -> void:
-	if RunState.phase != RunState.Phase.WAVE_COMBAT:
+	var preparing: bool = city_placed and level_definition.place_city_at_start and RunState.phase == RunState.Phase.DAY_SETUP
+	if not preparing and RunState.phase != RunState.Phase.WAVE_COMBAT:
 		return
 	if battle_shop.active:
 		_close_battle_shop()
@@ -1681,6 +1832,7 @@ func _configure_battle_shop_panel() -> void:
 	setup_hint_label.text = "购买后加入手牌"
 	setup_hint_label.tooltip_text = "商店打开时战斗、生产与黎明倒计时继续进行。"
 	refresh_button.custom_minimum_size = Vector2(156.0, 32.0)
+	hud_reference.shop_subtitle.text = "准备中 · 领牌后可部署" if RunState.phase == RunState.Phase.DAY_SETUP else "战斗继续进行"
 	_on_battle_shop_offers_changed()
 
 
@@ -1696,28 +1848,35 @@ func _close_battle_shop() -> void:
 	barracks_slot_button.visible = false
 	map_drop_surface.visible = true
 	battle_shop_button.visible = true
-	battle_shop_button.text = "金\n商店"
 	for slot_button in settlement_slot_buttons:
 		slot_button.visible = false
 	status_label.text = "商店已关闭，新购卡牌已加入底部手牌；点击建筑可调整岗位。"
 
 
 func _on_battle_shop_card_pressed(card_index: int) -> void:
+	var free_offer := battle_shop.opening_choices_remaining > 0
 	if not battle_shop.purchase_card(card_index, run_card_inventory):
 		setup_hint_label.text = battle_shop.last_error
 		_show_notice(battle_shop.last_error)
 		return
 	var card: OpeningCardDefinition = battle_shop.offered_cards[card_index]
-	_populate_battle_hand()
-	setup_hint_label.text = "已购买%s，已加入底部手牌。" % card.display_name
+	setup_hint_label.text = "已%s%s，已加入底部手牌。" % ["免费领取" if free_offer else "购买", card.display_name]
 
 
 func _on_battle_shop_offers_changed() -> void:
 	if not battle_shop.active:
 		return
-	selection_label.text = "金币 %d" % RunEconomy.amount(&"gold")
+	var free_offer := battle_shop.opening_choices_remaining > 0
+	var needs_defense := battle_shop.requires_opening_damage_card()
+	if hud_reference != null:
+		hud_reference.shop_heading.get_node("GoldSymbol").visible = not free_offer
+	selection_label.text = (
+		"可领 %d / %d" % [battle_shop.opening_choices_remaining, OPENING_FREE_CHOICES]
+		if free_offer else "金币 %d" % RunEconomy.amount(&"gold")
+	)
 	var refresh_cost: int = battle_shop.current_refresh_cost()
 	refresh_button.text = "刷新 %d金    │    下次 %d金" % [refresh_cost, mini(refresh_cost + 1, 6)]
+	refresh_button.visible = not free_offer
 	refresh_button.disabled = RunEconomy.amount(&"gold") < refresh_cost
 	for card_index in range(card_buttons.size()):
 		if card_index >= battle_shop.offered_cards.size():
@@ -1728,24 +1887,28 @@ func _on_battle_shop_offers_changed() -> void:
 		var held_count: int = run_card_inventory.count_matching(card.card_id, 1)
 		var fusion_gap: int = maxi(0, 3 - mini(held_count, 3))
 		var inventory_full: bool = run_card_inventory.card_count() >= RunCardInventory.MAX_CARDS
-		var lacks_gold: bool = RunEconomy.amount(&"gold") < card.shop_price
-		var state_text := "购买"
+		var lacks_gold: bool = not free_offer and RunEconomy.amount(&"gold") < card.shop_price
+		var needs_other_card := needs_defense and not card.can_deal_damage
+		var state_text := "领取" if free_offer else "购买"
 		if purchased:
 			state_text = "已售罄"
 		elif inventory_full:
 			state_text = "手牌已满"
 		elif lacks_gold:
 			state_text = "金币不足"
+		elif needs_other_card:
+			state_text = "需选伤害牌"
 		card_buttons[card_index].visible = true
-		card_buttons[card_index].text = "%s  ★1\n持有 %d｜再差 %d 张可合成\n金 %d｜%s" % [
-			card.display_name, held_count, fusion_gap, card.shop_price, state_text,
+		var price_text := "0元" if free_offer else "金 %d" % card.shop_price
+		card_buttons[card_index].text = "%s  ★1\n持有 %d｜再差 %d 张可合成\n%s｜%s" % [
+			card.display_name, held_count, fusion_gap, price_text, state_text,
 		]
 		card_buttons[card_index].tooltip_text = "%s\n建造消耗：%s" % [card.description, card.build_cost_text]
 		card_buttons[card_index].modulate = Color.WHITE
-		card_buttons[card_index].disabled = purchased or inventory_full or lacks_gold
+		card_buttons[card_index].disabled = purchased or inventory_full or lacks_gold or needs_other_card
 		_apply_shop_card_style(card_buttons[card_index], card_buttons[card_index].disabled)
 		if hud_reference != null:
-			hud_reference.update_offer(card_buttons[card_index],card,held_count,state_text)
+			hud_reference.update_offer(card_buttons[card_index], card, held_count, state_text, free_offer)
 
 
 func _begin_interwave_shop() -> void:
@@ -1931,7 +2094,9 @@ func _card_by_id(card_id: StringName) -> OpeningCardDefinition:
 
 
 func _card_play_allowed() -> bool:
-	return opening_draft.active or RunState.phase == RunState.Phase.WAVE_COMBAT
+	return opening_draft.active or RunState.phase == RunState.Phase.WAVE_COMBAT or (
+		level_definition.place_city_at_start and city_placed and RunState.phase == RunState.Phase.DAY_SETUP
+	)
 
 
 func _refresh_all_labels() -> void:

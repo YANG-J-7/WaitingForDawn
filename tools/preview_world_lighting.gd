@@ -1,6 +1,15 @@
 extends Node
 ## 人工光影预览：冻结玩法，保留镜头和美术动画；不改变正式主场景入口。
 const PREVIEW_SECONDS_PER_SECOND := 300.0
+const WatchHallVisual = preload("res://src/gameplay/art/watch_hall_visual.gd")
+const HALL_APPEARANCES: Array[TownHallAppearance] = [
+	preload("res://assets/buildings/town_hall_levels/level_1.tres"),
+	preload("res://assets/buildings/town_hall_levels/level_2.tres"),
+	preload("res://assets/buildings/town_hall_levels/level_3.tres"),
+	preload("res://assets/buildings/town_hall_levels/level_4.tres"),
+	preload("res://assets/buildings/town_hall_levels/level_5.tres"),
+]
+@export var include_units := false
 var main: Node2D
 var play_button: Button
 var status: Label
@@ -8,10 +17,16 @@ var mode: int = 1
 var terrain_lamp: WorldLightEmitter
 var terrain_lamp_button: Button
 var time_slider: HSlider
+var hall_selector: OptionButton
+var preview_hall: WatchHallVisual
 
 func _ready() -> void:
 	get_window().title = "Waiting for Dawn · 移动主光预览"
 	main = preload("res://src/main/main.tscn").instantiate()
+	var preview_level: Resource = main.level_definition.duplicate()
+	preview_level.environment_only = not include_units
+	preview_level.place_city_at_start = false
+	main.level_definition = preview_level
 	add_child(main)
 	if not main.level_definition.environment_only:
 		_prepare_unit_samples()
@@ -53,10 +68,41 @@ func _ready() -> void:
 	time_slider.tooltip_text = "拖动预览整局光源移动"
 	time_slider.value_changed.connect(_preview_time)
 	overlay.add_child(time_slider)
+	if main.level_definition.environment_only:
+		hall_selector = OptionButton.new()
+		hall_selector.position = Vector2(306, 76)
+		hall_selector.add_item("主城外观")
+		for level in HALL_APPEARANCES.size():
+			hall_selector.add_item("%d 级 · %s" % [level + 1, HALL_APPEARANCES[level].display_name])
+		hall_selector.item_selected.connect(_select_hall)
+		overlay.add_child(hall_selector)
 	_set_mode(1)
 	await get_tree().process_frame
 	main._update_map_view_rect()
 	main.map_camera.show_full_map()
+
+
+func _select_hall(index: int) -> void:
+	if is_instance_valid(preview_hall):
+		preview_hall.free()
+		preview_hall = null
+	if index == 0:
+		main.map_camera.show_full_map()
+		return
+	var appearance: TownHallAppearance = HALL_APPEARANCES[index - 1]
+	preview_hall = WatchHallVisual.new()
+	preview_hall.preview_only = true
+	preview_hall.appearance = appearance
+	preview_hall.lighting = main.world_lighting
+	var site: Vector2 = main.map_runtime.city_position + Vector2(-360, 0)
+	preview_hall.position = site
+	main.add_child(preview_hall)
+	var height := appearance.body.get_height() * appearance.width / appearance.body.get_width()
+	var camera: Camera2D = main.map_camera
+	camera.set_view_level(&"detail")
+	var fit_zoom := minf(main.map_view_rect().size.y * 0.58 / height, camera.zoom.x)
+	camera.zoom = Vector2.ONE * fit_zoom
+	camera.focus_world(site + Vector2(0.0, -height * 0.31))
 
 
 func _prepare_unit_samples() -> void:

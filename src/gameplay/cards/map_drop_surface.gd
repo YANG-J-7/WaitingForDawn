@@ -4,6 +4,7 @@ extends Control
 signal card_dropped(card_index: int, map_position: Vector2)
 
 @export var accepted_card_ids: PackedStringArray = PackedStringArray([
+	"town_hall",
 	"wall",
 	"arrow_tower",
 	"barracks",

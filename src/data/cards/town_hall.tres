@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="OpeningCardDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/cards/card_definition.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/buildings/town_hall_level_1/revision_2/card.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+card_id = &"town_hall"
+display_name = "主城·守夜厅"
+illustration = ExtResource("2")
+category = "city"
+shop_price = 0
+build_cost_text = "免费"
+footprint_radius = 48.0
+description = "拖到地图上的可通行空地安放主城。安放后有10秒准备时间。"

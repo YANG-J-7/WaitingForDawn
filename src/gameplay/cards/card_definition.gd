@@ -3,7 +3,8 @@ extends Resource
 
 @export var card_id: StringName = &"card"
 @export var display_name: String = "建筑"
-@export_enum("resource", "defense", "population") var category: String = "resource"
+@export var illustration: Texture2D
+@export_enum("resource", "defense", "population", "city") var category: String = "resource"
 @export_range(0, 999, 1) var shop_price: int = 6
 @export var can_deal_damage: bool = false
 @export var build_costs: Dictionary = {}
@@ -26,5 +27,7 @@ func category_label() -> String:
 			return "资源"
 		"population":
 			return "人口"
+		"city":
+			return "主城"
 		_:
 			return "防御"

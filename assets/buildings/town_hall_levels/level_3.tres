@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="TownHallAppearance" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/art/town_hall_appearance.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/buildings/town_hall_levels/level_3/body.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/buildings/town_hall_levels/level_3/faces.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/buildings/town_hall_levels/level_3/hearth.png" id="4"]
+
+[resource]
+script = ExtResource("1")
+display_name = "石门城"
+body = ExtResource("2")
+face_mask = ExtResource("3")
+hearth_mask = ExtResource("4")
+width = 376
+origin = Vector2(257, 351)
+footprints = Array[PackedVector2Array]([PackedVector2Array(16, 314, 101, 326, 152, 305, 83, 289), PackedVector2Array(97, 317, 317, 345, 444, 294, 219, 266), PackedVector2Array(278, 344, 387, 355, 442, 324, 341, 306), PackedVector2Array(111, 327, 277, 348, 298, 336, 134, 312), PackedVector2Array(390, 324, 461, 299, 462, 265, 391, 279)])
+solids = Array[PackedVector3Array]([PackedVector3Array(16, 314, 0, 101, 326, 0, 152, 305, 0, 83, 289, 0, 16, 314, 181, 101, 326, 181, 152, 305, 181, 83, 289, 181), PackedVector3Array(97, 317, 0, 317, 345, 0, 444, 294, 0, 219, 266, 0, 97, 317, 196, 317, 345, 196, 444, 294, 196, 219, 266, 196), PackedVector3Array(278, 344, 0, 387, 355, 0, 442, 324, 0, 341, 306, 0, 278, 344, 184, 387, 355, 184, 442, 324, 184, 341, 306, 184), PackedVector3Array(111, 327, 0, 277, 348, 0, 298, 336, 0, 134, 312, 0, 111, 327, 23, 277, 348, 23, 298, 336, 23, 134, 312, 23), PackedVector3Array(390, 324, 0, 461, 299, 0, 462, 265, 0, 391, 279, 0, 390, 324, 108, 461, 299, 108, 462, 265, 108, 391, 279, 108), PackedVector3Array(135, 313, 169, 227, 328, 256, 330, 300, 263, 460, 295, 123, 320, 353, 141), PackedVector3Array(317, 295, 276, 335, 290, 281, 351, 289, 275, 347, 302, 257), PackedVector3Array(20, 315, 183, 80, 280, 174, 122, 294, 172, 108, 332, 182), PackedVector3Array(298, 335, 180, 370, 312, 183, 418, 325, 179, 390, 356, 182)])
+shadow_slope = Vector3(0.56, 0.23, 0.48)

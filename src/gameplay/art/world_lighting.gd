@@ -1,6 +1,8 @@
 class_name WorldLighting
 extends Node2D
 ## 每个世界画布一个控制器；置于所有地面贴花之后、单位/建筑主体之前。
+signal main_light_changed
+
 const Profile = preload("res://src/gameplay/art/world_lighting_profile.gd")
 const SHADOW_SHADER = preload("res://src/gameplay/art/world_shadow.gdshader")
 var profile: Resource = Profile.new()
@@ -132,6 +134,7 @@ func set_lighting_enabled(value: bool) -> void:
 	for ref in emitters:
 		var emitter = ref.get_ref()
 		if emitter != null: emitter._process(0.0)
+	main_light_changed.emit()
 	queue_redraw()
 	if is_instance_valid(contact_layer): contact_layer.queue_redraw()
 
@@ -146,6 +149,7 @@ func _on_campaign_time_changed(remaining: float) -> void:
 		var position_on_map := world_bounds.position+Vector2(world_bounds.size.x*progress,0.0)
 		sky_light.global_position = (scope as Node2D).to_global(position_on_map) if scope is Node2D else position_on_map
 	_apply_ambient()
+	main_light_changed.emit()
 	queue_redraw()
 	if is_instance_valid(contact_layer): contact_layer.queue_redraw()
 
@@ -179,6 +183,23 @@ func shadow_direction_at(point: Vector2) -> Vector2:
 	# 近北缘也保留最小投影纵深，防止光源经过正上方时影子翻转或压成线。
 	away.y = maxf(away.y,world_bounds.size.y*0.18)
 	return away.normalized()
+
+
+func main_light_sample() -> Dictionary:
+	if not lighting_enabled or not is_instance_valid(sky_light):
+		return {}
+	var moon_energy := sky_light.energy if sky_light.enabled else 0.0
+	var sun_energy := sun_light.energy if is_instance_valid(sun_light) and sun_light.enabled else 0.0
+	var energy := moon_energy + sun_energy
+	var dawn_weight := sun_energy / maxf(energy, 0.0001)
+	var key_position := sky_light.global_position
+	var key_color := sky_light.color
+	var key_radius := sky_light.texture.get_width() * sky_light.texture_scale * 0.5
+	if is_instance_valid(sun_light):
+		key_position = key_position.lerp(sun_light.global_position, dawn_weight)
+		key_color = key_color.lerp(sun_light.color, dawn_weight)
+		key_radius = lerpf(key_radius, sun_light.texture.get_width() * sun_light.texture_scale * 0.5, dawn_weight)
+	return {"position": key_position, "color": key_color, "energy": energy, "radius": key_radius, "dawn_weight": dawn_weight}
 
 func _process(_delta: float) -> void:
 	# 只遍历已注册组件；不扫描整棵树、不创建纹理或每帧创建影子节点。

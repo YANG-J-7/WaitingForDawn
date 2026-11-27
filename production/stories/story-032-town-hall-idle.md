@@ -2,6 +2,8 @@
 
 状态：主城底座及左后侧红框修正已接入，185项相关回归/GL104项/素材检查通过，最终观感待用户复核；日期：2026-10-26。
 
+2026-11-26：正式第一关采用 [Story-036](story-036-place-town-hall-opening.md) 的可选址一级守夜厅。此处记录的旧主城待机与底座仍供固定主城配置使用。
+
 依据：用户已确认[主城设计图](../../design/art/concepts/town-hall-redesign-2026-10-23/town-hall-design-v1.png)并授权实施；遵循[建筑落地GDD](../../design/gdd/grid-map-rendering-system.md)与[美术圣经](../../design/art/art-bible.md)。
 
 ## 范围

@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-26",
+  "status": "candidate",
+  "generator": "内置 imagegen",
+  "prompt": "prompt-used.md",
+  "scope": "五级早夜静态光影与一级三时刻光照、三姿态待机分镜",
+  "references": [
+    {
+      "path": "codex-clipboard-7f413b24-5b79-436d-987c-7645d0a09d7a.png",
+      "type": "用户附件",
+      "sha256": "52028040CC66C22CB1741C8E8C2A4EF83F3B87839249FEC5C12ACB251A78CEF4"
+    },
+    {
+      "path": "assets/buildings/town_hall_level_1/body.png",
+      "sha256": "F318E1501D77104BA89499C75EB268843F82FF0694CA4A8197903D5C7FEE60FE"
+    },
+    {
+      "path": "design/art/concepts/tree-lighting-2026-11-25/comparison.png",
+      "sha256": "76EEC4965D72C29469A9EED8199F02BFD4C55EE464760AD786208C73C1BA92CA"
+    }
+  ],
+  "images": [
+    {
+      "path": "five-levels-moonlight.png",
+      "source": "exec-090dabb7-9da1-41b2-b4c3-e2c6bc9dfcba.png",
+      "size": [1536, 1024],
+      "sha256": "A1A4DADEA11B834D1E31A88D63E801AE8B1C05C2128599AEC55DD619E121D8A0"
+    },
+    {
+      "path": "watch-hall-light-and-idle.png",
+      "source": "exec-8b6b4d14-2025-43b1-86a6-4614cd90e835.png",
+      "size": [1536, 1024],
+      "sha256": "303FC6A97DDFDA70AAD86A263EEF2F4B1C4CEE494FBEE5D1FBF993ABF291111C"
+    }
+  ]
+}

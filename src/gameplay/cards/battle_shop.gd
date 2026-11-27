@@ -13,6 +13,20 @@ var offered_cards: Array[OpeningCardDefinition] = []
 var purchased_indices: Array[int] = []
 var refresh_count: int = 0
 var last_error: String = ""
+var opening_choices_remaining: int = 0
+var opening_damage_selected: bool = false
+
+
+func begin_opening(cards: Array[OpeningCardDefinition], free_choices: int) -> void:
+	initialized_stage = 1
+	offered_cards.assign(cards)
+	purchased_indices.clear()
+	opening_choices_remaining = free_choices
+	opening_damage_selected = false
+
+
+func requires_opening_damage_card() -> bool:
+	return opening_choices_remaining == 1 and not opening_damage_selected
 
 
 func open_for_stage(stage_index: int) -> bool:
@@ -31,6 +45,9 @@ func open_for_wave(wave_index: int) -> bool:
 func begin_stage(stage_index: int) -> bool:
 	if card_pool.size() < 6 or stage_index <= 0:
 		return false
+	if opening_choices_remaining > 0:
+		initialized_stage = stage_index
+		return true
 	if initialized_stage != stage_index or offered_cards.is_empty():
 		initialized_stage = stage_index
 		offered_cards.assign(card_pool)
@@ -61,14 +78,22 @@ func purchase_card(card_index: int, inventory: RunCardInventory) -> bool:
 		last_error = "普通卡库存已满（18/18），请先打出或合成。"
 		return false
 	var card: OpeningCardDefinition = offered_cards[card_index]
-	if not RunEconomy.try_pay({&"gold": card.shop_price}):
+	var is_free := opening_choices_remaining > 0
+	if requires_opening_damage_card() and not card.can_deal_damage:
+		last_error = "最后一个免费名额需选择能造成伤害的建筑。"
+		return false
+	if not is_free and not RunEconomy.try_pay({&"gold": card.shop_price}):
 		last_error = "金币不足：购买%s需要%d金币。" % [card.display_name, card.shop_price]
 		return false
 	var instance_id: int = inventory.add_card(card, initialized_stage, card_index)
 	if instance_id < 0:
-		RunEconomy.add_resource(&"gold", card.shop_price)
-		last_error = "普通卡库存已满，购买款已返还。"
+		if not is_free:
+			RunEconomy.add_resource(&"gold", card.shop_price)
+		last_error = "手牌已满。"
 		return false
+	if is_free:
+		opening_choices_remaining -= 1
+		opening_damage_selected = opening_damage_selected or card.can_deal_damage
 	purchased_indices.append(card_index)
 	purchase_changed.emit(purchased_indices.duplicate(), inventory.card_count())
 	offers_changed.emit()
@@ -84,11 +109,19 @@ func refresh() -> bool:
 	if not active:
 		last_error = "战斗商店尚未打开。"
 		return false
+	if opening_choices_remaining > 0:
+		last_error = "领完开局免费建筑后可刷新商店。"
+		return false
 	var cost: int = current_refresh_cost()
 	if not RunEconomy.try_pay({&"gold": cost}):
 		last_error = "金币不足：刷新需要%d金币。" % cost
 		return false
-	_rotate_open_offers()
+	if offered_cards.size() < 6:
+		offered_cards.assign(card_pool)
+		_shuffle_offers()
+		offered_cards.resize(6)
+	else:
+		_rotate_open_offers()
 	purchased_indices.clear()
 	refresh_count += 1
 	offers_changed.emit()
@@ -103,6 +136,8 @@ func reset() -> void:
 	purchased_indices.clear()
 	refresh_count = 0
 	last_error = ""
+	opening_choices_remaining = 0
+	opening_damage_selected = false
 	offers_changed.emit()
 
 

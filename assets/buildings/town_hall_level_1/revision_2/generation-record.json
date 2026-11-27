@@ -1,0 +1,182 @@
+{
+  "date": "2026-11-26",
+  "generator": "内置 image_gen 与 generate2dsprite",
+  "reference": "codex-clipboard-fb89928f-e6fa-486a-9dc7-96976cdc95b1.png",
+  "reference_sha256": "2e3a766e864ca975f312e7bdfe31727910b41bad7274c6bef8dc7df5dada8d6a",
+  "reference_crop": [
+    78,
+    109,
+    464,
+    435
+  ],
+  "sources": {
+    "body": {
+      "file": "exec-dac082f0-7524-439a-b40f-a1a8abb198d8.png",
+      "sha256": "ad8e62fa8399e0946b38dbfd48b1b013279c1c2cbbea9cc0fc22e926c4ec3901",
+      "prompt": "Use the image just shown as the visual reference and exact identity target for the one level-1 town hall. Redraw that exact standalone building, on a uniform pure #FF00FF magenta field, as one finished dense crisp hand-painted 2D game sprite for the same game. Preserve the silhouette literally: same 3/4 top-down angle with axis of roof rising to the right, left front gable and visible right wall, the original steep dark burgundy roof, the two simple blue gray stone roof caps, the deep brown exposed timber beams, pale muted front panels, three slim warm arched glazing windows, dark wood arched door with straight plank divisions, blue-gray ashlar footing and the characteristic three forward stone steps between square front piers with two small metal braziers. Keep proportions close to this specific reference; body roughly as high as wide. Strong black-blue recessed wood darks, cool light stone edges on left, dark wine red roof with unmistakable thin cool silver highlight tracing the left diagonal roof edge, modest cool highlights along the ridge and stone grades as in reference. Clean sharp large forms, tiny details controlled, no chunky pixels, no oversaturation, no structure additions. Only separate animation elements should be omitted: keep the small horizontal bronze flag rod fixed exactly above door in the same location and reconstruct the narrow backing where the hanging cloth was, keep the two metal bowls empty. Preserve the small warm glazing like reference for shader-emissive windows. No hanging cloth, flame, smoke, spill, lighting aura, dirt, grass, cast ground shadow or environmental backdrop. Whole building fully visible, roughly centered, enough clear even magenta margin on all edges, no grid, no text, no other building. Appearance must match this exact attached approved moonlit level one shape and color rather than a generic tavern.",
+      "qc": {
+        "frame_count": 1,
+        "valid_frame_count": 1,
+        "empty_count": 0,
+        "edge_touch_count": 0,
+        "paste_clamped_count": 0,
+        "body_scale_mean": 0.5838569593679016,
+        "output_subject_height_mean": 1029.0,
+        "body_scale_cv": 0.0,
+        "anchor_x_std": 0.0,
+        "anchor_y_std": 0.0,
+        "anchor_y_mean": 0.4733624454148472
+      }
+    },
+    "flag": {
+      "file": "exec-de17ca86-f1ae-4299-ac17-97bbba3ed75e.png",
+      "sha256": "7cd70b965dd6be84238a21ed1f5bdfc487cfa2a3ae5586eea4599641265fb7de",
+      "prompt": "Use the image just shown as visual reference for the very specific little blue-and-gold doorway pennant hanging over the arched door. Create FOUR animation frames of that cloth alone as a strict 2x2 equal cell sprite sheet, no rod or metal hardware, on 100% uniform pure magenta #FF00FF. Exact same rectangular royal blue cloth ending in ONE centered point, narrow gold hem and a single gold fleur de lis centered, slightly cool moonlit rich blue as shown. NOT a side-mounted flag, not two points, not a redesigned crest. In every cell its fixed top seam is a horizontal line at x=50% center and y=24% of its cell, width 33% of cell, and total pennant height about 51% of cell. Keep all pixels in safe center with wide magenta margin. Only the lower half of the cloth moves in a restrained light wind from left to right. Reading top-left, top-right, bottom-left, bottom-right: near resting canonical shape with small curl at point, medium sideways curl to right, clear peak fold to the right in the lowest third, then settling toward starting pose. Same scale, shade, texture and attachment at each cell, move only the free tail and fabric folds. Clean crisp HD game art, sharp easily read gold emblem and smooth painted form. No light beams, environment, label, separators, guide lines, smoke or other assets.",
+      "qc": {
+        "frame_count": 4,
+        "valid_frame_count": 4,
+        "empty_count": 0,
+        "edge_touch_count": 0,
+        "paste_clamped_count": 0,
+        "body_scale_mean": 0.4068237164461117,
+        "output_subject_height_mean": 115.25,
+        "body_scale_cv": 0.00483621793433386,
+        "anchor_x_std": 0.002098607602062439,
+        "anchor_y_std": 0.00034976793367704113,
+        "anchor_y_mean": 0.5066639741518579
+      }
+    },
+    "fire": {
+      "file": "exec-4e954178-a2f0-4156-b0f1-0d815aa706cd.png",
+      "sha256": "982920fa6c07b08a72217d58b9684672cc0ac4415c45a5effabb1d3c29f7eaf8",
+      "prompt": "Use the image just shown as visual reference for the specific small high-contrast torch fires in the two bowls. Produce one loop of four frames of a tiny exposed brazier flame, only flame, in an exact equal 2x2 sprite grid. Pure solid flat #FF00FF everywhere around elements, no borders no floor no bowl no smoke no detached embers no sparks no shadows no large halos. Four phases of the same root of flame anchored at x=50%, y=72% of each invisible cell with a tiny hot stable shared ignition base, only upper tongue changes. Flame is a short, slightly broad candle-shaped golden amber body, bright cream center and fine muted orange at tips, painterly crisp HD game visual style like the attached door torches. Flame height about 35-43% of each cell, width about 19-25%, rooted and stable with generous magenta all sides. Top-left a tall steadily rising tongue with slight left curl, top-right split upper tip curving right, bottom-left compact stouter flame, bottom-right medium tall tongue returning. No extra shapes, no text, exact count.",
+      "qc": {
+        "frame_count": 4,
+        "valid_frame_count": 4,
+        "empty_count": 0,
+        "edge_touch_count": 0,
+        "paste_clamped_count": 0,
+        "body_scale_mean": 0.22417486814406143,
+        "output_subject_height_mean": 87.25,
+        "body_scale_cv": 0.034361143163467014,
+        "anchor_x_std": 0.0025543438288920454,
+        "anchor_y_std": 0.0006995358673541304,
+        "anchor_y_mean": 0.7524232633279483
+      }
+    },
+    "ground": {
+      "file": "exec-38164220-7198-43d8-bb13-64aa66f3df79.png",
+      "sha256": "edc393cb4e6f86901e275bc4f31a375bdbd6f56a0928d593c6ce854d199f1f53",
+      "prompt": "Use the image just shown as visual reference for only the little irregular worn ground immediately front of the level one hall: a handful of half-embedded dark blue gray flat stones set in low-contrast brownish-gray compacted soil, rough grassy edge. Generate ONE isolated 2D game ground decal from a directly down-facing shallow overhead view without vertical sides, about 2.7 times wider than tall, with jagged irregular contour tapering at all edges. Its purpose is to reach a short distance forward from the base of the hall stair into surrounding dark blue-green grass, not a stone platform. Warmish gray brown earth dim at night, a modest lighter spot at center, ~5 or 6 embedded small flat uneven stones near center, sparse teal grass blades and low muted granules toward sparse feathered perimeter. No foreground house, unbroken slabs, geometry frame, walls, baked shadow, cast light, bright glow or background grass rectangle. True #FF00FF uniform flat magenta field around isolated decal, full art within generous magenta margins, no text. Game-native clean hand-painted detail matched to reference.",
+      "qc": {
+        "frame_count": 1,
+        "valid_frame_count": 1,
+        "empty_count": 0,
+        "edge_touch_count": 0,
+        "paste_clamped_count": 0,
+        "body_scale_mean": 0.45441760427458683,
+        "output_subject_height_mean": 278.0,
+        "body_scale_cv": 0.0,
+        "anchor_x_std": 0.0,
+        "anchor_y_std": 0.0,
+        "anchor_y_mean": 0.5086092715231788
+      }
+    }
+  },
+  "outputs": {
+    "body.png": {
+      "size": [
+        1027,
+        972
+      ],
+      "sha256": "120355d42520a1b9a698bef92e694a6664950b8e5ab1dd6af15ff16145bfc9b7"
+    },
+    "card.png": {
+      "size": [
+        512,
+        485
+      ],
+      "sha256": "4210229887cfaa12a2db7e925443647b4ee91a199075f614ccb1cf2233f36f4a"
+    },
+    "fire-1.png": {
+      "size": [
+        64,
+        120
+      ],
+      "sha256": "83ce22e777083a6270ea1f716e4eee50a803869c1b6f9c8471bc4291b6f60962"
+    },
+    "fire-2.png": {
+      "size": [
+        64,
+        120
+      ],
+      "sha256": "ba00c0bf97291452a711368473979f0ec39a6d4d671b8dc97bae5f891462db37"
+    },
+    "fire-3.png": {
+      "size": [
+        64,
+        120
+      ],
+      "sha256": "c786984ce164d77178950c78e19fdb67ff1bfcf65b66930ffcf0dc71cc54c9fc"
+    },
+    "fire-4.png": {
+      "size": [
+        64,
+        120
+      ],
+      "sha256": "bef3eae6433eb40564d36cfd36bbd0086899cfc32bb0c9cd44852ac4a2d2fc5c"
+    },
+    "flag-1.png": {
+      "size": [
+        94,
+        123
+      ],
+      "sha256": "be032fa0f0ead26c0edca026599f2431aee1de260ca6de1c6b4f4334730d9145"
+    },
+    "flag-2.png": {
+      "size": [
+        94,
+        123
+      ],
+      "sha256": "f1f71f686893c143957e4b3a18b95a6247c3983ccaa13dfa42f482cc89fa42e6"
+    },
+    "flag-3.png": {
+      "size": [
+        94,
+        123
+      ],
+      "sha256": "9b5034d15526f914de379cdb32db797670385440d749032532dfa3e1e8058935"
+    },
+    "flag-4.png": {
+      "size": [
+        94,
+        123
+      ],
+      "sha256": "96123e20f5e94e9864cbfee5c320decb6e06d7c9407d0389a0e601d06aa7d4fd"
+    },
+    "ground.png": {
+      "size": [
+        760,
+        199
+      ],
+      "sha256": "eb662d0281445160e96099b552688cbb254bfc1f9a9b58b92f26e4a2717f6db7"
+    }
+  },
+  "body_crop": [
+    152,
+    60,
+    1179,
+    1032
+  ],
+  "flag_top_row": 4,
+  "fire_output_bases": [
+    32,
+    111
+  ],
+  "fire_crop": [
+    96,
+    126,
+    160,
+    246
+  ]
+}

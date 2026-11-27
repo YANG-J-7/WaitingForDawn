@@ -187,13 +187,14 @@ func apply_shop_layout(drawer: bool) -> void:
 		else:
 			main._apply_shop_card_style(button,false)
 
-func update_offer(button: Button, card: OpeningCardDefinition, held: int, state: String) -> void:
+func update_offer(button: Button, card: OpeningCardDefinition, held: int, state: String, free_offer: bool = false) -> void:
 	var face: Control = button.get_node("ReferenceFace")
 	face.definition = card
 	face.illustration = HandCardSlot._illustration_for(card.card_id)
 	face.count = held
 	face.state_text = state
 	face.unavailable = button.disabled
+	face.free_offer = free_offer
 	face.update_icons()
 	for style in ["normal","hover","pressed","disabled","focus"]:
 		button.add_theme_stylebox_override(style,StyleBoxEmpty.new())

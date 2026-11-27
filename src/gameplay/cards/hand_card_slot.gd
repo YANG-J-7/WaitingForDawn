@@ -99,7 +99,7 @@ func configure(instance_id: int, definition: OpeningCardDefinition, star: int = 
 		card_definition.description, card_definition.build_cost_text,
 		"已达最高星级" if card_star >= RunCardInventory.MAX_STAR else "3张同名同星手牌可右键合成",
 	]
-	illustration.texture = _illustration_for(card_definition.card_id)
+	illustration.texture = card_definition.illustration if card_definition.illustration != null else _illustration_for(card_definition.card_id)
 	title_label.text = "%s  %s" % [card_definition.display_name, "★".repeat(card_star)]
 	cost_label.text = "建造 %s" % card_definition.build_cost_text
 	hint_label.text = "同星 %d/3｜%s" % [matching_count, "右键合成" if matching_count >= 3 and card_star < RunCardInventory.MAX_STAR else "拖动部署"]

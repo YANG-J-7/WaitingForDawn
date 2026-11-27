@@ -20,6 +20,8 @@ const CITY_FOOTPRINT := Vector2i(4, 4)
 
 static func footprint_for_card(card_id: StringName) -> Vector2i:
 	match card_id:
+		&"town_hall":
+			return CITY_FOOTPRINT
 		&"arrow_tower", &"wall":
 			return Vector2i.ONE
 		&"barracks", &"farm", &"house", &"lumber_camp", &"stone_mine", &"iron_mine", &"gold_mine":

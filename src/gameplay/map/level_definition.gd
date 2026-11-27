@@ -10,6 +10,8 @@ extends Resource
 @export var assembly: PackedScene
 ## 制图时关闭对局实体与模拟，其他关卡仍可使用原玩法。
 @export var environment_only: bool = false
+## 由手牌投放主城后再开始准备；旧灰盒关卡可沿用固定主城。
+@export var place_city_at_start: bool = false
 ## 纯视觉地表摆放，与通行、建造和资源点规则分离。
 @export_file("*.json") var surface_layout_path: String
 ## 仅调整景观与镜头余量，顺序为左、上、右、下；不扩大可玩网格。

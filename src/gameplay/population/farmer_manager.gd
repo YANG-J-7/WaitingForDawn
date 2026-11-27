@@ -15,6 +15,7 @@ var current_job_order: Array[StringName] = []
 var next_farmer_index: int = 0
 var economy: WaveEconomy
 var pathfinder: RefCounted
+var settlement_lighting: WorldLighting
 
 
 func set_pathfinder(value: RefCounted) -> void:
@@ -114,6 +115,7 @@ func _sync_roster(farmer_count: int) -> void:
 		return
 	while farmers.size() < target_count:
 		var farmer := FarmerAgent.new()
+		farmer.settlement_lighting = settlement_lighting
 		add_child(farmer)
 		farmer.configure(next_farmer_index, city_position)
 		farmer.set_pathfinder(pathfinder)

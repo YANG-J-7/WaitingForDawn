@@ -4,6 +4,7 @@ const Icon = preload("res://src/gameplay/art/hud_icon.gd")
 var definition: OpeningCardDefinition
 var illustration: Texture2D
 var shop: bool = false
+var free_offer: bool = false
 var star: int = 1
 var count: int = 1
 var state_text: String = "购买"
@@ -51,7 +52,8 @@ func _draw() -> void:
 	var font: Font = ThemeDB.fallback_font
 	var ink := Color("241c11")
 	draw_string(font,Vector2(9,19),definition.display_name,HORIZONTAL_ALIGNMENT_LEFT,w-45,13,ink)
-	draw_string(font,Vector2(w-31,19),"★%d" % star,HORIZONTAL_ALIGNMENT_LEFT,28,12,Color("514531"))
+	var rank := "1级" if definition.category == "city" else "★%d" % star
+	draw_string(font,Vector2(w-31,19),rank,HORIZONTAL_ALIGNMENT_LEFT,28,12,Color("514531"))
 	var art_rect: Rect2
 	if shop:
 		art_rect = Rect2(8,25,w*0.43,h-48)
@@ -72,6 +74,9 @@ func _draw() -> void:
 		var fitted: Vector2 = dims*scale_factor
 		draw_texture_rect(illustration,Rect2(art_rect.get_center()-fitted/2,fitted),false)
 	var x: float = 8
+	if shop and free_offer:
+		draw_string(font, Vector2(x, h - 10), "0元", HORIZONTAL_ALIGNMENT_LEFT, 46, 14, ink)
+		return
 	var keys: Array = cost_keys()
 	for i in range(keys.size()):
 		if i >= cost_icons.size():
@@ -84,7 +89,7 @@ func _draw() -> void:
 
 func cost_keys() -> Array:
 	if shop:
-		return ["gold"]
+		return [] if free_offer else ["gold"]
 	var result: Array = []
 	for key in [&"wood",&"food",&"stone",&"iron",&"gold"]:
 		if definition.build_costs.has(key):

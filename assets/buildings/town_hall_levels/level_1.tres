@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="TownHallAppearance" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/art/town_hall_appearance.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/buildings/town_hall_level_1/revision_2/body.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "守夜厅"
+body = ExtResource("2")
+width = 224
+origin = Vector2(513.5, 972)
+footprints = Array[PackedVector2Array]([PackedVector2Array(22, 844, 649, 917, 1007, 775, 379, 702), PackedVector2Array(111, 918, 464, 966, 604, 913, 251, 865)])
+solids = Array[PackedVector3Array]([PackedVector3Array(22, 844, 0, 22, 844, 145, 649, 917, 0, 649, 917, 145, 1007, 775, 0, 1007, 775, 145, 379, 702, 0, 379, 702, 145), PackedVector3Array(111, 918, 0, 111, 918, 150, 464, 966, 0, 464, 966, 150, 604, 913, 0, 604, 913, 150, 251, 865, 0, 251, 865, 150), PackedVector3Array(51, 833, 125, 51, 833, 366, 651, 904, 125, 651, 904, 366, 978, 770, 125, 978, 770, 366, 379, 699, 125, 379, 699, 366), PackedVector3Array(10, 882, 365, 655, 934, 365, 1021, 788, 365, 374, 736, 365, 347, 884, 674, 750, 761, 674), PackedVector3Array(309, 870, 641, 309, 870, 739, 364, 888, 641, 364, 888, 739, 400, 871, 641, 400, 871, 739, 350, 853, 641, 350, 853, 739), PackedVector3Array(695, 749, 641, 695, 749, 747, 751, 769, 641, 751, 769, 747, 798, 748, 641, 798, 748, 747, 737, 728, 641, 737, 728, 747)])

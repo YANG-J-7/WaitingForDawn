@@ -1,0 +1,92 @@
+{
+  "date": "2026-11-26",
+  "status": "candidate",
+  "generator": "内置 image_gen",
+  "title": "方案 C · 河谷木城",
+  "scope": "五级主城静态概念评审",
+  "prompt": "prompt-used.txt",
+  "raw": {
+    "path": "raw-sheet.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "sha256": "24a5ee578d5784d29b1934904c0c60f68e2e74c7bd99faa9942f7c25ade0d0fc"
+  },
+  "preview": {
+    "path": "town-hall-levels.png",
+    "size": [
+      1720,
+      1236
+    ],
+    "sha256": "e625a310f5beb8e6761c5ed2f727ba4a22ee26f282941728a2ae0ab65f280532"
+  },
+  "references": [
+    {
+      "path": "design/art/concepts/town-hall-levels-2026-11-25/town-hall-levels-v1.png",
+      "sha256": "18ec19c66067d91ae0c0a7dbb3d8c5f434169b085876103e027aa9dd201bb4a5"
+    },
+    {
+      "path": "design/art/concepts/tree-lighting-2026-11-25/moon.png",
+      "sha256": "689a9451ac346b3eb5e3ee1511b72106fc885ae6d15856d6f91a83bfb58c9e9f"
+    }
+  ],
+  "silhouettes": [
+    {
+      "level": 1,
+      "name": "河谷长厅",
+      "bbox": [
+        97,
+        176,
+        426,
+        404
+      ],
+      "opaque_pixels": 49563
+    },
+    {
+      "level": 2,
+      "name": "双脊会馆",
+      "bbox": [
+        502,
+        104,
+        930,
+        405
+      ],
+      "opaque_pixels": 85931
+    },
+    {
+      "level": 3,
+      "name": "连廊议厅",
+      "bbox": [
+        988,
+        72,
+        1466,
+        410
+      ],
+      "opaque_pixels": 114185
+    },
+    {
+      "level": 4,
+      "name": "高台木城",
+      "bbox": [
+        44,
+        567,
+        698,
+        948
+      ],
+      "opaque_pixels": 175243
+    },
+    {
+      "level": 5,
+      "name": "千梁议城",
+      "bbox": [
+        731,
+        471,
+        1503,
+        961
+      ],
+      "opaque_pixels": 258675
+    }
+  ],
+  "processing": "使用 generate2dsprite 去洋红底，清理边缘余色，沿五座建筑主轮廓裁取并原比例排版。"
+}

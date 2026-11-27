@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="TownHallAppearance" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/art/town_hall_appearance.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/buildings/town_hall_levels/level_5/body.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/buildings/town_hall_levels/level_5/faces.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/buildings/town_hall_levels/level_5/hearth.png" id="4"]
+
+[resource]
+script = ExtResource("1")
+display_name = "黎明主堡"
+body = ExtResource("2")
+face_mask = ExtResource("3")
+hearth_mask = ExtResource("4")
+width = 483.2
+origin = Vector2(271, 581)
+footprints = Array[PackedVector2Array]([PackedVector2Array(16, 518, 96, 546, 200, 512, 128, 478), PackedVector2Array(95, 547, 346, 587, 495, 536, 240, 496), PackedVector2Array(323, 567, 451, 577, 543, 535, 441, 509), PackedVector2Array(142, 562, 256, 586, 290, 573, 171, 541), PackedVector2Array(437, 553, 556, 519, 547, 479, 446, 512)])
+solids = Array[PackedVector3Array]([PackedVector3Array(16, 518, 0, 96, 546, 0, 200, 512, 0, 128, 478, 0, 16, 518, 323, 96, 546, 323, 200, 512, 323, 128, 478, 323), PackedVector3Array(95, 547, 0, 346, 587, 0, 495, 536, 0, 240, 496, 0, 95, 547, 225, 346, 587, 225, 495, 536, 225, 240, 496, 225), PackedVector3Array(323, 567, 0, 451, 577, 0, 543, 535, 0, 441, 509, 0, 323, 567, 176, 451, 577, 176, 543, 535, 176, 441, 509, 176), PackedVector3Array(142, 562, 0, 256, 586, 0, 290, 573, 0, 171, 541, 0, 142, 562, 38, 256, 586, 38, 290, 573, 38, 171, 541, 38), PackedVector3Array(437, 553, 0, 556, 519, 0, 547, 479, 0, 446, 512, 0, 437, 553, 115, 556, 519, 115, 547, 479, 115, 446, 512, 115), PackedVector3Array(51, 502, 310, 98, 519, 362, 145, 503, 311, 103, 524, 310, 99, 517, 375), PackedVector3Array(141, 513, 248, 224, 554, 380, 287, 528, 376, 393, 525, 270, 280, 548, 250), PackedVector3Array(225, 524, 381, 232, 530, 433, 300, 530, 433, 314, 536, 392, 263, 542, 474, 262, 524, 507), PackedVector3Array(338, 543, 170, 390, 533, 226, 475, 527, 248, 543, 510, 159, 439, 567, 177), PackedVector3Array(427, 515, 299, 441, 518, 326, 470, 511, 329, 487, 513, 297, 486, 524, 245), PackedVector3Array(30, 519, 311, 62, 513, 310, 110, 530, 310, 159, 521, 316), PackedVector3Array(142, 579, 220, 177, 557, 228, 256, 576, 229, 334, 571, 215, 321, 610, 227), PackedVector3Array(320, 566, 96, 361, 563, 126, 417, 571, 103, 374, 581, 91)])
+shadow_slope = Vector3(0.56, 0.23, 0.48)

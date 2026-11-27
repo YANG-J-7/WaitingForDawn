@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="TownHallAppearance" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/art/town_hall_appearance.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/buildings/town_hall_levels/level_2/body.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/buildings/town_hall_levels/level_2/faces.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/buildings/town_hall_levels/level_2/hearth.png" id="4"]
+
+[resource]
+script = ExtResource("1")
+display_name = "木石哨所"
+body = ExtResource("2")
+face_mask = ExtResource("3")
+hearth_mask = ExtResource("4")
+width = 312.8
+origin = Vector2(190, 374)
+footprints = Array[PackedVector2Array]([PackedVector2Array(12, 333, 91, 351, 144, 333, 60, 317), PackedVector2Array(89, 344, 231, 371, 355, 319, 214, 291), PackedVector2Array(247, 352, 315, 371, 380, 342, 316, 324), PackedVector2Array(116, 356, 220, 375, 232, 363, 132, 346)])
+solids = Array[PackedVector3Array]([PackedVector3Array(12, 333, 0, 91, 351, 0, 144, 333, 0, 60, 317, 0, 12, 333, 238, 91, 351, 238, 144, 333, 238, 60, 317, 238), PackedVector3Array(89, 344, 0, 231, 371, 0, 355, 319, 0, 214, 291, 0, 89, 344, 122, 231, 371, 122, 355, 319, 122, 214, 291, 122), PackedVector3Array(247, 352, 0, 315, 371, 0, 380, 342, 0, 316, 324, 0, 247, 352, 69, 315, 371, 69, 380, 342, 69, 316, 324, 69), PackedVector3Array(116, 356, 0, 220, 375, 0, 232, 363, 0, 132, 346, 0, 116, 356, 28, 220, 375, 28, 232, 363, 28, 132, 346, 28), PackedVector3Array(14, 333, 239, 80, 334, 292, 146, 327, 239, 94, 346, 239, 83, 332, 315), PackedVector3Array(88, 346, 110, 178, 331, 213, 281, 323, 224, 365, 308, 105, 265, 357, 110), PackedVector3Array(266, 314, 229, 278, 312, 231, 295, 304, 219, 285, 322, 210)])
+shadow_slope = Vector3(0.56, 0.23, 0.48)

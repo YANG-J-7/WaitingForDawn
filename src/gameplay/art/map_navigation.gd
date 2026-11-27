@@ -67,8 +67,8 @@ func _draw() -> void:
 			draw_colored_polygon(PackedVector2Array([point+Vector2(0,-3),point+Vector2(-3,3),point+Vector2(3,3)]),Color("b9d693"))
 		else:
 			draw_rect(Rect2(point-Vector2(2,2),Vector2(4,4)),Color("ffcd78") if site.site_type == &"iron_deposit" else Color("e5e7e9"))
-	var city: Vector2 = MAP_RECT.position + (main.map_runtime.city_position-visual_bounds.position) / visual_bounds.size * MAP_RECT.size
-	if not main.level_definition.environment_only:
+	if main.city_placed:
+		var city: Vector2 = MAP_RECT.position + (main.map_camera.city_position-visual_bounds.position) / visual_bounds.size * MAP_RECT.size
 		draw_rect(Rect2(city-Vector2(3,3),Vector2(6,6)),Color("ffd477"),false,1.5)
 	var world_rect: Rect2 = main.map_camera.visible_world_rect().intersection(visual_bounds)
 	draw_rect(Rect2(MAP_RECT.position+(world_rect.position-visual_bounds.position)/visual_bounds.size*MAP_RECT.size,world_rect.size/visual_bounds.size*MAP_RECT.size),Color("fff0c6"),false,1.0)

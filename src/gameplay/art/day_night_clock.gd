@@ -28,7 +28,6 @@ func configure(time_label: Label) -> void:
 	name = "DayNightClock"
 	custom_minimum_size = CAPSULE_SIZE
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	tooltip_text = "守至黎明：圆弧显示本局进度，最后5分钟月牙逐渐转为太阳。"
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	countdown = time_label
 	countdown.reparent(self)
@@ -40,17 +39,25 @@ func configure(time_label: Label) -> void:
 	countdown.add_theme_color_override("font_color", Color("ffc65e"))
 	countdown.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	dawn_title = Label.new()
-	dawn_title.text = "黎明"
 	dawn_title.position = Vector2(39.0, 7.0)
 	dawn_title.size = Vector2(36.0, 19.0)
 	dawn_title.add_theme_font_size_override("font_size", 14)
 	dawn_title.add_theme_color_override("font_color", Color("f3efdf"))
 	dawn_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(dawn_title)
+	set_preparing(false)
 	RunState.campaign_time_changed.connect(set_remaining_time)
 	set_remaining_time(RunState.campaign_remaining_seconds())
 	# Godot延迟更新最小尺寸，待旧字号的高度缓存释放后再收紧标签框。
 	call_deferred("_fit_countdown")
+
+func set_preparing(preparing: bool) -> void:
+	dawn_title.text = "准备" if preparing else "黎明"
+	tooltip_text = (
+		"准备结束后，怪物来袭并开始60分钟对局。"
+		if preparing else "守至黎明：圆弧显示本局进度，最后5分钟月牙逐渐转为太阳。"
+	)
+
 
 func _fit_countdown() -> void:
 	countdown.position = Vector2(76.0, 3.0)
